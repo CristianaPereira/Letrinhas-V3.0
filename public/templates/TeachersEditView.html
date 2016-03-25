@@ -1,0 +1,197 @@
+<!-- Inserção Professor: -->
+
+<!--FORMULARIO -->
+<div class="divWidget">
+    <div class="topcoat-navigation-bar">
+        <div class="topcoat-navigation-bar__item center full">
+            <h3 align="center" class="topcoat-navigation-bar__title">
+                Editar dados do Professor
+            </h3>
+        </div>
+    </div>
+    <div class="tabbable tabs-left " style="display:flex;">
+
+        <ul class="nav nav-tabs" style="width: 15%;">
+            <li><a href="#detalhes" data-toggle="tab">Detalhes</a></li>
+            <li class="active"><a href="#seguranca" data-toggle="tab">Segurança</a></li>
+            <li><a href="#turmas" data-toggle="tab">Turmas</a></li>
+        </ul>
+
+        <div class="tab-content" style="width: 75%;">
+            <!-- DETALHES -->
+            <div class="tab-pane" id="detalhes">
+                <form role="form" id="frmEditDetails" method="POST" action="/teachers/:id/edit"
+                      enctype="multipart/form-data">
+                    <legend>Detalhes</legend>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <input class="form-control mandatory" type="text" id="InputNome"
+                                       placeholder="Nome completo"
+                                       name="name" required/>
+                                <span class="glyphicon glyphicon-user"></span>
+                            </div>
+                            <div class="col-sm-4">
+                                <select class="form-control" id="dbUserType" name="tipo">
+                                    <option value="1">Auxiliar</option>
+                                    <option value="2">Professor</option>
+                                    <option value="3">Administrador do Sistema</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-2">
+                                <select class="form-control" id="selectEstado" name="estado">
+                                    <option value="true">Ativo</option>
+                                    <option value="false">Não Ativo</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <input type="email" class="form-control mandatory" id="inputEmail"
+                                       title="Endereço de e-mail" placeholder="Endereço de e-mail"
+                                       readonly="readonly"/>
+                                <span id="imgMail" class="glyphicon glyphicon-envelope"></span>
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="number" min="210000000" max="999999999" class="form-control mandatory"
+                                       id="InputTelefone" placeholder="Telefone" name="telefone" required>
+                                <span class="glyphicon glyphicon-earphone"></span>
+                            </div>
+                            <div class="col-sm-5">
+                                <input type="file" id="filePicker" class="form-control mandatory" accept="image/jpg"
+                                       name="filePicker"
+                                       required>
+                                <input type="hidden" id="base64textarea" class="form-control" accept="image/jpg"
+                                       name="imgb64">
+                                <span class="glyphicon glyphicon-camera"></span>
+                            </div>
+                            <div class="col-sm-1">
+                                <img id="iFoto" class="smallImgPreView" src="../img/inConstruction.jpg">
+                            </div>
+                        </div>
+                        <label id="validationLbl" class="alert-warning"></label>
+                        <!-- Botoes-->
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="btn-group">
+                                    <button type="reset" class="btn btn-default">Cancelar</button>
+                                    <button id="btnEditDetails" type="submit" class="btn btn-success">Guardar alterações
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <!--###################################################################-->
+                    </div>
+                </form>
+            </div>
+            <!-- SEGURANCA -->
+            <div class="tab-pane active" id="seguranca">
+                <legend>Dados de Segurança</legend>
+                <div class="row">
+                    <form id="frmEditPasswd" enctype="multipart/form-data">
+                        <div class="col-sm-6">
+                            <div class="row col-sm-12">
+                                <input type="password" class="form-control mandatory" id="txtOldPasswd"
+                                       placeholder="Palavra-passe antiga"
+                                       name="oldPswd" required>
+                                <span class="glyphicon"><i class="fa fa-unlock"></i></span>
+                            </div>
+                            <div class="row col-sm-12">
+                                <input type="password" class="form-control mandatory" id="txtNewPassword"
+                                       placeholder="Palavra-passe nova" name="newPswd" required>
+                                <span id="pwdIcon" class="glyphicon"><i class="fa fa-lock"></i></span>
+                            </div>
+                            <div class="row col-sm-12">
+                                <input type="password" class="form-control mandatory" id="txtConfPassword"
+                                       placeholder="Confirmar palavra-passe nova" required>
+                                <span class="glyphicon"><i class="fa fa-lock"></i></span>
+                            </div>
+                            <div class="row col-sm-12">
+                                <div class="btn-group">
+                                    <button id="btnEditPsw" type="submit" class="btn btn-success">Alterar
+                                        palavra-passe
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="row col-sm-12">
+
+                                <input type="text" max="9999" class="form-control mandatory" id="txtOldPin"
+                                       placeholder='Pin(para usar no Tablet)' name="codPin" required>
+                                <span class="glyphicon glyphicon-modal-window"></span>
+
+                            </div>
+                            <div class="row col-sm-12">
+                                <input type="text" max="9999" class="form-control mandatory" id="txtNewPin"
+                                       placeholder='Pin(para usar no Tablet)' name="codPin" required>
+                                <span class="glyphicon glyphicon-modal-window"></span>
+                            </div>
+                            <div class="row col-sm-12">
+                                <div class="btn-group">
+                                    <button id="btnUpdatePin type=" submit
+                                    " class="btn btn-success">Alterar
+                                    pin
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <label id="lblValidation" class="fa-warning"></label>
+                </div>
+                <div class="row col-sm-12">
+                    <div class="btn-group">
+                        <button type="reset" class="btn btn-default">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+            <!-- TURMAS -->
+            <div class="tab-pane" id="turmas">
+                <legend>Turmas associadas</legend>
+                <div id="classesList" class="col-md-12" align="center">
+                </div>
+                <legend>Adicionar Turmas</legend>
+                <div class="row">
+                    <div class="col-sm-5">
+                        <div id="selectEscolas" class="input-group m-bot15">
+                            <span class="input-group-addon btn-white"><i class="fa fa-university"></i></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div id="selectTurmas" class="input-group m-bot15">
+                            <span class="input-group-addon btn-white"><i class="fa fa-users"></i></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-1 col-bottom">
+                        <button id="addTurma" type="button" class="btn btn-success">
+                            <span class="glyphicon glyphicon glyphicon-plus"></span>
+                        </button>
+                    </div>
+                    <div class="col-sm-3 col-bottom">
+                        <button id="rmvTurmas" type="button" class="btn btn-danger" style="float: right;">
+                            <span class="glyphicon glyphicon glyphicon-erase" style="color:#ffcc00"></span>
+                            Limpar todas
+                        </button>
+                    </div>
+                </div>
+                <div id="assocTurma" class="col-sm-12">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--###################################################################-->
+
+    <div class="control-group">
+        <div id="hiddenEscola" class="hidden">
+            <input type="hidden" value="{}" id="teacherClasses" class="form-control" name="turmas">
+            <input type="hidden" id="userId">
+        </div>
+
+    </div>
+    <!-- Botoes-->
+</div>

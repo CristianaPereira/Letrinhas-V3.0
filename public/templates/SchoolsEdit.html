@@ -1,0 +1,41 @@
+
+<div class="topcoat-navigation-bar">
+    <div class="topcoat-navigation-bar__item center full">
+        <h1 align="center" class="topcoat-navigation-bar__title">Editar Escola</h1>
+
+    </div>
+</div>
+<div>
+    <legend>Dados Escola</legend>
+    <form role="form" method="POST" action="/schools" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="InputNome">Nome</label>
+            <input type="text" class="form-control" id="InputNome" placeholder="Nome" name="nome">
+            <label for="InputMorada">Morada</label>
+            <input type="text" class="form-control" id="InputMorada" placeholder="Morada" name="morada">
+
+
+            <div class="form-group">
+                <label for="file">Logotipo:</label>
+                <input type="file" id="InputFile" name="file">
+                
+            </div>
+            <button id="addEscola" type="button" class="btn"  >
+        <span class="glyphicon glyphicon glyphicon-plus"></span>
+        <p>Adicionar turma</p>
+        </button>
+        </div>
+        <div>
+        
+      </div>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <button id="buttonCancelar" type="reset" class="btn btn-lg btn-default btn-block btn-cancel">Cancelar</button>
+            </div>
+            <div class="col-sm-6">
+                <button type="submit" class="btn btn-lg btn-success btn-block btn-created">Submeter</button>
+            </div>
+        </div>
+    </form>
+</div>

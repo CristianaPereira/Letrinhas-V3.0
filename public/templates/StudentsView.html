@@ -1,0 +1,51 @@
+<div>
+  <div id="studentPanel" class="panel panel-default col-md-2" align="center" style="height:595px;">
+    <div class="panel-body " text-align="center" >
+      <div >Alunos: <span id="studentsBadge"class="badge">0</span>
+      </div>
+      <hr>
+      <div >
+        <input id="alunoProcurar" type="texto" class="form-control" placeholder="Procurar">
+      </div>
+      <hr>
+      <span>
+        <span class="glyphicon glyphicon-filter"></span>
+        Filtrar por:
+      </span>
+
+      <!-- Split button -->
+      <div class="btn-group" >
+        <button id="alFiltEscola" type="button" class="btn btn-sm btn-primary" style="width:100px" flag="0">
+          Escola
+        </button>
+        <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+          <span class="caret"></span>
+          <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu" role="menu" id="listaEscola">
+        </ul>
+        <span id="lblEscola" style="font-size:10px; color:#aaaaaa;"></span>
+      </div>
+      <br>
+      <br>
+      <div class="btn-group" id="dropTurma">
+      </div>
+      <hr>
+
+      <button id="btnStudentsNew" class="btn btn-success" style="position:relative; top:210px; font-size:12px">
+        <span class="glyphicon glyphicon-plus" style="color:#00ff00;"></span>
+        Novo Aluno
+      </button>
+    </div>
+  </div>
+  <div id="studentsContent" class=" panel-body col-md-5" align=center style="max-height:600px; overflow:auto">
+    <img src="../img/page-loader.gif" style='height:200px;'>
+
+  </div>
+  <div id="studentsPreview" class="col-md-5" align="center" style="">
+
+  </div>
+  <div class="col-sm-1" style="position:fixed; left:0px; top:15px;">
+    <img src="../img/ipt0.jpg" style="height:40px">
+  </div>
+</div>

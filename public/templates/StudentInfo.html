@@ -1,0 +1,182 @@
+<div>
+  <nav class="navbar navbar-default ">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" aria-expanded="false" href="/#">
+          <span>
+            <img src="../img/letrinhas2.png" style='height:32px;'title="Projeto final de Engª Informática de:
+            Alexandre Carvalho, aluno nº14922
+            Artur Gomes, aluno nº17262
+            Tiago Fernandes, aluno nº17253
+
+            ESTT-IPT-Tomar 2014/2015">
+          </span>
+          <label title="Pagina inicial">Letrinhas</label>
+        </a>
+      </div>
+
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li>
+              <a href="#tests" aria-expanded="false" title="Ver testes">
+                <img src="../img/testeTexto.png" style='height:32px;'>
+                Testes
+              </a>
+          </li>
+          <li>
+              <a href="#schools" aria-expanded="false" title="Ver escolas">
+                <img src="../img/escola1.png" style='height:32px;'>
+                Escolas
+              </a>
+          </li>
+          <li>
+              <a href="#students" aria-expanded="false" title="Ver alunos">
+                <img src="../img/alunos.png" style='height:32px;'>
+                Alunos
+              </a>
+          </li>
+          <li id="sepProf" style="display:none" >
+              <a href="#teachers" aria-expanded="false" >
+                <img src="../img/docentes.png" style='height:32px;'>
+                Professor/es
+              </a>
+          </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li id="opUser">
+            <a href="#user" aria-expanded="false">
+              <span class="glyphicon glyphicon-user" style="font-size:20px; color:#ddddee"></span>
+              <label id="user">User</label>,
+            </a>
+          </li>
+          <li id="opDef" style="display:none">
+            <a href="/#man" aria-expanded="false" title="Outras definições do serviço">
+              <label>Definições</label>
+              <span class="glyphicon glyphicon-cog" style="font-size:20px; color:#ddddee"></span>
+            </a>
+          </li>
+          <li>
+            <a href="#MenuPrincipal" aria-expanded="false" role="button" title="Voltar ao menu principal">
+              voltar
+              <img src="../img/voltar.png" style='height:32px;'>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </nav>
+
+    <div id="studentPanel" class="panel panel-default col-md-3" >
+    <div class="panel-body " style="height:595px;">
+      <img id="studentFoto" src="../img/page-loader.gif" style='height:200px; max-width:230px'>
+      <br>
+      <br>
+      <label class="badge">Nome:</label> <span id="nome">...</span><br>
+      <label class="badge">Numero de Aluno:</label> <span id="numAluno">9999</span><br>
+      <label class="badge">Turma:</label> <span id="turma">...</span><br>
+      <hr>
+      <button id="btnStudentEdit" class="btn btn-warning btn-block" style="position:relative; top:150px;font-size:12px">
+        <span class="glyphicon glyphicon-refresh" style="color:#eeee80"></span>
+        Editar Dados
+      </button>
+      <!--button id="btnStudentDelete" class="btn btn-danger btn-block" style="position:relative; top:50px;font-size:12px">
+        <span class="glyphicon glyphicon-trash" style="color:#eeaaaa"></span>
+        Apagar aluno
+      </button-->
+    </div>
+  </div>
+  <div id="evolucaoGeral" class=" panel-body col-md-9" align=center style="max-height:595px;">
+    <div  class="badge alert-info col-md-12 form-control">
+      <h4>Evolução geral.</h4>
+    </div>
+    <div class="col-md-9 badge" style="background-color:#ddcccc;height:450px;">
+      <span id="lblGrafico">
+        <br>
+        <label id="lblGrInfo">Á procura de dados...</label>
+        <img id="pdLoad" src="../img/page-loader.gif" style="height:20px">
+      </span>
+      <br>
+      <div class="col-md-11" style="background-color:#ffffcc">
+        <canvas id="evoGrafico" width="100%" height="65%" style="background-color:#ccccff"></canvas>
+      </div>
+      <br>
+      <div class="col-md-4" id="evoLegend" style="height:50px;width:100px; background-color:#ccffcc"></div>
+    </div>
+    <div id="evoNota" class="col-md-3" style="background-color:#aaaaff;height:400px;">
+      <br><span class="badge" style="font-size:16px">Nota Geral:</span> <label id="notaG" class="badge"style="font-size:16px"> 100,0% </label>
+      <hr>
+      <div align=left>
+        <label>Disciplinas (%):</label><br>
+        <img src="../img/portugues.png" style='height:20px; width:20px'><span class="badge">Poruguês:</span> <label id="notaP"> 100,0 </label><br>
+        <img src="../img/ingles.png" style='height:20px; width:20px'><span class="badge">Inglês:</span> <label id="notaI"> 100,0 </label><br>
+        <img src="../img/outroLinguas2.png" style='height:20px; width:20px'><span class="badge">Outra língua:</span> <label id="notaOL"> 100,0 </label><br>
+        <img src="../img/mate.png" style='height:20px; width:20px'><span class="badge">Matemática:</span> <label id="notaM"> 100,0 </label><br>
+        <img src="../img/estudoMeio.png" style='height:20px; width:20px'><span class="badge">Estudo do meio:</span> <label id="notaEM"> 100,0 </label><br>
+        <img src="../img/outro.png" style='height:20px; width:20px'><span class="badge">Outra:</span> <label id="notaO"> 100,0 </label><br>
+      </div>
+    </div>
+    <div class="col-md-3" style="background-color:#50afaf;height:50px">
+      <button id="btnStudentDelete" class="btn btn-info btn-block" style=";font-size:12px">
+        <span class="glyphicon glyphicon-stats" style="color:#ffaa50"></span>
+        Resultados & Estatísticas
+      </button>
+    </div>
+
+
+    <div id="panelResolucoes" class="col-md-12"  style="display:none">
+      <hr>
+      <div class=" badge alert-warning col-md-9" align=right>
+        <br>
+        <label id="lblResolut">Tem xx resoluções por corrigir</label>
+      </div>
+      <div class="col-md-3">
+        <button id="btnResolutions" class="btn badge btn-warning btn-block" style=";font-size:12px">
+          <span>
+            <span class="glyphicon glyphicon-ok" style="color:#50dd50"></span> /
+            <span class="glyphicon glyphicon-remove" style="color:#ffaaaa"></span><br>
+          </span>
+          Corrigir resoluções
+        </button>
+      </div>
+    </div>
+
+
+  </div>
+
+  <!-- MODAL para apresentar a constituição da turma -->
+  <div class="modal fade" id="myModalTurma" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" class="glyphicon glyphicon-remove-sign" style="color:#ee3030"></span></button>
+          <h4 class="modal-title" id="myModalLabel">
+          </h4>
+        </div>
+        <div class="modal-body" style="height:550px">
+           <div class="col-md-12">
+             <label>Professores:</label>
+           </div>
+           <div id="classProfessor" align=center class="col-md-12" style="max-height:120px; overflow:auto;">
+
+           </div>
+           <div class="col-md-12">
+             <hr>
+             <label>Alunos:</label>
+           </div>
+           <div id="classAlunos" align=center class="col-md-12" style="max-height:320px; overflow:auto;">
+
+           </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- ########################################### -->
+
+
+  <div class="col-sm-1" style="position:fixed; left:0px; top:15px;">
+    <img src="../img/ipt0.jpg" style="height:40px">
+  </div>
+</div>
