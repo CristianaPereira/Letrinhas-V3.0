@@ -1,0 +1,169 @@
+<!-- Inserção Pergunta do tipo Interpretação: -->
+<div class="topcoat-navigation-bar">
+  <div class="topcoat-navigation-bar__item center ">
+    <h3 align="center" class="topcoat-navigation-bar__title">
+      <img src="../img/letrinhas2.png" style="height:40px">
+      <img src="../img/testInterpretacao.png"  style="height:40px;" >
+      Criar Teste de Gramática (Interpretação)
+    </h3>
+  </div>
+</div>
+
+<div>
+  <!--  -->
+  <form id="interpNewForm" role="form" method="POST" action="/questions" enctype="multipart/form-data">
+
+    <div class="form-group">
+      <div class="col-sm-4">
+        <label for="InputTitulo" >Título:</label>
+        <input type="text" class="form-control preenche" id="InputTitulo" placeholder="Ex: Anita vai às compras" name="titulo" style="background-color:#e9e9ff;" disabled>
+      </div>
+      <div class="col-sm-2">
+        <label for="selectDiscip">Disciplina:</label>
+        <select class="form-control" id="selectDiscip" name="disciplina" style="background-color:#e9e9ff;">
+          <optgroup label="Linguas">
+          <option>Português</option>
+          <option>Inglês</option>
+          <option>Outra língua</option>
+        </select>
+      </div>
+      <div class="col-sm-2">
+        <label for="selectAno">Ano Escolar:</label>
+        <select class="form-control" id="selectAno" name="ano_escolar" style="background-color:#e9e9ff;">
+          <optgroup label="1º Ciclo do Ensino Básico">
+            <option>1º</option>
+            <option>2º</option>
+            <option>3º</option>
+            <option>4º</option>
+          <optgroup label="2º Ciclo Ensino Básico">
+            <option>5º</option>
+            <option>6º</option>
+          <optgroup label="3º Ciclo Ensino Básico">
+            <option>7º</option>
+            <option>8º</option>
+            <option>9º</option>
+          <optgroup label="Ensino Secundário">
+            <option>10º</option>
+            <option>11º</option>
+            <option>12º</option>
+        </select>
+      </div>
+      <div class="col-sm-4">
+        <label for="inputSom" >Gravação de Demonstração:</label>
+        <div class="col-sm-9">
+          <input class="preenche form-control" type="file" id="inputSom" accept="audio/mp3" name="file" disabled>
+        </div>
+        <div class="col-sm-3" style="vertical-align:bottom">
+
+          <button id="intGrava" class="btn btn-sm btn-default" >
+            <span class="glyphicon glyphicon-record" style="color:#ff0000"></span>
+            <br>
+            Gravar
+          </button>
+
+        </div>
+      </div>
+
+      <div class="col-sm-12">
+        <hr>
+        <label for="InputDescricao" >Descrição:</label>
+        <input type="text" class="form-control preenche" id="InputDescricao" placeholder="Ex: Teste de apoio para alunos com dificuldades de gramática" name="descricao" style="background-color:#e9e9ff;" disabled>
+        <br>
+      </div>
+
+      <div class="col-sm-12">
+        <label for="InputPergunta" >Pergunta:</label>
+        <input type="text" class="form-control preenche" id="InputPergunta" placeholder="Ex: Identifiqua as palavras acabadas em 'ão'." name="pergunta" style="background-color:#e9e9ff;" disabled>
+        <br>
+      </div>
+
+      <div class="col-sm-12">
+        <label for="InputTexto">Texto:</label>
+        <span id="help" style="color:#aaaaaa"></span>
+        <textarea class="form-control preenche panel" rows="10" id="InputTexto" name="texto" style="background-color:#e9e9ff;" disabled></textarea>
+        <panel id="marcador" class="form-control panel" style="display:none; height:220px; background-color:#ffe9e9; overflow:auto">
+        </panel>
+      </div>
+
+
+      <div class="col-sm-2">
+        <button id="txtMarca" class="btn btn-sm btn-info">
+          <span class="glyphicon glyphicon-screenshot" style="font-size:22px;color:#ff0000"></span>
+          <br>
+          <label>Marcar o texto</label>
+        </button>
+        <button id="txtEdita" class="btn btn-sm btn-warning" style="display:none">
+          <span class="glyphicon glyphicon-pencil" style="font-size:18px;color:#ffdd00"></span>
+          <br>
+          <label>Alterar o texto</label>
+        </button>
+      </div>
+      <div id="painelInvisivel" class="form-group  col-sm-8" style="display:none">
+          <select class="form-control" id="selectEstado" name="estado">
+            <option>1</option>
+          </select>
+          <select class="form-control" id="selectTipo" name="tipo">
+            <option>Interpretação</option>
+          </select>
+      </div>
+      <div class="col-sm-4" style="position:fixed; right:53px; bottom:15px">
+          <div class="col-sm-6">
+            <button id="buttonCancelar" type="reset" class="btn btn-lg btn-default btn-block btn-cancel">Cancelar</button>
+          </div>
+          <div class="col-sm-6">
+            <button id="subTesteInt" type="submit" class="btn btn-lg btn-success btn-block btn-created" disabled>Submeter</button>
+          </div>
+      </div>
+    </div>
+</form>
+
+<!-- MODAL para apresentar o equalizador para gravar o som -->
+<div class="modal fade" id="myModalRecord" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" class="glyphicon glyphicon-remove-sign" style="color:#ee3030"></span></button>
+        <h3 class="modal-title" id="myModalLabel">
+          <img src="../img/letrinhas2.png" style="height:40px">
+          <img src="../img/audio_file.png"  style="height:40px;" >
+          Estudio de som:
+        </h3>
+      </div>
+      <div class="modal-body" style="height:550px; background-color:#ddeeff">
+         <div class="col-md-12" align=center>
+            <div id="viz">
+              <canvas id="analyser" width="525" height="100" style="display: inline-block;
+                                                                     background: #202020;
+                                                                     box-shadow: 0px 0px 10px blue;" >
+              </canvas>
+
+              <canvas id="wavedisplay" width="525" height="100" style="display: inline-block;
+           		                                                       background: #202020;
+           		                                                       box-shadow: 0px 0px 10px blue;" >
+              </canvas>
+           	</div>
+           	<div id="controls">
+           		<span  id="record" class="btn badge btn-primary" style="font-size:16px" value=0>
+                 <span class="glyphicon glyphicon-record" style="color:#ee0000"></span>
+                 Gravar
+              </span>
+               <audio id="Rplayer" controls class="players" style="visibility:hidden;width:60%">
+                 <source  src="" type="audio/wave">
+               </audio>
+               <a id="save" class="btn badge btn-info" style="visibility:hidden;color:#ffffff" disabled>
+                 <span class="glyphicon glyphicon-download-alt" style="color:#00ee00" ></span>
+                 Download
+              </a>
+           	</div>
+         </div>
+
+         <div class="col-sm-12" id="rTexto" style="height:270px; overflow:auto; background-color:#ecdcbc">
+         </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+<!--  -->
+</div>

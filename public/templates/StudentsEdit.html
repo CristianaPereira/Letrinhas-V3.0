@@ -1,0 +1,65 @@
+
+<div class="topcoat-navigation-bar">
+    <div class="topcoat-navigation-bar__item center full">
+        <h1 align="center" class="topcoat-navigation-bar__title">Editar Aluno</h1>
+
+    </div>
+</div>
+<div>
+    <legend>Dados Aluno</legend>
+    <form role="form" method="POST" action="/students" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="InputNome">Nome</label>
+            <input type="text" class="form-control" id="InputNome" placeholder="Nome" name="nome">
+            <label for="InputNrAluno">Número de Aluno</label>
+            <input type="number" class="form-control" id="InputNrAluno" placeholder="Numero" name="numero">
+
+
+            <div class="form-group">
+                <label for="file">Foto:</label>
+                <input type="file" id="InputFile" name="file">
+            </div>
+
+            <label for="select">Estado</label>
+            <select class="form-control" id="select" name="estado">
+                <option>Ativo</option>
+                <option>Não Ativo</option>
+            </select>
+
+            <label for="select">Escola que o aluno frequenta</label>
+            <select class="form-control" id="selectEscola" name="escola">
+                <option>Escola1</option>
+                <option>Escola2</option>
+                <option>Escola3</option>
+                <option>Escola4</option>
+                <option>Escola5</option>
+                <option>Escola6</option>
+            </select>
+
+            <label for="select">Ano que o Aluno frequenta</label>
+            <select class="form-control" id="selectAno" name="Ano">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+            </select>
+
+            <label for="select">Turma do aluno</label>
+            <select class="form-control" id="selectTurma" name="turma">
+                <option>A</option>
+                <option>B</option>
+                <option>C</option>
+            </select>
+        </div>
+
+
+        <div class="row">
+            <div class="col-sm-6">
+                <button id="buttonCancelar" type="reset" class="btn btn-lg btn-default btn-block btn-cancel">Cancelar</button>
+            </div>
+            <div class="col-sm-6">
+                <button type="submit" class="btn btn-lg btn-success btn-block btn-created">Submeter</button>
+            </div>
+        </div>
+    </form>
+</div>

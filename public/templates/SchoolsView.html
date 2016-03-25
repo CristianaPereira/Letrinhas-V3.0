@@ -1,0 +1,65 @@
+<div>
+   <div id="schoolsPanel" class="panel panel-default col-md-2" align="center" style="height:595px;">
+    <div class="panel-body " text-align="center" >
+      <div >Escolas: <span id="schoolsBadge"class="badge"></span>
+      </div>
+      <hr>
+
+      <div >
+        <input id="escolaProcurar" type="texto" class="form-control" placeholder="Procurar">
+      </div>
+      <hr>
+
+      <br>
+      <button id="btnSchoolNew" class="btn btn-success" style="position:relative; top:370px;font-size:12px"><span class="glyphicon glyphicon-plus" style="color:#00ff00;"></span>
+        Nova Escola
+      </button>
+    </div>
+  </div>
+  <div id="schoolsContent" class=" panel-body col-md-5" align=center style="max-height:595px; overflow:auto">
+    <img src="../img/page-loader.gif" style='height:200px;'>
+
+  </div>
+  <div id="schoolsPreview" class="col-md-5" align="center" style="max-height:595px; overflow:auto">
+
+  </div>
+
+
+    <!-- MODAL para apresentar a constituição da turma -->
+    <div class="modal fade" id="myModalTurma" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" class="glyphicon glyphicon-remove-sign" style="color:#ee3030"></span></button>
+            <h4 class="modal-title" id="myModalLabel">
+            </h4>
+          </div>
+          <div class="modal-body" style="height:550px">
+             <div class="col-md-12">
+               <label>Professores:</label>
+             </div>
+             <div id="classProfessor" align=center class="col-md-12" style="max-height:120px; overflow:auto;">
+
+             </div>
+             <div class="col-md-12">
+               <hr>
+               <label>Alunos:</label>
+             </div>
+             <div id="classAlunos" align=center class="col-md-12" style="max-height:320px; overflow:auto;">
+
+             </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!-- ########################################### -->
+
+
+    <div class="col-sm-1" style="position:fixed; left:0px; top:15px;">
+      <img src="../img/ipt0.jpg" style="height:40px">
+    </div>
+
+
+</div>

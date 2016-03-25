@@ -1,0 +1,101 @@
+
+<div class="topcoat-navigation-bar">
+    <div class="topcoat-navigation-bar__item center full">
+        <h3 align="center" class="topcoat-navigation-bar__title">
+          <img src="../img/letrinhas2.png" style="height:40px">
+          <img src="../img/escola1.png"  style="height:40px;" >
+          Registar Escola
+        </h3>
+
+    </div>
+</div>
+<div>
+    <legend>Dados da Escola</legend>
+    <form role="form" method="POST" action="/schools" enctype="multipart/form-data">
+      <div class="form-group">
+        <div class="col-sm-6">
+          <div class="col-sm-12">
+            <label for="InputNome" >Nome:</label>
+            <input type="text" class="form-control preenche" id="InputNome" placeholder="Ex: Escola Secundária Artur Gonçalves" name="nome" style="background-color:#e9e9ff;">
+          </div>
+          <div class="col-sm-12">
+            <br>
+            <label for="InputMorada">Morada:</label>
+            <input type="text" class="form-control preenche" id="InputMorada" placeholder="Ex: Rua das rosas, lote nº 1, Torres Novas" name="morada" style="background-color:#e9e9ff;">
+          </div>
+
+          <div class="col-sm-6" style="height:350px;">
+            <br>
+            <label for="inputFoto">Logotipo:</label>
+            <input type="file" class="form-control preenche" id="inputFoto" accept="image/jpg" name="file" style="background-color:#e9e9ff;">
+            <br>
+            <img id="iFoto" style="display:none; height:230px;" src="../img/inConstruction.jpg">
+          </div>
+        </div>
+        <div class="col-sm-6" >
+          <div class="col-sm-4" style="height:63px; padding-top: 25px;" >
+              <button id="createTurma" type="button" class="btn btn-success">
+                <span class="glyphicon glyphicon-plus" style="color:#00ff00"></span>
+                Criar uma turma
+              </button>
+
+              <div id="checkTurma" style="display:none">
+              <button id="addTurma" type="button" class="btn btn-info" style="width:70px" >
+                <span class="glyphicon glyphicon-ok-sign" style="color:#00ff00"></span>
+              </button>
+              <button id="cancelTurma" type="button" class="btn btn-info" style="width:70px">
+                <span class="glyphicon glyphicon-remove-sign" style="color:#ff0000"></span>
+              </button>
+            </div>
+          </div>
+
+
+          <div id="formTurma" class="col-sm-8" style="display:none">
+            <div class="col-sm-5" >
+              <label for="selectAno">Ano escolar:</label>
+              <select class="form-control" id="selectAno" style="background-color:#e9e9ff;">
+                <optgroup label="1º Ciclo do Ensino Básico">
+                  <option value="1">1º Ano</option>
+                  <option value="2">2º Ano</option>
+                  <option value="3">3º Ano</option>
+                  <option value="4">4º Ano</option>
+                <optgroup label="2º Ciclo do Ensino Básico">
+                  <option value="5">5º Ano</option>
+                  <option value="6">6º Ano</option>
+                <optgroup label="3º Ciclo do Ensino Básico">
+                  <option value="7">7º Ano</option>
+                  <option value="8">8º Ano</option>
+                  <option value="9">9º Ano</option>
+                <optgroup label="Ensino Secundário">
+                  <option value="10">10º Ano</option>
+                  <option value="11">11º Ano</option>
+                  <option value="12">12º Ano</option>
+              </select>
+            </div>
+
+            <div class="col-sm-7" >
+              <label for="InputNomeTurma">Nome da turma:</label>
+              <input type="text" class="form-control" id="InputNomeTurma" placeholder="Ex: turma A" style="background-color:#e9e9ff;">
+            </div>
+          </div>
+        </div>
+
+        <div id="listaTurmas"class="col-sm-6" style="max-height:430px; overflow:auto;">
+        </div>
+
+        <div id="hiddenListaTurmas" style="display:none">
+          <input type="number" id="nTurmas" class="form-control" name="nTurmas">
+        </div>
+
+
+          <div class="col-sm-4" style="position:fixed; right:53px; bottom:15px">
+            <div class="col-sm-6">
+              <button id="buttonCancelar" type="reset" class="btn btn-lg btn-default btn-block btn-cancel">Cancelar</button>
+            </div>
+            <div class="col-sm-6">
+              <button id="subEscola" type="submit" class="btn btn-lg btn-success btn-block btn-created" disabled>Submeter</button>
+            </div>
+          </div>
+        </div>
+    </form>
+</div>
