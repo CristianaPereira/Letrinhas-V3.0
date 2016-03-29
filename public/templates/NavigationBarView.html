@@ -1,9 +1,17 @@
-<nav class="navbar navbar-default">
+<nav id="topMainBar" class="navbar navbar-default  navbar-fixed-top">
     <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-            <a class="navbar-brand" style="color: #80FF80;" href="/#"aria-expanded="false">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" style="color: #1F59B5;" href="/#" aria-expanded="false">
         <span>
-          <img src="../img/letrinhas2.png" style='height:32px;'title="Projeto final de Engª Informática de:
+          <img src="../img/letrinhas2.png" style='height:25px;' title="Projeto final de Engª Informática de:
           Alexandre Carvalho, aluno nº14922
           Artur Gomes, aluno nº17262
           Tiago Fernandes, aluno nº17253
@@ -13,48 +21,51 @@
             </a>
         </div>
 
+        <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li>
                     <a href="#tests" aria-expanded="false" title="Ver testes">
-                        <img src="../img/testeTexto.png" style='height:32px;'>
+                        <i class="fa fa-file-text-o"></i>
                         Testes
                     </a>
                 </li>
                 <li>
                     <a href="#schools" aria-expanded="false" title="Ver escolas">
-                        <img src="../img/escola1.png" style='height:32px;'>
+                        <i class="fa fa-university"></i>
                         Escolas
                     </a>
                 </li>
                 <li>
                     <a href="#students" aria-expanded="false" title="Ver alunos">
-                        <img src="../img/alunos.png" style='height:32px;'>
+                        <i class="fa fa-graduation-cap"></i>
                         Alunos
                     </a>
                 </li>
-                <li id="sepProf" style="display:none">
+                <li id="sepProf">
                     <a href="#teachers" aria-expanded="false" title="Ver funcionários">
-                        <img src="../img/docentes.png" style='height:32px;'>
-                        Professor/es
+                        <i class="fa fa-users"></i>
+                        Professores
                     </a>
                 </li>
             </ul>
-
             <ul class="nav navbar-nav navbar-right">
-                <li id="opUser">
-                    <a href="#user" aria-expanded="false">
-                        <span class="glyphicon glyphicon-user" style="font-size:20px; color:#ddddee"></span>
-                        <label id="user">User</label>
+                <li class="dropdown">
+                    <a id="userName" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                       aria-haspopup="true"
+                       aria-expanded="false">
                     </a>
-                </li>
-                <li>
-                    <a id="menuSair"  aria-expanded="false" title="Sair do serviço">
-                        <label>Logout</label>
-                        <span class="glyphicon glyphicon-log-out" style="font-size:20px; color:#ee5555"></span>
-                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li><a href="#user">Perfil</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li class="dropdown-header">Nav header</li>
+                        <li><a href="#">Separated link</a></li>
+                        <li><a href="#">Sair <i class="fa fa-sign-out"></i></a></li>
+                    </ul>
                 </li>
             </ul>
-        </div>
-    </div>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
 </nav>

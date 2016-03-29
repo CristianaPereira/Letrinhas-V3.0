@@ -2,6 +2,47 @@
  * --------------------------------------- */
 body {
     font-family: arial, helvetica;
+    padding-bottom: 90px;
+    padding-top: 50px;
+
+}
+
+#box {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: #CCC;
+}
+
+.chute {
+    border-radius: 25px;
+    width: 50px;
+    height: 50px;
+    background: #FF0;
+    position: absolute;
+    opacity: 0.5;
+}
+
+.form {
+    width: 80%;
+    margin: 20px auto;
+}
+
+#footer > .navbar {
+    max-height: 22px;
+    min-height: 22px;
+}
+
+div.a {
+    width: 50px;
+    height: 50px;
+    background-color: red;
+    position: fixed;
+
+}
+
+a {
+    text-decoration: none;
 }
 
 .wrap {
@@ -211,11 +252,6 @@ body {
     padding: 0 50px;
 }
 
-.insertContainer {
-    margin: auto;
-    width: 80%;
-}
-
 .form-control {
     height: 30px;
     padding: 5px 10px;
@@ -353,6 +389,7 @@ label {
 .dataImage {
     max-height: 140px;
     padding-top: 11px;
+    padding-bottom: 11px;
     border-radius: 5px;
 }
 
@@ -378,13 +415,10 @@ label {
     border: 1px solid #c9302c;
 }
 
-#content {
-    max-width: 90%;
-    margin: auto;
-}
-
 #teachersContent {
     border-right: solid 1px #eee;
+    overflow-y: scroll;
+    max-height: 500px;
 }
 
 .row {
@@ -502,4 +536,67 @@ label {
     position: absolute;
     right: 0;
     padding: 0px 26px;
+}
+
+.content {
+    width: 80%;
+    margin: auto;
+}
+
+.subMenu {
+    margin-top: -20px;
+    height: 35px;
+    width: 100%;
+    background-color: #EAF1F1;
+    text-align: center;
+}
+
+.nav-tabs > li, .nav-pills > li {
+    float: none;
+    display: inline-block;
+    *display: inline; /* ie7 fix */
+    zoom: 1; /* hasLayout ie7 trigger */
+}
+
+.nav-tabs, .nav-pills {
+    text-align: center;
+}
+
+.mainDiv {
+    max-width: 90%;
+    margin: auto;
+}
+
+.subMenu-Item {
+    width: 100px;
+    /*float: left;*/
+    display: inline-block;
+    zoom: 1;
+}
+
+#topMainBar {
+    margin-bottom: 0px;
+}
+
+#myPreview img {
+    max-height: 250px;
+
+}
+
+*::-webkit-scrollbar {
+    width: 5px;
+    border-radius: 19px;
+}
+
+*::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 19px;
+
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: #1fb5ad;
+    outline: 1px solid #1fb5ad;
+    border-radius: 19px;
+
 }

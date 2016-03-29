@@ -52,6 +52,7 @@ window.populateDDSchools = function () {
         }
     );
 };
+
 window.assocClass = function () {
     var escola = $("#dbEscolas").children(":selected").attr("id");
     var turma = $("#dbTurmas").children(":selected").attr("id");
@@ -59,19 +60,57 @@ window.assocClass = function () {
         var obj = jQuery.parseJSON($("#teacherClasses").val());
         //Se a escola já estiver listada, e a turma não, adiciona a turma
         if (obj[escola]) {
-            if (obj[escola]['turma'].indexOf(turma) == -1) {
-                obj[escola]['turma'].push(turma);
+            if (obj[escola].turmas.indexOf(turma) == -1) {
+                obj[escola].turmas.push(turma);
             } else {
                 return false;
             }
         } else {
             obj[escola] = {};
             obj[escola]['id'] = escola;
-            obj[escola]['turma'] = [];
-            obj[escola]['turma'].push(turma);
+            obj[escola].turmas = [];
+            obj[escola].turmas.push(turma);
         }
         $("#teacherClasses").val(JSON.stringify(obj));
-        $("#assocTurma").append('<label> - ' + $("#dbTurmas").children(":selected").text() + '</label><span>, '
-            + $("#dbEscolas").children(":selected").text() + '; </span><br>');
+        $("#assocTurma").append('<span><b>' + $("#dbTurmas").children(":selected").text() + '</b>, '
+            + $("#dbEscolas").children(":selected").text() + '; <i id="' + escola + ':' + turma + '" class="fa fa-trash" onclick="desassocClass(this)"></i><br></span>');
     }
 };
+window.desassocClass = function (elem) {
+    var obj = jQuery.parseJSON($("#teacherClasses").val());
+    var data = elem.id.split(":");
+    var index = obj[data[0]]['turmas'].indexOf(data[1]);
+    /*   if (index != -1) {
+     //Se for a unica turma da escola, remove a turma e a escola
+     if (obj[data[0]].turma.length == 1) {
+     delete obj[data[0]];
+     } else {
+     obj[data[0]].turma.splice(index, 1);
+     }
+     }*/
+    //Remove a turma da lista
+    $.each(obj, function (iSchool, school) {
+        if (school.id == data[0]) {
+            $.each(school.turmas, function (iTurma, turma) {
+                if (turma == data[1]) {
+                    obj[iSchool].turmas.splice(iTurma, 1);
+                    console.log(school.turmas.length);
+                    if (school.turmas.length == 0) {
+                        delete obj[iSchool];
+                    }
+                }
+            })
+        }
+    });
+//Remove a entrada
+    $(elem).parent().remove();
+    $("#teacherClasses").val(JSON.stringify(obj));
+};
+//Aperfeiçoamente da funcao ":contains" do JQuery para case insensitive
+//(http://stackoverflow.com/questions/187537/is-there-a-case-insensitive-jquery-contains-selector)
+$.extend($.expr[':'], {
+    'containsi': function (elem, i, match, array) {
+        return (elem.textContent || elem.innerText || '').toLowerCase()
+                .indexOf((match[3] || "").toLowerCase()) >= 0;
+    }
+});

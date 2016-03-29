@@ -3,6 +3,7 @@ window.TeachersEditView = Backbone.View.extend({
         "click #buttonCancelar": "buttonCancelar",
         "click #addTurma": "addTurma",
         "click #btnEditDetails": "beforeSend",
+        "click #btnEditTurmas": "editTurmas",
         "click #btnEditPsw": "editPsw",
         "change #inputFoto": "carregaFoto",
         "change #filePicker": "convertPhoto",
@@ -12,7 +13,28 @@ window.TeachersEditView = Backbone.View.extend({
 
 
     },
+    //Sends an udate classes to server
+    editTurmas: function (e) {
+        var isValid = true;
+        e.preventDefault();
+        modem('POST', 'teachers/editClasses',
+            //Response Handler
+            function (json) {
+                sucssesMsg($("#newteacherform"), "Turmas associadas com sucesso.");
+                setTimeout(function () {
+                    app.navigate('/teachers/' + $("#userId").val() + "/edit", {
+                        trigger: true
+                    });
+                }, 2000);
+            },
+            //Error Handling
+            function (xhr, ajaxOptions, thrownError) {
+                failMsg($("#newteacherform"), "Não foi possível alterar os dados. \n (" + JSON.parse(xhr.responseText).result + ").");
+            },
+            $("#teacherClasses").serialize() + "&email=" + encodeURIComponent($("#userId").val())
+        );
 
+    },
     //Before Sending Request To Server
     beforeSend: function (e) {
         var isValid = true;
@@ -101,7 +123,6 @@ window.TeachersEditView = Backbone.View.extend({
 
     //Adiciona a escola e a turma ao objecto
     addTurma: function () {
-
         assocClass();
     },
 

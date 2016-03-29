@@ -84,6 +84,7 @@ var Router = Backbone.Router.extend({
     //Inic Template
     inicio: function () {
         var self = this;
+        $("#topMainBar").remove();
         templateLoader.load(["Inicio"],
             function () {
                 var v = new Inicio({});
@@ -96,7 +97,7 @@ var Router = Backbone.Router.extend({
     MenuPrincipal: function () {
         var self = this;
 
-        this.topMenu();
+        self.topMenu();
 
         //Load Template
         templateLoader.load(["MenuPrincipalView"],
@@ -109,7 +110,7 @@ var Router = Backbone.Router.extend({
     },
 
     //Load NavigationBar
-    topMenu:function () {
+    topMenu: function () {
         var self = this;
         //Load NavigationBar
         templateLoader.load(["NavigationBarView"],
@@ -147,10 +148,6 @@ var Router = Backbone.Router.extend({
     },
 
 
-
-
-
-
     teachersEdit: function (id) {
         var self = this;
 
@@ -158,7 +155,7 @@ var Router = Backbone.Router.extend({
 
         templateLoader.load(["TeachersEditView"],
             function () {
-                var v = new TeachersEditView({id:id});
+                var v = new TeachersEditView({id: id});
                 self.showView(v, $('#content'));
             }
         );
@@ -166,6 +163,7 @@ var Router = Backbone.Router.extend({
 
     user: function () {
         var self = this;
+        self.topMenu();
         templateLoader.load(["UserView"],
             function () {
                 var v = new UserView({});
