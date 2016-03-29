@@ -127,6 +127,9 @@ app.route('/teachers/editDetails')
 app.route('/teachers/editPasswd')
     .post(teachers.editPasswd);
 
+app.route('/teachers/editClasses')
+    .post(teachers.editClasses);
+
 app.route('/teachers/:id/del')
     .post(auth, perms(3), teachers.delete);
 

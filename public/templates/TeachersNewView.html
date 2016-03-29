@@ -1,8 +1,8 @@
 <!-- Inserção Professor: -->
 
 <!--FORMULARIO -->
-<div class="container">
-    <form id="newteacherform" class="insertContainer" role="form" data-toggle="validator" method="POST"
+<div class="container form">
+    <form id="newteacherform" role="form" data-toggle="validator" method="POST"
           action="/teachers"
           enctype="multipart/form-data">
         <div class="divWidget">
@@ -104,15 +104,7 @@
             </div>
             <div id="assocTurma" class="col-sm-12">
             </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="btn-group">
-                        <button id="buttonCancelar" type="reset" class="btn btn-default">Cancelar</button>
-                        <button id="newteacherbtn" type="submit" class="btn btn-success">Submeter</button>
-                    </div>
-                </div>
 
-            </div>
             <!--###################################################################-->
 
             <div class="control-group">
@@ -123,4 +115,12 @@
             </div>
         </div>
     </form>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="btn-group">
+                <button id="buttonCancelar" type="reset" class="btn btn-default">Cancelar</button>
+                <button id="newteacherbtn" type="submit" class="btn btn-success">Submeter</button>
+            </div>
+        </div>
+    </div>
 </div>

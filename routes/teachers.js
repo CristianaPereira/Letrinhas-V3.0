@@ -53,7 +53,7 @@ exports.new = function (req, res) {
 
         for (var items in escolas) {
             console.log("Ver escola :" + escolas[items].id);
-            insertProfTurma(req.body.email, escolas[items].id, escolas[items].turma);
+            insertProfTurma(req.body.email, escolas[items].id, escolas[items].turmas);
             console.log("-------------");
         }
 
@@ -122,7 +122,52 @@ exports.editPasswd = function (req, res) {
 
     });
 };
+exports.editClasses = function (req, res) {
+    var escolas = JSON.parse(req.body.turmas);
+    for (var items in escolas) {
+        insertProfTurma(req.body.email, escolas[items].id, escolas[items].turmas);
+    }
+    res.redirect('/teachers/' + req.body.email + '/edit');
+};
 
+//Função para atualizar as turmas com o id do professor
+function insertProfTurma(idProf, escola, turmas) {
+
+    var existe = false;
+    //Obtem os dados da escola
+    db2.get(escola, function (err, schoolData) {
+        if (err) {
+            return res.status(500).json({
+                'result': 'nok',
+                'message': err
+            });
+        }
+        //Verifica as turmas registadas.
+        for (var turma in schoolData.turmas) {
+            //Quando encontrar uma turma para ser associada
+            if (turmas.indexOf(schoolData.turmas[turma]._id) > -1) {
+                //Verifica se já está associada ao professor
+                for (var prof in schoolData.turmas[turma].professores) {
+                    //Se não estiver associado, associa
+                    if (schoolData.turmas[turma].professores[prof].id === idProf) {
+                        existe = true;
+                    }
+                }
+                if (!existe) {
+                    schoolData.turmas[turma].professores.push(
+                        {"id": idProf}
+                    );
+                } else {
+                    console.log(idProf + ", já está associado à turma " + schoolData.turmas[turma].ano + "º " + schoolData.turmas[turma].nome);
+                }
+            } else {
+                console.log(schoolData.turmas[turma].professores);
+            }
+            existe = false;
+        }
+        db2.insert(schoolData, schoolData._id);
+    });
+};
 exports.delete = function (req, res) {
 
     db.get(req.params.id, function (err, body) {
@@ -206,41 +251,5 @@ exports.get = function (req, res) {
 };
 
 
-//Função para atualizar as turmas com o id do professor
-function insertProfTurma(idProf, escola, turmas) {
 
-    var existe = false;
-    //Obtem os dados da escola
-    db2.get(escola, function (err, schoolData) {
-        if (err) {
-            return res.status(500).json({
-                'result': 'nok',
-                'message': err
-            });
-        }
-        //Verifica as turmas registadas.
-        for (var turma in schoolData.turmas) {
-            //Quando encontrar uma turma para ser associada
-            if (turmas.indexOf(schoolData.turmas[turma]._id) > -1) {
-                //Verifica se já está associada ao professor
-                for (var prof in schoolData.turmas[turma].professores) {
-                    //Se não estiver associado, associa
-                    if (schoolData.turmas[turma].professores[prof].id === idProf) {
-                        existe = true;
-                    }
-                }
-                if (!existe) {
-                    schoolData.turmas[turma].professores.push(
-                        {"id": idProf}
-                    );
-                } else {
-                    console.log(idProf + ", já está associado à turma " + schoolData.turmas[turma].ano + "º " + schoolData.turmas[turma].nome);
-                }
-            } else {
-                console.log(schoolData.turmas[turma].professores);
-            }
-        }
-        db2.insert(schoolData, schoolData._id);
-    });
-};
 
