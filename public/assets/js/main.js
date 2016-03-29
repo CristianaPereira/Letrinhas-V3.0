@@ -19,112 +19,92 @@ var Router = Backbone.Router.extend({
         elem.html(rendered.el);
     },
     routes: {
+
+        //Pagina Inicial
+        "home": "home",
+
+        //Default Page
+        "": "index",
+
+        //Menu Principal
+        "dashboard": "dashboard",
+
+        //Teachers Routing
         "teachers": "teachers",
         "teachers/new": "teachersNew",
         "teachers/:id/edit": "teachersEdit",
         "user": "user",
 
-        "students": "students",
-        "students/new": "studentsNew",
-        "students/edit": "studentsEdit",
-        "student/view": "studentInfo",
-
+        //School Routing
         "schools": "schools",
         "schools/new": "schoolsNew",
-        "schools/edit": "schoolsEdit",
-        //  "schools/:id": "schoolsInfo",
+        "schools/:id": "schoolsInfo",
+        "schools/:id/edit": "schoolsEdit",
 
-        //Testes
-        "tests": "tests",
+        //Students Routing
+        "students": "students",
+        "students/new": "studentsNew",
+        "students/:id": "studentsEdit",
+        "student/view": "studentInfo"
 
-        //Perguntas de:
-        //  Texto
-        "questionsText": "questionsText",
-        "questionsText/new": "questionsTextNew",
-        "questionsText/edit": "questionsTextEdit",
-
-        //  Lista de Palavras
-        "questionsList": "questionsList",
-        "questionsList/new": "questionsListNew",
-        "questionsList/edit": "questionsListEdit",
-
-        //  Mutlimédia
-        "questionsMultimedia": "questionsMultimedia",
-        "questionsMultimedia/new": "questionsMultimediaNew",
-        "questionsMultimedia/edit": "questionsMultimediaEdit",
-
-        //  Interpretação
-        "questionsInterp": "questionsInterp",
-        "questionsInterp/new": "questionsInterpNew",
-        "questionsInterp/edit": "questionsInterpEdit",
-
-        //Resoluções:
-        "submissions": "submissions",
-
-        //Menu Principal
-        "MenuPrincipal": "MenuPrincipal",
-
-        //Pagina de Manutenção
-        "man": "man",
-
-        //Pagina Inicial
-        "inicio": "inicio",
-
-        //Default Page
-        "": "index"
     },
+
+
+    //Load NavigationBar
+    navbar: function () {
+        var self = this;
+        //Load NavigationBar
+        templateLoader.load(["NavigationBar"],
+            function () {
+                var v = new NavigationBar({});
+                self.showView(v, $('#header'));
+            }
+        );
+    },
+
 
     //Default Template
     index: function () {
-        app.navigate("/inicio", {
+        app.navigate("/home", {
             trigger: true
         });
     },
 
     //Inic Template
-    inicio: function () {
+    home: function () {
         var self = this;
-        $("#topMainBar").remove();
-        templateLoader.load(["Inicio"],
+
+        $('#header').html("");
+        $('#content').html("");
+
+        templateLoader.load(["Home"],
             function () {
-                var v = new Inicio({});
+                var v = new Home({});
                 self.showView(v, $('#content'));
             }
         );
     },
 
     //Home Template
-    MenuPrincipal: function () {
+    dashboard: function () {
         var self = this;
 
-        self.topMenu();
+        this.navbar();
 
         //Load Template
-        templateLoader.load(["MenuPrincipalView"],
+        templateLoader.load(["Dashboard"],
             function () {
-                var v = new MenuPrincipalView({});
+                var v = new Dashboard({});
                 self.showView(v, $('#content'));
             }
         );
 
     },
 
-    //Load NavigationBar
-    topMenu: function () {
-        var self = this;
-        //Load NavigationBar
-        templateLoader.load(["NavigationBarView"],
-            function () {
-                var v = new NavigationBarView({});
-                self.showView(v, $('#header'));
-            }
-        );
-    },
-
     teachers: function () {
         var self = this;
 
-        self.topMenu();
+        self.navbar();
 
         templateLoader.load(["TeachersView"],
             function () {
@@ -137,7 +117,7 @@ var Router = Backbone.Router.extend({
     teachersNew: function () {
         var self = this;
 
-        self.topMenu();
+        self.navbar();
 
         templateLoader.load(["TeachersNewView"],
             function () {
@@ -147,11 +127,10 @@ var Router = Backbone.Router.extend({
         );
     },
 
-
     teachersEdit: function (id) {
         var self = this;
 
-        self.topMenu();
+        self.navbar();
 
         templateLoader.load(["TeachersEditView"],
             function () {
@@ -163,7 +142,6 @@ var Router = Backbone.Router.extend({
 
     user: function () {
         var self = this;
-        self.topMenu();
         templateLoader.load(["UserView"],
             function () {
                 var v = new UserView({});
@@ -174,6 +152,9 @@ var Router = Backbone.Router.extend({
 
     students: function () {
         var self = this;
+
+        self.navbar();
+
         templateLoader.load(["StudentsView"],
             function () {
                 var v = new StudentsView({});
@@ -214,6 +195,9 @@ var Router = Backbone.Router.extend({
 
     schools: function () {
         var self = this;
+
+        self.navbar();
+
         templateLoader.load(["SchoolsView"],
             function () {
                 var v = new SchoolsView({});
@@ -232,248 +216,33 @@ var Router = Backbone.Router.extend({
         );
     },
 
-    schoolsEdit: function () {
+    schoolsEdit: function (id) {
         var self = this;
         templateLoader.load(["SchoolsEdit"],
             function () {
-                var v = new SchoolsEdit({});
+                var v = new SchoolsEdit({id: id});
                 self.showView(v, $('#content'));
             }
         );
     },
 
-    tests: function () {
+    schoolsInfo: function (id) {
         var self = this;
 
-        self.topMenu();
+        self.navbar();
 
-        templateLoader.load(["TestsView"],
+        templateLoader.load(["SchoolsInfo"],
             function () {
-                var v = new TestsView({});
+                var v = new SchoolsInfo({id: id});
                 self.showView(v, $('#content'));
             }
         );
     },
 
-    questionsText: function () {
-        var self = this;
-
-        self.topMenu();
-
-        templateLoader.load(["QuestionsText"],
-            function () {
-                var v = new QuestionsText({});
-                self.showView(v, $('#content'));
-            }
-        );
-    },
-
-    questionsTextNew: function () {
-        var self = this;
-
-        self.topMenu();
-
-        templateLoader.load(["QuestionsTextNew"],
-            function () {
-                var v = new QuestionsTextNew({});
-                self.showView(v, $('#content'));
-            }
-        );
-    },
-
-    questionsTextEdit: function () {
-        var self = this;
-
-        self.topMenu();
-
-        templateLoader.load(["QuestionsTextEdit"],
-            function () {
-                var v = new QuestionsTextEdit({});
-                self.showView(v, $('#content'));
-            }
-        );
-    },
-
-    questionsList: function () {
-        var self = this;
-
-        self.topMenu();
-
-        templateLoader.load(["QuestionsList"],
-            function () {
-                var v = new QuestionsList({});
-                self.showView(v, $('#content'));
-            }
-        );
-    },
-
-    questionsListNew: function () {
-        var self = this;
-
-        self.topMenu();
-
-        templateLoader.load(["QuestionsListNew"],
-            function () {
-                var v = new QuestionsListNew({});
-                self.showView(v, $('#content'));
-            }
-        );
-    },
-
-    questionsListEdit: function () {
-        var self = this;
-        templateLoader.load(["QuestionsListEdit"],
-            function () {
-                var v = new QuestionsListEdit({});
-                self.showView(v, $('#content'));
-            }
-        );
-    },
-
-    questionsMultimedia: function () {
-        var self = this;
-        templateLoader.load(["QuestionsMultimedia"],
-            function () {
-                var v = new QuestionsMultimedia({});
-                self.showView(v, $('#content'));
-            }
-        );
-    },
-
-    questionsMultimediaNew: function () {
-        var self = this;
-        templateLoader.load(["QuestionsMultimediaNew"],
-            function () {
-                var v = new QuestionsMultimediaNew({});
-                self.showView(v, $('#content'));
-            }
-        );
-    },
-
-    questionsMultimediaEdit: function () {
-        var self = this;
-        templateLoader.load(["QuestionsMultimediaEdit"],
-            function () {
-                var v = new QuestionsMultimediaEdit({});
-                self.showView(v, $('#content'));
-            }
-        );
-    },
-
-    questionsInterp: function () {
-        var self = this;
-        templateLoader.load(["QuestionsInterp"],
-            function () {
-                var v = new QuestionsInterp({});
-                self.showView(v, $('#content'));
-            }
-        );
-    },
-
-    questionsInterpNew: function () {
-        var self = this;
-        templateLoader.load(["QuestionsInterpNew"],
-            function () {
-                var v = new QuestionsInterpNew({});
-                self.showView(v, $('#content'));
-            }
-        );
-    },
-
-    questionsInterpEdit: function () {
-        var self = this;
-        templateLoader.load(["QuestionsInterpEdit"],
-            function () {
-                var v = new QuestionsInterpEdit({});
-                self.showView(v, $('#content'));
-            }
-        );
-    },
-
-    submissions: function () {
-        var self = this;
-        templateLoader.load(["SubmissionsView"],
-            function () {
-                var v = new SubmissionsView({});
-                self.showView(v, $('#content'));
-            }
-        );
-    },
-
-    answersText: function () {
-        var self = this;
-        templateLoader.load(["AnswersText"],
-            function () {
-                var v = new AnswersText({});
-                self.showView(v, $('#content'));
-            }
-        );
-    },
-
-    answersTextCorr: function () {
-        var self = this;
-        templateLoader.load(["AnswersTextCorr"],
-            function () {
-                var v = new AnswersTextCorr({});
-                self.showView(v, $('#content'));
-            }
-        );
-    },
-
-    answersList: function () {
-        var self = this;
-        templateLoader.load(["AnswersList"],
-            function () {
-                var v = new AnswersList({});
-                self.showView(v, $('#content'));
-            }
-        );
-    },
-
-    answersListCorr: function () {
-        var self = this;
-        templateLoader.load(["AnswerListtCorr"],
-            function () {
-                var v = new AnswersListCorr({});
-                self.showView(v, $('#content'));
-            }
-        );
-    },
-
-    answersMultimedia: function () {
-        var self = this;
-        templateLoader.load(["AnswersMultimedia"],
-            function () {
-                var v = new AnswersMultimedia({});
-                self.showView(v, $('#content'));
-            }
-        );
-    },
-
-    answersInterp: function () {
-        var self = this;
-        templateLoader.load(["AnswersInterp"],
-            function () {
-                var v = new AnswersInterp({});
-                self.showView(v, $('#content'));
-            }
-        );
-    },
-
-    // Manutenção
-    man: function () {
-        var self = this;
-        templateLoader.load(["manView"],
-            function () {
-                var v = new manView({});
-                self.showView(v, $('#content'));
-            }
-        );
-    },
 
 });
 
-templateLoader.load(["Inicio"],
+templateLoader.load(["Home"],
     function () {
         app = new Router();
         Backbone.history.start();

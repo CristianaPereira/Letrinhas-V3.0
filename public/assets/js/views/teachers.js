@@ -2,15 +2,9 @@ window.TeachersView = Backbone.View.extend({
 
     events: {
         "click #newteacherbtn": "newTeacher",
-        "click #btnDelProf": "deleteTeacher",
-        "keyup #txtSearch": "searchProf",
+        "click #btnDelProf": "deleteTeacher"
     },
 
-    //filtra os profs que correspondem à pesquisa (case insensitive)
-    searchProf: function (e) {
-        $(".listButton").hide();
-        $(".listButton:containsi(" + $(e.currentTarget).val() + ")").show();
-    },
     //New Teacher
     newTeacher: function (e) {
         e.preventDefault();
@@ -31,7 +25,7 @@ window.TeachersView = Backbone.View.extend({
             "Tem a certeza que pretende eliminar o professor <label>" + obj + " </label> ?",
             "btnDelProf", obj);
 
-        $('#teachersDiv').append(modal);
+        $('#mainDiv').append(modal);
         $('#modalConfirmDel').modal("show");
     },
 
@@ -43,7 +37,7 @@ window.TeachersView = Backbone.View.extend({
             function (json) {
                 console.log("apagado");
 
-                sucssesMsg($("#teachersDiv"), "O utilizador " + $(e.currentTarget).attr('value') + " foi apagado com sucesso");
+                sucssesMsg($("#mainDiv"), "O utilizador" + $(e.currentTarget).attr('value') + " apagado com sucesso");
 
                 setTimeout(function () {
                     document.location.reload(true);
@@ -162,21 +156,21 @@ window.TeachersView = Backbone.View.extend({
         ;
     },
 
-//Class Renderer
+    //Class Renderer
     render: function () {
         var self = this;
         $(this.el).html(this.template());
+        
         modem('GET', 'teachers',
             //Response Handler
             function (json) {
                 //Teachers Counter
                 $('#teachersBadge').text(json.length);
-                //  $('#teachersContent').empty();
+                $('#teachersContent').empty();
                 //Preenche a lista de professores registados( e com estado activo)
                 $.each(json, function (key, data) {
                     //Botao de editar
                     var $edit = $("<a>", {
-                        //href: "#teachers/data.doc._id/edit",
                         href: "#teachers/edit",
                         val: data.doc._id,
                         title: "Editar professor",
@@ -213,7 +207,7 @@ window.TeachersView = Backbone.View.extend({
                 //Error Handling Given The Error Nature
                 //Se o erro retornado for de acesso negado, reencaminha o utilizador para a página de login
                 if (JSON.parse(xhr.status)) {
-                    failMsg($("#teachersDiv"), "Ocorreu um imprevisto. \n (" + JSON.parse(xhr.responseText).result + ").");
+                    failMsg($("#mainDiv"), "Ocorreu um imprevisto. \n (" + JSON.parse(xhr.responseText).result + ").");
                     setTimeout(function () {
                         app.navigate('/inicio', {
                             trigger: true

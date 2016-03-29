@@ -10,6 +10,7 @@ window.TeachersNewView = Backbone.View.extend({
     },
     //Adiciona a escola e a turma ao objecto
     addTurma: function () {
+
         assocClass();
     },
 
@@ -58,7 +59,7 @@ window.TeachersNewView = Backbone.View.extend({
     },
 
     //Verifica se o e-mail já esta registado
-    isEmailAvailable: function () {
+    isEmailAvail: function () {
         //Se o email ja estiver a ser usado
         modem('GET', 'teachers/' + $("#inputEmail").val(),
             function (json) {
@@ -76,14 +77,16 @@ window.TeachersNewView = Backbone.View.extend({
         $("#inputEmail").removeClass("emptyField");
         return true;
     },
+
     //Before Sending Request To Server
     beforeSend: function (e) {
         var isValid = true;
         e.preventDefault();
+
         //Se algum dos campos estiver vazio
-        var allListElements = $("input");
+        var allListElements = $(".mandatory");
         $.each(allListElements, function (key, elem) {
-            if (isEmpty(elem)) {
+            if ($(elem).val() != null && $(elem).val().length == 0) {
                 $(elem).addClass("emptyField");
                 $("#validationLbl").text("Todos os campos de preenchimento obrigatório");
                 isValid = false;
@@ -97,9 +100,10 @@ window.TeachersNewView = Backbone.View.extend({
             $("#validationLbl").text("O pin deverá conter apenas dígitos. (0-9)");
             return false;
         }
-        if (!this.isEmailAvailable()) {
+        if (!this.isEmailAvail()) {
             return false;
         }
+        console.log(isValid);
         if (isValid) {
             this.send();
         }
@@ -107,9 +111,11 @@ window.TeachersNewView = Backbone.View.extend({
     },
 
     //Volta para a página dos professores
-    goBack: function () {
+    goBack: function (e) {
+        e.preventDefault();
         window.history.back();
     },
+
     //Verifies if an input is empty
     isEmpty: function (e) {
         if ($(e.currentTarget).val().length != 0) {
@@ -119,7 +125,7 @@ window.TeachersNewView = Backbone.View.extend({
 
     //Sending Request To Server
     send: function () {
-        console.log($("#newteacherform").serialize());
+
         //Crypt Passwords
         $("#InputPasswd").val(md5($("#InputPasswd").val()));
         $("#oldPasw").val(md5($("#oldPasw").val()));
@@ -137,16 +143,14 @@ window.TeachersNewView = Backbone.View.extend({
                     app.navigate('/teachers', {
                         trigger: true
                     });
-                }, 1800);
+                }, 2000);
             },
             //Error Handling
             function (xhr, ajaxOptions, thrownError) {
                 failMsg($("#newteacherform"), "Não foi possível inserir o novo utilizador. \n (" + JSON.parse(xhr.responseText).result + ").");
             },
-
             $("#newteacherform").serialize()
-        )
-        ;
+        );
     },
 
 

@@ -58,9 +58,6 @@ window.StudentsNewView = Backbone.View.extend({
     beforeSend: function(e){
         e.preventDefault();
 
-        console.log($("#newstudentform").serializeArray());
-
-
         //Send Form Via Ajax
         modem('POST', 'students',
             //Response Handler
@@ -116,7 +113,7 @@ window.StudentsNewView = Backbone.View.extend({
                     var hidden = document.getElementById('hidenTurma');
                     hidden.selectedIndex = i;
                     //addicionar os id's necessários de escola:turma;
-                    var r = hidden.options[i].value + ':' + hidden.options[i].text + ';';
+                    var r = hidden.options[i].value + ':' + hidden.options[i].text;
                     $("#hidenIDTurma").val(r);
 
                 }, false);

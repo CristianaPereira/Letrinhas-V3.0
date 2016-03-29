@@ -1,0 +1,56 @@
+<style>
+    #classes p{
+        color:black;
+    }
+</style>
+
+<img id="schoolImg" src="">
+
+<br>
+
+<p id="schoolName" style="color:black">NOT_DEFINED</p>
+<p id="schoolAddress" style="color:black">NOT_DEFINED</p>
+
+
+<br>
+
+<label for="classes">Turmas:</label>
+<div id="classes"></div>
+
+<br>
+
+<label for="newclassform">Criar Turma</label>
+<form id="newclassform" method="post" action="/class/new">
+
+    <select name="year">
+        <optgroup label="1º Ciclo do Ensino Básico">
+            <option value="1">1º Ano</option>
+            <option value="2">2º Ano</option>
+            <option value="3">3º Ano</option>
+            <option value="4">4º Ano</option>
+        </optgroup>
+        <optgroup label="2º Ciclo do Ensino Básico">
+            <option value="5">5º Ano</option>
+            <option value="6">6º Ano</option>
+        </optgroup>
+        <optgroup label="3º Ciclo do Ensino Básico">
+            <option value="7">7º Ano</option>
+            <option value="8">8º Ano</option>
+            <option value="9">9º Ano</option>
+        </optgroup>
+        <optgroup label="Ensino Secundário">
+            <option value="10">10º Ano</option>
+            <option value="11">11º Ano</option>
+            <option value="12">12º Ano</option>
+        </optgroup>
+    </select>
+
+    <input type="text" name="name">
+
+    <input type="submit" value="Criar Turma">
+
+</form>
+
+<br><br>
+
+<button id="goBack">Cancelar</button>
