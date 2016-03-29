@@ -1,0 +1,225 @@
+<!-- Inserção Pergunta do tipo Texto: -->
+<div class="topcoat-navigation-bar">
+  <div class="topcoat-navigation-bar__item center full">
+    <h4 align="center" class="topcoat-navigation-bar__title">
+      <img src="../../img/testLista.png" style="height:40px;" >
+      Criar Teste Lista de Palavras
+    </h4>
+  </div>
+</div>
+
+<div>
+  <form id="listNewForm" role="form" method="POST" action="/questions" enctype="multipart/form-data">
+    <div class="container insertContainer">
+      <h4>Detalhes do teste</h4>
+      <hr>
+      <!-- TUTULO-DISCIPLINA-ANOESCOLAR -->
+      <div class="form-group">
+        <div class="col-sm-8">
+        <label for="InputTitulo" >Título:</label>
+        <input type="text" class="form-control preenche" id="InputTitulo" placeholder="Ex: Anita vai ao médico" name="titulo" disabled>
+      </div>
+        <div class="col-sm-2">
+        <label for="selectDiscip">Disciplina:</label>
+        <select class="form-control" id="selectDiscip" name="disciplina" >
+          <optgroup label="Linguas">
+          <option>Português</option>
+          <option>Inglês</option>
+          <option>Outra língua</option>
+          </optgroup>
+        </select>
+      </div>
+        <div class="col-sm-2">
+        <label for="selectAno">Ano Escolar:</label>
+        <select class="form-control" id="selectAno" name="ano_escolar" >
+          <optgroup label="1º Ciclo do Ensino Básico">
+            <option>1º</option>
+            <option>2º</option>
+            <option>3º</option>
+            <option>4º</option>
+          </optgroup>
+          <optgroup label="2º Ciclo Ensino Básico">
+            <option>5º</option>
+            <option>6º</option>
+          </optgroup>
+          <optgroup label="3º Ciclo Ensino Básico">
+            <option>7º</option>
+            <option>8º</option>
+            <option>9º</option>
+          </optgroup>
+          <optgroup label="Ensino Secundário">
+            <option>10º</option>
+            <option>11º</option>
+            <option>12º</option>
+          </optgroup>
+        </select>
+      </div>
+      </div>
+
+      <!-- PERGUNTA-DESCRIÇÃO -->
+      <div class="form-group">
+        <div class="col-sm-6">
+          </br>
+          <label for="InputDescricao" >Descrição:</label>
+          <input type="text" class="form-control preenche" id="InputDescricao" placeholder="Ex: Teste de apoio para alunos com dificuldades de leitura" name="descricao"  disabled>
+        </div>
+        <div class="col-sm-6">
+          </br>
+          <label for="InputPergunta" >Pergunta:</label>
+          <input type="text" class="form-control preenche" id="InputPergunta" placeholder="Ex: Leia as palavras..." name="pergunta"  disabled>
+        </div>
+      </div>
+
+      <!-- Lista de palavras -->
+      <div class="form-group">
+        <div class="col-sm-4">
+          </br>
+          <div class="form-group">
+            <label for="col1">Coluna 1:</label>
+            <textarea class="form-control preenche" rows="10" id="col1" name="cl1" style="resize: none;" disabled></textarea>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          </br>
+          <div class="form-group">
+            <label for="col2">Coluna 2:</label>
+            <textarea class="form-control" rows="10" id="col2" name="cl2" style="resize: none;"  disabled></textarea>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          </br>
+          <div class="form-group">
+            <label for="col3">Coluna 3:</label>
+            <textarea class="form-control" rows="10" id="col3" name="cl3" style="resize: none;"  disabled></textarea>
+          </div>
+        </div>
+
+      </div>
+      <div id="painelInvisivel" class="form-group  col-sm-4" style="display:none">
+        <div class="col-sm-2" >
+          <select class="form-control" id="selectEstado" name="estado">
+            <option>1</option>
+          </select>
+        </div>
+        <div class="col-sm-2">
+          <select class="form-control" id="selectTipo" name="tipo">
+            <option>Lista</option>
+          </select>
+
+        </div>
+      </div>
+
+      <!-- Audio -->
+      <div class="col-sm-12">
+        <h4>Detalhes do Áudio</h4>
+        <hr style="background-color: #b0aac2;">
+        </br>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-3" style="padding-right: 0px;">
+                <span class="file-input btn btn-block btn-primary btn-file">
+                Carregar ficheiro de som…
+                  <input id="inputSom" accept="audio/mp3"
+                         style="position: absolute;opacity: 0;top: 0px;left: 5%;width: 90%;height: 100%;"
+                         type="file" id="inputSom" accept="audio/mp3" name="file" disabled>
+                </span>
+        </div>
+        <div class="col-sm-3" style="padding-left: 0px;">
+          <input type="text" class="form-control" id="soundPath"
+                 placeholder="Nenhum ficheiro seleccionado"
+                 disabled>
+        </div>
+        <div class="col-sm-1" style="vertical-align:bottom">
+          <label style="margin-top: 10px;">OU</label>
+        </div>
+        <div class="col-sm-3" style="vertical-align:bottom">
+          <button id="lstGrava" class="btn btn-default">
+            <span class="glyphicon glyphicon-record" style="color:#ff0000"></span>
+            Gravar ficheiro de som
+          </button>
+        </div>
+      </div>
+    </div>
+    </br>
+    <div class="container">
+
+      <div class="form-group">
+
+        <div class="col-sm-12">
+          </br>
+          <div class="col-sm-5 col-md-offset-7">
+            <div class="col-sm-6">
+              <button id="buttonCancelar" type="reset"
+                      class="btn btn-default btn-block btn-cancel">
+                Cancelar
+              </button>
+            </div>
+            <div class="col-sm-6">
+              <button id="subTxt" type="submit" class="btn btn-success btn-block btn-created"
+                      title="Todos os campos são de preenchimento obrigatório.">
+                Submeter
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </form>
+</div>
+<!-- MODAL para apresentar o equalizador para gravar o som -->
+<div class="modal fade" id="myModalRecord" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" class="glyphicon glyphicon-remove-sign" style="color:#ee3030"></span></button>
+        <h4 class="modal-title" id="myModalLabel">
+          <img src="../../img/letrinhas2.png" style="height:40px">
+          <img src="../../img/audio_file.png" style="height:40px;" >
+          Estudio de som:
+        </h4>
+      </div>
+      <div class="modal-body" style="height:550px; background-color:#ddeeff">
+         <div class="col-md-12" align=center>
+            <div id="viz">
+              <canvas id="analyser" width="525" height="100" style="display: inline-block;
+                                                                     background: #202020;
+                                                                     box-shadow: 0px 0px 10px blue;" >
+              </canvas>
+
+              <canvas id="wavedisplay" width="525" height="100" style="display: inline-block;
+           		                                                       background: #202020;
+           		                                                       box-shadow: 0px 0px 10px blue;" >
+              </canvas>
+           	</div>
+           	<div id="controls">
+           		<span  id="record" class="btn badge btn-primary" style="font-size:16px" value=0>
+                 <span class="glyphicon glyphicon-record" style="color:#ee0000"></span>
+                 Gravar
+              </span>
+               <audio id="Rplayer" controls class="players" style="visibility:hidden;width:60%">
+                 <source  src="" type="audio/wave">
+               </audio>
+               <a id="save" class="btn badge btn-info" style="visibility:hidden;color:#ffffff" disabled>
+                 <span class="glyphicon glyphicon-download-alt" style="color:#00ee00" ></span>
+                 Download
+              </a>
+           	</div>
+         </div>
+
+         <div class="col-sm-4" id="cl1" align=center style="height:270px; overflow:auto; background-color:#ecdcbc">
+         </div>
+         <div class="col-sm-4" id="cl2" align=center style="height:270px; overflow:auto; background-color:#cdecbc">
+         </div>
+         <div class="col-sm-4" id="cl3" align=center style="height:270px; overflow:auto; background-color:#ecdcbc">
+         </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+<!--  -->
+</div>

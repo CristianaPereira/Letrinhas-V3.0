@@ -10,8 +10,3 @@ window.isNumber = function (value) {
         return false;
     }
 }
-
-//Verifies if a string is a number, returns true if positive
-window.isEmpty = function (elem) {
-    return $(elem).val() != null && $(elem).val().length == 0;
-}

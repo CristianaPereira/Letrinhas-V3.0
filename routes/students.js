@@ -1,20 +1,9 @@
 require('colors');
 
 var nano = require('nano')(process.env.COUCHDB);
+
 var db = nano.use('dev_alunos');
-
-nano.auth(process.env.USERNAME, process.env.PASSWORD, function (err, response, headers) {
-    console.log(err);
-    nano = require('nano')({
-        url: process.env.COUCHDB,
-        cookie: headers['set-cookie']
-    });
-    db = nano.use('dev_alunos');
-});
-
-exports.upDate = function (req, res) {
-    console.log('students upDate, NotAvaliable yet'.blue);
-};
+var dbe = nano.use('dev_escolas');
 
 exports.new = function (req, res) {
 
@@ -29,15 +18,12 @@ exports.new = function (req, res) {
             "numero": req.body.number,
             "escola": sclass[0],
             "turma": sclass[1],
-            "imgb64" : req.body.b64,
+            "b64": req.body.b64,
         };
 
-        db.insert(newStudent, req.body.name + new Date().getTime(), function (err, body) {
+        db.insert(newStudent, req.body.name + new Date().getTime(), function (err) {
             if (err)
-                return res.status(500).json({
-                    'result': 'nok',
-                    'message': err
-                });
+                return res.status(err.statusCode).json({});
             else {
                 console.log('New student was inserted'.green);
                 res.status(200).json({});
@@ -46,55 +32,20 @@ exports.new = function (req, res) {
     }
     else {
         console.log("Fields Missing");
+        res.status(401).json({});
     }
-
-    /*
-     var aluno={
-     "nome":req.body.nome,
-     "estado":true,
-     "numero":req.body.numero,
-     "escola":getEscola(req.body.turma),
-     "turma":getTurma(req.body.turma),
-     };
-
-     var file;
-     if(req.files) file = req.files.file;
-
-     var imgData = require('fs').readFileSync(file.path);
-     var dati= new Date();
-     var idAluno= req.body.nome+dati.getTime();
-
-     db.multipart.insert(aluno, [{
-     name: 'aluno.jpg',
-     data: imgData,
-     content_type: 'image/jpg'
-     }], idAluno, function(err, body) {
-     if (err) {
-     return res.status(500).json({
-     'result': 'nok',
-     'message': err
-     });
-     }
-
-     console.log('New student was inserted'.green);
-
-     res.redirect('/#students');
-
-     });
-     */
 
 };
 
 exports.getAll = function (req, res) {
+
     console.log('students getAll'.green);
 
     db.list({'include_docs': true, 'attachments': true, 'limit': undefined, 'descending': true}, function (err, body) {
         if (err) {
-            return res.status(500).json({
-                'result': 'nok',
-                'message': err
-            });
+            return res.status(err.statusCode).json({});
         }
+
         res.json(body.rows);
     });
 };
@@ -105,14 +56,99 @@ exports.get = function (req, res) {
 
     db.get(id, function (err, body) {
         if (err) {
-            return res.status(500).json({
-                'result': 'nok',
-                'message': err
-            });
+            return res.status(err.statusCode).json({});
         }
 
         res.json(body);
     });
+};
+
+//NEW
+exports.getStudents = function(req, res){
+
+    var user = req.params.id;
+
+    //Get Teacher Classes
+    dbe.list({'include_docs': true, 'attachments': false, 'limit': undefined, 'descending': true}, function (err, body) {
+        if (err) {
+            return res.status(err.statusCode).json({});
+        }
+
+        //Fetch Classes
+        var classes = "";
+
+        for(var i in body.rows){
+
+            for(var j in body.rows[i].doc.turmas){
+
+                for(var k in body.rows[i].doc.turmas[j].professores){
+
+                    if(body.rows[i].doc.turmas[j].professores[k]._id == user)
+                        classes += body.rows[i].doc.turmas[j]._id + " ";
+                        //classes.push({"_id": body.rows[i].doc.turmas[j]._id});
+
+                }
+
+            }
+
+        }
+
+        //Fetch Students From Classes
+        db.list({'include_docs': true, 'attachments': false, 'limit': undefined, 'descending': true}, function (err, body2) {
+            if (err) {
+                return res.status(err.statusCode).json({});
+            }
+
+            for(var i in body2.rows){
+
+                var search = new RegExp(body2.rows[i].doc.turma);
+
+                if(!search.test(classes))
+                    delete body2.rows[i];
+            }
+
+            res.json(body2.rows);
+        });
+
+    });
+
+},
+
+exports.removeStudent = function (req, res){
+
+    //Fetch School
+    console.log('Remove Student: Fetching Student ' + req.params.id + ''.green);
+
+    //Search School Info
+    db.get(req.params.id, function (err, body) {
+
+        if (err) {
+            //Report Error (Student Doenst Exists)
+            console.log("Error Removing Student");
+            return res.status(err.statusCode).json({});
+        }
+        else {
+
+            db.destroy(body._id, body._rev, function (err) {
+
+                if (err) {
+                    //Report Error (Student Doenst Exists)
+                    console.log("Error Removing Student");
+                    return res.status(err.statusCode).json({});
+                }
+                else {
+                    console.log("Student Removed");
+                    return res.status(200).json({});
+                }
+
+            });
+
+        }
+
+    });
+
+
+
 };
 
 function getEscola(turma) {

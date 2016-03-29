@@ -21,9 +21,10 @@ var schools = require('./routes/schools'),
     questions = require('./routes/questions'),
     submissions = require('./routes/submissions');
 
+//Express Variable
 var app = express();
 
-// configure app to use bodyParser()
+//Configure app to use bodyParser()
 app.use(bodyParser({limit: '50mb'}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
@@ -40,43 +41,43 @@ var router = express.Router();
 // Route middleware that will happen on every request
 router.use(function (req, res, next) {
     // log each request to the console
-    console.log("Route Request: ".blue + req.method + " " + req.url);
+    console.log("Route Request: ".blue + req.method, req.url);
     next();
 });
 
-// Validating Login
+// Validating Login Credentials
 var auth = function (req, res, next) {
     //Check For Login User
     var login = basicAuth(req);
+    //console.log(login);
     if (login) {
         db.get(login.name, {revs_info: true}, function (err, body) {
             if (!err) {
                 if (body.password == login.pass) {
+                    //Login Successfully
                     console.log("Login Successfully");
                     req.user = {name: login.name, perm: body.permissionLevel};
                     next();
                 }
                 else {
-                    //Report Error
+                    //Report Error (Rong Password)
+                    console.log(body.password);
                     console.log("Login Attempt Failed - Wrong info");
                     res.status(401).json({});
                 }
             }
             else {
-                //Report Error
+                //Report Error (Rong Username)
                 console.log("Login Attempt Failed" + err);
-                res.status(401).json({
-                    'result': 'nok',
-                    'message': err
-                });
+                res.status(401).json({});
             }
 
         });
     }
     else {
-        //Report Error
+        //Report Error (No Auth Credentials)
         console.log("Login Attempt Failed - Missing user");
-        res.status(401).json({'result': 'Acesso negado. Por favor efectue login.'});
+        res.status(401).json({});
     }
 
 }
@@ -108,6 +109,7 @@ var tself = function (req, res, next) {
     req.params.id = req.user.name;
     next();
 }
+
 // Make App use router
 app.use('/', router);
 
@@ -119,7 +121,7 @@ app.route('/teachers')
     .get(auth, perms(3), teachers.getAll);
 
 app.route('/teachers/:id')
-    .get(auth, perms(3), teachers.get);
+	.get(auth, perms(3), teachers.get);
 
 app.route('/teachers/editDetails')
     .post(teachers.updateDetails);
@@ -127,23 +129,25 @@ app.route('/teachers/editDetails')
 app.route('/teachers/editPasswd')
     .post(teachers.editPasswd);
 
-app.route('/teachers/editClasses')
-    .post(teachers.editClasses);
-
 app.route('/teachers/:id/del')
     .post(auth, perms(3), teachers.delete);
-
-
+	
 app.route('/schools')
     .post(auth, perms(3), schools.new)
     .get(auth, perms(3), schools.getAll);
 
+app.route('/schools/:id')
+	.post(auth, perms(3), schools.editSchool)
+    .get(auth, perms(3), schools.get);
+
+//Only Return Teacher Related Students
 app.route('/students')
     .post(auth, perms(2), students.new)
-    .get(auth, perms(2), students.getAll);
+    .get(auth, tself, perms(2), students.getStudents);
+
 
 app.route('/students/:id')
-    .get(auth, perms(2), students.get);
+        .get(auth, perms(2), students.get);
 
 app.route('/questions')
     .post(auth, perms(2), questions.new)
@@ -158,9 +162,26 @@ app.route('/tests')
 
 app.route('/tests/:id')
     .get(auth, perms(2), questions.get);
+
+
+
+//This Needs To Be Revised
+app.route('/schools/:id/newclass')
+    .post(auth, perms(3), schools.newClass);
+
+app.route('/schools/:id/removeclass')
+    .post(auth, perms(3), schools.removeClass);
+
+app.route('/schools/:id/remove')
+    .post(auth, perms(3), schools.removeSchool);
+
+
+
+app.route('/students/:id/remove')
+    .post(auth, perms(3), students.removeStudent);
+
+
 /*
-
-
  //Professores
  app.post('/teachers', auth, teachers.new);
  app.post('/teachers/:id',  auth, teachers.upDate);
