@@ -12,6 +12,7 @@ window.StudentsEdit = Backbone.View.extend({
         trigger: true
       });
     },
+  
   render: function() {
     $(this.el).html(this.template());
     return this;

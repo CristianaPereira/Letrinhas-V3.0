@@ -10,7 +10,6 @@ window.TeachersNewView = Backbone.View.extend({
     },
     //Adiciona a escola e a turma ao objecto
     addTurma: function () {
-
         assocClass();
     },
 
