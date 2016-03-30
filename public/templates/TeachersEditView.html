@@ -1,7 +1,7 @@
 <!-- Inserção Professor: -->
 
 <!--FORMULARIO -->
-<div class="divWidget form">
+<div class="divWidget">
     <div class="topcoat-navigation-bar">
         <div class="topcoat-navigation-bar__item center full">
             <h3 align="center" class="topcoat-navigation-bar__title">
@@ -85,7 +85,7 @@
                 </form>
             </div>
             <!-- SEGURANCA -->
-            <div class="tab-pane" id="seguranca">
+            <div class="tab-pane active" id="seguranca">
                 <legend>Dados de Segurança</legend>
                 <div class="row">
                     <form id="frmEditPasswd" enctype="multipart/form-data">
@@ -151,7 +151,7 @@
                 </div>
             </div>
             <!-- TURMAS -->
-            <div class="tab-pane active" id="turmas">
+            <div class="tab-pane" id="turmas">
                 <legend>Turmas associadas</legend>
                 <div id="classesList" class="col-md-12" align="center">
                 </div>
@@ -183,26 +183,15 @@
                 </div>
             </div>
         </div>
-
     </div>
     <!--###################################################################-->
 
     <div class="control-group">
-        <div id="hiddenEscola" class="">
-            <input type="text" value="{}" id="teacherClasses" class="form-control" name="turmas">
-            <input type="text" id="userId">
+        <div id="hiddenEscola" class="hidden">
+            <input type="hidden" value="{}" id="teacherClasses" class="form-control" name="turmas">
+            <input type="hidden" id="userId">
         </div>
 
-    </div>
-    <!-- Botoes-->
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="btn-group">
-                <button type="reset" class="btn btn-default">Cancelar</button>
-                <button id="btnEditTurmas" type="submit" class="btn btn-success">Associar turmas
-                </button>
-            </div>
-        </div>
     </div>
     <!-- Botoes-->
 </div>

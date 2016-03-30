@@ -166,19 +166,7 @@ window.TeachersEditView = Backbone.View.extend({
 
   render: function() {
     var self = this;
-    //Se não está logado nem é administrador, sai daqui!
-    var controlo=window.localStorage.getItem("Logged");
-    var role = ''+window.localStorage.getItem('Role');
-    var profID = ''+window.localStorage.getItem('ProfID');
-    var editProf = ''+window.sessionStorage.getItem("ProfEditar");
-    if(!controlo || role != "Administrador do Sistema" && editProf != profID){
-      console.log('Não Logado');
-      window.sessionStorage.removeItem("ProfEditar");
-      app.navigate('/#', {
-          trigger: true
-        });
-        return null;
-    }
+
     $(this.el).html(this.template());
 
     setTimeout(function(){
