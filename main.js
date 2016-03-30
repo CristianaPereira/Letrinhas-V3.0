@@ -121,23 +121,26 @@ app.route('/teachers')
     .get(auth, perms(3), teachers.getAll);
 
 app.route('/teachers/:id')
-	.get(auth, perms(3), teachers.get);
+    .get(auth, perms(3), teachers.get);
 
 app.route('/teachers/editDetails')
-    .post(teachers.updateDetails);
+    .post(auth, perms(3), teachers.updateDetails);
 
 app.route('/teachers/editPasswd')
-    .post(teachers.editPasswd);
+    .post(auth, perms(3), teachers.editPasswd);
+
+app.route('/teachers/editClasses')
+    .post(auth, perms(3), teachers.editClasses);
 
 app.route('/teachers/:id/del')
     .post(auth, perms(3), teachers.delete);
-	
+
 app.route('/schools')
     .post(auth, perms(3), schools.new)
     .get(auth, perms(3), schools.getAll);
 
 app.route('/schools/:id')
-	.post(auth, perms(3), schools.editSchool)
+    .post(auth, perms(3), schools.editSchool)
     .get(auth, perms(3), schools.get);
 
 //Only Return Teacher Related Students
@@ -147,7 +150,7 @@ app.route('/students')
 
 
 app.route('/students/:id')
-        .get(auth, perms(2), students.get);
+    .get(auth, perms(2), students.get);
 
 app.route('/questions')
     .post(auth, perms(2), questions.new)
@@ -164,7 +167,6 @@ app.route('/tests/:id')
     .get(auth, perms(2), questions.get);
 
 
-
 //This Needs To Be Revised
 app.route('/schools/:id/newclass')
     .post(auth, perms(3), schools.newClass);
@@ -174,7 +176,6 @@ app.route('/schools/:id/removeclass')
 
 app.route('/schools/:id/remove')
     .post(auth, perms(3), schools.removeSchool);
-
 
 
 app.route('/students/:id/remove')

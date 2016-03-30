@@ -95,6 +95,7 @@ exports.updateDetails = function (req, res) {
         });
     });
 };
+
 exports.editPasswd = function (req, res) {
     console.log('Teachers - UPDATE'.cyan);
     console.log(req.body);
@@ -123,6 +124,14 @@ exports.editPasswd = function (req, res) {
     });
 };
 
+exports.editClasses = function (req, res) {
+    var escolas = JSON.parse(req.body.turmas);
+    for (var items in escolas) {
+        insertProfTurma(req.body.email, escolas[items].id, escolas[items].turmas);
+    }
+    res.redirect('/teachers/' + req.body.email);
+};
+
 exports.delete = function (req, res) {
 
     db.get(req.params.id, function (err, body) {
@@ -148,7 +157,6 @@ exports.delete = function (req, res) {
 
     res.redirect('/teachers');
 };
-
 
 exports.photo = function (req, res) {
     var id = req.params.id;
