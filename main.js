@@ -168,6 +168,9 @@ app.route('/tests/:id')
 
 
 //This Needs To Be Revised
+app.route('/schools/class')
+    .post(auth, perms(2), tself, schools.newClass);
+
 app.route('/schools/:id/newclass')
     .post(auth, perms(3), schools.newClass);
 

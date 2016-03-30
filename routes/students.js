@@ -9,6 +9,7 @@ exports.new = function (req, res) {
 
     //Verify Fields
     if (req.body.name && req.body.number && req.body.class && req.body.b64) {
+
         //!TEMPORARY! - Separating Class From School
         var sclass = (req.body.class).split(":");
 
@@ -21,7 +22,7 @@ exports.new = function (req, res) {
             "b64": req.body.b64,
         };
 
-        db.insert(newStudent, req.body.name + new Date().getTime(), function (err) {
+        db.insert(newStudent, (req.body.name).replace(/\s+/g, '') + new Date().getTime(), function (err) {
             if (err)
                 return res.status(err.statusCode).json({});
             else {
@@ -32,7 +33,7 @@ exports.new = function (req, res) {
     }
     else {
         console.log("Fields Missing");
-        res.status(401).json({});
+        res.send(401, { error: "Todos os campos sao de preenchimento obrigatório" });
     }
 
 };
@@ -43,7 +44,7 @@ exports.getAll = function (req, res) {
 
     db.list({'include_docs': true, 'attachments': true, 'limit': undefined, 'descending': true}, function (err, body) {
         if (err) {
-            return res.status(err.statusCode).json({});
+            res.send(err.statusCode, {error: "Erro a procurar alunos"});
         }
 
         res.json(body.rows);
@@ -71,7 +72,7 @@ exports.getStudents = function(req, res){
     //Get Teacher Classes
     dbe.list({'include_docs': true, 'attachments': false, 'limit': undefined, 'descending': true}, function (err, body) {
         if (err) {
-            return res.status(err.statusCode).json({});
+            return res.status(err.statusCode, {error: "Erro a procurar alunos"});
         }
 
         //Fetch Classes
@@ -104,7 +105,8 @@ exports.getStudents = function(req, res){
                 var search = new RegExp(body2.rows[i].doc.turma);
 
                 if(!search.test(classes))
-                    delete body2.rows[i];
+                    body2.rows.splice(i, 1);
+
             }
 
             res.json(body2.rows);

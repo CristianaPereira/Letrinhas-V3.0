@@ -61,10 +61,17 @@ window.StudentsNewView = Backbone.View.extend({
         //Send Form Via Ajax
         modem('POST', 'students',
             //Response Handler
-            function (json) {
+            function () {
+                sucssesMsg($("#newstudentform"), "Aluno criado com sucesso");
+                setTimeout(function () {
+                    app.navigate('/students', {
+                        trigger: true
+                    });
+                }, 2000);
             },
             //Error Handling
             function (xhr, ajaxOptions, thrownError) {
+                failMsg($("#newstudentform"), "Não foi possível criar o novo aluno. \n (" + JSON.parse(xhr.responseText).error + ").");
             },
             //Data To Send
             $("#newstudentform").serializeArray()
