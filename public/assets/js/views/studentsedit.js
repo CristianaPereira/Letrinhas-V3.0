@@ -1,20 +1,23 @@
 window.StudentsEdit = Backbone.View.extend({
-  events: {
-      "click #buttonCancelar": "buttonCancelar",
+    events: {
+        "click #buttonCancelar": "buttonCancelar",
 
 
-
-  },
-  initialize: function() {},
-
-    buttonCancelar: function(e) {
-    app.navigate('/MenuPrincipal', {
-        trigger: true
-      });
     },
-  
-  render: function() {
-    $(this.el).html(this.template());
-    return this;
-  }
+
+    initialize: function (id) {
+        this.student = {id: id};
+    },
+
+    buttonCancelar: function (e) {
+        app.navigate('/MenuPrincipal', {
+            trigger: true
+        });
+    },
+
+    render: function () {
+        $(this.el).html(this.template());
+        return this;
+    }
+
 });
