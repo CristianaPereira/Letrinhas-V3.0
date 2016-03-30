@@ -54,9 +54,9 @@ var Router = Backbone.Router.extend({
     navbar: function () {
         var self = this;
         //Load NavigationBar
-        templateLoader.load(["NavigationBar"],
+        templateLoader.load(["NavigationBarView"],
             function () {
-                var v = new NavigationBar({});
+                var v = new NavigationBarView({});
                 self.showView(v, $('#header'));
             }
         );
@@ -142,6 +142,8 @@ var Router = Backbone.Router.extend({
 
     user: function () {
         var self = this;
+        self.navbar();
+
         templateLoader.load(["UserView"],
             function () {
                 var v = new UserView({});

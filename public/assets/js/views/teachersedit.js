@@ -3,6 +3,7 @@ window.TeachersEditView = Backbone.View.extend({
         "click #buttonCancelar": "buttonCancelar",
         "click #addTurma": "addTurma",
         "click #btnEditDetails": "beforeSend",
+        "click #btnEditTurmas": "editTurmas",
         "click #btnEditPsw": "editPsw",
         "change #inputFoto": "carregaFoto",
         "change #filePicker": "convertPhoto",
@@ -12,7 +13,31 @@ window.TeachersEditView = Backbone.View.extend({
 
 
     },
+    //Sends an udate classes to server
+    editTurmas: function (e) {
+        var self = this;
+        e.preventDefault();
+        modem('POST', 'teachers/editClasses',
+            //Response Handler
+            function (json) {
+                sucssesMsg($("#editTeacherView"), "Turmas associadas com sucesso.");
+                setTimeout(function () {
+                    self.getTurmas($("#inputEmail").val(), $("#InputNome").val());
+                    $("#teacherClasses").val("{}");
+                    $("#assocTurma").empty();
+                }, 2000);
 
+            },
+            //Error Handling
+            function (xhr, ajaxOptions, thrownError) {
+                failMsg($("#editTeacherView"), "Não foi possível alterar os dados. \n (" + JSON.parse(xhr.responseText).result + ").");
+                console.log("NOT OK");
+
+            },
+            $("#teacherClasses").serialize() + "&email=" + encodeURIComponent($("#inputEmail").val())
+        );
+
+    },
     //Before Sending Request To Server
     beforeSend: function (e) {
         var isValid = true;
@@ -32,7 +57,7 @@ window.TeachersEditView = Backbone.View.extend({
             function (xhr, ajaxOptions, thrownError) {
                 failMsg($("#newteacherform"), "Não foi possível alterar os dados. \n (" + JSON.parse(xhr.responseText).result + ").");
             },
-            $("#frmEditDetails").serialize() + "&email=" + encodeURIComponent($("#userId").val())
+            $("#frmEditDetails").serialize() + "&email=" + encodeURIComponent($("#inputEmail").val())
         );
     },
 
@@ -57,7 +82,7 @@ window.TeachersEditView = Backbone.View.extend({
             function (xhr, ajaxOptions, thrownError) {
                 failMsg($("#newteacherform"), "Não foi possível alterar a password. \n (" + JSON.parse(xhr.responseText).result + ").");
             },
-            $("#frmEditPasswd").serialize() + "&email=" + encodeURIComponent($("#userId").val())
+            $("#frmEditPasswd").serialize() + "&email=" + encodeURIComponent($("#inputEmail").val())
         );
     },
     //Convert Photo To Base64 String
@@ -101,7 +126,6 @@ window.TeachersEditView = Backbone.View.extend({
 
     //Adiciona a escola e a turma ao objecto
     addTurma: function () {
-
         assocClass();
     },
 
@@ -145,6 +169,7 @@ window.TeachersEditView = Backbone.View.extend({
     getTurmas: function (idProf, nomeProf) {
         var self = this;
         var nTurmas = 0;
+        $("#prfSchool").empty();
         //Objecto Json com o nome das escolas e turmas
         var obj = jQuery.parseJSON("{}");
         //Obtem os nomes das escolas e respectivas turmas associadas ao professor idProf
@@ -213,7 +238,6 @@ window.TeachersEditView = Backbone.View.extend({
                 + '<img src="../img/docentes.png"  style="height:40px;" >'
                 + "Editar dados de " + prof.eMail);
             $("#inputEmail").val(prof._id);
-            $("#userId").val(prof._id);
             $("#InputPasswd").val(prof.pwd);
             $("#inputPin").val(prof.pin);
             $("#InputTelefone").val(prof.telefone);
