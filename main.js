@@ -179,7 +179,7 @@ app.route('/schools/:id/removeclass')
 app.route('/schools/:id/remove')
     .post(auth, perms(3), schools.removeSchool);
 
-
+//Student Routing
 app.route('/students/:id/remove')
     .post(auth, perms(3), students.removeStudent);
 
