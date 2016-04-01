@@ -150,6 +150,7 @@ app.route('/students')
 
 
 app.route('/students/:id')
+    .post(auth, perms(2), students.editStudent)
     .get(auth, perms(2), students.get);
 
 app.route('/questions')

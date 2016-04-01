@@ -33,7 +33,7 @@ exports.new = function (req, res) {
     }
     else {
         console.log("Fields Missing");
-        res.send(401, { error: "Todos os campos sao de preenchimento obrigatório" });
+        res.send(401, {error: "Todos os campos sao de preenchimento obrigatório"});
     }
 
 };
@@ -65,12 +65,65 @@ exports.get = function (req, res) {
 };
 
 //NEW
-exports.getStudents = function(req, res){
+exports.editStudent = function (req, res) {
+    
+    if (req.body.name != '' && req.body.number != '') {
+
+        //Fetch School
+        console.log('Edit Student: Fetching Student ' + req.params.id + ''.green);
+
+        //Search School Info
+        db.get(req.params.id, function (err, body) {
+
+            if (err) {
+                //Report Error (School Doenst Exists)
+                console.log("Error Editing Student");
+                res.send(err.statusCode, {error: "Aluno Invalido"});
+            }
+            else {
+
+                body.nome = req.body.name;
+                body.numero = req.body.number;
+
+                if (req.body.b64 != '')
+                    body.b64 = req.body.b64;
+
+                db.insert(body, body._id, function (err) {
+
+                    if (err) {
+                        //Report Error (Student Doesn't Exists)
+                        console.log("Error Editing Student");
+                        res.send(err.statusCode, {error: "Aluno Invalido"});
+                    }
+                    else {
+                        console.log("Student Edited");
+                        res.send(200);
+                    }
+
+                });
+
+            }
+
+        });
+
+    }
+    else {
+        console.log('Parameters Missing');
+        res.send(401, {error: "Alguns parametros são de preenchimento obrigatório"});
+    }
+};
+
+exports.getStudents = function (req, res) {
 
     var user = req.params.id;
 
     //Get Teacher Classes
-    dbe.list({'include_docs': true, 'attachments': false, 'limit': undefined, 'descending': true}, function (err, body) {
+    dbe.list({
+        'include_docs': true,
+        'attachments': false,
+        'limit': undefined,
+        'descending': true
+    }, function (err, body) {
         if (err) {
             return res.status(err.statusCode, {error: "Erro a procurar alunos"});
         }
@@ -78,15 +131,15 @@ exports.getStudents = function(req, res){
         //Fetch Classes
         var classes = "";
 
-        for(var i in body.rows){
+        for (var i in body.rows) {
 
-            for(var j in body.rows[i].doc.turmas){
+            for (var j in body.rows[i].doc.turmas) {
 
-                for(var k in body.rows[i].doc.turmas[j].professores){
+                for (var k in body.rows[i].doc.turmas[j].professores) {
 
-                    if(body.rows[i].doc.turmas[j].professores[k]._id == user)
+                    if (body.rows[i].doc.turmas[j].professores[k]._id == user)
                         classes += body.rows[i].doc.turmas[j]._id + " ";
-                        //classes.push({"_id": body.rows[i].doc.turmas[j]._id});
+                    //classes.push({"_id": body.rows[i].doc.turmas[j]._id});
 
                 }
 
@@ -94,17 +147,24 @@ exports.getStudents = function(req, res){
 
         }
 
+        console.log(classes);
+
         //Fetch Students From Classes
-        db.list({'include_docs': true, 'attachments': false, 'limit': undefined, 'descending': true}, function (err, body2) {
+        db.list({
+            'include_docs': true,
+            'attachments': false,
+            'limit': undefined,
+            'descending': true
+        }, function (err, body2) {
             if (err) {
                 return res.status(err.statusCode).json({});
             }
 
-            for(var i in body2.rows){
+            for (var i in body2.rows) {
 
                 var search = new RegExp(body2.rows[i].doc.turma);
 
-                if(!search.test(classes))
+                if (!search.test(classes))
                     body2.rows.splice(i, 1);
 
             }
@@ -114,9 +174,9 @@ exports.getStudents = function(req, res){
 
     });
 
-},
+};
 
-exports.removeStudent = function (req, res){
+exports.removeStudent = function (req, res) {
 
     //Fetch School
     console.log('Remove Student: Fetching Student ' + req.params.id + ''.green);
@@ -148,7 +208,6 @@ exports.removeStudent = function (req, res){
         }
 
     });
-
 
 
 };
