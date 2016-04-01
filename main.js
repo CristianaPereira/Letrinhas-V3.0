@@ -162,7 +162,7 @@ app.route('/questions/:id')
 
 //Tests
 app.route('/tests')
-    .get(auth, perms(2), tests.getAll);
+    .get(auth, tself, perms(2), tests.getAll);
 
 
 
