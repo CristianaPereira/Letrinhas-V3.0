@@ -5,6 +5,15 @@ window.StudentsEdit = Backbone.View.extend({
         "change #filePicker": "convertPhoto",
     },
 
+    //Check Auth
+    auth: function (e) {
+        if (!window.sessionStorage.getItem("keyo")) {
+            app.navigate("/#", true);
+            return false;
+        }
+        return true;
+    },
+
     //Convert Photo To Base64 String
     convertPhoto: function (e) {
 
@@ -90,6 +99,9 @@ window.StudentsEdit = Backbone.View.extend({
 
     render: function () {
         var self = this;
+
+        //Check Local Auth
+        if(!self.auth()){ return false; }
 
         $(this.el).html(this.template());
 

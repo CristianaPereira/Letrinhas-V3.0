@@ -160,12 +160,10 @@ app.route('/questions')
 app.route('/questions/:id')
     .get(auth, perms(2), questions.get);
 
+//Tests
 app.route('/tests')
-    .post(auth, perms(2), questions.new)
-    .get(auth, perms(2), questions.getAll);
+    .get(auth, perms(2), tests.getAll);
 
-app.route('/tests/:id')
-    .get(auth, perms(2), questions.get);
 
 
 //This Needs To Be Revised
