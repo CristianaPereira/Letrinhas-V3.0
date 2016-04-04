@@ -2,6 +2,7 @@ require('colors');
 
 var nano = require('nano')(process.env.COUCHDB);
 var db = nano.use('dev_testes');
+var dbp = nano.use('dev_perguntas');
 
 exports.upDate = function (req, res) {
     var id = req.params.id;
@@ -115,14 +116,29 @@ exports.getAll = function (req, res) {
         }
         else {
 
-            for(var i in body.rows){
+            for (var i in body.rows) {
 
-                if(body.rows[i].doc.professorId && body.rows[i].doc.professorId == user)
+                if (body.rows[i].doc.professorId && body.rows[i].doc.professorId == user)
                     body.rows[i].doc.isMine = true;
 
             }
 
-            res.json(body.rows);
+            var response = {};
+            response.tests = body.rows;
+
+            dbp.list({'include_docs': true, 'limit': undefined, 'descending': true}, function (err, body) {
+
+                if (err) {
+                    res.send(err.statusCode, {error: "Erro a procurar escolas"});
+                }
+                else {
+                    response.questions = body.rows;
+                    res.json(response);
+                }
+
+            });
+
+
         }
 
     });

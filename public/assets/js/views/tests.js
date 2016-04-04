@@ -30,11 +30,12 @@ window.TestsView = Backbone.View.extend({
             //Response Handler
             function (json) {
 
-                console.log(json);
+                self.tests = json.tests;
+                self.questions = json.questions;
 
                 //Append Test Buttons To Template
                 $("#testsContent").html("");
-                $.each(json, function (i) {
+                $.each(self.tests, function (i) {
 
                     //Load First School Preview
                     if (i === 0) {
@@ -97,6 +98,7 @@ window.TestsView = Backbone.View.extend({
 
                     $("#testsContent").append($div);
                 });
+
             },
 
             //Error Handling
