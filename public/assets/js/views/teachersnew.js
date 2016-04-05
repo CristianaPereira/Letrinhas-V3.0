@@ -10,7 +10,6 @@ window.TeachersNewView = Backbone.View.extend({
     },
     //Adiciona a escola e a turma ao objecto
     addTurma: function () {
-
         assocClass();
     },
 
@@ -51,6 +50,7 @@ window.TeachersNewView = Backbone.View.extend({
 
                 var dataUrl = canvas.toDataURL('image/jpeg');
                 $("#base64textarea").val(dataUrl);
+                $("#iFoto").attr('src', dataUrl);
 
             }
             image.src = readerEvent.target.result;
@@ -103,7 +103,12 @@ window.TeachersNewView = Backbone.View.extend({
         if (!this.isEmailAvail()) {
             return false;
         }
-        console.log(isValid);
+        if (!matchingPswds($("#InputPasswd").val(), $("#ConfirmPasswd").val())) {
+            $("#InputPasswd").addClass("emptyField");
+            $("#ConfirmPasswd").addClass("emptyField");
+            $("#validationLbl").text("As passwords não coincidem.");
+            return false;
+        }
         if (isValid) {
             this.send();
         }
@@ -153,15 +158,12 @@ window.TeachersNewView = Backbone.View.extend({
         );
     },
 
-
     //Class Initializer
     initialize: function () {
-
         //Get Schools If User Has Required Permissions
         populateDDSchools();
     }
     ,
-
     //Class Renderer
     render: function () {
         $(this.el).html(this.template());

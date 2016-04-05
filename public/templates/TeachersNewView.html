@@ -2,7 +2,7 @@
 
 <!--FORMULARIO -->
 <div class="container">
-    <form id="newteacherform" class="insertContainer" role="form" data-toggle="validator" method="POST"
+    <form id="newteacherform" class="mainDiv" role="form" data-toggle="validator" method="POST"
           action="/teachers"
           enctype="multipart/form-data">
         <div class="divWidget">
@@ -14,7 +14,7 @@
                 </div>
             </div>
             <legend>Detalhes</legend>
-
+            <!--NOME & TIPO & ESTADO-->
             <div class="row">
                 <div class="col-sm-6">
                     <input class="form-control mandatory" type="text" id="InputNome"
@@ -36,6 +36,7 @@
                     </select>
                 </div>
             </div>
+            <!--EMAIL & TELEFONE & FOTO-->
             <div class="row">
                 <div class="col-sm-4">
                     <input type="email" class="form-control mandatory" id="inputEmail"
@@ -47,16 +48,21 @@
                            id="InputTelefone" placeholder="Telefone" name="telefone" required>
                     <span class="glyphicon glyphicon-earphone"></span>
                 </div>
-                <div class="col-sm-5">
-                    <input type="file" id="filePicker" class="form-control mandatory" accept="image/jpg"
-                           name="filePicker"
-                           required>
-                    <input type="hidden" id="base64textarea" class="form-control" accept="image/jpg"
-                           name="imgb64">
-                    <span class="glyphicon glyphicon-camera"></span>
-                    <img id="iFoto" style="display:none" src="../img/inConstruction.jpg">
+                <div class="col-sm-4">
+                    <div class="upload form-control">
+                        <span>Escolher fotografia</span>
+                        <input type="file" id="filePicker" class="form-control mandatory" accept="image/jpg"
+                               name="filePicker"
+                               required>
+                        <input type="hidden" id="base64textarea" class="form-control" accept="image/jpg"
+                               name="imgb64">
+                    </div>
+                </div>
+                <div class="col-sm-1">
+                    <img id="iFoto" class="smallImgPreView">
                 </div>
             </div>
+
             <div class="row">
                 <div class="col-sm-4">
                     <input type="password" class="form-control mandatory" id="InputPasswd"
@@ -104,23 +110,21 @@
             </div>
             <div id="assocTurma" class="col-sm-12">
             </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="btn-group">
-                        <button id="buttonCancelar" type="reset" class="btn btn-default">Cancelar</button>
-                        <button id="newteacherbtn" type="submit" class="btn btn-success">Submeter</button>
-                    </div>
-                </div>
-
-            </div>
             <!--###################################################################-->
-
             <div class="control-group">
                 <div id="hiddenEscola" class="hidden">
                     <input type="hidden" value="{}" id="teacherClasses" class="form-control" name="turmas">
                 </div>
-
             </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="btn-group">
+                    <button id="buttonCancelar" type="reset" class="btn btn-default">Cancelar</button>
+                    <button id="newteacherbtn" type="submit" class="btn btn-success">Inserir</button>
+                </div>
+            </div>
+
         </div>
     </form>
 </div>

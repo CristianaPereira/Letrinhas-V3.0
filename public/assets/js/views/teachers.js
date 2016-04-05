@@ -4,8 +4,23 @@ window.TeachersView = Backbone.View.extend({
         "click #newteacherbtn": "newTeacher",
         "click #btnDelProf": "deleteTeacher",
         "keyup #txtSearch": "searchProf",
+        "click #orderBy": "orderProfs",
     },
 
+    orderProfs: function () {
+        var mylist = $('#teachersContent');
+
+        var listitems = mylist.children('div').get();
+
+        listitems.sort(function (a, b) {
+            console.log($(a).children('span').text());
+            return $(a).children('span').text().toUpperCase().localeCompare($(b).children('span').text().toUpperCase());
+        });
+
+        $.each(listitems, function (index, item) {
+            mylist.append(item);
+        });
+    },
     //filtra os profs que correspondem à pesquisa (case insensitive)
     searchProf: function (e) {
         $(".listButton").hide();
@@ -41,10 +56,8 @@ window.TeachersView = Backbone.View.extend({
         //Apaga o professor seleccionado
         modem('POST', 'teachers/' + $(e.currentTarget).attr('value') + '/del',
             function (json) {
-                console.log("apagado");
 
                 sucssesMsg($("#teachersDiv"), "O utilizador " + $(e.currentTarget).attr('value') + " foi apagado com sucesso");
-
                 setTimeout(function () {
                     document.location.reload(true);
                 }, 2000);
@@ -64,85 +77,10 @@ window.TeachersView = Backbone.View.extend({
         });
     },
 
-    getTurmas: function (idProf, nomeProf) {
-        var self = this;
-        var nTurmas = 0;
-        //Objecto Json com o nome das escolas e turmas
-        var obj = jQuery.parseJSON("{}");
-        //Obtem os nomes das escolas e respectivas turmas associadas ao professor idProf
-        modem('GET', 'schools', function (schoolsList) {
-                //Verifica a lista de escolas
-                $.each(schoolsList, function (key, school) {
-                    //Verifica a lista de turmas
-                    $.each(school.doc.turmas, function (kTurma, turma) {
-                        var trm = turma.ano + "º " + turma.nome;
-                        //Verifica a lista de turmas
-                        $.each(turma.professores, function (kProf, prof) {
-                            if (prof.id == idProf) {
-                                //Se a escola já estiver listada, e a turma não, adiciona a turma
-                                if (obj[school.doc.nome]) {
-                                    if (obj[school.doc.nome]['turma'].indexOf(trm) == -1) {
-                                        obj[school.doc.nome]['turma'].push(trm);
-                                    }
-                                } else {
-                                    obj[school.doc.nome] = {};
-                                    obj[school.doc.nome]['id'] = school.doc.nome;
-                                    obj[school.doc.nome]['turma'] = [];
-                                    obj[school.doc.nome]['turma'].push(trm);
-                                    nTurmas++;
-                                }
-                            }
-                        });
-                    });
-                });
-                $('#assocClasses').text(nomeProf + ', tem ' + nTurmas + ' turma(s) associada(s).');
-                //Exibe os dado na view
-                $.each(obj, function (kSch, sch) {
-                    var $school = $("<div>", {
-                        class: "col-md-8 col-sm-8"
-                    }).append('<i class="fa fa-university"></i>' +
-                        '<label style="margin-left: 7px;">' + sch.id + '</label>');
-                    var $row = $("<div>", {
-                        class: "row"
-                    }).append($school);
-                    $($row).append($school);
-                    var $classes = $("<div>", {
-                        class: "col-md-4 col-sm-4"
-                    });
-                    $.each(sch.turma, function (kValue, value) {
-                        $classes.append('<label>' + value + '</label></br>')
-                    });
-                    $($row).append($classes);
-                    $("#prfSchool").append($row);
-                });
-            },
-            function (error) {
-                console.log('Error getting schools list!');
-            }
-        )
-        ;
-
-    },
-
     enchePreview: function (teacherData) {
         var self = this;
-        this.getTurmas(teacherData._id, teacherData.nome);
+        getAssocClasses(teacherData._id, teacherData.nome);
         $('#teachersPreview').empty();
-        var permission;
-        switch (teacherData.permissionLevel) {
-            case '1' :
-                permission = "Auxiliar";
-                break;
-            case '2' :
-                permission = "Professor";
-                break;
-            case '3' :
-                permission = "Administrador de Sistema";
-                break;
-            default:
-                permission = "Utilizador";
-        }
-        ;
 
         var $divFoto = $("<div>", {
             class: "col-md-4"
@@ -151,10 +89,10 @@ window.TeachersView = Backbone.View.extend({
         var $divDados = $("<div>", {
             class: "col-md-8"
         }).append('<label class="dataTitle col-md-12">' + teacherData.nome + '</label><br>')
-            .append('<label class="col-md-12 dataSubTitle">' + permission + '</label><br>')
-            .append('<label class="col-md-4 lblUserDetails">E-mail:</label> <label class="col-md-8">' + teacherData._id + '</label><br>')
-            .append('<label class="col-md-4 lblUserDetails">Nome:</label> <label class="col-md-8">' + teacherData.nome + '</label><br>')
-            .append('<label class="col-md-4 lblUserDetails">Telefone:</label> <label  class="col-md-8">' + teacherData.telefone + ' </label><br>')
+            .append('<label class="col-md-12 dataSubTitle">' + getUserRole(teacherData.permissionLevel) + '</label><br>')
+            .append('<label class="col-md-4 lblDataDetails">E-mail:</label> <label class="col-md-8">' + teacherData._id + '</label><br>')
+            .append('<label class="col-md-4 lblDataDetails">Nome:</label> <label class="col-md-8">' + teacherData.nome + '</label><br>')
+            .append('<label class="col-md-4 lblDataDetails">Telefone:</label> <label  class="col-md-8">' + teacherData.telefone + ' </label><br>')
             .append('<div id="SchoolTable" class="col-md-12" align="center" style="max-height:220px; overflow:auto"></div>');
 
         $('#teachersPreview').append($divFoto, $divDados)
@@ -213,12 +151,13 @@ window.TeachersView = Backbone.View.extend({
                 //Error Handling Given The Error Nature
                 //Se o erro retornado for de acesso negado, reencaminha o utilizador para a página de login
                 if (JSON.parse(xhr.status)) {
-                    failMsg($("#teachersDiv"), "Ocorreu um imprevisto. \n (" + JSON.parse(xhr.responseText).result + ").");
-                    setTimeout(function () {
-                        app.navigate('/inicio', {
-                            trigger: true
-                        });
-                    }, 2000);
+                    showLoginModal($("#teachersDiv"));
+                    /* failMsg($("#teachersDiv"), "Ocorreu um imprevisto. \n (" + JSON.parse(xhr.responseText).result + ").");
+                     setTimeout(function () {
+                     app.navigate('/inicio', {
+                     trigger: true
+                     });
+                     }, 2000);*/
                 }
             }
         );
