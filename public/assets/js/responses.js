@@ -10,7 +10,7 @@ window.sucssesMsg = function (form, txt) {
         role: "dialog",
         "aria-labelledby": "basicModal",
         "aria-hidden": "true"
-    }).append('<div id="infoModalContent" class="modal-dialog"></div>>');
+    }).append('<div id="infoModalContent" class="modal-dialog"></div>');
 
     $(form).append($edit);
 
@@ -32,7 +32,7 @@ window.failMsg = function (form, txt) {
         role: "dialog",
         "aria-labelledby": "basicModal",
         "aria-hidden": "true"
-    }).append('<div id="infoModalContent" class="modal-dialog"></div>>');
+    }).append('<div id="infoModalContent" class="modal-dialog"></div>');
 
     form.append($edit);
 

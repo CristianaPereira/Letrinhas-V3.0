@@ -22,7 +22,7 @@ window.TeachersEditView = Backbone.View.extend({
             function (json) {
                 sucssesMsg($("#editTeacherView"), "Turmas associadas com sucesso.");
                 setTimeout(function () {
-                    self.getTurmas($("#inputEmail").val(), $("#InputNome").val());
+                    getAssocClasses($("#inputEmail").val(), $("#InputNome").val());
                     $("#teacherClasses").val("{}");
                     $("#assocTurma").empty();
                 }, 2000);
@@ -117,6 +117,7 @@ window.TeachersEditView = Backbone.View.extend({
 
                 var dataUrl = canvas.toDataURL('image/jpeg');
                 $("#base64textarea").val(dataUrl);
+                $("#iFoto").attr('src', dataUrl);
 
             }
             image.src = readerEvent.target.result;
@@ -166,87 +167,24 @@ window.TeachersEditView = Backbone.View.extend({
         self.teacherID = id;
     },
 
-    getTurmas: function (idProf, nomeProf) {
-        var self = this;
-        var nTurmas = 0;
-        $("#prfSchool").empty();
-        //Objecto Json com o nome das escolas e turmas
-        var obj = jQuery.parseJSON("{}");
-        //Obtem os nomes das escolas e respectivas turmas associadas ao professor idProf
-        modem('GET', 'schools', function (schoolsList) {
-                //Verifica a lista de escolas
-                $.each(schoolsList, function (key, school) {
-                    //Verifica a lista de turmas
-                    $.each(school.doc.turmas, function (kTurma, turma) {
-                        var trm = turma.ano + "º " + turma.nome;
-                        //Verifica a lista de turmas
-                        $.each(turma.professores, function (kProf, prof) {
-                            if (prof.id == idProf) {
-                                //Se a escola já estiver listada, e a turma não, adiciona a turma
-                                if (obj[school.doc.nome]) {
-                                    if (obj[school.doc.nome]['turma'].indexOf(trm) == -1) {
-                                        obj[school.doc.nome]['turma'].push(trm);
-                                    }
-                                } else {
-                                    obj[school.doc.nome] = {};
-                                    obj[school.doc.nome]['id'] = school.doc.nome;
-                                    obj[school.doc.nome]['turma'] = [];
-                                    obj[school.doc.nome]['turma'].push(trm);
-                                    nTurmas++;
-                                }
-                            }
-                        });
-                    });
-                });
-                $('#assocClasses').text(nomeProf + ', tem ' + nTurmas + ' turma(s) associada(s).');
-                //Exibe os dado na view
-                $.each(obj, function (kSch, sch) {
-                    var $school = $("<div>", {
-                        class: "col-md-8 col-sm-8"
-                    }).append('<i class="fa fa-university"></i>' +
-                        '<label style="margin-left: 7px;">' + sch.id + '</label>');
-                    var $row = $("<div>", {
-                        class: "row"
-                    }).append($school);
-                    $($row).append($school);
-                    var $classes = $("<div>", {
-                        class: "col-md-4 col-sm-4"
-                    });
-                    $.each(sch.turma, function (kValue, value) {
-                        $classes.append('<label>' + value + ' </label>' +
-                            '<i class="fa fa-remove" tooltip="Remover" style="margin-left: 5px;"></i></br>')
-                    });
-                    $($row).append($classes);
-                    $("#prfSchool").append($row);
-                });
-            },
-            function (error) {
-                console.log('Error getting schools list!');
-            }
-        )
-        ;
-
-    },
-
     render: function () {
         var self = this;
         $(this.el).html(this.template());
         //Gets teacher data and shows his/her info
         modem('GET', 'teachers/' + self.teacherID.id, function (prof) {
-            $("#InputNome").val(prof.nome);
-            $("#editHead").html('<img src="../img/letrinhas2.png" style="height:40px">'
-                + '<img src="../img/docentes.png"  style="height:40px;" >'
-                + "Editar dados de " + prof.eMail);
-            $("#inputEmail").val(prof._id);
-            $("#InputPasswd").val(prof.pwd);
-            $("#inputPin").val(prof.pin);
-            $("#InputTelefone").val(prof.telefone);
+            console.log(prof);
+            $(".titleImage").attr('src', prof.imgb64);
             $("#iFoto").attr('src', prof.imgb64);
-            $("#dbUserType").eq(1).prop('selected', true);
+            $(".titleText").text(prof.nome);
 
+            $("#InputNome").val(prof.nome);
+            $("#inputEmail").val(prof._id);
+            $("#InputTelefone").val(prof.telefone);
+
+            $("#dbUserType > option").eq(prof.permissionLevel - 1).attr('selected', 'selected');
             $('#classesList').append('<div id="prfSchool" class="col-md-12" align=left><label id="assocClasses">' + prof.nome + ', não tem turmas associadas.</label></div>')
             ;
-            self.getTurmas(prof._id, prof.nome);
+            getAssocClasses(prof._id, prof.nome);
             if (prof.estado) {
                 document.getElementById('selectEstado').selectedIndex = 0;
             }

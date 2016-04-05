@@ -53,7 +53,7 @@ exports.new = function (req, res) {
 
         for (var items in escolas) {
             console.log("Ver escola :" + escolas[items].id);
-            insertProfTurma(req.body.email, escolas[items].id, escolas[items].turma);
+            insertProfTurma(req.body.email, escolas[items].id, escolas[items].turmas);
             console.log("-------------");
         }
 
@@ -69,31 +69,28 @@ exports.new = function (req, res) {
 
 exports.updateDetails = function (req, res) {
     console.log('Teachers - UPDATE'.cyan);
-
-
-    db.get(req.body.email, function (err, body) {
-        if (err) {
-            console.log("(L-20) - Não foi possivel aceder a " + req.body.email + '\n'
-                + "erro: " + err);
-            res.redirect('/teachers');
-        }
-        body.estado = req.body.estado;
-        body.nome = req.body.name;
-        body.telefone = req.body.telefone;
-        body.tipoFuncionario = req.body.tipo;
-        if (req.body.imgb64) {
-            body.imgb64 = req.body.imgb64;
-        }
-        db.insert(body, req.body.email, function (err, body) {
-            if (err)
-                console.log("(L-131) - Não foi possivel alterar " + req.body.email + '\n' + "erro: " + err);
-            else {
-                res.json(body);
-                console.log('New teacher ' + req.body.name + ' was inserted!'.green);
-
+    if (req.body.name && req.body.telefone) {
+        db.get(req.body.email, function (err, body) {
+            if (err) {
+                console.log("(L-20) - Não foi possivel aceder a " + req.body.email + '\n'
+                    + "erro: " + err);
+                res.redirect('/teachers');
             }
+            body.nome = req.body.name;
+            body.telefone = req.body.telefone;
+            if (req.body.imgb64) {
+                body.imgb64 = req.body.imgb64;
+            }
+            db.insert(body, req.body.email, function (err, body) {
+                if (err)
+                    console.log("(L-131) - Não foi possivel alterar " + req.body.email + '\n' + "erro: " + err);
+                else {
+                    res.json(body);
+                    console.log('Updated teacher ' + req.body.name + '!'.green);
+                }
+            });
         });
-    });
+    }
 };
 
 exports.editPasswd = function (req, res) {
@@ -216,7 +213,7 @@ exports.get = function (req, res) {
 
 //Função para atualizar as turmas com o id do professor
 function insertProfTurma(idProf, escola, turmas) {
-
+    console.log(turmas);
     var existe = false;
     //Obtem os dados da escola
     db2.get(escola, function (err, schoolData) {

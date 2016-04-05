@@ -59,9 +59,9 @@ window.UserView = Backbone.View.extend({
                 class: "col-md-8"
             }).append('<label class="dataTitle col-md-12">' + teacherData.nome + '</label><br>')
                 .append('<label class="col-md-12 dataSubTitle">' + permission + '</label><br>')
-                .append('<label class="col-md-4 lblUserDetails">E-mail:</label> <label class="col-md-8">' + teacherData._id + '</label><br>')
-                .append('<label class="col-md-4 lblUserDetails">Nome:</label> <label class="col-md-8">' + teacherData.nome + '</label><br>')
-                .append('<label class="col-md-4 lblUserDetails">Telefone:</label> <label  class="col-md-8">' + teacherData.telefone + ' </label><br>')
+                .append('<label class="col-md-4 lblDataDetails">E-mail:</label> <label class="col-md-8">' + teacherData._id + '</label><br>')
+                .append('<label class="col-md-4 lblDataDetails">Nome:</label> <label class="col-md-8">' + teacherData.nome + '</label><br>')
+                .append('<label class="col-md-4 lblDataDetails">Telefone:</label> <label  class="col-md-8">' + teacherData.telefone + ' </label><br>')
                 .append('<div id="SchoolTable" class="col-md-12" align="center" style="max-height:220px; overflow:auto"></div>')
                 .append('<div class="col-md-12" ><hr class="dataHr"></div><div id="prfSchool" class="col-md-12" align=left><label id="assocClasses">' + teacherData.nome + ', não tem turmas associadas.</label></div>');
 
