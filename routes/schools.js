@@ -116,7 +116,7 @@ exports.editSchool = function (req, res){
     }
     else{
         console.log('Parameters Missing');
-        req.send(401).json({});
+        res.send(401, { error: "Alguns parametros são de preenchimento obrigatório" });
     }
 
 
@@ -169,7 +169,7 @@ exports.newClass = function (req, res) {
     db.get(req.params.id, function (err, body) {
 
         if (err) {
-            return res.status(err.statusCode).json({});
+            res.send(err.statusCode, { error: "Erro ao procurar escola" });
         }
         else {
 
@@ -188,10 +188,7 @@ exports.newClass = function (req, res) {
             //Update School
             db.insert(body, body._id, function (err) {
                 if (err) {
-                    res.status(500).json({
-                        'result': 'nok',
-                        'message': err
-                    });
+                    res.send(err.statusCode, { error: "Erro ao inserir turma na escola" });
                 }
                 else{
                     console.log('New class was inserted into the school'.green);
@@ -213,7 +210,7 @@ exports.removeClass = function (req, res){
 
         if (err) {
             //Report Error (School Doenst Exists)
-            return res.status(err.statusCode).json({});
+            res.send(err.statusCode, { error: "Erro ao procurar escola" });
         }
         else {
 
@@ -230,10 +227,7 @@ exports.removeClass = function (req, res){
             //Update School
             db.insert(body, body._id, function (err) {
                 if (err) {
-                    res.status(500).json({
-                        'result': 'nok',
-                        'message': err
-                    });
+                    res.send(err.statusCode, { error: "Erro ao apagar turma da escola" });
                 }
                 else{
                     console.log('Class Removed Successfully'.green);

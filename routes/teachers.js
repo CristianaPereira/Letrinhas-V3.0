@@ -236,7 +236,7 @@ function insertProfTurma(idProf, escola, turmas) {
                 }
                 if (!existe) {
                     schoolData.turmas[turma].professores.push(
-                        {"id": idProf}
+                        {"_id": idProf}
                     );
                 } else {
                     console.log(idProf + ", já está associado à turma " + schoolData.turmas[turma].ano + "º " + schoolData.turmas[turma].nome);

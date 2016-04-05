@@ -36,23 +36,17 @@ window.SchoolsInfo = Backbone.View.extend({
         modem('POST', 'schools/' + self.school.id + '/newclass',
 
             //Response Handler
-            function (json) {
-                document.location.reload(true);
+            function () {
+                sucssesMsg($("#classes"), "Turma Adicionado com sucesso");
+                setTimeout(function () {
+                    document.location.reload(true);
+                }, 2000);
+
             },
 
             //Error Handling
             function (xhr, ajaxOptions, thrownError) {
-
-                switch (xhr.status) {
-                    case 404:
-                        app.navigate('schools', true);
-                        break;
-
-                    default:
-                        //Default == 200 (OK)
-                        document.location.reload(true);
-                }
-
+                failMsg($("#classes"), "Não foi possível adicionar a tuurma. \n (" + JSON.parse(xhr.responseText).error + ").");
             },
 
             newClass
@@ -72,23 +66,15 @@ window.SchoolsInfo = Backbone.View.extend({
 
                 //Response Handler
                 function () {
-                    document.location.reload(true);
+                    sucssesMsg($("#classes"), "Turma removida com sucesso");
+                    setTimeout(function () {
+                        document.location.reload(true);
+                    }, 2000);
                 },
 
                 //Error Handling
                 function (xhr, ajaxOptions, thrownError) {
-
-                    console.log("heyo");
-
-                    switch (xhr.status) {
-                        case 404:
-                            app.navigate('schools', true);
-                            break;
-
-                        default:
-                            //Default == 200 (OK)
-                            document.location.reload(true);
-                    }
+                    failMsg($("#classes"), "Não foi possível remover a turma. \n (" + JSON.parse(xhr.responseText).error + ").");
                 },
 
                 {_id: e.target.value}

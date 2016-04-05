@@ -150,6 +150,7 @@ app.route('/students')
 
 
 app.route('/students/:id')
+    .post(auth, perms(2), students.editStudent)
     .get(auth, perms(2), students.get);
 
 app.route('/questions')
@@ -159,15 +160,16 @@ app.route('/questions')
 app.route('/questions/:id')
     .get(auth, perms(2), questions.get);
 
+//Tests
 app.route('/tests')
-    .post(auth, perms(2), questions.new)
-    .get(auth, perms(2), questions.getAll);
+    .get(auth, tself, perms(2), tests.getAll);
 
-app.route('/tests/:id')
-    .get(auth, perms(2), questions.get);
 
 
 //This Needs To Be Revised
+app.route('/schools/class')
+    .post(auth, perms(2), tself, schools.newClass);
+
 app.route('/schools/:id/newclass')
     .post(auth, perms(3), schools.newClass);
 
@@ -177,7 +179,7 @@ app.route('/schools/:id/removeclass')
 app.route('/schools/:id/remove')
     .post(auth, perms(3), schools.removeSchool);
 
-
+//Student Routing
 app.route('/students/:id/remove')
     .post(auth, perms(3), students.removeStudent);
 

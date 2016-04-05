@@ -5,6 +5,15 @@ window.StudentsNewView = Backbone.View.extend({
         "change #filePicker": "convertPhoto",
     },
 
+    //Check Auth
+    auth: function (e) {
+        if (!window.sessionStorage.getItem("keyo")) {
+            app.navigate("/#", true);
+            return false;
+        }
+        return true;
+    },
+
     //Convert Photo To Base64 String
     convertPhoto: function (e) {
 
@@ -61,10 +70,17 @@ window.StudentsNewView = Backbone.View.extend({
         //Send Form Via Ajax
         modem('POST', 'students',
             //Response Handler
-            function (json) {
+            function () {
+                sucssesMsg($("#newstudentform"), "Aluno criado com sucesso");
+                setTimeout(function () {
+                    app.navigate('/students', {
+                        trigger: true
+                    });
+                }, 2000);
             },
             //Error Handling
             function (xhr, ajaxOptions, thrownError) {
+                failMsg($("#newstudentform"), "Não foi possível criar o novo aluno. \n (" + JSON.parse(xhr.responseText).error + ").");
             },
             //Data To Send
             $("#newstudentform").serializeArray()
@@ -79,6 +95,10 @@ window.StudentsNewView = Backbone.View.extend({
     //Class Renderer
     render: function () {
         var self = this;
+
+        //Check Local Auth
+        if(!self.auth()){ return false; }
+
         $(this.el).html(this.template());
 
         modem('GET', 'schools',
