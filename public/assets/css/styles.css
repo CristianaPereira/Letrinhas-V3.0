@@ -520,7 +520,7 @@ div.upload {
 }
 
 div.upload > span {
-    position: fixed;
+    position: absolute;
     padding: 5px;
 }
 

@@ -47,7 +47,7 @@ window.SchoolsView = Backbone.View.extend({
     },
 
     //Navigate To School Edit Page
-    editSchool: function(e){
+    editSchool: function (e) {
         e.preventDefault();
         app.navigate('schools/' + e.target.value + '/edit', {
             trigger: true
@@ -107,45 +107,49 @@ window.SchoolsView = Backbone.View.extend({
             trigger: true
         });
     },
+    //Solicita confirmação para apagar o professor
+    confirmDelete: function (id, nome) {
+
+        var modal = delModal("Apagar escola",
+            "Tem a certeza que pretende eliminar a escola <label>" + nome + " </label> ?",
+            "deletebtn", id);
+
+        $('#schoolsDiv').append(modal);
+        $('#modalConfirmDel').modal("show");
+    },
 
     //Remove School
-    deleteSchool: function(e){
-        e.preventDefault();
-
-        var r = confirm("Are you sure you want to delete this school?");
-
-        if(r){
-
-            modem('POST', 'schools/' + e.target.value + '/remove' ,
-
-                //Response Handler
-                function () {
+    deleteSchool: function (e) {
+        var self = this;
+        $('#modalConfirmDel').modal("hide");
+        modem('POST', 'schools/' + e.target.value + '/remove',
+            //Response Handler
+            function () {
+                sucssesMsg($("#schoolsDiv"), "Escola apagada com sucesso!");
+                setTimeout(function () {
                     document.location.reload(true);
-                },
-
-                //Error Handling
-                function (xhr, ajaxOptions, thrownError) {
-
-                }
-            );
-
-        }
-
+                }, 2000);
+            },
+            //Error Handling
+            function (xhr, ajaxOptions, thrownError) {
+                console.log("ups");
+            }
+        );
     },
 
     //Search School
-    searchSchool: function(e){
+    searchSchool: function (e) {
 
-        $('#schoolsContent').find('button').each(function(){
+        $('#schoolsContent').find('button').each(function () {
 
             var search = new RegExp(($("#schoolSearch").val()).toLowerCase());
             var source = ($(this).attr('name')).toLowerCase();
 
 
-            if(search.test(source)){
+            if (search.test(source)) {
                 $(this).show();
             }
-            else{
+            else {
                 $(this).hide();
             }
 
@@ -154,7 +158,8 @@ window.SchoolsView = Backbone.View.extend({
     },
 
     //Class Initializer
-    initialize: function () {},
+    initialize: function () {
+    },
 
     //Class Renderer
     render: function () {
@@ -162,42 +167,55 @@ window.SchoolsView = Backbone.View.extend({
         var self = this;
 
         //Check Local Auth
-        if(!self.auth()){ return false; }
+        if (!self.auth()) {
+            return false;
+        }
 
         $(this.el).html(this.template());
-
-        $("#opDef").attr("style", "display:show");
-        $("#sepProf").attr("style", "display:show");
-
-
         //Get Shools Information
         modem('GET', 'schools',
 
             //Response Handler
             function (json) {
+                $('#schoolsContent').empty();
+                //Teachers Counter
+                $('#schoolsBadge').text(json.length);
+                //  $('#teachersContent').empty();
+                //Preenche a lista de professores registados( e com estado activo)
+                $.each(json, function (key, data) {
+                    //Botao de editar
+                    var $edit = $("<a>", {
+                        //href: "#teachers/data.doc._id/edit",
+                        href: "#schools/edit",
+                        val: data.doc._id,
+                        title: "Editar professor",
+                    }).append('<i class="fa fa-edit"></i>')
+                        .click(function () {
+                            //  self.editTeacher($(this).val());
+                        });
 
-                //Append School Buttons To Template
-                $("#schoolsContent").html("");
-                $.each(json, function (i) {
+                    //Botao de eliminar
+                    var $delete = $("<a>", {
+                        href: "#schools",
+                        val: data.doc._id,
+                        title: "Apagar professor",
+                    }).append('<i class="fa fa-trash-o"></i>')
+                        .click(function () {
+                            self.confirmDelete(data.doc._id, data.doc.nome);
+                        });
 
-                    //Load First School Preview
-                    if (i === 0) {
-                        self.fillPreview(this.doc);
-                    }
+                    var $div = $("<div>", {
+                        class: "listButton divWidget"
+                    }).append("<img src=" + data.doc.imgb64 + "><span>" + data.doc.nome + "</span>")
+                        .append($edit)
+                        .append($delete)
+                        .click(function () {
+                            self.enchePreview(data.doc);
+                        });
 
-                    var $div = $("<button>", {
-                        id: this.doc._id,
-                        class: "btn btn-lg btn-block schoolSelec",
-                        name: this.doc.nome,
-                        type: "button",
-                        style: "height:60px; text-align:left; background-color: #53BDDC; color: #ffffff;"
-                    })
-                        .append("<img style='height:30px;' src='" + this.doc.b64 + "'>" + "&nbsp;&nbsp;&nbsp;" + this.doc.nome);
-
-                    $("#schoolsContent").append($div);
+                    $('#schoolsContent').append($div);
                 });
-
-
+                //  self.fillPreview(json[0].doc);
             },
 
             //Error Handling

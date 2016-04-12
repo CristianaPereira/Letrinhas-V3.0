@@ -78,8 +78,10 @@ window.assocClass = function () {
 };
 
 //Gets a list of schools and classes associated to some teacher
-window.getAssocClasses = function (idProf, nomeProf) {
+window.getAssocClasses = function (idProf, nomeProf, editable) {
     var nTurmas = 0;
+
+
     $("#prfSchool").empty();
     //Objecto Json com o nome das escolas e turmas
     var obj = jQuery.parseJSON("{}");
@@ -92,64 +94,68 @@ window.getAssocClasses = function (idProf, nomeProf) {
                     var trm = turma.ano + "º " + turma.nome;
                     //Verifica a lista de turmas
                     $.each(turma.professores, function (kProf, prof) {
-                        if (prof.id == idProf) {
-                            //Se a escola já estiver listada, e a turma não, adiciona a turma
-                            if (obj[school.doc.nome]) {
-                                if (obj[school.doc.nome]['turma'].indexOf(trm) == -1) {
-                                    obj[school.doc.nome]['turma'].push(trm);
-                                    nTurmas++;
-                                }
-                            } else {
-                                obj[school.doc.nome] = {};
-                                obj[school.doc.nome]['id'] = school.doc.nome;
-                                obj[school.doc.nome]['turma'] = [];
-                                obj[school.doc.nome]['turma'].push(trm);
-                                nTurmas++;
+                        if (prof._id == idProf) {
+                            var $class = '<label>' + trm + '</label>';
+                            if (editable) {
+                                $class += '<i id="' + school.doc._id + ':' + turma._id + '" class="fa fa-remove"  onclick = "removeClass(this)" ></i>';
                             }
+                            $class += '</br>';
+                            //Se a escola já estiver listada, e a turma não, adiciona a turma
+                            if (!$('div#' + school.doc._id).length) {
+                                var $row = $("<div>", {
+                                    class: "row",
+                                    id: school.doc._id
+                                }).append($("<div>", {
+                                    class: "col-md-8 col-sm-8"
+                                }).append('<i class="fa fa-university"></i>' +
+                                    '<label style="margin-left: 7px;">' + school.doc.nome + '</label>'), $("<div>", {
+                                    class: "col-md-4 col-sm-4"
+                                }).append($class));
+                                $("#prfSchool").append($row);
+
+                            } else {
+                                $('div#' + school.doc._id + "> .col-md-4").append($class);
+                            }
+                            nTurmas++;
+                            console.log(nTurmas);
                         }
                     });
                 });
             });
-            $('#assocClasses').text(nomeProf + ', tem ' + nTurmas + ' turma(s) associada(s).');
-            //Exibe os dado na view
-            $.each(obj, function (kSch, sch) {
-                var $school = $("<div>", {
-                    class: "col-md-8 col-sm-8"
-                }).append('<i class="fa fa-university"></i>' +
-                    '<label style="margin-left: 7px;">' + sch.id + '</label>');
-                var $row = $("<div>", {
-                    class: "row"
-                }).append($school);
-                $($row).append($school);
-                var $classes = $("<div>", {
-                    class: "col-md-4 col-sm-4"
-                });
-                $.each(sch.turma, function (kValue, value) {
-                    $classes.append('<label>' + value + '</label></br>')
-                });
-                $($row).append($classes);
-                $("#prfSchool").append($row);
-            });
+            $("#prfSchool").prepend('<label id="assocClasses">' + nomeProf + ', tem ' + nTurmas + ' turma(s) associada(s).</label>');
+
         },
         function (error) {
             console.log('Error getting schools list!');
         }
+    );
+
+
+};
+
+window.removeClass = function (elem) {
+    var classe = (elem.id).split(":");
+    modem('POST', 'teachers/rmvClass',
+        //Response Handler
+        function (json) {
+
+            getAssocClasses($("#inputEmail").val(), $("#InputNome").val(), true);
+
+
+        },
+        //Error Handling
+        function (xhr, ajaxOptions, thrownError) {
+            failMsg($("#newteacherform"), "Não foi possível alterar os dados. \n (" + JSON.parse(xhr.responseText).result + ").");
+        },
+        '&email=' + encodeURIComponent($("#inputEmail").val()) + '&school=' + encodeURIComponent(classe[0]) + '&class=' + encodeURIComponent(classe[1])
     )
     ;
-}
+};
 
 window.desassocClass = function (elem) {
     var obj = jQuery.parseJSON($("#teacherClasses").val());
     var data = elem.id.split(":");
     var index = obj[data[0]]['turmas'].indexOf(data[1]);
-    /*   if (index != -1) {
-     //Se for a unica turma da escola, remove a turma e a escola
-     if (obj[data[0]].turma.length == 1) {
-     delete obj[data[0]];
-     } else {
-     obj[data[0]].turma.splice(index, 1);
-     }
-     }*/
     //Remove a turma da lista
     $.each(obj, function (iSchool, school) {
         if (school.id == data[0]) {

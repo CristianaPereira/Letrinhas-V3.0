@@ -22,7 +22,7 @@ window.TeachersEditView = Backbone.View.extend({
             function (json) {
                 sucssesMsg($("#editTeacherView"), "Turmas associadas com sucesso.");
                 setTimeout(function () {
-                    getAssocClasses($("#inputEmail").val(), $("#InputNome").val());
+                    getAssocClasses($("#inputEmail").val(), $("#InputNome").val(), true);
                     $("#teacherClasses").val("{}");
                     $("#assocTurma").empty();
                 }, 2000);
@@ -182,9 +182,9 @@ window.TeachersEditView = Backbone.View.extend({
             $("#InputTelefone").val(prof.telefone);
 
             $("#dbUserType > option").eq(prof.permissionLevel - 1).attr('selected', 'selected');
-            $('#classesList').append('<div id="prfSchool" class="col-md-12" align=left><label id="assocClasses">' + prof.nome + ', não tem turmas associadas.</label></div>')
+            $('#classesList').append('<div id="prfSchool" class="col-md-12" align=left><label id="assocClasses">' + prof.nome + ', não tem turmas associadas.</label></div>');
             ;
-            getAssocClasses(prof._id, prof.nome);
+            getAssocClasses(prof._id, prof.nome, true);
             if (prof.estado) {
                 document.getElementById('selectEstado').selectedIndex = 0;
             }

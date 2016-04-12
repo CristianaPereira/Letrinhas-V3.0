@@ -79,7 +79,7 @@ window.TeachersView = Backbone.View.extend({
 
     enchePreview: function (teacherData) {
         var self = this;
-        getAssocClasses(teacherData._id, teacherData.nome);
+
         $('#teachersPreview').empty();
 
         var $divFoto = $("<div>", {
@@ -96,8 +96,10 @@ window.TeachersView = Backbone.View.extend({
             .append('<div id="SchoolTable" class="col-md-12" align="center" style="max-height:220px; overflow:auto"></div>');
 
         $('#teachersPreview').append($divFoto, $divDados)
-            .append('<div class="col-md-12" ><hr class="dataHr"></div><div id="prfSchool" class="col-md-12" align=left><label id="assocClasses">' + teacherData.nome + ', não tem turmas associadas.</label></div>')
+            .append('<div class="col-md-12" ><hr class="dataHr"></div><div id="classesList" class="col-md-12" align=left></div>')
         ;
+        $('#classesList').append('<div id="prfSchool" class="col-md-12" align=left></div>');
+        getAssocClasses(teacherData._id, teacherData.nome, false);
     },
 
 //Class Renderer

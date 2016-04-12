@@ -122,7 +122,7 @@ exports.editPasswd = function (req, res) {
 };
 
 exports.editClasses = function (req, res) {
-    var escolas = JSON.parse(req.body.turmas);
+    var escolas = JSON.parse(req.body.addTurmas);
     for (var items in escolas) {
         insertProfTurma(req.body.email, escolas[items].id, escolas[items].turmas);
     }
@@ -134,7 +134,6 @@ exports.delete = function (req, res) {
     db.get(req.params.id, function (err, body) {
         if (err) {
             console.log("Nao foi possivel encontrar " + req.params.id + "\n " + err);
-
             return res.status(500).json({
                 'result': 'nok',
                 'message': err
@@ -211,7 +210,7 @@ exports.get = function (req, res) {
 };
 
 
-//Função para atualizar as turmas com o id do professor
+//Função para associar professores às turmas
 function insertProfTurma(idProf, escola, turmas) {
     console.log(turmas);
     var existe = false;
@@ -230,7 +229,7 @@ function insertProfTurma(idProf, escola, turmas) {
                 //Verifica se já está associada ao professor
                 for (var prof in schoolData.turmas[turma].professores) {
                     //Se não estiver associado, associa
-                    if (schoolData.turmas[turma].professores[prof].id === idProf) {
+                    if (schoolData.turmas[turma].professores[prof]._id === idProf) {
                         existe = true;
                     }
                 }
@@ -249,3 +248,42 @@ function insertProfTurma(idProf, escola, turmas) {
     });
 };
 
+//Função para desassociar professores às turmas
+exports.rmvClass = function (req, res) {
+    console.log(req.body);
+
+    console.log(req.body.email, req.body.school, req.body.class);
+
+    //Obtem os dados da escola
+    db2.get(req.body.school, function (err, schoolData) {
+        if (err) {
+            return res.status(500).json({
+                'result': 'nok',
+                'message': err
+            });
+        }
+        //Verifica as turmas registadas.
+        for (var turma in schoolData.turmas) {
+            //Quando encontrar uma turma para ser desassociada
+            if (schoolData.turmas[turma]._id == req.body.class) {
+                //Verifica se já está associada ao professor
+                for (var prof in schoolData.turmas[turma].professores) {
+                    //Se estiver associado, desassocia
+                    if (schoolData.turmas[turma].professores[prof]._id === req.body.email) {
+                        schoolData.turmas[turma].professores.splice(prof, 1);
+                    }
+                }
+            } else {
+                if (err) {
+                    res.send(err.statusCode, {error: "Erro ao desassociar turma do professor"});
+                }
+                else {
+                    console.log('Class Removed Successfully'.green);
+                    res.status(200).json({});
+                }
+            }
+        }
+        db2.insert(schoolData, schoolData._id);
+
+    });
+};
