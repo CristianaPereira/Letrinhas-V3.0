@@ -66,7 +66,7 @@ exports.get = function (req, res) {
 
 //NEW
 exports.editStudent = function (req, res) {
-    
+
     if (req.body.name != '' && req.body.number != '') {
 
         //Fetch School

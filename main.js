@@ -132,6 +132,9 @@ app.route('/teachers/editPasswd')
 app.route('/teachers/editClasses')
     .post(auth, perms(3), teachers.editClasses);
 
+app.route('/teachers/rmvClass')
+    .post(auth, perms(3), teachers.rmvClass);
+
 app.route('/teachers/:id/del')
     .post(auth, perms(3), teachers.delete);
 
@@ -163,7 +166,6 @@ app.route('/questions/:id')
 //Tests
 app.route('/tests')
     .get(auth, tself, perms(2), tests.getAll);
-
 
 
 //This Needs To Be Revised
