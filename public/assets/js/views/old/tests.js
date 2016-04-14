@@ -560,31 +560,42 @@ window.TestsView = Backbone.View.extend({
         modem('GET', 'questions/'+documnt.perguntas, function(item) {
             console.log("a buscar a pergunta: "+documnt.perguntas);
             var d='<div class="btn-group" id="btnTestEdit" style="position:absolute; left:10px">'
+                    
                 +'<span type="button" class="btn badge btn-warning dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Opções de edição">'
-                +'<span class="glyphicon glyphicon-cog"></span>'
-                +'<span class="sr-only">Toggle Dropdown</span>'
+                +'  <span class="glyphicon glyphicon-cog"></span>'
+                +'  <span class="sr-only">Toggle Dropdown</span>'
                 +'</span>'
-                +'<ul class="dropdown-menu" role="menu">'
-                +'<li>'
-                +'<a title="Criar um novo teste com o mesmo conteúdo."><label id="btnTestClonar" class="btn badge btn-warning" val="'+documnt._id+'">'
-                +'<span class="glyphicon glyphicon-refresh" style="color:#80ee80"></span> '
-                +'Clonar Teste'
-                +'</label></a>'
-                +'</li>'
-                +'<li class="divider"></li>'
-                +'<li>'
-                +'<a title="Apagar este teste"><label id="btnTestElimina" class="btn badge btn-danger" val="'+documnt._id+'">'
-                +'<span class="glyphicon glyphicon-trash" style="color:#cccccc"></span> '
-                +'Apagar Teste'
-                +'</label></a>'
-                +'</li>'
-                +'</ul>'
+                    
+                    +'<ul class="dropdown-menu" role="menu">'
+                        +'<li>'
+                            +'<a title="Criar um novo teste com o mesmo conteúdo.">' +
+                                '<label id="btnTestClonar" class="btn badge btn-warning" val="'+documnt._id+'">'
+                                    +'<span class="glyphicon glyphicon-refresh" style="color:#80ee80"></span> '
+                                    +'Clonar Teste'
+                                +'</label>' +
+                            '</a>'
+                        +'</li>'
+                        +'<li class="divider"></li>'
+                        +'<li>'
+                            +'<a title="Apagar este teste">' +
+                '               <label id="btnTestElimina" class="btn badge btn-danger" val="'+documnt._id+'">'
+                                +'<span class="glyphicon glyphicon-trash" style="color:#cccccc"></span> '
+                                +'Apagar Teste'
+                                +'</label>' +
+                '           </a>'
+                        +'</li>'
+                    +'</ul>'
                 +'</div>'
+
+
                 +'<span class="badge btn-info">Pré-visualização de "'+documnt.titulo+'"</span><hr>'
                 +'<div align=left>'
-                +'<label>Descrição:</label><span> '+documnt.descricao+'</span>'
-                +'<br><label>Pergunta:</label><span> '+item.pergunta+'</span>'
+                +'  <label>Descrição:</label><span> '+documnt.descricao+'</span>'
+                +'  <br><label>Pergunta:</label><span> '+item.pergunta+'</span>'
                 +'</div>'
+
+                    
+
                 +'<div class="panel panel-default col-md-12 " aling="center" style="height:300px; overflow:auto">';
             if(item.conteudo['palavrasCL1'].length > 0) {
                 d+='<div class="col-md-4">'
@@ -612,6 +623,7 @@ window.TestsView = Backbone.View.extend({
                 d+='<span class="badge btn-warning">Este item não tem conteúdo</span>';
             }
             d+='</div>'
+
                 +'<div class="col-md-12 " align=left>'
                 +'<label>Demo:</label>'
                 +'<audio id="vozProf" controls style="width:100%">'
