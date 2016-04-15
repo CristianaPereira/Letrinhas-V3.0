@@ -683,8 +683,14 @@ window.TestsView = Backbone.View.extend({
             +'<label>Descrição:</label><span> '+documnt.descricao+'</span>'
             +'</div>'
             +'<hr>'
+
+
+
             +'<div id="paginas" style="height:474px; overflow:auto">'
             +'</div>';
+
+
+
         $('#testsPreview').append(d);
         var indicador=1;
         for (var i = 0; i < documnt.perguntas.length; i++) {
@@ -731,14 +737,24 @@ window.TestsView = Backbone.View.extend({
                     }
                 }
                 opcoes+='</div>';
-                var g='<div align=left><label class="badge btn-success">Página '+indicador+': '+item.titulo+' </label><br>'
-                    +'<label>Pergunta:</label><span> '+item.pergunta+'</span></div><br>'
+
+                var g='' +
+                    '<div align=left>' +
+                    '   <label class="badge btn-success">Página '+indicador+': '+item.titulo+' </label>' +
+                    '   <br>'
+                    +'  <label>Pergunta:</label><span> '+item.pergunta+'</span>' +
+                    '</div>' +
+
+                    '<br>'
+
                     +'<div class="panel panel-default" align=center style=" height:200px; width:100%; color:#ffffff; background-color:#80c0ff;">'
-                    +corpo
+                    +   corpo
                     +'</div>'
+
                     +'<div align=center style="height:140px; width:100%;">'
-                    +opcoes
+                    +   opcoes
                     +'</div>'
+                        
                     +'<hr>';
                 indicador++;
                 $("#paginas").append(g);
@@ -792,6 +808,7 @@ window.TestsView = Backbone.View.extend({
                 +'<label>Descrição:</label><span> '+documnt.descricao+'</span>'
                 +'<br><label>Pergunta:</label><span> '+item.pergunta+'</span>'
                 +'</div>'
+                    
                 +'<div class="panel panel-default col-md-12 " style="height:300px; overflow:auto; text-align:justify">'
                 +' <br>'+self.marcaTexto(item.conteudo.texto, item.conteudo.posicaoResposta)
                 +'</div>'
