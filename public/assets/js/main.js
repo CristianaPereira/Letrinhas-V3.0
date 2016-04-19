@@ -48,7 +48,8 @@ var Router = Backbone.Router.extend({
         "student/view": "studentInfo",
 
         //Tests Routing
-        "tests": "tests"
+        "tests": "tests",
+        "questionsText/new" : "textTestNew"
 
     },
 
@@ -262,6 +263,19 @@ var Router = Backbone.Router.extend({
         templateLoader.load(["TestsView"],
             function () {
                 var v = new TestsView({});
+                self.showView(v, $('#content'));
+            }
+        );
+    },
+
+    textTestNew: function(){
+        var self = this;
+
+        self.navbar();
+
+        templateLoader.load(["QuestionsTextNew"],
+            function () {
+                var v = new QuestionsTextNew({});
                 self.showView(v, $('#content'));
             }
         );

@@ -1,3 +1,5 @@
+<button id="newtestbtn">Novo Teste</button>
+
 <div id="testsContent" class=" panel-body col-md-5" align=center style="overflow:auto">
     <img src="../img/page-loader.gif" style='height:200px;'>
 </div>
@@ -39,4 +41,56 @@
 
     <div id="testPreviewContainer" align=left></div>
 
+</div>
+
+
+<!-- MODAL FOR TEST CREATION TYPE CHOISE -->
+<div class="modal fade" id="newTestModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title" id="myModalLabel">
+                    <img src="../../img/letrinhas2.png" style="height:50px">
+                    Escolha o tipo de teste que quer criar.</h3>
+            </div>
+            <div class="modal-body">
+                <div align="center">
+                    <button id="textTestbtn" type="button"
+                            style="height:50px; width:200px; background-color: #53BDDC; color: #ffffff;"
+                            class="btn btn-lg ">
+                        <img src="../../img/testeTexto.png" style="height:25px;">
+                        Texto
+                    </button>
+                    <button id="listTestbtn" type="button"
+                            style="height:50px; width:200px;background-color: #53BDDC; color: #ffffff;"
+                            class="btn btn-lg ">
+                        <img src="../../img/testLista.png" style="height:25px;">
+                        Lista de Palavras
+                    </button>
+                    <p></p>
+                    <button id="multimediaTestbtn" type="button"
+                            style="height:50px; width:200px; background-color: #53BDDC; color: #ffffff;"
+                            class="btn btn-lg ">
+                        <img src="../../img/testMul.png" style="height:25px;">
+                        Multimédia
+                    </button>
+                    <button id="interpretationTestbtn" type="button"
+                            style="height:50px; width:200px; background-color: #53BDDC; color: #ffffff;"
+                            class="btn btn-lg ">
+                        <img src="../../img/testInterpretacao.png" style="height:25px;">
+                        Interpretação
+                    </button>
+
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #53BDDC;">
+                <button id="btnTesteCriar" type="button" class="btn btn-success btn-conf btn_mine-MediumLarge"
+                        style="visibility:hidden">Criar
+                </button>
+            </div>
+        </div>
+    </div>
 </div>

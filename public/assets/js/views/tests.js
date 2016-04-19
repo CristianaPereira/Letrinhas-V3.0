@@ -1,6 +1,8 @@
 window.TestsView = Backbone.View.extend({
     events: {
-        "click .testSelec": "changePreview"
+        "click .testSelec": "changePreview",
+        "click #newtestbtn": "newTest",
+        "click #textTestbtn": "textTestNew"
     },
 
     //Check Auth
@@ -216,8 +218,6 @@ window.TestsView = Backbone.View.extend({
             });
 
             $("#testPreviewContainer")
-                .append($("<label>", {html: "Pergunta:"}))
-                .append($("<span>", {html: pergunta.titulo}))
                 .append($("<div>", {
                     id: "pages",
                     style: "height:474px; overflow:auto"
@@ -315,7 +315,7 @@ window.TestsView = Backbone.View.extend({
                         html: "Página " + $pagNum + ": " + pergunta.titulo
                     }))
                     .append("<br>")
-                    .append($("<label>", {html: "Página"}))
+                    .append($("<label>", {html: "Pergunta: ", style: "font-weight: bold"}))
                     .append($("<span>", {html: pergunta.pergunta}))
                 )
                 .append("<br>")
@@ -336,6 +336,7 @@ window.TestsView = Backbone.View.extend({
         });
     },
 
+    //Interpretation Preview
     interpretationPreview: function ($test) {
         var self = this;
 
@@ -387,64 +388,78 @@ window.TestsView = Backbone.View.extend({
     },
 
     //Mark Text
-    markText:function(texto, posicoes){
-        var self=this;
-        var $text="";
-        var $s='<span ';
-        var $s1=' class="badge">';
-        var $palavra= s;
-        var $isCaracter=true;
-        var $posicao=1;
-        var $index=0;
-        
-        if(posicoes[index]==posicao){
-            palavra+=s1;
+    markText: function ($text, $positions) {
+        var $self = this;
+        var $text = "";
+        var $s = '<span ';
+        var $s1 = ' class="badge">';
+        var $palavra = s;
+        var $isCaracter = true;
+        var $posicao = 1;
+        var $index = 0;
+
+        if (posicoes[index] == posicao) {
+            palavra += s1;
             index++;
         }
-        else{
-            palavra+='>';
+        else {
+            palavra += '>';
         }
 
-        if(texto.length!=0){
+        if (texto.length != 0) {
             for (var i = 0; i < texto.length; i++) {
                 //de acordo com a tabela ascii 1º caracter possivel '!' CODE 33
-                if(texto.charCodeAt(i)<33){
+                if (texto.charCodeAt(i) < 33) {
                     //se o caracter anterior for válido
-                    if(isCaracter){
+                    if (isCaracter) {
                         //fecha a palavra
-                        palavra+='</span> ';
+                        palavra += '</span> ';
                         posicao++;
                         //adiciona a palavra à linha
-                        text+=palavra;
+                        text += palavra;
                         //reinicia a palavra
-                        palavra= s;
+                        palavra = s;
 
-                        if(posicoes[index]==posicao){
-                            palavra+=s1;
+                        if (posicoes[index] == posicao) {
+                            palavra += s1;
                             index++;
                         }
-                        else{
-                            palavra+='>';
+                        else {
+                            palavra += '>';
                         }
                         //não e um caracter válido (ex: "enter", "space", "tab")
-                        isCaracter=false;
+                        isCaracter = false;
                     }
                 }
-                else{
+                else {
                     //adiciona o caracter à palavra
-                    palavra+=texto.charAt(i);
+                    palavra += texto.charAt(i);
                     //confirma que era uma caracter
-                    isCaracter=true;
+                    isCaracter = true;
                 }
             }
             //entregar o resto
-            if(palavra.length>0){
-                palavra+='</span> ';
-                text+= palavra;
+            if (palavra.length > 0) {
+                palavra += '</span> ';
+                text += palavra;
             }
         }
         return text;
     },
+
+    //New Test Modal
+    newTest: function () {
+        $('#newTestModal').modal("show");
+    },
+
+    //New Text Test
+    textTestNew: function () {
+        $('#newTestModal').modal("hide");
+        app.navigate('/questionsText/new', {
+            trigger: true
+        });
+    },
+
 
     //Class Initializer
     initialize: function () {
@@ -480,57 +495,57 @@ window.TestsView = Backbone.View.extend({
                     }
 
                     //Select Test Type Image
-                    var imgT = '';
+                    var $imgT = '';
                     switch (this.doc.tipo) {
                         case 'Texto':
-                            imgT = "../img/testeTexto.png";
+                            $imgT = "../img/testeTexto.png";
                             break;
                         case 'Lista':
-                            imgT = "../img/testLista.png";
+                            $imgT = "../img/testLista.png";
                             break;
                         case 'Multimédia':
-                            imgT = "../img/testMul.png";
+                            $imgT = "../img/testMul.png";
                             break;
                         case 'Interpretação':
-                            imgT = "../img/testInterpretacao.png";
+                            $imgT = "../img/testInterpretacao.png";
                             break;
                         default:
-                            imgT = "../img/page-loader.gif";
+                            $imgT = "../img/page-loader.gif";
                             break;
                     }
                     ;
 
                     //Select Test Class Image
-                    var imgC = '';
+                    var $imgC = '';
                     switch (this.doc.disciplina) {
                         case 'Português':
-                            imgC = "../img/portugues.png";
+                            $imgC = "../img/portugues.png";
                             break;
                         case 'Inglês':
-                            imgC = "../img/ingles.png";
+                            $imgC = "../img/ingles.png";
                             break;
                         case 'Matemática':
-                            imgC = "../img/mate.png";
+                            $imgC = "../img/mate.png";
                             break;
                         case 'Estudo do Meio':
-                            imgC = "../img/estudoMeio.png";
+                            $imgC = "../img/estudoMeio.png";
                             break;
                         case 'Outra língua':
-                            imgC = "../img/outroLinguas2.png";
+                            $imgC = "../img/outroLinguas2.png";
                             break;
                         case 'Outra':
-                            imgC = "../img/outro.png";
+                            $imgC = "../img/outro.png";
                             break;
                         default:
-                            imgC = "../img/page-loader.gif";
+                            $imgC = "../img/page-loader.gif";
                             break;
                     }
                     ;
 
                     //Select BG Color
-                    var color = "#53BDDC";
+                    var $color = "#53BDDC";
                     if (this.doc.isMine)
-                        color = "#60CC60";
+                        $color = "#60CC60";
 
                     //Construct Button
                     var $div = $("<button>", {
@@ -538,11 +553,11 @@ window.TestsView = Backbone.View.extend({
                         class: "btn btn-lg btn-block testSelec",
                         name: this.doc.titulo,
                         type: "button",
-                        style: "height:60px; text-align:left; background-color: " + color + "; color: #ffffff;"
+                        style: "height:60px; text-align:left; background-color: " + $color + "; color: #ffffff;"
                     })
                         .append(
-                            "<img style='height:30px;' src='" + imgT + "'>" +
-                            "<img style='height:30px;' src='" + imgC + "'>" +
+                            "<img style='height:30px;' src='" + $imgT + "'>" +
+                            "<img style='height:30px;' src='" + $imgC + "'>" +
                             "&nbsp;&nbsp;&nbsp;" +
                             this.doc.titulo
                         );
