@@ -1,7 +1,10 @@
 window.QuestionsTextNew = Backbone.View.extend({
     events: {
         "click #showEqualizer": "showEqualizer",
-        "click #record": "initRecord"
+        "click #record": "initRecord",
+        "click #backbtn": "goBack",
+        "change #uploadSoundFile": "uploadSoundFile",
+        "submit": "beforeSend",
     },
 
     //Check Auth
@@ -13,13 +16,24 @@ window.QuestionsTextNew = Backbone.View.extend({
         return true;
     },
 
+    //Go back to the last visited page
+    goBack: function (e) {
+        e.preventDefault();
+        window.history.back();
+    },
+
+    //Before Sending Request To Server
+    beforeSend: function (e){
+        e.preventDefault();
+        
+        console.log($("#newTextTestForm").serialize());
+        
+    },
+    
     //Show Voice Recorder Equalizer
     showEqualizer: function (e) {
         e.preventDefault();
-
-        $("#rTexto").html($("#InputTexto").val());
         $("#myModalRecord").modal("show");
-
         initAudio();
     },
 
@@ -42,7 +56,14 @@ window.QuestionsTextNew = Backbone.View.extend({
 
         toggleRecording(e.target);
     },
-    
+
+    //Upload Sound File
+    uploadSoundFile: function(){
+        var files = $("#uploadSoundFile").prop('files');
+        $("#soundPath")
+            .attr("placeholder", files[0].name)
+            .css('border', 'solid 1px #cccccc');
+    },
 
     //Class Initializer
     initialize: function () {

@@ -2,7 +2,8 @@ window.TestsView = Backbone.View.extend({
     events: {
         "click .testSelec": "changePreview",
         "click #newtestbtn": "newTest",
-        "click #textTestbtn": "textTestNew"
+        "click #textTestbtn": "textTestNew",
+        "click #multimediaTestbtn": "multimediaTestNew"
     },
 
     //Check Auth
@@ -456,6 +457,14 @@ window.TestsView = Backbone.View.extend({
     textTestNew: function () {
         $('#newTestModal').modal("hide");
         app.navigate('/questionsText/new', {
+            trigger: true
+        });
+    },
+
+    //New Multimedia Test
+    multimediaTestNew: function () {
+        $('#newTestModal').modal("hide");
+        app.navigate('/multimediaTest/new', {
             trigger: true
         });
     },
