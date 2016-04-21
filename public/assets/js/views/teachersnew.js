@@ -143,7 +143,7 @@ window.TeachersNewView = Backbone.View.extend({
         modem('POST', 'teachers',
             //Response Handler
             function (json) {
-                sucssesMsg($("#newteacherform"), "Utilizador inserido com sucesso");
+                sucssesMsg($("#newteacherform"), "Utilizador inserido com sucesso", 2000);
                 setTimeout(function () {
                     app.navigate('/teachers', {
                         trigger: true

@@ -4,7 +4,7 @@ window.TeachersView = Backbone.View.extend({
         "click #newteacherbtn": "newTeacher",
         "click #btnDelProf": "deleteTeacher",
         "keyup #txtSearch": "searchProf",
-        "click #orderBy": "orderProfs",
+        "click #orderBy": "orderProfs"
     },
 
     orderProfs: function () {
@@ -57,7 +57,7 @@ window.TeachersView = Backbone.View.extend({
         modem('POST', 'teachers/' + $(e.currentTarget).attr('value') + '/del',
             function (json) {
 
-                sucssesMsg($("#teachersDiv"), "O utilizador " + $(e.currentTarget).attr('value') + " foi apagado com sucesso");
+                sucssesMsg($("#teachersDiv"), "O utilizador " + $(e.currentTarget).attr('value') + " foi apagado com sucesso",2000);
                 setTimeout(function () {
                     document.location.reload(true);
                 }, 2000);
@@ -69,12 +69,6 @@ window.TeachersView = Backbone.View.extend({
         );
 
 
-    },
-
-    editTeacher: function (obj) {
-        app.navigate('/teachers/' + obj + "/edit", {
-            trigger: true
-        });
     },
 
     enchePreview: function (teacherData) {
@@ -93,7 +87,6 @@ window.TeachersView = Backbone.View.extend({
             .append('<label class="col-md-4 lblDataDetails">E-mail:</label> <label class="col-md-8">' + teacherData._id + '</label><br>')
             .append('<label class="col-md-4 lblDataDetails">Nome:</label> <label class="col-md-8">' + teacherData.nome + '</label><br>')
             .append('<label class="col-md-4 lblDataDetails">Telefone:</label> <label  class="col-md-8">' + teacherData.telefone + ' </label><br>')
-            .append('<div id="SchoolTable" class="col-md-12" align="center" style="max-height:220px; overflow:auto"></div>');
 
         $('#teachersPreview').append($divFoto, $divDados)
             .append('<div class="col-md-12" ><hr class="dataHr"></div><div id="classesList" class="col-md-12" align=left></div>')
@@ -111,19 +104,15 @@ window.TeachersView = Backbone.View.extend({
             function (json) {
                 //Teachers Counter
                 $('#teachersBadge').text(json.length);
-                //  $('#teachersContent').empty();
                 //Preenche a lista de professores registados( e com estado activo)
                 $.each(json, function (key, data) {
                     //Botao de editar
                     var $edit = $("<a>", {
-                        //href: "#teachers/data.doc._id/edit",
-                        href: "#teachers/edit",
-                        val: data.doc._id,
-                        title: "Editar professor",
-                    }).append('<i class="fa fa-edit"></i>')
-                        .click(function () {
-                            self.editTeacher($(this).val());
-                        });
+                            href: "#teachers/" + data.doc._id + "/edit",
+                            val: data.doc._id,
+                            title: "Editar professor",
+                        }).append('<i id="btnEdit" class="fa fa-edit"></i>')
+                        ;
 
                     //Botao de eliminar
                     var $delete = $("<a>", {
@@ -134,12 +123,13 @@ window.TeachersView = Backbone.View.extend({
                         .click(function () {
                             self.confirmDelete($(this).val());
                         });
-
+                    //Separa o nome para recolher apenas o primeiro e o utimo
+                    var splName = (data.doc.nome).split(" ");
                     var $div = $("<div>", {
                         class: "listButton divWidget"
-                    }).append("<img src=" + data.doc.imgb64 + "><span>" + data.doc.nome + "</span>")
-                        .append($edit)
-                        .append($delete)
+                    }).append("<img src=" + data.doc.imgb64 + "><span>" + splName[0] + " " + splName[splName.length - 1] + "</span>")
+                        //  .append($edit)
+                        .append($("<div>", {class: "editDeleteOp"}).append($edit, $delete))
                         .click(function () {
                             self.enchePreview(data.doc);
                         });

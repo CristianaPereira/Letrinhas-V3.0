@@ -20,7 +20,7 @@ window.TeachersEditView = Backbone.View.extend({
         modem('POST', 'teachers/editClasses',
             //Response Handler
             function (json) {
-                sucssesMsg($("#editTeacherView"), "Turmas associadas com sucesso.");
+                sucssesMsg($("#editTeacherView"), "Turmas associadas com sucesso.",2000);
                 setTimeout(function () {
                     getAssocClasses($("#inputEmail").val(), $("#InputNome").val(), true);
                     $("#teacherClasses").val("{}");
@@ -42,22 +42,22 @@ window.TeachersEditView = Backbone.View.extend({
     beforeSend: function (e) {
         var isValid = true;
         e.preventDefault();
+        console.log($("#frmEditDetails").serialize());
         //Send Form Submit To Server
         modem('POST', 'teachers/editDetails',
             //Response Handler
             function (json) {
-                sucssesMsg($("#newteacherform"), "Dados alterados com sucesso.");
+                sucssesMsg($("body"), "Dados alterados com sucesso.",2000);
                 setTimeout(function () {
-                    app.navigate('/teachers', {
-                        trigger: true
-                    });
+                    document.location.reload(true);
                 }, 2000);
             },
             //Error Handling
             function (xhr, ajaxOptions, thrownError) {
                 failMsg($("#newteacherform"), "Não foi possível alterar os dados. \n (" + JSON.parse(xhr.responseText).result + ").");
             },
-            $("#frmEditDetails").serialize() + "&email=" + encodeURIComponent($("#inputEmail").val())
+
+            $("#frmEditDetails").serialize()
         );
     },
 
@@ -71,7 +71,7 @@ window.TeachersEditView = Backbone.View.extend({
         modem('POST', 'teachers/editPasswd',
             //Response Handler
             function (json) {
-                sucssesMsg($("#newteacherform"), "Dados alterados com sucesso.");
+                sucssesMsg($("#newteacherform"), "Dados alterados com sucesso.",2000);
                 setTimeout(function () {
                     app.navigate('/teachers', {
                         trigger: true

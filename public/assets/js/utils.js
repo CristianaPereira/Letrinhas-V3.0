@@ -10,7 +10,7 @@ window.populateDDSchools = function () {
         function (json) {
             var schoolsList = '<select class="form-control  mandatory" id="dbEscolas">';
             schoolsList += '<option disabled selected>Escola</option>';
-            var classList = '<span class="input-group-addon btn-white"><i class="fa fa-users">' +
+            var classList = '<span class="input-group-addon btn-white"><i class="fa fa-book">' +
                 '</i></span><select class="form-control mandatory" id="dbTurmas">';
             classList += '<option disabled selected>Turma</option>';
             //Lista as escolas
@@ -95,11 +95,10 @@ window.getAssocClasses = function (idProf, nomeProf, editable) {
                     //Verifica a lista de turmas
                     $.each(turma.professores, function (kProf, prof) {
                         if (prof._id == idProf) {
-                            var $class = '<label>' + trm + '</label>';
+                            var $class = '<li >' + trm + '</li>';
                             if (editable) {
-                                $class += '<i id="' + school.doc._id + ':' + turma._id + '" class="fa fa-remove"  onclick = "removeClass(this)" ></i>';
+                                $class = '<li >' + trm + ' <i id="' + school.doc._id + ':' + turma._id + '" class="fa fa-remove"  onclick = "removeClass(this)" ></i></li>';
                             }
-                            $class += '</br>';
                             //Se a escola já estiver listada, e a turma não, adiciona a turma
                             if (!$('div#' + school.doc._id).length) {
                                 var $row = $("<div>", {
@@ -108,16 +107,13 @@ window.getAssocClasses = function (idProf, nomeProf, editable) {
                                 }).append($("<div>", {
                                     class: "col-md-8 col-sm-8"
                                 }).append('<i class="fa fa-university"></i>' +
-                                    '<label style="margin-left: 7px;">' + school.doc.nome + '</label>'), $("<div>", {
-                                    class: "col-md-4 col-sm-4"
-                                }).append($class));
+                                    '<label style="margin-left: 7px;">' + school.doc.nome + '</label>').append('<ul>' + $class + '</ul>'));
                                 $("#prfSchool").append($row);
 
                             } else {
-                                $('div#' + school.doc._id + "> .col-md-4").append($class);
+                                $('div#' + school.doc._id + "  ul").append($class);
                             }
                             nTurmas++;
-                            console.log(nTurmas);
                         }
                     });
                 });
@@ -318,4 +314,20 @@ window.attemptLogin = function () {
 
         }
     );
+};
+
+window.sortJsonByCol = function (property) {
+
+    'use strict';
+    return function (a, b) {
+        var sortStatus = 0;
+
+        if (a[property] < b[property]) {
+            sortStatus = -1;
+        } else if (a[property] > b[property]) {
+            sortStatus = 1;
+        }
+        return sortStatus;
+    };
+
 }

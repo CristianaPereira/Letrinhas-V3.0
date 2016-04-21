@@ -69,6 +69,7 @@ exports.new = function (req, res) {
 
 exports.updateDetails = function (req, res) {
     console.log('Teachers - UPDATE'.cyan);
+    console.log(req.body.name + " " + req.body.telefone);
     if (req.body.name && req.body.telefone) {
         db.get(req.body.email, function (err, body) {
             if (err) {

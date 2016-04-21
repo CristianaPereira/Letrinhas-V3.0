@@ -38,7 +38,6 @@ var Router = Backbone.Router.extend({
         //School Routing
         "schools": "schools",
         "schools/new": "schoolsNew",
-        "schools/:id": "schoolsInfo",
         "schools/:id/edit": "schoolsEdit",
 
         //Students Routing
@@ -47,6 +46,12 @@ var Router = Backbone.Router.extend({
         "students/:id": "studentsEdit",
         "student/view": "studentInfo",
 
+        //Touch questions Routing
+        "questionsTouch": "questionsTouch",
+        "questionsTouch/new": "questionsTouchNew",
+        "questionsTouch/edit": "questionsTouchEdit",
+
+        "resolutions": "resolutions",
         //Tests Routing
         "tests": "tests"
 
@@ -103,7 +108,21 @@ var Router = Backbone.Router.extend({
         );
 
     },
+    //Home Template
+    resolutions: function () {
+        var self = this;
 
+        this.navbar();
+
+        //Load Template
+        templateLoader.load(["ResolutionsView"],
+            function () {
+                var v = new ResolutionsView({});
+                self.showView(v, $('#content'));
+            }
+        );
+
+    },
     //Teacher Templates
     teachers: function () {
         var self = this;
@@ -232,6 +251,8 @@ var Router = Backbone.Router.extend({
 
     schoolsEdit: function (id) {
         var self = this;
+
+        this.navbar();
         templateLoader.load(["SchoolsEdit"],
             function () {
                 var v = new SchoolsEdit({id: id});
@@ -253,6 +274,40 @@ var Router = Backbone.Router.extend({
         );
     },
 
+    //Questions template
+    questionsTouch: function () {
+        var self = this;
+        self.navbar();
+        templateLoader.load(["QuestionsTouch"],
+            function () {
+                var v = new QuestionsTouch({});
+                self.showView(v, $('#content'));
+            }
+        );
+    },
+
+    questionsTouchNew: function () {
+        var self = this;
+        self.navbar();
+        templateLoader.load(["QuestionsTouchNew"],
+            function () {
+                var v = new QuestionsTouchNew({});
+                self.showView(v, $('#content'));
+            }
+        );
+    },
+
+    questionsTouchEdit: function () {
+        var self = this;
+        self.navbar();
+        templateLoader.load(["QuestionsTouchEdit"],
+            function () {
+                var v = new QuestionsTouchEdit({});
+                self.showView(v, $('#content'));
+            }
+        );
+    },
+
     //Tests Templates
     tests: function () {
         var self = this;
@@ -266,6 +321,7 @@ var Router = Backbone.Router.extend({
             }
         );
     },
+
 
 });
 

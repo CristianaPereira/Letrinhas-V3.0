@@ -35,8 +35,8 @@ exports.new = function (req, res) {
             "turmas": [],
             "b64": req.body.b64
         }
-
-        db.insert(school, "NEW|Escola" + new Date().getTime(), function (err) {
+        var id = "NEW|Escola" + new Date().getTime();
+        db.insert(school, id, function (err) {
             if (err)
                 return res.status(500).json({
                     'result': 'nok',
@@ -44,7 +44,8 @@ exports.new = function (req, res) {
                 });
             else {
                 console.log('New school was inserted'.green);
-                res.status(200).json({});
+
+                res.status(200).json([id]);
             }
         })
 
@@ -72,9 +73,9 @@ exports.getAll = function (req, res) {
 };
 
 //NEW
-exports.editSchool = function (req, res){
+exports.editSchool = function (req, res) {
 
-    if(req.body.name != '' && req.body.address != ''){
+    if (req.body.name != '' && req.body.address != '') {
 
         //Fetch School
         console.log('Edit School: Fetching School ' + req.params.id + ''.green);
@@ -92,7 +93,7 @@ exports.editSchool = function (req, res){
                 body.nome = req.body.name;
                 body.morada = req.body.address;
 
-                if(req.body.b64 != '')
+                if (req.body.b64 != '')
                     body.b64 = req.body.b64;
 
                 db.insert(body, body._id, function (err) {
@@ -112,17 +113,17 @@ exports.editSchool = function (req, res){
             }
 
         });
-        
+
     }
-    else{
+    else {
         console.log('Parameters Missing');
-        res.send(401, { error: "Alguns parametros são de preenchimento obrigatório" });
+        res.send(401, {error: "Alguns parametros são de preenchimento obrigatório"});
     }
 
 
 };
 
-exports.removeSchool = function (req, res){
+exports.removeSchool = function (req, res) {
 
     //Fetch School
     console.log('Remove School: Fetching School ' + req.params.id + ''.green);
@@ -156,20 +157,19 @@ exports.removeSchool = function (req, res){
     });
 
 
-
 };
 
 exports.newClass = function (req, res) {
 
     //Fetch School
     console.log('Fetching School' + req.params.id + ''.green);
-
+    console.log(req.body);
     var presentYear = new Date().getFullYear();
 
     db.get(req.params.id, function (err, body) {
 
         if (err) {
-            res.send(err.statusCode, { error: "Erro ao procurar escola" });
+            res.send(err.statusCode, {error: "Erro ao procurar escola"});
         }
         else {
 
@@ -185,12 +185,13 @@ exports.newClass = function (req, res) {
             //Add New Class Skeleton to School
             body.turmas.push(newClass);
 
+            console.log(body.turmas);
             //Update School
             db.insert(body, body._id, function (err) {
                 if (err) {
-                    res.send(err.statusCode, { error: "Erro ao inserir turma na escola" });
+                    res.send(err.statusCode, {error: "Erro ao inserir turma na escola"});
                 }
-                else{
+                else {
                     console.log('New class was inserted into the school'.green);
                     res.status(200).json({});
                 }
@@ -201,7 +202,7 @@ exports.newClass = function (req, res) {
     });
 }
 
-exports.removeClass = function (req, res){
+exports.removeClass = function (req, res) {
 
     //Fetch School
     console.log('Fetching School' + req.params.id + ''.green);
@@ -210,15 +211,15 @@ exports.removeClass = function (req, res){
 
         if (err) {
             //Report Error (School Doenst Exists)
-            res.send(err.statusCode, { error: "Erro ao procurar escola" });
+            res.send(err.statusCode, {error: "Erro ao procurar escola"});
         }
         else {
 
             //Search For The Correct Class
-            for(var c in body.turmas){
+            for (var c in body.turmas) {
 
                 //Remove Class
-                if(body.turmas[c]._id == req.body._id){
+                if (body.turmas[c]._id == req.body._id) {
                     body.turmas.splice(c, 1);
                 }
 
@@ -227,9 +228,9 @@ exports.removeClass = function (req, res){
             //Update School
             db.insert(body, body._id, function (err) {
                 if (err) {
-                    res.send(err.statusCode, { error: "Erro ao apagar turma da escola" });
+                    res.send(err.statusCode, {error: "Erro ao apagar turma da escola"});
                 }
-                else{
+                else {
                     console.log('Class Removed Successfully'.green);
                     res.status(200).json({});
                 }
