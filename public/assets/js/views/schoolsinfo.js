@@ -37,7 +37,7 @@ window.SchoolsInfo = Backbone.View.extend({
 
             //Response Handler
             function () {
-                sucssesMsg($("#classes"), "Turma Adicionado com sucesso");
+                sucssesMsg($("#classes"), "Turma Adicionado com sucesso",2000);
                 setTimeout(function () {
                     document.location.reload(true);
                 }, 2000);
@@ -66,7 +66,7 @@ window.SchoolsInfo = Backbone.View.extend({
 
                 //Response Handler
                 function () {
-                    sucssesMsg($("#classes"), "Turma removida com sucesso");
+                    sucssesMsg($("#classes"), "Turma removida com sucesso",2000);
                     setTimeout(function () {
                         document.location.reload(true);
                     }, 2000);

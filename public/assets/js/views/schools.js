@@ -1,11 +1,30 @@
 window.SchoolsView = Backbone.View.extend({
     events: {
-        "click .schoolSelec": "schoolInfo",
-        "click #newschoolbtn": "newSchool",
-        "click #editbtn": "editSchool",
         "click #deletebtn": "deleteSchool",
-        "click #showSchoolDetails": "showSchoolDetails",
-        "keyup #schoolSearch": "searchSchool",
+        "keyup #txtSearch": "searchSchool",
+        "click #orderBy": "orderSchools"
+    },
+
+    orderSchools: function (e) {
+        var mylist = $('#schoolsContent');
+
+        var listitems = mylist.children('div').get();
+
+        listitems.sort(function (a, b) {
+            return $(a).children('span').text().toUpperCase().localeCompare($(b).children('span').text().toUpperCase());
+        });
+        //ordenar de forma descendente/ascendente
+        if (!$(e.currentTarget).children('i').hasClass("fa-sort-alpha-asc")) {
+            listitems = listitems.reverse();
+            $(e.currentTarget).children('i').addClass("fa-sort-alpha-asc")
+            $(e.currentTarget).children('i').removeClass("fa-sort-alpha-desc")
+        } else {
+            $(e.currentTarget).children('i').removeClass("fa-sort-alpha-asc")
+            $(e.currentTarget).children('i').addClass("fa-sort-alpha-desc")
+        }
+        $.each(listitems, function (index, item) {
+            mylist.append(item);
+        });
     },
 
     //Check Auth
@@ -17,96 +36,6 @@ window.SchoolsView = Backbone.View.extend({
         return true;
     },
 
-    //Change School Info
-    schoolInfo: function (e) {
-
-        var self = this;
-
-        //Get School Info
-        modem('GET', 'schools/' + e.target.id,
-
-            //Response Handler
-            function (json) {
-                self.fillPreview(json);
-            },
-
-            //Error Handling
-            function (xhr, ajaxOptions, thrownError) {
-
-            }
-        );
-
-    },
-
-    //Navigate To School Details
-    showSchoolDetails: function (e) {
-        e.preventDefault();
-        app.navigate('schools/' + e.target.value, {
-            trigger: true
-        });
-    },
-
-    //Navigate To School Edit Page
-    editSchool: function (e) {
-        e.preventDefault();
-        app.navigate('schools/' + e.target.value + '/edit', {
-            trigger: true
-        });
-    },
-
-    //Fill School Preview
-    fillPreview: function (json) {
-        //Update Edit/Delete Button Values
-        $("#schoolsPreview #editbtn").val(json._id);
-        $("#schoolsPreview #deletebtn").val(json._id);
-
-        //Set School Image
-        $("#schoolsPreview img").attr("src", json.b64);
-
-        //Set School Name
-        $("#schoolsPreview #schoolName").attr("value", json._id).html(json.nome);
-
-        //Set School Address
-        $("#schoolsPreview #schoolAddress").html(json.morada);
-
-        //Set School ID
-        $("#showSchoolDetails").val(json._id);
-
-        //Fill Class Info
-        $("#schoolsPreview #classList").html("");
-        if (json.turmas.length > 0) {
-
-            $.each(json.turmas, function (i) {
-                var $class = $('<div>', {class: "col-md-3"}).append(
-                    $('<button>', {
-                        id: "btnTurma" + i,
-                        class: "btn btn-info mostraTurma",
-                        value: this.id,
-                        style: "font-size:11px"
-                    })
-                        .append(this.ano + "º Ano, " + this.nome)
-                );
-
-                $("#schoolsPreview #classList").append($class);
-
-            });
-
-        }
-        else {
-            //If School Has No Class
-            $("#schoolsPreview #classList").append("<div class='col-md-12 alert-warning' align=center ><hr><label>Esta escola não tem turmas.</label></div>");
-        }
-
-    },
-
-    //Go to new school template
-    newSchool: function (e) {
-        e.preventDefault();
-
-        app.navigate('/schools/new', {
-            trigger: true
-        });
-    },
     //Solicita confirmação para apagar o professor
     confirmDelete: function (id, nome) {
 
@@ -125,7 +54,7 @@ window.SchoolsView = Backbone.View.extend({
         modem('POST', 'schools/' + e.target.value + '/remove',
             //Response Handler
             function () {
-                sucssesMsg($("#schoolsDiv"), "Escola apagada com sucesso!");
+                sucssesMsg($("#schoolsDiv"), "Escola apagada com sucesso!",2000);
                 setTimeout(function () {
                     document.location.reload(true);
                 }, 2000);
@@ -140,23 +69,45 @@ window.SchoolsView = Backbone.View.extend({
     //Search School
     searchSchool: function (e) {
 
-        $('#schoolsContent').find('button').each(function () {
-
-            var search = new RegExp(($("#schoolSearch").val()).toLowerCase());
-            var source = ($(this).attr('name')).toLowerCase();
-
-
-            if (search.test(source)) {
-                $(this).show();
-            }
-            else {
-                $(this).hide();
-            }
-
-        });
+        $(".listButton").hide();
+        $(".listButton:containsi(" + $(e.currentTarget).val() + ")").show();
 
     },
+    enchePreview: function (schoolData) {
+        var self = this;
+        console.log(schoolData);
 
+        $('#schoolsPreview').empty();
+
+        var $divFoto = $("<div>", {
+            class: "col-md-4"
+        }).append('<img src="' + schoolData.b64 + '"  class="dataImage">');
+
+        var $divDados = $("<div>", {
+            class: "col-md-8"
+        }).append('<label class="dataTitle col-md-12">' + schoolData.nome + '</label><br>')
+            .append('<label class="col-md-4 lblDataDetails">Nome:</label> <label class="col-md-8">' + schoolData.morada + '</label><br>')
+
+        $('#schoolsPreview').append($divFoto, $divDados)
+            .append('<div class="col-md-12" ><hr class="dataHr"></div><div id="classesList" class="col-md-12" align=left></div>')
+        ;
+        $('#classesList').append('<div id="prfSchool" class="col-md-12" align=left></div> </br>');
+
+        $.each(schoolData.turmas, function () {
+
+            var $class = $('<button>', {
+                class: "classBtn",
+                html: this.ano + "º " + this.nome + " "
+            })
+
+
+            $("#classesList").append($class);
+
+        });
+        $("#classesList").prepend('<label id="assocClasses"> Existe ' + schoolData.turmas.length + ' turma(s) associada(s).</label>')
+        //getAssocClasses(teacherData._id, teacherData.nome, false);
+
+    },
     //Class Initializer
     initialize: function () {
     },
@@ -186,13 +137,11 @@ window.SchoolsView = Backbone.View.extend({
                     //Botao de editar
                     var $edit = $("<a>", {
                         //href: "#teachers/data.doc._id/edit",
-                        href: "#schools/edit",
+                        href: "#schools/" + data.doc._id + "/edit",
                         val: data.doc._id,
-                        title: "Editar professor",
-                    }).append('<i class="fa fa-edit"></i>')
-                        .click(function () {
-                            //  self.editTeacher($(this).val());
-                        });
+
+                        title: "Editar escola",
+                    }).append('<i class="fa fa-edit"></i>');
 
                     //Botao de eliminar
                     var $delete = $("<a>", {
@@ -206,16 +155,15 @@ window.SchoolsView = Backbone.View.extend({
 
                     var $div = $("<div>", {
                         class: "listButton divWidget"
-                    }).append("<img src=" + data.doc.imgb64 + "><span>" + data.doc.nome + "</span>")
-                        .append($edit)
-                        .append($delete)
+                    }).append("<img src=" + data.doc.b64 + "><span>" + data.doc.nome + "</span>")
+                        .append($("<div>", {class: "editDeleteOp"}).append($edit, $delete))
                         .click(function () {
                             self.enchePreview(data.doc);
                         });
 
                     $('#schoolsContent').append($div);
                 });
-                //  self.fillPreview(json[0].doc);
+                self.enchePreview(json[0].doc);
             },
 
             //Error Handling

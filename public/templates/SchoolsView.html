@@ -1,114 +1,43 @@
 <div id="schoolsDiv" class="mainDiv">
+    <div class="col-md-12">
+        <section class="panel subMenu">
 
-    <!--School Panel-->
-    <div id="schoolsPanel" class="panel panel-default col-md-2" align="center" style="height:595px;">
-        <div class="panel-body " text-align="center">
-            <div>Escolas: <span id="schoolsBadge" class="badge"></span>
-            </div>
-            <hr>
-
-            <div>
-                <input id="schoolSearch" type="texto" class="form-control" placeholder="Procurar">
-            </div>
-            <hr>
-
-            <br>
-            <button id="newschoolbtn" class="btn btn-success" style="position:relative; top:370px;font-size:12px"><span
-                    class="glyphicon glyphicon-plus" style="color:#00ff00;"></span>
-                Nova Escola
-            </button>
-        </div>
-    </div>
-
-    <!--School Content-->
-    <div id="schoolsContent" class=" panel-body col-md-5" align=center style="max-height:595px; overflow:auto">
-        <img src="../img/page-loader.gif" style='height:200px;'>
-    </div>
-
-
-    <!--Scool Preview-->
-    <div id="schoolsPreview" class="col-md-5" align="center" style="height:595px; max-height:595px; overflow:auto">
-
-        <div class="btn-group" id="btnSchoolsDrop" style="position:absolute; left:15px">
-            <span type="button" class="btn badge btn-warning dropdown-toggle" data-toggle="dropdown"
-                  aria-expanded="false">
-                <span class="glyphicon glyphicon-cog"></span>
-                <span class="sr-only">Toggle Dropdown</span>
-            </span>
-            <ul class="dropdown-menu" role="menu">
+            <ul class="nav navbar-nav">
+                <li><a>Total: <label id="schoolsBadge" class=""></label>
+                </a></li>
                 <li>
-                    <button id="editbtn" value="NOT_DEFINED">Editar Dados</button>
+                    <div class="input-group" style="width: 350px;padding-top: 11px;">
+                        <input id="txtSearch" type="text" class="form-control" placeholder="Pesquisar"
+                               aria-describedby="basic-addon2">
+                        <span class="input-group-addon"> <i class="fa fa-search"></i></span>
+                    </div>
                 </li>
-                <li>
-                    <button id="deletebtn" value="NOT_DEFINED">Apagar Escola</button>
-                </li>
+                <li><a id="orderBy" class="order"><i class="fa fa-sort-alpha-asc"></i> </a></li>
+
+                <li><a href="#schools/new" title="Adicionar escola">
+                    <i class="fa fa-institution"><span class="badge-over">  <i class="fa fa-plus-circle"></i></span></i>
+
+                </a></li>
+
+
             </ul>
 
-            <img src="NOT_DEFINED" style="height:220px; max-width:430px">
 
-            <br>
-            <div align=left class="col-md-12">
-                <br>
-                <span>
-                    <label class="badge">Nome:</label>
-                    <label id="schoolName" value="NOT_DEFINED">NOT_DEFINED</label>
-                </span>
-                <br>
-                <span>
-                    <label class="badge">Morada: </label>
-                    <span id="schoolAddress">NOT_DEFINED</span>
-                </span>
-
-                <br>
-
-                <button id="showSchoolDetails" value="NOT_DEFINED">Mostrar Todos Os Detalhes</button>
-
-            </div>
-
-            <div class="col-md-12" align=left>
-                <hr>
-                <label>Turmas:</label>
-            </div>
-
-            <div id="classList" class="col-md-12" style="max-height:235px; overflow:auto">
-            </div>
-
-        </div>
-
+        </section>
+        <!-- END REGIONAL STATS PORTLET-->
     </div>
+    <div class=" panel-body col-md-5" align=center>
 
-</div>
-
-
-<!-- MODAL para apresentar a constituição da turma -->
-<div class="modal fade" id="myModalTurma" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="false">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true" class="glyphicon glyphicon-remove-sign" style="color:#ee3030"></span>
-                </button>
-                <h4 class="modal-title" id="myModalLabel">
-                </h4>
-            </div>
-            <div class="modal-body" style="height:550px">
-                <div class="col-md-12">
-                    <label>Professores:</label>
-                </div>
-                <div id="classProfessor" align=center class="col-md-12" style="max-height:120px; overflow:auto;">
-
-                </div>
-                <div class="col-md-12">
-                    <hr>
-                    <label>Alunos:</label>
-                </div>
-                <div id="classAlunos" align=center class="col-md-12" style="max-height:320px; overflow:auto;">
-
-                </div>
-
-            </div>
+        <div id="schoolsContent" class=" panel-body col-md-12" align=center>
 
         </div>
     </div>
+
+
+    <div class="col-md-7" style="padding: 30px; " align="center">
+        <div id="schoolsPreview" class="col-md-12 divWidget" align="center">
+        </div>
+    </div>
 </div>
+
+

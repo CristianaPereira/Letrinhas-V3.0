@@ -74,7 +74,7 @@ window.StudentsEdit = Backbone.View.extend({
 
             //Response Handler
             function () {
-                sucssesMsg($("#editstudentform"), "Aluno editado com sucesso");
+                sucssesMsg($("#editstudentform"), "Aluno editado com sucesso",2000);
                 setTimeout(function () {
                     app.navigate('/students', {
                         trigger: true

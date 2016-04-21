@@ -58,20 +58,20 @@ window.StudentsNewView = Backbone.View.extend({
     },
 
     //Return to last visited page
-    back: function(e){
+    back: function (e) {
         e.preventDefault();
         window.history.back();
     },
 
     //Before Sending Request To Server
-    beforeSend: function(e){
+    beforeSend: function (e) {
         e.preventDefault();
 
         //Send Form Via Ajax
         modem('POST', 'students',
             //Response Handler
             function () {
-                sucssesMsg($("#newstudentform"), "Aluno criado com sucesso");
+                sucssesMsg($("#newstudentform"), "Aluno criado com sucesso",2000);
                 setTimeout(function () {
                     app.navigate('/students', {
                         trigger: true
@@ -90,14 +90,17 @@ window.StudentsNewView = Backbone.View.extend({
     },
 
     //Class Initializer
-    initialize: function () {},
+    initialize: function () {
+    },
 
     //Class Renderer
     render: function () {
         var self = this;
 
         //Check Local Auth
-        if(!self.auth()){ return false; }
+        if (!self.auth()) {
+            return false;
+        }
 
         $(this.el).html(this.template());
 

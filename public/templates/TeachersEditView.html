@@ -1,4 +1,4 @@
-<!-- Inserção Professor: -->
+<!-- Edicao Professor: -->
 
 <!--FORMULARIO -->
 <div id="editTeacherView" class="divWidget form">
@@ -17,15 +17,11 @@
                 </h4>
             </div>
             <div id="collapse1" class="panel-collapse collapse">
-                <div class="panel-body">
-                    <div class="row">
-
-                        <!--###################################################################-->
-                    </div>
-                    <div class="col-md-3">
+                <form id="frmEditDetails" class="panel-body">
+                    <div class="col-md-2">
                         <img id="iFoto" class="col-md-12" src="../img/changePic.jpg">
                         <div class="upload form-control">
-                            <span>Alterar fotografia</span>
+                            <span>Alterar</span>
                             <input type="file" id="filePicker" class="form-control mandatory"
                                    accept="image/jpg"
                                    name="filePicker"
@@ -34,17 +30,24 @@
                                    accept="image/jpg" name="imgb64">
                         </div>
                     </div>
-                    <div class="col-md-9">
-                        <div class="col-md-12">
-                            <div class="row">
+                    <div class="col-md-10">
+                        <div class="row">
+                            <div class="col-md-9">
                                 <input class="form-control mandatory" type="text" id="InputNome"
                                        placeholder="Nome completo"
                                        name="name" required/>
-                                <span class="glyphicon glyphicon-user"></span></div>
+                                <span class="glyphicon glyphicon-user"></span>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-control" id="selectEstado" name="estado">
+                                    <option>Ativo</option>
+                                    <option>Não Ativo</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="col-md-8">
                             <input type="email" class="form-control mandatory" id="inputEmail"
-                                   title="Endereço de e-mail" placeholder="Endereço de e-mail"
+                                   title="Endereço de e-mail" name="email" placeholder="Endereço de e-mail"
                                    readonly="readonly"/>
                             <span id="imgMail" class="glyphicon glyphicon-envelope"></span>
                         </div>
@@ -58,16 +61,16 @@
                             <label id="validationLbl" class="alert-warning"></label>
                         </div>
                         <!-- Botoes-->
-                        <div class="col-sm-12">
-                            <div class="btn-group">
-                                <button type="reset" class="btn btn-default">Cancelar</button>
-                                <button id="btnEditDetails" type="submit" class="btn btn-success">Guardar
-                                    alterações
-                                </button>
-                            </div>
+
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="btn-group">
+                            <button id="btnEditDetails" type="submit" class="btn btn-success">Guardar
+                                alterações
+                            </button>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
         <div class="panel panel-default">
@@ -148,7 +151,6 @@
                         </div>
                         <div class="col-sm-3">
                             <div id="selectTurmas" class="input-group m-bot15">
-                                <span class="input-group-addon btn-white"><i class="fa fa-users"></i></span>
                             </div>
                         </div>
                         <div class="col-sm-4 col-bottom" style="float: right;">
@@ -161,7 +163,27 @@
                     <div id="assocTurma" class="col-sm-12">
                     </div>
                     <!-- Botoes-->
+                    <div class="col-lg-6">
+                        <div class="input-group my-group">
 
+                            <input type="text" class="form-control" name="snpid" placeholder="Test"><select id="lunch"
+                                                                                                            class="selectpicker form-control"
+                                                                                                            data-live-search="true"
+                                                                                                            title="Please select a lunch ...">
+                            <option>Hot Dog, Fries and a Soda</option>
+                            <option>Burger, Shake and a Smile</option>
+                            <option>Sugar, Spice and all things nice</option>
+                            <option>Baby Back Ribs</option>
+                            <option>A really really long option made to illustrate an issue with the live search in an
+                                inline form
+                            </option>
+                        </select>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="submit">GO!</button>
+                            </span>
+                        </div>
+                        <!-- /input-group -->
+                    </div>
                     <div class="col-sm-12">
                         <div class="btn-group">
                             <button type="reset" class="btn btn-default">Cancelar</button>

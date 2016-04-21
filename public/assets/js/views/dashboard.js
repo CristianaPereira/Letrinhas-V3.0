@@ -3,12 +3,14 @@ window.Dashboard = Backbone.View.extend({
 
     initialize: function () {
     },
-    
+
     render: function () {
         $(this.el).html(this.template());
         modem('GET', '/me',
             //Response Handler
             function (json) {
+
+                console.log("render, view/dashboard \n");
                 console.log("render, view/dashboard \n");
             },
             //Error Handling

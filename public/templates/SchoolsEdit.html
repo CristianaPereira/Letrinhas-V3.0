@@ -1,38 +1,102 @@
-<div class="topcoat-navigation-bar">
-    <div class="topcoat-navigation-bar__item center full">
-        <h1 align="center" class="topcoat-navigation-bar__title">Editar Escola</h1>
+<!--FORMULARIO -->
 
-    </div>
-</div>
-<div>
-    <legend>Dados Escola</legend>
-    <form id="schooleditform" role="form" method="POST" action="/schools" enctype="multipart/form-data">
-        <div class="form-group">
+<div class="form">
 
-            <label for="schoolName">Nome</label>
-            <input type="text" class="form-control" id="schoolName" placeholder="Nome" name="name">
-
-            <label for="schoolAddress">Morada</label>
-            <input type="text" class="form-control" id="schoolAddress" placeholder="Morada" name="address">
-
-
-            <div class="form-group">
-                <label for="filePicker">Logotipo:</label>
-                <input type="file" id="filePicker" name="file">
-                <input type="text" id="base64textarea" name="b64">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div align="center" class="titleBox">
+                <img class="titleImage">
+        <span class="titleText">
+            Editar dados da escola
+        </span>
             </div>
-
-            <div class="row">
-                <div class="col-sm-6">
-                    <button id="cancelbtn" type="reset" class="btn btn-lg btn-default btn-block btn-cancel">
-                        Cancelar
-                    </button>
-                </div>
-                <div class="col-sm-6">
-                    <button type="submit" class="btn btn-lg btn-success btn-block btn-created">Submeter</button>
-                </div>
-            </div>
-
         </div>
-    </form>
+    </div>
+    <div class="col-md-6">
+        <div class="panel panel-info">
+            <div class="panel-heading"><i class="fa fa-gears"></i> Detalhes</div>
+            <div class="panel-body">
+                <form id="schooleditform" class="panel-body" role="form" method="POST" action="/schools"
+                      enctype="multipart/form-data">
+                    <div class="col-md-12 center-child">
+                        <img id="iFoto" src="../img/changePic.jpg" name="fds">
+                        <div class="upload form-control">
+                            <span>Alterar</span>
+                            <input type="file" id="filePicker" class="form-control mandatory"
+                                   accept="image/jpg"
+                                   name="filePicker">
+                            <input type="hidden" id="base64textarea" class="form-control"
+                                   accept="image/jpg" name="b64">
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-12">
+                        <input type="text" class="form-control mandatory" id="schoolName"
+                               placeholder="Nome" name="name" required>
+                        <span class="glyphicon"><i class="fa fa-institution"></i></span>
+                    </div>
+                    <div class="col-md-12">
+                        <input type="text" class="form-control" id="schoolAddress" placeholder="Morada"
+                               name="address">
+                        <span class="glyphicon "><i class="fa fa-map"></i></span>
+                    </div>
+                    <!-- Botoes-->
+
+                    <div class="col-sm-12">
+                        <div class="btn-group">
+                            <button id="btnEditDetails" type="submit" class="btn btn-success">Guardar
+                                alterações
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="panel panel-info">
+            <div class="panel-heading"><i class="fa fa-book"></i> Turmas</div>
+            <div class="panel-body ">
+                <form id="newclassform" class="row" method="post" action="/class/new">
+                    <div class="input-group ">
+                        <span class="input-group-addon">
+                            <select name="year">
+                                <option selected disabled>Ano escolar</option>
+                                <optgroup label="1º Ciclo do Ensino Básico">
+                                    <option value="1">1º Ano</option>
+                                    <option value="2">2º Ano</option>
+                                    <option value="3">3º Ano</option>
+                                    <option value="4">4º Ano</option>
+                                </optgroup>
+                                <optgroup label="2º Ciclo do Ensino Básico">
+                                    <option value="5">5º Ano</option>
+                                    <option value="6">6º Ano</option>
+                                </optgroup>
+                                <optgroup label="3º Ciclo do Ensino Básico">
+                                    <option value="7">7º Ano</option>
+                                    <option value="8">8º Ano</option>
+                                    <option value="9">9º Ano</option>
+                                </optgroup>
+                                <optgroup label="Ensino Secundário">
+                                    <option value="10">10º Ano</option>
+                                    <option value="11">11º Ano</option>
+                                    <option value="12">12º Ano</option>
+                                </optgroup>
+                            </select>
+                            </span>
+                        <input class="form-control" type="text" name="name" placeholder="Designação">
+                            <span class="input-group-addon addon-button">
+                            <button id="addNewClass" value="Criar Turma"
+                                    style="border: none;background-color: transparent;">Criar Turma
+                            </button>
+                            </span>
+                    </div>
+                </form>
+                <legend>Turmas associadas</legend>
+                <div id="classesList" class="col-md-12" align="left">
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

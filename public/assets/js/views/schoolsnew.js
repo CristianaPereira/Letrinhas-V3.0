@@ -41,7 +41,7 @@ window.SchoolsNew = Backbone.View.extend({
 
                 var dataUrl = canvas.toDataURL('image/jpeg');
                 $("#base64textarea").val(dataUrl);
-
+                $("#iFoto").attr("src", dataUrl);
             }
             image.src = readerEvent.target.result;
         }
@@ -51,15 +51,15 @@ window.SchoolsNew = Backbone.View.extend({
     //Before Sending Request To Server
     beforeSend: function (e) {
         e.preventDefault();
-
         modem('POST', 'schools',
-
             //Response Handler
-            function () {
-                console.log("School Created Successfully");
-                app.navigate('schools', {
-                    trigger: true
-                });
+            function (json) {
+                sucssesMsg($(".form"), "Escola inserida com sucesso!", 1000);
+                setTimeout(function () {
+                    app.navigate("schools/" + json + "/edit", {
+                        trigger: true
+                    });
+                }, 1200);
             },
 
             //Error Handling
@@ -70,7 +70,7 @@ window.SchoolsNew = Backbone.View.extend({
                 console.log(thrownError);
 
                 //Redirect If Everyting Ok
-                if(xhr.status == 200){
+                if (xhr.status == 200) {
                     console.log("School Created Successfully");
                     app.navigate('schools', {
                         trigger: true
@@ -89,7 +89,6 @@ window.SchoolsNew = Backbone.View.extend({
         e.preventDefault();
         window.history.back();
     },
-
 
 
     //Class Initializer
