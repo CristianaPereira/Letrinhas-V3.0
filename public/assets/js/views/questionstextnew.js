@@ -25,8 +25,15 @@ window.QuestionsTextNew = Backbone.View.extend({
     //Before Sending Request To Server
     beforeSend: function (e){
         e.preventDefault();
-        
-        console.log($("#newTextTestForm").serialize());
+
+        modem('POST', 'questions',
+            function (json) {
+            },
+            //Error Handling
+            function (xhr, ajaxOptions, thrownError) {
+            },
+            new FormData($("#newTextTestForm")[0])
+        );
         
     },
     

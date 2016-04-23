@@ -118,7 +118,7 @@ exports.getAll = function (req, res) {
 
             for (var i in body.rows) {
 
-                if (body.rows[i].doc.professorId && body.rows[i].doc.professorId == user)
+                if (body.rows[i].doc.profID && body.rows[i].doc.profID == user)
                     body.rows[i].doc.isMine = true;
 
             }

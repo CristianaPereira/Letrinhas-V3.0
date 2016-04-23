@@ -10,8 +10,11 @@ var express = require('express'),
     basicAuth = require('basic-auth'),
     http = require('http');
 
+
 //Path Variable
 var path = require('path');
+    fs = require('fs-extra');       //File System - for file manipulation
+    mime = require('mime');
 
 //Route Controllers
 var schools = require('./routes/schools'),
@@ -24,8 +27,13 @@ var schools = require('./routes/schools'),
 //Express Variable
 var app = express();
 
+//File Upload
+var busboy = require('connect-busboy'); //middleware for form/file upload
+app.use(busboy({immediate: true}));
+
 //Configure app to use bodyParser()
 app.use(bodyParser({limit: '50mb'}));
+//app.use(bodyParser({uploadDir: __dirname + '/tmp'}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '/public')));
@@ -43,6 +51,38 @@ router.use(function (req, res, next) {
     // log each request to the console
     console.log("Route Request: ".blue + req.method, req.url);
     next();
+});
+
+//Build Body and Parse Files When FormData is Uploaded insted of JSON
+router.use(function (req, res, next) {
+    if (req.busboy != null) {
+
+        req.busboy.on('file', function (fieldname, file, filename) {
+            req.body['filePath'] = __dirname + "\\tmp\\" + filename;
+            console.log("Uploading: " + filename);
+            //Path where image will be uploaded
+            fstream = fs.createWriteStream(__dirname + '\\tmp\\' + filename);
+            file.pipe(fstream);
+            fstream.on('close', function () {
+                console.log("Upload Finished of " + filename);
+            });
+
+        });
+
+
+        req.busboy.on('field', function (key, value) {
+            req.body[key] = value;
+        });
+
+        req.busboy.on('finish', function () {
+            next();
+        });
+
+    }
+    else{
+        next();
+    }
+
 });
 
 // Validating Login Credentials
@@ -80,7 +120,7 @@ var auth = function (req, res, next) {
         res.status(401).json({});
     }
 
-}
+};
 
 /**
  * PERMISSIONS:
@@ -102,13 +142,13 @@ var perms = function (level) {
             res.status(401).json(["Permission Error"]);
         }
     }
-}
+};
 
 // Make Teacher Query Be On Logged User
 var tself = function (req, res, next) {
     req.params.id = req.user.name;
     next();
-}
+};
 
 // Make App use router
 app.use('/', router);
@@ -154,7 +194,7 @@ app.route('/students/:id')
     .get(auth, perms(2), students.get);
 
 app.route('/questions')
-    .post(auth, perms(2), questions.new)
+    .post(auth, tself, perms(2), questions.test)
     .get(auth, perms(2), questions.getAll);
 
 app.route('/questions/:id')
@@ -163,7 +203,6 @@ app.route('/questions/:id')
 //Tests
 app.route('/tests')
     .get(auth, tself, perms(2), tests.getAll);
-
 
 
 //This Needs To Be Revised

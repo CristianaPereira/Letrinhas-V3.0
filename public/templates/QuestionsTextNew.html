@@ -19,12 +19,12 @@
                     <label for="InputTitulo">Título:</label>
                     <input type="text" class="form-control mandatory" id="InputTitulo"
                            placeholder="Ex: Anita vai às compras"
-                           name="titulo" >
+                           name="title" >
                 </div>
                 <div class="col-sm-2">
                     </br>
                     <label for="selectDiscip">Disciplina:</label>
-                    <select class="form-control" id="selectDiscip" name="disciplina">
+                    <select class="form-control" id="selectDiscip" name="class">
                         <optgroup label="Linguas">
                             <option>Português</option>
                             <option>Inglês</option>
@@ -35,7 +35,7 @@
                 <div class="col-sm-2">
                     </br>
                     <label for="selectAno">Ano Escolar:</label>
-                    <select class="form-control" id="selectAno" name="ano_escolar">
+                    <select class="form-control" id="selectAno" name="schoolYear">
                         <optgroup label="1º Ciclo do Ensino Básico">
                             <option>1º</option>
                             <option>2º</option>
@@ -65,14 +65,14 @@
                     </br>
                     <label for="InputPergunta">Pergunta:</label>
                     <input type="text" class="form-control mandatory" id="InputPergunta"
-                           placeholder="Ex: Leia o segunte texto" name="pergunta"
+                           placeholder="Ex: Leia o segunte texto" name="question"
                            >
                 </div>
                 <div class="col-sm-6">
                     </br>
                     <label for="InputDescricao">Descrição:</label>
                     <input type="text" class="form-control mandatory" id="InputDescricao"
-                           placeholder="Ex: Teste de apoio para alunos con dificuldades de leitura" name="descricao"
+                           placeholder="Ex: Teste de apoio para alunos con dificuldades de leitura" name="description"
                            >
 
                 </div>
@@ -82,16 +82,16 @@
                 <div class="col-sm-12">
                     </br>
                     <label for="InputTexto">Texto</label>
-                    <textarea class="form-control mandatory" rows="7" id="InputTexto" name="texto" style="resize: none;"
+                    <textarea class="form-control mandatory" rows="7" id="InputTexto" name="text" style="resize: none;"
                               ></textarea>
                 </div>
             </div>
 
             <div id="painelInvisivel" class="form-group  col-sm-8" style="display:none">
-                <select class="form-control" id="selectEstado" name="estado">
+                <select class="form-control" id="selectEstado" name="state">
                     <option>1</option>
                 </select>
-                <select class="form-control" id="selectTipo" name="tipo">
+                <select class="form-control" id="selectTipo" name="type">
                     <option>Texto</option>
                 </select>
                 </br>

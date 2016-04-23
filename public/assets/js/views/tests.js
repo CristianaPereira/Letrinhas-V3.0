@@ -28,7 +28,7 @@ window.TestsView = Backbone.View.extend({
         });
 
         //Select Test Type Preview
-        switch ($test.tipo) {
+        switch ($test.type) {
             case 'Texto':
                 self.textPreview($test);
                 break;
@@ -56,30 +56,30 @@ window.TestsView = Backbone.View.extend({
         //Test Description
         $("#testPreviewContainer")
             .append($("<label>", {html: "<b>Descrição:</b>"}))
-            .append($("<span>", {html: test.descricao}))
+            .append($("<span>", {html: test.description}))
             .append("<br>");
 
         //Write Questions
-        $.each(test.perguntas, function () {
+        $.each(test.questions, function () {
 
             var id = this;
-            var pergunta = "";
+            var $question = "";
 
             //Find Question
             $.each(self.questions, function () {
                 if (id == this.id) {
-                    pergunta = this.doc;
+                    $question = this.doc;
                 }
             });
 
             $("#testPreviewContainer")
                 .append($("<label>", {html: "Pergunta:"}))
-                .append($("<span>", {html: pergunta.titulo}))
+                .append($("<span>", {html: $question.title}))
                 .append($("<div>", {
                     class: "panel panel-default col-md-12",
                     align: "left",
                     style: "height:300px; overflow:auto",
-                    html: pergunta.conteudo.texto
+                    html: $question.content.text
                 }))
                 .append("<br>");
 
@@ -494,6 +494,8 @@ window.TestsView = Backbone.View.extend({
                 self.tests = json.tests;
                 self.questions = json.questions;
 
+                console.log(self.tests);
+
                 //Append Test Buttons To Template
                 $("#testsContent").html("");
                 $.each(self.tests, function (i) {
@@ -505,7 +507,7 @@ window.TestsView = Backbone.View.extend({
 
                     //Select Test Type Image
                     var $imgT = '';
-                    switch (this.doc.tipo) {
+                    switch (this.doc.type) {
                         case 'Texto':
                             $imgT = "../img/testeTexto.png";
                             break;
@@ -526,7 +528,7 @@ window.TestsView = Backbone.View.extend({
 
                     //Select Test Class Image
                     var $imgC = '';
-                    switch (this.doc.disciplina) {
+                    switch (this.doc.class) {
                         case 'Português':
                             $imgC = "../img/portugues.png";
                             break;
@@ -560,7 +562,7 @@ window.TestsView = Backbone.View.extend({
                     var $div = $("<button>", {
                         id: this.doc._id,
                         class: "btn btn-lg btn-block testSelec",
-                        name: this.doc.titulo,
+                        name: this.doc.title,
                         type: "button",
                         style: "height:60px; text-align:left; background-color: " + $color + "; color: #ffffff;"
                     })
@@ -568,7 +570,7 @@ window.TestsView = Backbone.View.extend({
                             "<img style='height:30px;' src='" + $imgT + "'>" +
                             "<img style='height:30px;' src='" + $imgC + "'>" +
                             "&nbsp;&nbsp;&nbsp;" +
-                            this.doc.titulo
+                            this.doc.title
                         );
 
                     $("#testsContent").append($div);
