@@ -3,7 +3,9 @@ window.TestsView = Backbone.View.extend({
         "click .testSelec": "changePreview",
         "click #newtestbtn": "newTest",
         "click #textTestbtn": "textTestNew",
-        "click #multimediaTestbtn": "multimediaTestNew"
+        "click #multimediaTestbtn": "multimediaTestNew",
+        "click #listTestbtn": "listTestNew",
+        "click #interpretationTestbtn": "interpretationTestNew"
     },
 
     //Check Auth
@@ -28,11 +30,11 @@ window.TestsView = Backbone.View.extend({
         });
 
         //Select Test Type Preview
-        switch ($test.type) {
-            case 'Texto':
+        switch ($test.type.toLowerCase()) {
+            case 'text':
                 self.textPreview($test);
                 break;
-            case 'Lista':
+            case 'list':
                 self.listPreview($test);
                 break;
             case 'Multimédia':
@@ -81,6 +83,15 @@ window.TestsView = Backbone.View.extend({
                     style: "height:300px; overflow:auto",
                     html: $question.content.text
                 }))
+                .append($("<div>", {class: "col-md-12", align: "left"})
+                    .append($("<label>", {html: "Demo: ", style: "font-weight: bold"}))
+                    .append("<br>")
+                    .append($("<audio controls>", {id: "vozProf", style: "width:100%"}))
+                    .append($("<source>", {
+                        src: "file/dev_perguntas/"+$question._id+"/voice.mp3",
+                        type: "audio/mpeg"
+                    }))
+                )
                 .append("<br>");
 
         });
@@ -96,25 +107,25 @@ window.TestsView = Backbone.View.extend({
         //Test Description
         $("#testPreviewContainer")
             .append($("<label>", {html: "<b>Descrição:</b>"}))
-            .append($("<span>", {html: test.descricao}))
+            .append($("<span>", {html: test.description}))
             .append("<br>");
 
         //Write Questions
-        $.each(test.perguntas, function () {
+        $.each(test.questions, function () {
 
             var id = this;
-            var pergunta = "";
+            var $question = "";
 
             //Find Question
             $.each(self.questions, function () {
                 if (id == this.id)
-                    pergunta = this.doc;
+                    $question = this.doc;
             });
 
             //Pre-Build Containers
             $("#testPreviewContainer")
                 .append($("<label>", {html: "Pergunta:"}))
-                .append($("<span>", {html: pergunta.titulo}))
+                .append($("<span>", {html: $question.title}))
                 .append($("<div>", {
                     id: "answerContainer",
                     class: "panel panel-default col-md-12 ",
@@ -128,12 +139,12 @@ window.TestsView = Backbone.View.extend({
              */
 
             //Column 1
-            if (pergunta.conteudo.palavrasCL1.length > 0) {
+            if ($question.content.wordsCL1) {
                 //Add Column
                 $("#answerContainer")
                     .append($("<div>", {class: "col-md-4"})
                         .append($("<span>", {class: "badge btn-success", html: "Coluna 1"}))
-                        .append(self.getColumns(pergunta.conteudo.palavrasCL1))
+                        .append(self.getColumns($question.content.wordsCL1))
                     )
             }
             else
@@ -143,12 +154,12 @@ window.TestsView = Backbone.View.extend({
                 }))
 
             //Column 2
-            if (pergunta.conteudo.palavrasCL2.length > 0) {
+            if ($question.content.wordsCL2) {
                 //Add Column
                 $("#answerContainer")
                     .append($("<div>", {class: "col-md-4"})
                         .append($("<span>", {class: "badge btn-success", html: "Coluna 2"}))
-                        .append(self.getColumns(pergunta.conteudo.palavrasCL2))
+                        .append(self.getColumns($question.content.wordsCL2))
                     )
             }
             else
@@ -158,12 +169,12 @@ window.TestsView = Backbone.View.extend({
                 }))
 
             //Column 3
-            if (pergunta.conteudo.palavrasCL3.length > 0) {
+            if ($question.content.wordsCL3) {
                 //Add Column
                 $("#answerContainer")
                     .append($("<div>", {class: "col-md-4"})
                         .append($("<span>", {class: "badge btn-success", html: "Coluna 3"}))
-                        .append(self.getColumns(pergunta.conteudo.palavrasCL3))
+                        .append(self.getColumns($question.content.wordsCL3))
                     )
             }
             else
@@ -179,13 +190,13 @@ window.TestsView = Backbone.View.extend({
 
             $("#testPreviewContainer")
                 .append($("<div>", {class: "col-md-12", align: "left"})
-                    .append($("<label>", {html: "Demo:"}))
-                    .append($("<audio controls>", {id: "vozProf", style: "width:100%"})
-                        .append($("<source>", {
-                            src: "photo/dev_perguntas/" + pergunta._id + "/voz.mp3",
-                            type: "audio/mpeg"
-                        }))
-                    )
+                    .append($("<label>", {html: "Demo: ", style: "font-weight: bold"}))
+                    .append("<br>")
+                    .append($("<audio controls>", {id: "vozProf", style: "width:100%"}))
+                    .append($("<source>", {
+                        src: "file/dev_perguntas/"+$question._id+"/voice.mp3",
+                        type: "audio/mp3"
+                    }))
                 )
 
         });
@@ -347,30 +358,30 @@ window.TestsView = Backbone.View.extend({
         //Test Description
         $("#testPreviewContainer")
             .append($("<label>", {html: "<b>Descrição:</b>"}))
-            .append($("<span>", {html: $pergunta.descricao}))
+            .append($("<span>", {html: $pergunta.description}))
             .append("<br>");
 
         //Write Questions
         $.each($test.perguntas, function () {
 
             var $id = this;
-            var $pergunta = "";
+            var $question = "";
 
             //Find Question
             $.each(self.questions, function () {
                 if ($id == this.id) {
-                    $pergunta = this.doc;
+                    $question = this.doc;
                 }
             });
 
             $("#testPreviewContainer")
                 .append($("<label>", {html: "Pergunta:"}))
-                .append($("<span>", {html: $pergunta.titulo}))
+                .append($("<span>", {html: $question.titulo}))
                 .append($("<div>", {
                     class: "panel panel-default col-md-12",
                     align: "justify",
                     style: "height:300px; overflow:auto",
-                    html: $pergunta.conteudo.texto
+                    html: $question.content.text
                 }))
                 .append("<br>");
 
@@ -469,6 +480,22 @@ window.TestsView = Backbone.View.extend({
         });
     },
 
+    //New List Test
+    listTestNew: function () {
+        $('#newTestModal').modal("hide");
+        app.navigate('/listTest/new', {
+            trigger: true
+        });
+    },
+
+    //New List Test
+    interpretationTestNew: function () {
+        $('#newTestModal').modal("hide");
+        app.navigate('/interpretationTest/new', {
+            trigger: true
+        });
+    },
+
 
     //Class Initializer
     initialize: function () {
@@ -507,11 +534,11 @@ window.TestsView = Backbone.View.extend({
 
                     //Select Test Type Image
                     var $imgT = '';
-                    switch (this.doc.type) {
-                        case 'Texto':
+                    switch ((this.doc.type).toLowerCase()) {
+                        case 'text':
                             $imgT = "../img/testeTexto.png";
                             break;
-                        case 'Lista':
+                        case 'list':
                             $imgT = "../img/testLista.png";
                             break;
                         case 'Multimédia':
@@ -528,8 +555,8 @@ window.TestsView = Backbone.View.extend({
 
                     //Select Test Class Image
                     var $imgC = '';
-                    switch (this.doc.class) {
-                        case 'Português':
+                    switch ((this.doc.class).toLowerCase()) {
+                        case 'português':
                             $imgC = "../img/portugues.png";
                             break;
                         case 'Inglês':

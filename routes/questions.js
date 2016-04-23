@@ -4,6 +4,8 @@ var nano = require('nano')(process.env.COUCHDB);
 var db = nano.use('dev_testes');
 var db2 = nano.use('dev_perguntas');
 
+var fs = require('fs-extra'),       //File System - for file manipulation
+    mime = require('mime');
 
 //Como as perguntas nuca se poderão alterar
 //usa-se o upDate apenas para desabilitar a pergunta
@@ -832,16 +834,39 @@ exports.test = function (req, res) {
             "schoolYear": req.body.schoolYear,
             "question": req.body.question,
             "description": req.body.description,
-            "content": {"text": req.body.text},
+            "content": {},
             "state": Boolean(req.body.state),
             "type": req.body.type,
             "profID": req.params.id,
             "creationDate": $date
         };
 
+        switch ($question.type) {
+            case "text":
+                $question.content["text"] = req.body.text;
+                break;
+
+            case "list":
+                if (req.body.cl1)
+                    $question.content["wordsCL1"] = wordPrefix(req.body.cl1);
+
+                if (req.body.cl2)
+                    $question.content["wordsCL2"] = wordPrefix(req.body.cl2);
+
+                if (req.body.cl3)
+                    $question.content["wordsCL3"] = wordPrefix(req.body.cl3);
+
+                break;
+
+            default:
+
+                break;
+        }
+        
+
         db.insert($test, $idTest, function (err, body) {
             if (err) {
-                console.log('questions new, an error ocourred'.green);
+                console.log('Test new, an error ocourred'.green);
                 res.send(500);
             }
             else {
@@ -855,7 +880,7 @@ exports.test = function (req, res) {
                         res.send(500);
                     }
                     else {
-                        console.log('questions added'.red);
+                        console.log('New Test Added'.red);
                     }
 
                 });
@@ -872,3 +897,19 @@ exports.test = function (req, res) {
     res.send(200);
 
 };
+
+
+function wordPrefix($col){
+    var $col = ($col)
+        .replace(/(\r\n|\n|\r)/gm, " ")  //Replaces all 3 types of line breaks with a space
+        .replace(/\s+/g, " ")            //Replace all double white spaces with single spaces
+        .split(" ");                   //Split String Into Array
+
+    var $json = [];
+
+    for (var i in $col) {
+        $json.push($col[i]);
+    }
+
+    return $json;
+}

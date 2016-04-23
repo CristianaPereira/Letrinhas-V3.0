@@ -8,12 +8,12 @@ var db = nano.use('dev_professores');
 var express = require('express'),
     bodyParser = require('body-parser'),
     basicAuth = require('basic-auth'),
-    http = require('http');
-
+    http = require('http'),
+    busboy = require('connect-busboy'); //middleware for form/file upload
 
 //Path Variable
-var path = require('path');
-    fs = require('fs-extra');       //File System - for file manipulation
+var path = require('path'),
+    fs = require('fs-extra'),       //File System - for file manipulation
     mime = require('mime');
 
 //Route Controllers
@@ -22,21 +22,22 @@ var schools = require('./routes/schools'),
     students = require('./routes/students'),
     tests = require('./routes/tests'),
     questions = require('./routes/questions'),
-    submissions = require('./routes/submissions');
+    submissions = require('./routes/submissions'),
+    fileHandler = require('./routes/fileHandler');
 
 //Express Variable
 var app = express();
 
-//File Upload
-var busboy = require('connect-busboy'); //middleware for form/file upload
+//Set BusBoy to Parse Form Immediately
 app.use(busboy({immediate: true}));
 
-//Configure app to use bodyParser()
-app.use(bodyParser({limit: '50mb'}));
-//app.use(bodyParser({uploadDir: __dirname + '/tmp'}));
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, '/public')));
+/**
+ * Body Parser Config
+ */
+app.use(bodyParser({limit: '50mb'}));                       //Data Transfer Max Size
+app.use(bodyParser.urlencoded({extended: true}));           //Set URL Enconde
+app.use(bodyParser.json());                                 //Parse Body Data To JSON
+app.use(express.static(path.join(__dirname, '/public')));   //Public Folder Path
 
 
 //Set our server port
@@ -222,6 +223,9 @@ app.route('/schools/:id/remove')
 app.route('/students/:id/remove')
     .post(auth, perms(3), students.removeStudent);
 
+//File Handler
+app.route("/file/:db/:id/:filename")
+    .get(fileHandler.fileDownload)
 
 /*
  //Professores

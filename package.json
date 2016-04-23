@@ -9,7 +9,6 @@
     "colors": "*",
     "express": "~4.0.0",
     "fs-extra": "^0.28.0",
-    "multer": "^1.1.0",
     "nano": "^6.1.5",
     "request": "*"
   },
@@ -21,13 +20,16 @@
     "Tiago Fernandes <thiago_f@aeiou.pt>",
     "Artur Gomes <artur.s.gomes@gmail.com>",
     "Alexandre Carvalho <axcs90@gmail.com>",
-    "António Manso <manso@ipt.pt>"
+    "António Manso <manso@ipt.pt>",
+    "Renato Pestana <renatompestana@gmail.com",
+    "Cristina Pereira <>"
   ],
   "maintainers": [
     "apocas <petermdias@gmail.com>",
     "thiago_f@aeiou.pt",
     "artur.s.gomes@gmail.com",
     "axcs90@gmail.com",
-    "manso@ipt.pt"
+    "manso@ipt.pt",
+    "renatompestana@gmail.com"
   ]
 }

@@ -4,7 +4,7 @@ window.QuestionsTextNew = Backbone.View.extend({
         "click #record": "initRecord",
         "click #backbtn": "goBack",
         "change #uploadSoundFile": "uploadSoundFile",
-        "submit": "beforeSend",
+        "submit": "beforeSend"
     },
 
     //Check Auth

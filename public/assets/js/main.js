@@ -50,7 +50,9 @@ var Router = Backbone.Router.extend({
         //Tests Routing
         "tests": "tests",
         "questionsText/new" : "textTestNew",
-        "multimediaTest/new" : "multimediaTestNew"
+        "multimediaTest/new" : "multimediaTestNew",
+        "listTest/new" : "listTestNew",
+        "interpretationTest/new" : "interpretationTestNew"
 
     },
 
@@ -295,7 +297,35 @@ var Router = Backbone.Router.extend({
         );
     },
 
+    listTestNew: function(){
+        var self = this;
+
+        self.navbar();
+
+        templateLoader.load(["QuestionsListNew"],
+            function () {
+                var v = new QuestionsListNew({});
+                self.showView(v, $('#content'));
+            }
+        );
+    },
+
+    interpretationTestNew: function(){
+        var self = this;
+
+        self.navbar();
+
+        templateLoader.load(["QuestionsInterpNew"],
+            function () {
+                var v = new QuestionsInterpNew({});
+                self.showView(v, $('#content'));
+            }
+        );
+    }
+
 });
+
+
 
 templateLoader.load(["Home"],
     function () {
