@@ -804,93 +804,110 @@ exports.test = function (req, res) {
 
     console.log(req.body);
 
-    //Date And ID's Generator
-    var $date = new Date();
-    var $idQuest = 'Q' + $date.getTime();
-    var $idTest = 'T' + $date.getTime();
+    if(req.body.filePath){
+        //Date And ID's Generator
+        var $date = new Date();
+        var $idQuest = 'Q' + $date.getTime();
+        var $idTest = 'T' + $date.getTime();
 
-    //Image Data Sync
-    var $imgData = fs.readFileSync(req.body.filePath);
+        //Image Data Sync
+        var $imgData = fs.readFileSync(req.body.filePath);
 
-    //Check if File is a MP3 File
-    if ((mime.lookup(req.body.filePath)).startsWith("audio")) {
+        //Check if File is a MP3 File
+        if ((mime.lookup(req.body.filePath)).startsWith("audio")) {
 
-        var $test = {
-            "title": req.body.title,
-            "class": req.body.class,
-            "schoolYear": req.body.schoolYear,
-            "nRepetitions": 0,
-            "description": req.body.description,
-            "questions": {0: $idQuest},
-            "state": Boolean(req.body.state),
-            "type": req.body.type,
-            "profID": req.params.id,
-            "creationDate": $date
-        };
+            //Test Object
+            var $test = {
+                "title": req.body.title,
+                "class": req.body.class,
+                "schoolYear": req.body.schoolYear,
+                "nRepetitions": 0,
+                "description": req.body.description,
+                "questions": {0: $idQuest},
+                "state": Boolean(req.body.state),
+                "type": req.body.type,
+                "profID": req.params.id,
+                "creationDate": $date
+            };
 
-        var $question = {
-            "title": req.body.title,
-            "class": req.body.class,
-            "schoolYear": req.body.schoolYear,
-            "question": req.body.question,
-            "description": req.body.description,
-            "content": {},
-            "state": Boolean(req.body.state),
-            "type": req.body.type,
-            "profID": req.params.id,
-            "creationDate": $date
-        };
+            //Test Question
+            var $question = {
+                "title": req.body.title,
+                "class": req.body.class,
+                "schoolYear": req.body.schoolYear,
+                "question": req.body.question,
+                "description": req.body.description,
+                "content": {},
+                "state": Boolean(req.body.state),
+                "type": req.body.type,
+                "profID": req.params.id,
+                "creationDate": $date
+            };
 
-        switch ($question.type) {
-            case "text":
-                $question.content["text"] = req.body.text;
-                break;
+            //Select Question Type
+            switch ($question.type) {
+                case "text":
+                    $question.content["text"] = req.body.text;
+                    break;
 
-            case "list":
-                if (req.body.cl1)
-                    $question.content["wordsCL1"] = wordPrefix(req.body.cl1);
+                case "list":
+                    if (req.body.cl1)
+                        $question.content["wordsCL1"] = wordPrefix(req.body.cl1);
 
-                if (req.body.cl2)
-                    $question.content["wordsCL2"] = wordPrefix(req.body.cl2);
+                    if (req.body.cl2)
+                        $question.content["wordsCL2"] = wordPrefix(req.body.cl2);
 
-                if (req.body.cl3)
-                    $question.content["wordsCL3"] = wordPrefix(req.body.cl3);
+                    if (req.body.cl3)
+                        $question.content["wordsCL3"] = wordPrefix(req.body.cl3);
 
-                break;
+                    break;
 
-            default:
+                case "interpretation":
+                    //Content Text
+                    $question.content["text"] = req.body.text;
 
-                break;
+                    //Iterate SID's
+                    $question.content["sid"] = [];
+                    var $sid = req.body.sid.split(',');
+                    for(var i in $sid){
+                        $question.content.sid.push($sid[i]);
+                    }
+
+                    break;
+
+                default:
+                    break;
+            }
+
+            //Insert Test in DB
+            db.insert($test, $idTest, function (err, body) {
+                if (err) {
+                    console.log('Test new, an error ocourred'.green);
+                    res.send(500);
+                }
+                else {
+                    db2.multipart.insert($question, [{
+                        name: 'voice.mp3',
+                        data: $imgData,
+                        content_type: 'audio/mp3'
+                    }], $idQuest, function (err, body) {
+                        if (err) {
+                            console.log('questions new, an error ocourred'.green);
+                            res.send(500);
+                        }
+                        else {
+                            console.log('New Test Added'.red);
+                        }
+
+                    });
+                }
+            });
+
         }
-        
-
-        db.insert($test, $idTest, function (err, body) {
-            if (err) {
-                console.log('Test new, an error ocourred'.green);
-                res.send(500);
-            }
-            else {
-                db2.multipart.insert($question, [{
-                    name: 'voice.mp3',
-                    data: $imgData,
-                    content_type: 'audio/mp3'
-                }], $idQuest, function (err, body) {
-                    if (err) {
-                        console.log('questions new, an error ocourred'.green);
-                        res.send(500);
-                    }
-                    else {
-                        console.log('New Test Added'.red);
-                    }
-
-                });
-            }
-        });
-
-    }
-    else {
-        console.log("Invalid File Type");
-        res.send(401, {error: "Invalid File Type"});
+        else {
+            console.log("Invalid File Type");
+            res.send(401, {error: "Invalid File Type"});
+        }
     }
 
 

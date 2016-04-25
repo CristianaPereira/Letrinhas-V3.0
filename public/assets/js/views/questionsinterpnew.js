@@ -4,6 +4,7 @@ window.QuestionsInterpNew = Backbone.View.extend({
         "click #record": "initRecord",
         "change #uploadSoundFile": "uploadSoundFile",
         "click #markText": "markText",
+        "click #writeText": "writeText",
         "click .selectable": "selectWord",
         "click #backbtn": "goBack",
         "submit": "beforeSend"
@@ -28,13 +29,24 @@ window.QuestionsInterpNew = Backbone.View.extend({
     beforeSend: function (e) {
         e.preventDefault();
 
+        //Generate Form Data
+        var fd = new FormData($("#newInterpretationTestForm")[0]);
+
+        //Generate Answers Locations
+        var $sid = [];
+        $("#inputPanel").find(".badge").each(function(){
+            $sid.push((this.id).substring(3));
+        });
+
+        fd.append("sid", $sid);
+
         modem('POST', 'questions',
             function (json) {
             },
             //Error Handling
             function (xhr, ajaxOptions, thrownError) {
             },
-            new FormData($("#newListTestForm")[0])
+            fd
         );
 
     },
@@ -74,6 +86,18 @@ window.QuestionsInterpNew = Backbone.View.extend({
             .css('border', 'solid 1px #cccccc');
     },
 
+    //Finalize Text Marking
+    writeText: function(e){
+        e.preventDefault();
+
+        $("#inputTextArea").show();
+        $("#markText").show();
+
+        $("#inputPanel").hide();
+        $("#writeText").hide();
+
+    },
+
     //Text Marking
     markText: function (e) {
         e.preventDefault();
@@ -82,33 +106,32 @@ window.QuestionsInterpNew = Backbone.View.extend({
 
         alert("Atenção: \nMarcar o texto deve ser um processo final. \nCaso altere o texto ou pretenda remarcar o mesmo, todas as marcações anteriores serão removidas!");
 
-        var $text = $("#inputTextArea").val();
+        // var $text = $("#inputTextArea").val();
+        // var $words = $("#inputTextArea").val()
+        //     .replace(/(\r\n|\n|\r)/gm, " ")  //Replaces all 3 types of line breaks with a space
+        //     .replace(/\s+/g, " ")            //Replace all double white spaces with single spaces
+        //     .split(" ");
+        //
+        // //Make Array Unique
+        // $words = self.unique($words);
 
         var $words = $("#inputTextArea").val()
-            .replace(/(\r\n|\n|\r)/gm, " ")  //Replaces all 3 types of line breaks with a space
+            .replace(/(\r\n|\n|\r)/gm, "<br>")  //Replaces all 3 types of line breaks with a space
             .replace(/\s+/g, " ")            //Replace all double white spaces with single spaces
             .split(" ");
 
-        //Make Array Unique
-        $words = self.unique($words);
+        var $result = [];
 
         //Replace String With Selectable Span
         for(var i in $words){
-            $text = $text.replace($words[i], "<mark class='selectable'>" + $words[i] + "</mark>");
+            if($words[i] == "<br>")
+                $result.push("<br>");
+            else
+                $result.push("<span id='sid" + i +"' class='selectable'>" + $words[i] + "</span>");
         }
 
-        $("#inputPanel").append($text);
+        $("#inputPanel").append($result.join(' '));
 
-        /*
-        for (var i in $words) {
-
-            $("#inputPanel")
-                .append($("<span>", {
-                    class: "selectable",
-                    html: $words[i] + " "
-                }))
-        }
-        */
 
         $("#inputTextArea").hide();
         $("#markText").hide();
@@ -120,11 +143,7 @@ window.QuestionsInterpNew = Backbone.View.extend({
 
     //Mark Word
     selectWord: function (e) {
-
-        console.log(e.target);
         $(e.target).toggleClass("badge");
-
-        //$("#"+e.target.id).hide();
     },
 
     //Make Unique String Array

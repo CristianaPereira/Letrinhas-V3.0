@@ -40,7 +40,7 @@ window.TestsView = Backbone.View.extend({
             case 'Multimédia':
                 self.multimediaPreview($test);
                 break;
-            case 'Interpretação':
+            case 'interpretation':
                 self.interpretationPreview($test);
                 break;
         }
@@ -349,8 +349,10 @@ window.TestsView = Backbone.View.extend({
     },
 
     //Interpretation Preview
-    interpretationPreview: function ($test) {
+    interpretationPreview: function (test) {
         var self = this;
+
+        console.log(test);
 
         //Clear Preview
         $("#testPreviewContainer").empty();
@@ -358,11 +360,11 @@ window.TestsView = Backbone.View.extend({
         //Test Description
         $("#testPreviewContainer")
             .append($("<label>", {html: "<b>Descrição:</b>"}))
-            .append($("<span>", {html: $pergunta.description}))
+            .append($("<span>", {html: test.description}))
             .append("<br>");
 
         //Write Questions
-        $.each($test.perguntas, function () {
+        $.each(test.questions, function () {
 
             var $id = this;
             var $question = "";
@@ -374,16 +376,46 @@ window.TestsView = Backbone.View.extend({
                 }
             });
 
+            /**
+             * HIGHLIGHT WORDS
+             * @type {Array}
+             */
+            var $words = ($question.content.text)
+                .replace(/(\r\n|\n|\r)/gm, "<br>")  //Replaces all 3 types of line breaks with a space
+                .replace(/\s+/g, " ")            //Replace all double white spaces with single spaces
+                .split(" ");
+
+            var $result = [];
+
+            //Replace String With Selectable Span
+            for(var i in $words){
+                if($words[i] == "<br>")
+                    $result.push("<br>");
+                else
+                    $result.push("<span id='sid" + i +"' class='selectable'>" + $words[i] + "</span>");
+            }
+
+            /**
+             * FILL PANEL
+             */
             $("#testPreviewContainer")
-                .append($("<label>", {html: "Pergunta:"}))
-                .append($("<span>", {html: $question.titulo}))
-                .append($("<div>", {
-                    class: "panel panel-default col-md-12",
+                .append($("<label>", {html: "Pergunta: &nbsp;", style: "font-weight: bold"}))
+                .append($("<span>", {html: $question.title}))
+                .append("<br>")
+                .append($("<panel>", {
+                    id: "panelPreview",
+                    class: "form-control panel",
                     align: "justify",
                     style: "height:300px; overflow:auto",
-                    html: $question.content.text
+                    html: $result.join(' ')
                 }))
                 .append("<br>");
+
+            for(var i in $question.content.sid){
+                $("#panelPreview")
+                    .find("#sid" + $question.content.sid[i])
+                    .toggleClass("badge");
+            }
 
         });
     },
@@ -544,14 +576,14 @@ window.TestsView = Backbone.View.extend({
                         case 'Multimédia':
                             $imgT = "../img/testMul.png";
                             break;
-                        case 'Interpretação':
+                        case 'interpretation':
                             $imgT = "../img/testInterpretacao.png";
                             break;
                         default:
                             $imgT = "../img/page-loader.gif";
                             break;
                     }
-                    ;
+
 
                     //Select Test Class Image
                     var $imgC = '';

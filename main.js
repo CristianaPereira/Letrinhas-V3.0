@@ -59,6 +59,7 @@ router.use(function (req, res, next) {
     if (req.busboy != null) {
 
         req.busboy.on('file', function (fieldname, file, filename) {
+
             req.body['filePath'] = __dirname + "\\tmp\\" + filename;
             console.log("Uploading: " + filename);
             //Path where image will be uploaded
