@@ -19,6 +19,7 @@ var schools = require('./routes/schools'),
     students = require('./routes/students'),
     tests = require('./routes/tests'),
     questions = require('./routes/questions'),
+    resolutions = require('./routes/resolutions'),
     submissions = require('./routes/submissions');
 
 //Express Variable
@@ -166,6 +167,11 @@ app.route('/questions/:id')
 //Tests
 app.route('/tests')
     .get(auth, tself, perms(2), tests.getAll);
+
+
+//RESOLUTIONS
+app.route('/resolutions')
+    .get(auth, tself, perms(2), resolutions.getAll);
 
 
 //This Needs To Be Revised

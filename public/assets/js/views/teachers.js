@@ -57,7 +57,7 @@ window.TeachersView = Backbone.View.extend({
         modem('POST', 'teachers/' + $(e.currentTarget).attr('value') + '/del',
             function (json) {
 
-                sucssesMsg($("#teachersDiv"), "O utilizador " + $(e.currentTarget).attr('value') + " foi apagado com sucesso",2000);
+                sucssesMsg($("#teachersDiv"), "O utilizador " + $(e.currentTarget).attr('value') + " foi apagado com sucesso", 2000);
                 setTimeout(function () {
                     document.location.reload(true);
                 }, 2000);
@@ -144,6 +144,7 @@ window.TeachersView = Backbone.View.extend({
                 //Se o erro retornado for de acesso negado, reencaminha o utilizador para a página de login
                 if (JSON.parse(xhr.status)) {
                     showLoginModal($("#teachersDiv"));
+                    console.log(md5("teste1234"));
                     /* failMsg($("#teachersDiv"), "Ocorreu um imprevisto. \n (" + JSON.parse(xhr.responseText).result + ").");
                      setTimeout(function () {
                      app.navigate('/inicio', {
