@@ -112,7 +112,7 @@ var Router = Backbone.Router.extend({
     resolutions: function () {
         var self = this;
 
-        self.navbar();
+        this.navbar();
 
         //Load Template
         templateLoader.load(["ResolutionsView"],

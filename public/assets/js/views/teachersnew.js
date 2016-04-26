@@ -160,7 +160,6 @@ window.TeachersNewView = Backbone.View.extend({
 
     //Class Initializer
     initialize: function () {
-
         //Get Schools If User Has Required Permissions
         populateDDSchools();
     }

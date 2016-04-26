@@ -52,19 +52,6 @@ window.populateDDSchools = function () {
         }
     );
 };
-//Search in json object
-window.findJsonObj = function (obj, key, val) {
-    var objects = [];
-    for (var i in obj) {
-        if (!obj.hasOwnProperty(i)) continue;
-        if (typeof obj[i] == 'object') {
-            objects = objects.concat(findJsonObj(obj[i], key, val));
-        } else if (i == key && obj[key] == val) {
-            objects.push(obj);
-        }
-    }
-    return objects;
-};
 
 window.assocClass = function () {
     var escola = $("#dbEscolas").children(":selected").attr("id");
@@ -240,7 +227,7 @@ window.showLoginModal = function (form) {
                         class: "modal-title", text: "Controlo de acesso"
                     })
                 )
-                // MODAl BODy
+                // MODAl HEATHER
             ).append(
                 $("<div>", {
                     class: "modal-body",
