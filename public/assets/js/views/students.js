@@ -1,7 +1,6 @@
 window.StudentsView = Backbone.View.extend({
     events: {
         "click #newstudentbtn": "newStudent",
-        "click .studentSelec": "studentInfo",
         "click #editbtn": "editStudent",
         "click #deletebtn": "deleteStudent",
     },
@@ -16,66 +15,28 @@ window.StudentsView = Backbone.View.extend({
     },
 
     //Edit Student Navigation
-    editStudent: function(e){
+    editStudent: function (e) {
         e.preventDefault();
         app.navigate('students/' + e.target.value, true);
     },
+    //Solicita confirmação para apagar o professor
+    confirmDelete: function (id, nome) {
 
+        var modal = delModal("Apagar escola",
+            "Tem a certeza que pretende eliminar o aluno <label>" + nome + " </label> ?",
+            "deletebtn", id);
+
+        $('#studentsDiv').append(modal);
+        $('#modalConfirmDel').modal("show");
+    },
     //Delete Student
-    deleteStudent: function(e){
+    deleteStudent: function (e) {
         e.preventDefault();
-
-        var r = confirm("Are you sure you want to delete this student?");
-
-        if(r){
-
-            modem('POST', 'students/' + e.target.value + '/remove' ,
-
-                //Response Handler
-                function () {
-                    document.location.reload(true);
-                },
-
-                //Error Handling
-                function (xhr, ajaxOptions, thrownError) {
-
-                }
-            );
-
-        }
-    },
-
-    //Fill School Preview
-    fillPreview: function (json) {
-        //Update Edit/Delete Button Values
-        $("#studentsPreview #editbtn").val(json._id);
-        $("#studentsPreview #deletebtn").val(json._id);
-
-        //Set School Image
-        $("#studentsPreview img").attr("src", json.b64);
-
-        //Set School Name
-        $("#studentsPreview #studentName").attr("value", json._id).html(json.nome);
-
-        //Set School Address
-        $("#studentsPreview #studentNumber").html(json.numero);
-
-        //Set School ID
-        $("#studentsPreview #studentClass").html(json.turma);
-
-    },
-
-    //Change Student Info
-    studentInfo: function (e) {
-
-        var self = this;
-
-        //Get School Info
-        modem('GET', 'students/' + e.target.id,
+        modem('POST', 'students/' + e.target.value + '/remove',
 
             //Response Handler
-            function (json) {
-                self.fillPreview(json);
+            function () {
+                document.location.reload(true);
             },
 
             //Error Handling
@@ -84,10 +45,33 @@ window.StudentsView = Backbone.View.extend({
             }
         );
 
+
     },
 
+    //Fill School Preview
+    fillPreview: function (studentData) {
+        var self = this;
+        $('#studentsPreview').empty();
+
+        var $divFoto = $("<div>", {
+            class: "col-md-4"
+        }).append('<img src="' + studentData.b64 + '"  class="dataImage">');
+
+        var $divDados = $("<div>", {
+            class: "col-md-8"
+        }).append('<label class="dataTitle col-md-12 row">' + studentData.nome + '</label>')
+            .append('<label class="col-md-4 lblDataDetails">Escola:</label> <label class="col-md-8">' + studentData.schoolDetails + '</label><br>')
+            .append('<label class="col-md-4 lblDataDetails">Número:</label> <label class="col-md-8">' + studentData.numero + '</label><br>')
+
+        $('#studentsPreview').append($divFoto, $divDados)
+            .append('<div class="col-md-12" ><hr class="dataHr"></div><div id="classesList" class="col-md-12" align=left></div>')
+        ;
+
+    },
+
+
     //New Student Navigation
-    newStudent: function(e){
+    newStudent: function (e) {
         e.preventDefault();
         app.navigate('/students/new', true);
     },
@@ -101,41 +85,54 @@ window.StudentsView = Backbone.View.extend({
         var self = this;
 
         //Check Local Auth
-        if(!self.auth()){ return false; }
-
+        if (!self.auth()) {
+            return false;
+        }
         //Render Template
         $(this.el).html(this.template());
+
 
         //Get Shools Information
         modem('GET', 'students',
 
             //Response Handler
             function (json) {
-
                 //StudentsCounter
                 $("#studentsBadge").text(json.length);
-
                 //Append School Buttons To Template
                 $("#studentsContent").empty();
+
                 $.each(json, function (i) {
 
-                    //Load First School Preview
-                    if (i === 0) {
-                        self.fillPreview(this.doc);
-                    }
+                    //Botao de editar
+                    var $edit = $("<a>", {
+                        //href: "#teachers/data.doc._id/edit",
+                        href: "#students/" + this.doc._id + "/edit",
+                        val: this.doc._id,
+                        title: "Editar aluno",
+                    }).append('<i class="fa fa-edit"></i>');
+                    //Botao de eliminar
+                    var $delete = $("<a>", {
+                        href: "#students",
+                        val: this.doc._id,
+                        title: "Apagar aluno",
+                    }).append('<i class="fa fa-trash-o"></i>')
+                        .click(function () {
+                            self.confirmDelete(json[i].doc._id, json[i].doc.nome);
+                        });
 
-                    var $div = $("<button>", {
-                        id: this.doc._id,
-                        class: "btn btn-lg btn-block studentSelec",
-                        name: this.doc.nome,
-                        type: "button",
-                        style: "height:60px; text-align:left; background-color: #53BDDC; color: #ffffff;"
-                    })
-                        .append("<img style='height:30px;' src='" + this.doc.b64 + "'>" + "&nbsp;&nbsp;&nbsp;" + this.doc.nome);
+
+                    var $div = $("<div>", {
+                        class: "listButton divWidget"
+                    }).append("<img src=" + this.doc.b64 + "><span>" + this.doc.nome + "</span>")
+                        .append($("<div>", {class: "editDeleteOp"}).append($edit, $delete))
+                        .click(function () {
+                            self.fillPreview(json[i].doc);
+                        });
 
                     $("#studentsContent").append($div);
                 });
-
+                self.fillPreview(json[0].doc);
 
             },
 
@@ -143,7 +140,8 @@ window.StudentsView = Backbone.View.extend({
             function (xhr, ajaxOptions, thrownError) {
 
             }
-        );
+        )
+
 
         return this;
     },

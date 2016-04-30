@@ -77,7 +77,7 @@ window.TeachersView = Backbone.View.extend({
         $('#teachersPreview').empty();
 
         var $divFoto = $("<div>", {
-            class: "col-md-4"
+            class: "col-md-3"
         }).append('<img src="' + teacherData.imgb64 + '"  class="dataImage">');
 
         var $divDados = $("<div>", {

@@ -3,11 +3,11 @@ window.SchoolsNew = Backbone.View.extend({
         "click #backbtn": "goBack",
         "submit": "beforeSend",
         "change #filePicker": "convertPhoto",
+        "click #btnCrop": "getFoto"
     },
 
     //Convert Photo To Base64 String
     convertPhoto: function (e) {
-
         var file = e.target.files[0];
 
         // Load the image
@@ -15,37 +15,21 @@ window.SchoolsNew = Backbone.View.extend({
 
         reader.onload = function (readerEvent) {
             var image = new Image();
-            image.onload = function () {
-
-                //Image Resize
-                var canvas = document.createElement('canvas');
-                var MAX_WIDTH = 450;
-                var MAX_HEIGHT = 350;
-                var width = image.width;
-                var height = image.height;
-
-                if (width > height) {
-                    if (width > MAX_WIDTH) {
-                        height *= MAX_WIDTH / width;
-                        width = MAX_WIDTH;
-                    }
-                } else {
-                    if (height > MAX_HEIGHT) {
-                        width *= MAX_HEIGHT / height;
-                        height = MAX_HEIGHT;
-                    }
-                }
-                canvas.width = width;
-                canvas.height = height;
-                canvas.getContext('2d').drawImage(image, 0, 0, width, height);
-
-                var dataUrl = canvas.toDataURL('image/jpeg');
-                $("#base64textarea").val(dataUrl);
-                $("#iFoto").attr("src", dataUrl);
-            }
             image.src = readerEvent.target.result;
+            showCropper(".form", image, 600, 300, 16 / 9);
+
         }
         reader.readAsDataURL(file);
+    },
+    //Recorta a foto
+    getFoto: function (e) {
+        e.preventDefault();
+        var canvas = $("#preview")[0];
+        var dataUrl = canvas.toDataURL('image/jpeg');
+
+        $("#base64textarea").val(dataUrl);
+        $("#iFoto").attr('src', dataUrl);
+        $(".cropBG").remove();
     },
 
     //Before Sending Request To Server

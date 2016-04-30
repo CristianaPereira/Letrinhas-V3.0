@@ -57,7 +57,7 @@ window.ResolutionsView = Backbone.View.extend({
                                     return false;
                                 }
                             });
-                     
+
 
                         });
                     },
