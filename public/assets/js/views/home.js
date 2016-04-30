@@ -48,6 +48,7 @@ window.Home = Backbone.View.extend({
         //Create Credentials
         var cre = $('#userEmail').val() + ':' + md5($("#psswrd").val());   //Credentials = Username:Password
         var creb = btoa(cre);                                         //Credentials Base64
+
         window.sessionStorage.setItem("keyo", creb);                  //Store Credentials Base64
 
         //Check User Authenticity
@@ -55,7 +56,7 @@ window.Home = Backbone.View.extend({
 
             //Response Handler
             function (json) {
-                console.log(json);
+                console.log("logged in");
                 $("#mLogin").modal("hide");
                 app.navigate('/dashboard', {
                     trigger: true

@@ -117,6 +117,8 @@ exports.getStudents = function (req, res) {
 
     var user = req.params.id;
 
+    var escolas = [];
+
     //Get Teacher Classes
     dbe.list({
         'include_docs': true,
@@ -139,6 +141,10 @@ exports.getStudents = function (req, res) {
 
                     if (body.rows[i].doc.turmas[j].professores[k]._id == user)
                         classes += body.rows[i].doc.turmas[j]._id + " ";
+                    escolas.push({
+                        "_id": body.rows[i].doc.turmas[j]._id,
+                        "details": body.rows[i].doc.nome + ", " + body.rows[i].doc.turmas[j].ano + "º " + body.rows[i].doc.turmas[j].nome
+                    })
                     //classes.push({"_id": body.rows[i].doc.turmas[j]._id});
 
                 }
@@ -159,17 +165,27 @@ exports.getStudents = function (req, res) {
             if (err) {
                 return res.status(err.statusCode).json({});
             }
+            var students = body2;
 
-            for (var i in body2.rows) {
+            //Filtra "os meus alunos"
+            for (var i = 0; i < students.rows.length; i++) {
 
-                var search = new RegExp(body2.rows[i].doc.turma);
-
+                var search = new RegExp(students.rows[i].doc.turma);
                 if (!search.test(classes))
-                    body2.rows.splice(i, 1);
-
+                    students.rows.splice(i, 1);
+            }
+            //Adiciona a string da escola
+            for (var i = 0; i < students.rows.length; i++) {
+                //Adiciona o campo com o nome da escola e aturma por extenso
+                for (var esc in escolas) {
+                    if (escolas[esc]._id == students.rows[i].doc.turma) {
+                        students.rows[i].doc.schoolDetails = escolas[esc].details;
+                    }
+                }
             }
 
-            res.json(body2.rows);
+            res.json(students.rows);
+            console.log("fim2");
         });
 
     });

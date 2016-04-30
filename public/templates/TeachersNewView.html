@@ -1,130 +1,127 @@
 <!-- Inserção Professor: -->
 
 <!--FORMULARIO -->
-<div class="container">
-    <form id="newteacherform" class="mainDiv" role="form" data-toggle="validator" method="POST"
-          action="/teachers"
-          enctype="multipart/form-data">
-        <div class="divWidget">
-            <div class="topcoat-navigation-bar">
-                <div class="topcoat-navigation-bar__item center full">
-                    <h3 align="center" class="topcoat-navigation-bar__title">
-                        Inserir novo professor
-                    </h3>
-                </div>
+<form id="newteacherform" class="mainDiv" role="form" data-toggle="validator" method="POST"
+      action="/teachers"
+      enctype="multipart/form-data">
+    <div class="divWidget">
+        <div class="topcoat-navigation-bar">
+            <div class="topcoat-navigation-bar__item center full">
+                <h3 align="center" class="topcoat-navigation-bar__title">
+                    Inserir novo professor
+                </h3>
             </div>
-            <legend>Detalhes</legend>
-            <!--NOME & TIPO & ESTADO-->
-            <div class="row">
-                <div class="col-sm-6">
-                    <input class="form-control mandatory" type="text" id="InputNome"
-                           placeholder="Nome completo"
-                           name="name" required/>
-                    <span class="glyphicon glyphicon-user"></span>
-                </div>
-                <div class="col-sm-4">
-                    <select class="form-control" id="dbUserType" name="tipo">
-                        <option value="1">Auxiliar</option>
-                        <option value="2">Professor</option>
-                        <option value="3">Administrador do Sistema</option>
-                    </select>
-                </div>
-                <div class="col-sm-2">
-                    <select class="form-control" id="selectEstado" name="estado">
-                        <option>Ativo</option>
-                        <option>Não Ativo</option>
-                    </select>
-                </div>
+        </div>
+        <legend>Detalhes</legend>
+        <!--NOME & TIPO & ESTADO-->
+        <div class="row">
+            <div class="col-sm-6">
+                <input class="form-control mandatory" type="text" id="InputNome"
+                       placeholder="Nome completo"
+                       name="name" required/>
+                <span class="glyphicon glyphicon-user"></span>
             </div>
-            <!--EMAIL & TELEFONE & FOTO-->
-            <div class="row">
-                <div class="col-sm-4">
-                    <input type="email" class="form-control mandatory" id="inputEmail"
-                           title="Endereço de e-mail" placeholder="Endereço de e-mail" name="email" required/>
-                    <span id="imgMail" class="glyphicon glyphicon-envelope"></span>
-                </div>
-                <div class="col-sm-3">
-                    <input type="number" min="210000000" max="999999999" class="form-control mandatory"
-                           id="InputTelefone" placeholder="Telefone" name="telefone" required>
-                    <span class="glyphicon glyphicon-earphone"></span>
-                </div>
-                <div class="col-sm-4">
-                    <div class="upload form-control">
-                        <span>Escolher fotografia</span>
-                        <input type="file" id="filePicker" class="form-control mandatory" accept="image/jpg"
-                               name="filePicker"
-                               required>
-                        <input type="hidden" id="base64textarea" class="form-control" accept="image/jpg"
-                               name="imgb64">
-                    </div>
-                </div>
-                <div class="col-sm-1">
-                    <img id="iFoto" class="smallImgPreView">
-                </div>
+            <div class="col-sm-4">
+                <select class="form-control" id="dbUserType" name="tipo">
+                    <option value="1">Auxiliar</option>
+                    <option value="2">Professor</option>
+                    <option value="3">Administrador do Sistema</option>
+                </select>
             </div>
+            <div class="col-sm-2">
+                <select class="form-control" id="selectEstado" name="estado">
+                    <option>Ativo</option>
+                    <option>Não Ativo</option>
+                </select>
+            </div>
+        </div>
+        <!--EMAIL & TELEFONE & FOTO-->
+        <div class="row">
+            <div class="col-sm-5">
+                <input type="email" class="form-control mandatory" id="inputEmail"
+                       title="Endereço de e-mail" placeholder="Endereço de e-mail" name="email" required/>
+                <span id="imgMail" class="glyphicon glyphicon-envelope"></span>
+            </div>
+            <div class="col-sm-3">
+                <input type="number" min="210000000" max="999999999" class="form-control mandatory"
+                       id="InputTelefone" placeholder="Telefone" name="telefone" required>
+                <span class="glyphicon glyphicon-earphone"></span>
+            </div>
+            <div class="col-sm-3">
+                <button id="btnFoto" type="button" class="btn btn-default"><span class="add-on"><i
+                        class="fa fa-image"></i></span>
+                    Escolher fotografia
+                </button>
+                <input type="hidden" id="base64textarea" class="form-control" accept="image/jpg"
+                       name="imgb64">
 
-            <div class="row">
-                <div class="col-sm-4">
-                    <input type="password" class="form-control mandatory" id="InputPasswd"
-                           placeholder="Palavra-passe"
-                           name="password" required>
-                    <span id="pwdIcon" class="glyphicon glyphicon-lock"></span>
-                </div>
-                <div class="col-sm-4">
-                    <input type="password" class="form-control mandatory" id="ConfirmPasswd"
-                           placeholder="Confirmar palavra-passe" required>
-                    <span class="glyphicon glyphicon-lock"></span>
-                </div>
-                <div class="col-sm-4">
-                    <input type="text" max="9999" class="form-control mandatory" id="inputPin"
-                           placeholder='Pin(para usar no Tablet)' name="codPin" required>
-                    <span class="glyphicon glyphicon-modal-window"></span>
-                </div>
             </div>
-            <label id="validationLbl" class="alert-warning"></label>
-            <div class="col-sm-12">
-                <legend>Turmas</legend>
+            <div class="col-sm-1">
+                <img id="iFoto" class="smallImgPreView">
             </div>
-            <div class="row">
-                <div class="col-sm-5">
-                    <div id="selectEscolas" class="input-group m-bot15">
-                        <span class="input-group-addon btn-white"><i class="fa fa-university"></i></span>
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div id="selectTurmas" class="input-group m-bot15">
-                        <span class="input-group-addon btn-white"><i class="fa fa-book"></i></span>
-                    </div>
-                </div>
-                <div class="col-sm-1 col-bottom">
-                    <button id="addTurma" type="button" class="btn btn-success">
-                        <span class="glyphicon glyphicon glyphicon-plus"></span>
-                    </button>
-                </div>
-                <div class="col-sm-3 col-bottom">
-                    <button id="rmvTurmas" type="button" class="btn btn-danger" style="float: right;">
-                        <span class="glyphicon glyphicon glyphicon-erase" style="color:#ffcc00"></span>
-                        Limpar todas
-                    </button>
-                </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-4">
+                <input type="password" class="form-control mandatory" id="InputPasswd"
+                       placeholder="Palavra-passe"
+                       name="password" required>
+                <span id="pwdIcon" class="glyphicon glyphicon-lock"></span>
             </div>
-            <div id="assocTurma" class="col-sm-12">
+            <div class="col-sm-4">
+                <input type="password" class="form-control mandatory" id="ConfirmPasswd"
+                       placeholder="Confirmar palavra-passe" required>
+                <span class="glyphicon glyphicon-lock"></span>
             </div>
-            <!--###################################################################-->
-            <div class="control-group">
-                <div id="hiddenEscola" class="hidden">
-                    <input type="hidden" value="{}" id="teacherClasses" class="form-control" name="turmas">
-                </div>
+            <div class="col-sm-4">
+                <input type="text" max="9999" class="form-control mandatory" id="inputPin"
+                       placeholder='Pin(para usar no Tablet)' name="codPin" required>
+                <span class="glyphicon glyphicon-modal-window"></span>
             </div>
+        </div>
+        <label id="validationLbl" class="alert-warning"></label>
+        <div class="col-sm-12">
+            <legend>Turmas</legend>
         </div>
         <div class="row">
-            <div class="col-sm-12">
-                <div class="btn-group">
-                    <button id="buttonCancelar" type="reset" class="btn btn-default">Cancelar</button>
-                    <button id="newteacherbtn" type="submit" class="btn btn-success">Inserir</button>
+            <div class="col-sm-5">
+                <div id="selectEscolas" class="input-group m-bot15">
+                    <span class="input-group-addon btn-white"><i class="fa fa-university"></i></span>
                 </div>
             </div>
-
+            <div class="col-sm-3">
+                <div id="selectTurmas" class="input-group m-bot15">
+                    <span class="input-group-addon btn-white"><i class="fa fa-book"></i></span>
+                </div>
+            </div>
+            <div class="col-sm-1 col-bottom">
+                <button id="addTurma" type="button" class="btn btn-success">
+                    <span class="glyphicon glyphicon glyphicon-plus"></span>
+                </button>
+            </div>
+            <div class="col-sm-3 col-bottom">
+                <button id="rmvTurmas" type="button" class="btn btn-danger" style="float: right;">
+                    <span class="glyphicon glyphicon glyphicon-erase" style="color:#ffcc00"></span>
+                    Limpar todas
+                </button>
+            </div>
         </div>
-    </form>
-</div>
+        <div id="assocTurma" class="col-sm-12">
+        </div>
+        <!--###################################################################-->
+        <div class="control-group">
+            <div id="hiddenEscola" class="hidden">
+                <input type="hidden" value="{}" id="teacherClasses" class="form-control" name="turmas">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="btn-group">
+                <button id="buttonCancelar" type="reset" class="btn btn-default">Cancelar</button>
+                <button id="newteacherbtn" type="submit" class="btn btn-success">Inserir</button>
+            </div>
+        </div>
+
+    </div>
+</form>

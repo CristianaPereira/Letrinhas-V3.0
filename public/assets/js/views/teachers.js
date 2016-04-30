@@ -57,7 +57,7 @@ window.TeachersView = Backbone.View.extend({
         modem('POST', 'teachers/' + $(e.currentTarget).attr('value') + '/del',
             function (json) {
 
-                sucssesMsg($("#teachersDiv"), "O utilizador " + $(e.currentTarget).attr('value') + " foi apagado com sucesso",2000);
+                sucssesMsg($("#teachersDiv"), "O utilizador " + $(e.currentTarget).attr('value') + " foi apagado com sucesso", 2000);
                 setTimeout(function () {
                     document.location.reload(true);
                 }, 2000);
@@ -77,7 +77,7 @@ window.TeachersView = Backbone.View.extend({
         $('#teachersPreview').empty();
 
         var $divFoto = $("<div>", {
-            class: "col-md-4"
+            class: "col-md-3"
         }).append('<img src="' + teacherData.imgb64 + '"  class="dataImage">');
 
         var $divDados = $("<div>", {

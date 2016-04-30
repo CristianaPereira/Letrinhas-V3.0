@@ -18,25 +18,21 @@
             <div class="panel-body">
                 <form id="schooleditform" class="panel-body" role="form" method="POST" action="/schools"
                       enctype="multipart/form-data">
-                    <div class="col-md-12 center-child">
-                        <img id="iFoto" src="../img/changePic.jpg" name="fds">
-                        <div class="upload form-control">
-                            <span>Alterar</span>
-                            <input type="file" id="filePicker" class="form-control mandatory"
-                                   accept="image/jpg"
-                                   name="filePicker">
-                            <input type="hidden" id="base64textarea" class="form-control"
-                                   accept="image/jpg" name="b64">
+                    <div class="col-md-12 center-child row">
+                        <div class="profile-pic">
+                            <input type="file" class="form-control preenche" id="filePicker" accept="image/jpg"
+                                   name="img" style="background-color:#e9e9ff;">
+                            <img id="iFoto">
+                            <input type="hidden" id="base64textarea" class="form-control" accept="image/jpg" name="b64">
+                            <div class="emptyState-container"><i class="fa fa-image fa-2x"></i></div>
                         </div>
                     </div>
-
-
-                    <div class="col-md-12">
+                    <div class="col-md-12 row">
                         <input type="text" class="form-control mandatory" id="schoolName"
                                placeholder="Nome" name="name" required>
                         <span class="glyphicon"><i class="fa fa-institution"></i></span>
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-12 row">
                         <input type="text" class="form-control" id="schoolAddress" placeholder="Morada"
                                name="address">
                         <span class="glyphicon "><i class="fa fa-map"></i></span>
