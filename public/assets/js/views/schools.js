@@ -54,7 +54,7 @@ window.SchoolsView = Backbone.View.extend({
         modem('POST', 'schools/' + e.target.value + '/remove',
             //Response Handler
             function () {
-                sucssesMsg($("#schoolsDiv"), "Escola apagada com sucesso!",2000);
+                sucssesMsg($("#schoolsDiv"), "Escola apagada com sucesso!", 2000);
                 setTimeout(function () {
                     document.location.reload(true);
                 }, 2000);
@@ -80,13 +80,20 @@ window.SchoolsView = Backbone.View.extend({
         $('#schoolsPreview').empty();
 
         var $divFoto = $("<div>", {
-            class: "col-md-4"
+            class: "col-md-5"
         }).append('<img src="' + schoolData.b64 + '"  class="dataImage">');
 
-        var $divDados = $("<div>", {
-            class: "col-md-8"
-        }).append('<label class="dataTitle col-md-12">' + schoolData.nome + '</label><br>')
-            .append('<label class="col-md-4 lblDataDetails">Nome:</label> <label class="col-md-8">' + schoolData.morada + '</label><br>')
+        var $divDados = $("<div>", {class: "col-md-7"}).append(
+            $('<label>', {
+                class: "dataTitle col-md-12 row", text: schoolData.nome
+            }),
+            $('<label>', {
+                class: "col-md-4 lblDataDetails", text: "Morada:"
+            }),
+            $('<label>', {
+                class: "col-md-8 ", text: schoolData.morada
+            }))
+
 
         $('#schoolsPreview').append($divFoto, $divDados)
             .append('<div class="col-md-12" ><hr class="dataHr"></div><div id="classesList" class="col-md-12" align=left></div>')

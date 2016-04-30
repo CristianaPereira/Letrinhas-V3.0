@@ -281,6 +281,86 @@ window.showLoginModal = function (form) {
     $("#mLogin").modal("show");
 };
 
+//Mostra o formulário de login no form indicado
+//showCropper("nomeFormulario/div", maxWidth da tela, Width do resultado, height do resultado , ratio (1=quadrado) (16/9=rectangulo);
+window.showCropper = function (form, base_image, maxWidth, resWidth, aspectRatio) {
+
+    //Carrega
+    var resHeight = resWidth / aspectRatio;
+
+    base_image.onload = function () {
+        var height = base_image.height * maxWidth / base_image.width;
+        var $cropperModal = $("<div>", {
+            id: "cropperPanel",
+            class: "panel panel-info",
+            width: maxWidth + 40
+        }).append(
+            $("<div>", {class: "panel-heading"}
+                // MODAl HEATHER
+            ).append(
+                $("<div>", {}).append(
+                    $("<button>", {
+                        type: "button", class: "close", "data-dismiss": "modal", "aria-label": "Close"
+                    }),
+                    $("<h3>", {
+                        class: "modal-title", text: "Recorte de imagem"
+                    })
+                )
+                // MODAl HEATHER
+            )).append(
+            $("<div>", {class: "panel-body"}).append(
+                '<div><canvas id="viewport" width="' + maxWidth + '" height="' + height + '" ></canvas>' +
+                '<canvas id="preview" width="' + resWidth + 'px" height="' + resHeight + 'px" style="display: none;"></canvas></div>'
+            )
+        ).append(
+            $("<div>", {}).append(
+                $("<button>", {
+                    type: "submit", id: "btnCrop", class: "btn btn-lg btn-login btn-block",
+                    text: "Recortar"
+                })
+            ));
+        $(form).append($("<div>", {class: 'cropBG'}).append($cropperModal));
+
+        var canvas = document.getElementById('viewport'),
+            context = canvas.getContext('2d');
+
+
+        context.drawImage(base_image, 0, 0, base_image.width, base_image.height, 0, 0, maxWidth, height);
+
+
+        //-------
+        $('#viewport').Jcrop({
+            onChange: updatePreview,
+            onSelect: updatePreview,
+            allowSelect: true,
+            allowMove: true,
+            allowResize: true,
+            bgOpacity: 0.35,
+            aspectRatio: aspectRatio
+            //aspectRatio: 16 / 9
+        });
+    }
+
+
+};
+
+
+function updatePreview(c) {
+
+    if (parseInt(c.w) > 0) {
+        // Show image preview
+        var imageObj = $("#viewport")[0];
+        var canvas = $("#preview")[0];
+        var context = canvas.getContext("2d");
+
+        if (imageObj != null && c.x != 0 && c.y != 0 && c.w != 0 && c.h != 0) {
+            context.drawImage(imageObj, c.x, c.y, c.w, c.h, 0, 0, canvas.width, canvas.height);
+        }
+
+    }
+}
+
+
 //Tenta efectuar login
 window.attemptLogin = function () {
     //Create Credentials

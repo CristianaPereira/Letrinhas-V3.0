@@ -1,5 +1,10 @@
 /* Custom CSS
  * --------------------------------------- */
+
+html {
+    height: 100%;
+}
+
 body {
     font-family: arial, helvetica;
     padding-bottom: 90px;
@@ -287,6 +292,10 @@ a {
     border: 1px solid #4DB8B8;
 }
 
+#teachersPreview {
+    padding: 20px;
+}
+
 .form-control {
     padding-right: 30px;
 }
@@ -316,15 +325,35 @@ label {
 
 .profile-pic {
     background-color: #fff;
-    padding: 100px 50px;
     border: 5px dashed #F1F2F7;
     border-radius: 3px;
+    position: relative;
     text-align: center;
     text-transform: uppercase;
     font-size: 16px;
     font-weight: bold;
-    height: 220px;
+    height: 180px;
     color: #7f858a;
+}
+
+.profile-pic * {
+    position: absolute;
+    top: 0px;
+}
+
+.profile-pic:hover {
+    cursor: hand;
+}
+
+.profile-pic:hover i {
+    color: #FF8B94;
+}
+
+.profile-pic input {
+    background-color: #e9e9ff;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
 }
 
 .btn-group {
@@ -333,6 +362,7 @@ label {
 
 .listButton {
     width: 100%;
+    position: relative;
 }
 
 .listButton:hover {
@@ -349,7 +379,7 @@ label {
 
 .listButton > span {
     font-family: 'Open Sans', sans-serif;
-    font-size: 19px;
+    font-size: 17px;
     color: #32323a;
     padding-left: 15px;
 }
@@ -392,7 +422,7 @@ label {
 }
 
 .dataImage {
-    max-height: 140px;
+    max-width: 100%;
     padding-top: 11px;
     padding-bottom: 11px;
     border-radius: 5px;
@@ -711,8 +741,9 @@ div.upload input {
 }
 
 .editDeleteOp {
-    float: right;
-    position: relative;
+    position: absolute;
+    top: 10px;
+    right: 10px;
 }
 
 .editDeleteOp > a {
@@ -726,6 +757,7 @@ div.upload input {
 #iFoto {
     transition: all 1.5s ease-in-out;
     border-radius: 4px;
+    position: static;
     z-index: 100;
     max-width: 100%;
 }
@@ -837,11 +869,37 @@ option:hover {
     text-decoration: none;
     background: #B63C47;
     box-shadow: 0 0 3px gray;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: bold;
     padding: 0;
 }
 
 .round-button:hover {
     border-color: #E91E63;
+}
+
+#yourId {
+    width: 200px;
+    height: 150px;
+    position: relative; /* or fixed or absolute */
+}
+
+.cropBG {
+    background: rgba(5, 5, 5, 0.7);
+    color: black;
+    position: absolute;
+    top: 50px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+}
+
+#cropperPanel {
+    margin: 30px auto;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
+}
+
+.jcrop-holder {
+    margin: auto;
 }
