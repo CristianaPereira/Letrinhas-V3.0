@@ -2,47 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e10414e8-d07f-4deb-9127-a887219cd84e" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/routes/resolutions.js" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/assets/js/views/old/inicio.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/assets/js/views/old/man.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/assets/js/views/old/menuprincipal.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/assets/js/views/old/questionsinterpnew.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/assets/js/views/old/questionslistnew.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/assets/js/views/old/questionsmultimedianew.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/assets/js/views/old/questionstextnew.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/assets/js/views/old/schools.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/assets/js/views/old/schoolsnew.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/assets/js/views/old/students.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/assets/js/views/old/studentsedit.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/assets/js/views/old/studentsnew.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/assets/js/views/old/teachers.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/assets/js/views/old/teachersedit.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/assets/js/views/old/teachersnew.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/assets/js/views/old/tests.js" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/img/changePic.jpg" afterPath="$PROJECT_DIR$/public/img/changePic.jpg" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/assets/css/styles.css" afterPath="$PROJECT_DIR$/public/assets/css/styles.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/assets/js/main.js" afterPath="$PROJECT_DIR$/public/assets/js/main.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/assets/js/responses.js" afterPath="$PROJECT_DIR$/public/assets/js/responses.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/assets/js/utils.js" afterPath="$PROJECT_DIR$/public/assets/js/utils.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/assets/js/views/home.js" afterPath="$PROJECT_DIR$/public/assets/js/views/home.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/assets/js/views/navigationbar.js" afterPath="$PROJECT_DIR$/public/assets/js/views/navigationbar.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/assets/js/views/resolutions.js" afterPath="$PROJECT_DIR$/public/assets/js/views/resolutions.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/assets/js/views/schools.js" afterPath="$PROJECT_DIR$/public/assets/js/views/schools.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/assets/js/views/schoolsedit.js" afterPath="$PROJECT_DIR$/public/assets/js/views/schoolsedit.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/assets/js/views/schoolsnew.js" afterPath="$PROJECT_DIR$/public/assets/js/views/schoolsnew.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/assets/js/views/studentinfo.js" afterPath="$PROJECT_DIR$/public/assets/js/views/studentinfo.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/assets/js/views/students.js" afterPath="$PROJECT_DIR$/public/assets/js/views/students.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/assets/js/views/teachers.js" afterPath="$PROJECT_DIR$/public/assets/js/views/teachers.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/assets/js/views/teachersedit.js" afterPath="$PROJECT_DIR$/public/assets/js/views/teachersedit.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/assets/js/views/teachersnew.js" afterPath="$PROJECT_DIR$/public/assets/js/views/teachersnew.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/index.html" afterPath="$PROJECT_DIR$/public/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/templates/NavigationBarView.html" afterPath="$PROJECT_DIR$/public/templates/NavigationBarView.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/templates/ResolutionsView.html" afterPath="$PROJECT_DIR$/public/templates/ResolutionsView.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/assets/js/views/studentsnew.js" afterPath="$PROJECT_DIR$/public/assets/js/views/studentsnew.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/templates/SchoolsEdit.html" afterPath="$PROJECT_DIR$/public/templates/SchoolsEdit.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/templates/SchoolsNew.html" afterPath="$PROJECT_DIR$/public/templates/SchoolsNew.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/templates/StudentsView.html" afterPath="$PROJECT_DIR$/public/templates/StudentsView.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/templates/TeachersNewView.html" afterPath="$PROJECT_DIR$/public/templates/TeachersNewView.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/students.js" afterPath="$PROJECT_DIR$/routes/students.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/templates/SchoolsView.html" afterPath="$PROJECT_DIR$/public/templates/SchoolsView.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/templates/StudentsNewView.html" afterPath="$PROJECT_DIR$/public/templates/StudentsNewView.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/schools.js" afterPath="$PROJECT_DIR$/routes/schools.js" />
     </list>
     <ignored path="Letrinhas.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -65,17 +37,90 @@
     <option name="SHOW_TABLE_DETAILS" value="true" />
     <option name="SHOW_EMPTY_GROUPS" value="false" />
   </component>
+  <component name="DockManager">
+    <window id="2">
+      <content type="file-editors">
+        <state>
+          <leaf>
+            <file leaf-file-name="schoolsnew.js" pinned="false" current-in-tab="false">
+              <entry file="file://$PROJECT_DIR$/public/assets/js/views/schoolsnew.js">
+                <provider selected="true" editor-type-id="text-editor">
+                  <state vertical-scroll-proportion="0.0">
+                    <caret line="40" column="6" selection-start-line="30" selection-start-column="4" selection-end-line="40" selection-end-column="6" />
+                    <folding />
+                  </state>
+                </provider>
+              </entry>
+            </file>
+            <file leaf-file-name="SchoolsNew.html" pinned="false" current-in-tab="false">
+              <entry file="file://$PROJECT_DIR$/public/templates/SchoolsNew.html">
+                <provider selected="true" editor-type-id="text-editor">
+                  <state vertical-scroll-proportion="-15.441176">
+                    <caret line="36" column="77" selection-start-line="32" selection-start-column="32" selection-end-line="36" selection-end-column="77" />
+                    <folding />
+                  </state>
+                </provider>
+              </entry>
+            </file>
+            <file leaf-file-name="schools.js" pinned="false" current-in-tab="true">
+              <entry file="file://$PROJECT_DIR$/public/assets/js/views/schools.js">
+                <provider selected="true" editor-type-id="text-editor">
+                  <state vertical-scroll-proportion="0.026652452">
+                    <caret line="139" column="48" selection-start-line="139" selection-start-column="44" selection-end-line="139" selection-end-column="48" />
+                    <folding />
+                  </state>
+                </provider>
+              </entry>
+            </file>
+          </leaf>
+        </state>
+      </content>
+    </window>
+  </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
     <favorites_list name="Letrinhas" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="450">
-      <file leaf-file-name="styles.css" pinned="false" current-in-tab="true">
+      <file leaf-file-name="styles.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/assets/css/styles.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.74120605">
-              <caret line="377" column="0" selection-start-line="377" selection-start-column="0" selection-end-line="377" selection-end-column="0" />
+            <state vertical-scroll-proportion="-13.1470585">
+              <caret line="359" column="21" selection-start-line="359" selection-start-column="21" selection-end-line="359" selection-end-column="21" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="students.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/assets/js/views/students.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="26" column="29" selection-start-line="26" selection-start-column="8" selection-end-line="26" selection-end-column="29" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="responses.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/public/assets/js/responses.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.45652175">
+              <caret line="71" column="28" selection-start-line="71" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
+              <folding>
+                <marker date="1462215256691" expanded="true" signature="477:541" placeholder="..." />
+                <marker date="1462215256691" expanded="true" signature="1090:1150" placeholder="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="main.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/assets/js/main.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="154" column="0" selection-start-line="154" selection-start-column="0" selection-end-line="154" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -85,41 +130,34 @@
         <entry file="file://$PROJECT_DIR$/public/assets/js/views/schoolsedit.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="52" column="0" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
+              <caret line="90" column="49" selection-start-line="90" selection-start-column="49" selection-end-line="90" selection-end-column="49" />
               <folding>
-                <element signature="e#434#691#0" expanded="false" />
-                <element signature="e#743#1287#0" expanded="false" />
-                <element signature="e#941#1004#0" expanded="false" />
-                <element signature="e#1089#1230#0" expanded="false" />
-                <element signature="e#2128#2874#0" expanded="false" />
-                <element signature="e#2351#2571#0" expanded="false" />
-                <element signature="e#2478#2549#0" expanded="false" />
-                <element signature="e#2656#2804#0" expanded="false" />
-                <element signature="e#2933#2999#0" expanded="false" />
-                <element signature="e#3029#3673#0" expanded="false" />
-                <element signature="e#3360#3406#0" expanded="false" />
-                <element signature="e#3490#3634#0" expanded="false" />
-                <element signature="e#3836#5296#0" expanded="false" />
-                <element signature="e#4017#5156#0" expanded="false" />
-                <element signature="e#4329#5140#0" expanded="false" />
-                <element signature="e#4413#4481#0" expanded="false" />
-                <element signature="e#4528#4691#0" expanded="false" />
-                <element signature="e#4733#4824#0" expanded="false" />
-                <element signature="e#4847#5070#0" expanded="false" />
-                <element signature="e#5241#5257#0" expanded="false" />
+                <element signature="e#667#924#0" expanded="false" />
+                <element signature="e#976#1520#0" expanded="false" />
+                <element signature="e#1174#1237#0" expanded="false" />
+                <element signature="e#1322#1463#0" expanded="false" />
+                <element signature="e#1591#1982#0" expanded="false" />
+                <element signature="e#3020#3099#0" expanded="false" />
+                <element signature="e#3520#3586#0" expanded="false" />
+                <element signature="e#4243#4297#0" expanded="false" />
+                <element signature="e#4389#4541#0" expanded="false" />
+                <element signature="e#5254#6065#0" expanded="false" />
+                <element signature="e#5338#5406#0" expanded="false" />
+                <element signature="e#5453#5616#0" expanded="false" />
+                <element signature="e#5658#5749#0" expanded="false" />
+                <element signature="e#5772#5995#0" expanded="false" />
+                <element signature="e#6166#6182#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SchoolsEdit.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/templates/SchoolsEdit.html">
+      <file leaf-file-name="StudentsEdit.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/templates/StudentsEdit.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-10.735294">
-              <caret line="27" column="30" selection-start-line="27" selection-start-column="30" selection-end-line="27" selection-end-column="30" />
-              <folding>
-                <element signature="n#style#0;n#input#0;n#div#0;n#div#0;n#form#0;n#div#1;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
-              </folding>
+            <state vertical-scroll-proportion="-0.0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -141,16 +179,12 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/public/assets/js/views/old/teachersnew.js" />
-        <option value="$PROJECT_DIR$/public/assets/js/views/inicio.js" />
         <option value="$PROJECT_DIR$/public/assets/js/views/tests.js" />
         <option value="$PROJECT_DIR$/public/assets/js/views/old/studentsnew.js" />
         <option value="$PROJECT_DIR$/public/assets/libs/jquery.min.js" />
         <option value="$PROJECT_DIR$/public/assets/js/engine.js" />
-        <option value="$PROJECT_DIR$/public/templates/StudentsNewView.html" />
         <option value="$PROJECT_DIR$/public/assets/js/views/menuprincipal.js" />
         <option value="$PROJECT_DIR$/public/assets/js/views/utils.js" />
-        <option value="$PROJECT_DIR$/public/assets/js/views/studentsnew.js" />
         <option value="$PROJECT_DIR$/routes/tests.js" />
         <option value="$PROJECT_DIR$/public/templates/TestsView.html" />
         <option value="$PROJECT_DIR$/public/templates/Inicio.html" />
@@ -162,7 +196,6 @@
         <option value="$PROJECT_DIR$/public/templates/UserView.html" />
         <option value="$PROJECT_DIR$/main.js" />
         <option value="$PROJECT_DIR$/public/assets/js/views/user.js" />
-        <option value="$PROJECT_DIR$/public/assets/js/responses.js" />
         <option value="$PROJECT_DIR$/routes/teachers.js" />
         <option value="$USER_HOME$/Documents/GitHub/algorithmi-web/assets/js/main.js" />
         <option value="$PROJECT_DIR$/public/templates/TeachersEditView.html" />
@@ -171,27 +204,32 @@
         <option value="$PROJECT_DIR$/public/templates/ResolutionsView.html" />
         <option value="$PROJECT_DIR$/public/templates/StudentsView.html" />
         <option value="$PROJECT_DIR$/public/assets/js/views/studentinfo.js" />
-        <option value="$PROJECT_DIR$/public/assets/js/views/students.js" />
         <option value="$PROJECT_DIR$/routes/students.js" />
         <option value="$PROJECT_DIR$/public/index.html" />
         <option value="$PROJECT_DIR$/public/templates/TeachersView.html" />
         <option value="$PROJECT_DIR$/public/templates/TeachersNewView.html" />
         <option value="$PROJECT_DIR$/public/assets/js/views/teachersnew.js" />
         <option value="$PROJECT_DIR$/public/assets/js/views/old/teachersedit.js" />
-        <option value="$PROJECT_DIR$/public/templates/SchoolsNew.html" />
         <option value="$PROJECT_DIR$/public/assets/js/views/teachersedit.js" />
-        <option value="$PROJECT_DIR$/public/assets/js/views/schoolsnew.js" />
-        <option value="$PROJECT_DIR$/public/assets/js/views/schoolsedit.js" />
         <option value="$PROJECT_DIR$/public/templates/NavigationBarView.html" />
         <option value="$PROJECT_DIR$/public/assets/js/views/home.js" />
-        <option value="$PROJECT_DIR$/public/assets/js/utils.js" />
         <option value="$PROJECT_DIR$/public/assets/js/views/navigationbar.js" />
         <option value="$PROJECT_DIR$/public/assets/js/views/dashboard.js" />
         <option value="$PROJECT_DIR$/public/assets/js/views/teachers.js" />
         <option value="$PROJECT_DIR$/public/assets/js/views/schools.js" />
         <option value="$PROJECT_DIR$/public/assets/js/main.js" />
+        <option value="$PROJECT_DIR$/public/assets/js/views/schoolsnew.js" />
+        <option value="$PROJECT_DIR$/routes/schools.js" />
         <option value="$PROJECT_DIR$/public/templates/SchoolsEdit.html" />
+        <option value="$PROJECT_DIR$/public/assets/js/views/schoolsedit.js" />
+        <option value="$PROJECT_DIR$/public/templates/SchoolsView.html" />
+        <option value="$PROJECT_DIR$/public/templates/SchoolsNew.html" />
+        <option value="$PROJECT_DIR$/public/assets/js/utils.js" />
+        <option value="$PROJECT_DIR$/public/assets/js/views/studentsnew.js" />
         <option value="$PROJECT_DIR$/public/assets/css/styles.css" />
+        <option value="$PROJECT_DIR$/public/templates/StudentsNewView.html" />
+        <option value="$PROJECT_DIR$/public/assets/js/views/students.js" />
+        <option value="$PROJECT_DIR$/public/assets/js/responses.js" />
       </list>
     </option>
   </component>
@@ -238,6 +276,7 @@
     </navigator>
     <panes>
       <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -267,24 +306,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="routes" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Letrinhas" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Letrinhas-V3.0" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="routes" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="old" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -410,7 +431,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -497,15 +517,14 @@
     <frame x="82" y="-11" width="1849" height="1102" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24985804" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32969433" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2589438" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32969433" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3299262" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4478595" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32950193" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24958949" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24929018" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -513,9 +532,30 @@
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4478595" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
+    <layout-to-restore>
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32969433" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32950193" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2589438" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3299262" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4478595" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24929018" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+    </layout-to-restore>
   </component>
   <component name="Vcs.Log.UiProperties">
     <option name="RECENTLY_FILTERED_USER_GROUPS">
@@ -573,7 +613,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/public/assets/js/views/students.js</url>
-          <line>109</line>
+          <line>105</line>
           <option name="timeStamp" value="36" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
@@ -582,25 +622,11 @@
           <option name="timeStamp" value="37" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="38" />
+      <option name="time" value="39" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$USER_HOME$/Documents/GitHub/algorithmi-web/assets/js/main.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5361174">
-          <caret line="43" column="29" selection-start-line="43" selection-start-column="29" selection-end-line="43" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/assets/js/models/Teacher.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6857143">
-          <caret line="24" column="0" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/assets/js/views/studentsedit.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -637,14 +663,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routes/schools.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.4874142">
-          <caret line="185" column="24" selection-start-line="185" selection-start-column="24" selection-end-line="185" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/routes/teachers.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.028604118">
@@ -674,14 +692,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-3.3466818">
           <caret line="0" column="18" selection-start-line="0" selection-start-column="7" selection-end-line="0" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/assets/js/views/students.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="105" column="0" selection-start-line="105" selection-start-column="0" selection-end-line="105" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -762,47 +772,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routes/students.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="44" column="61" selection-start-line="44" selection-start-column="61" selection-end-line="44" selection-end-column="61" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/assets/js/views/studentsnew.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7951945">
-          <caret line="48" column="55" selection-start-line="48" selection-start-column="50" selection-end-line="48" selection-end-column="55" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/templates/TeachersEditView.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-1.25">
           <caret line="3" column="24" selection-start-line="3" selection-start-column="9" selection-end-line="3" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/assets/js/views/teachersnew.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.1430206">
-          <caret line="5" column="8" selection-start-line="5" selection-start-column="8" selection-end-line="5" selection-end-column="36" />
-          <folding>
-            <element signature="e#913#942#0" expanded="false" />
-            <element signature="e#1027#1108#0" expanded="false" />
-            <element signature="e#1187#1796#0" expanded="false" />
-            <element signature="e#3098#3164#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/templates/SchoolsNew.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="25" column="69" selection-start-line="25" selection-start-column="69" selection-end-line="25" selection-end-column="69" />
-          <folding>
-            <element signature="n#style#0;n#input#0;n#div#0;n#div#0;n#div#0;n#form#0;n#div#1;n#div#0;n#div#1;n#div#0;n#!!top" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -814,19 +787,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/assets/js/views/schoolsnew.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="18" column="41" selection-start-line="18" selection-start-column="40" selection-end-line="18" selection-end-column="41" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/node_modules/nano/node_modules/follow/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/browser/bluebird.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="3551" column="12" selection-start-line="3551" selection-start-column="12" selection-end-line="3551" selection-end-column="12" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -834,23 +798,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-6.8235292">
           <caret line="43" column="20" selection-start-line="43" selection-start-column="9" selection-end-line="43" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="58" column="46" selection-start-line="58" selection-start-column="46" selection-end-line="58" selection-end-column="46" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/templates/NavigationBarView.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-10.029411">
-          <caret line="56" column="0" selection-start-line="56" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -858,7 +805,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -866,14 +812,148 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.36384976">
           <caret line="0" column="2915" selection-start-line="0" selection-start-column="2915" selection-end-line="0" selection-end-column="2915" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/assets/js/views/dashboard.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.54347825">
+          <caret line="19" column="20" selection-start-line="19" selection-start-column="20" selection-end-line="19" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/templates/Dashboard.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.3809524">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/templates/Home.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33291456">
+          <caret line="11" column="36" selection-start-line="11" selection-start-column="36" selection-end-line="11" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/assets/js/engine.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.62814647">
+          <caret line="31" column="92" selection-start-line="31" selection-start-column="55" selection-end-line="31" selection-end-column="92" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/assets/js/views/teachers.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.62814647">
+          <caret line="152" column="17" selection-start-line="152" selection-start-column="17" selection-end-line="152" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/assets/js/views/navigationbar.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="25" column="34" selection-start-line="25" selection-start-column="7" selection-end-line="25" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/assets/js/views/teachersnew.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="101" column="3" selection-start-line="101" selection-start-column="3" selection-end-line="106" selection-end-column="6" />
+          <folding>
+            <element signature="e#913#942#0" expanded="false" />
+            <element signature="e#1027#1108#0" expanded="false" />
+            <element signature="e#1187#1796#0" expanded="false" />
+            <element signature="e#3098#3164#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/students.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.028604118">
+          <caret line="44" column="61" selection-start-line="44" selection-start-column="61" selection-end-line="44" selection-end-column="61" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/templates/SchoolsEdit.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.50595236">
+          <caret line="17" column="65" selection-start-line="17" selection-start-column="65" selection-end-line="17" selection-end-column="65" />
+          <folding>
+            <element signature="n#style#0;n#i#1;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/schools.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.7997712">
+          <caret line="206" column="5" selection-start-line="206" selection-start-column="5" selection-end-line="206" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/templates/NavigationBarView.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-41.17647">
+          <caret line="56" column="0" selection-start-line="56" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/templates/SchoolsView.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-11.029411">
+          <caret line="15" column="120" selection-start-line="15" selection-start-column="120" selection-end-line="15" selection-end-column="120" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#li#1;n#ul#0;n#section#0;n#div#0;n#div#0;n#!!top" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/templates/SchoolsNew.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-15.441176">
+          <caret line="36" column="77" selection-start-line="32" selection-start-column="32" selection-end-line="36" selection-end-column="77" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/assets/js/views/studentsnew.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.7723112">
+          <caret line="54" column="51" selection-start-line="54" selection-start-column="51" selection-end-line="54" selection-end-column="51" />
+          <folding>
+            <marker date="1462201772258" expanded="true" signature="3819:3926" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/templates/StudentsNewView.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.35714287">
+          <caret line="20" column="32" selection-start-line="20" selection-start-column="32" selection-end-line="20" selection-end-column="32" />
+          <folding>
+            <element signature="n#style#0;n#i#1;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/templates/StudentsEdit.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/public/assets/js/utils.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-7.5">
-          <caret line="315" column="26" selection-start-line="315" selection-start-column="12" selection-end-line="315" selection-end-column="26" />
+        <state vertical-scroll-proportion="1.430206">
+          <caret line="223" column="36" selection-start-line="223" selection-start-column="36" selection-end-line="223" selection-end-column="36" />
           <folding>
             <element signature="e#0#41#0" expanded="false" />
             <element signature="e#152#2524#0" expanded="false" />
@@ -892,6 +972,13 @@
             <element signature="e#2968#3031#0" expanded="false" />
             <element signature="e#3037#3082#0" expanded="false" />
             <element signature="e#3098#3260#0" expanded="false" />
+            <element signature="e#3724#6012#0" expanded="false" />
+            <element signature="e#4003#5907#0" expanded="false" />
+            <element signature="e#4102#5760#0" expanded="false" />
+            <element signature="e#4216#5744#0" expanded="false" />
+            <element signature="e#4397#5724#0" expanded="false" />
+            <element signature="e#4447#5702#0" expanded="false" />
+            <element signature="e#4557#4761#0" expanded="false" />
             <element signature="e#4924#5516#0" expanded="false" />
             <element signature="e#4980#5120#0" expanded="false" />
             <element signature="e#5140#5238#0" expanded="false" />
@@ -908,120 +995,82 @@
             <element signature="e#7237#7305#0" expanded="false" />
             <element signature="e#7550#7864#0" expanded="false" />
             <element signature="e#7556#7862#0" expanded="false" />
-            <element signature="e#7868#7939#0" expanded="false" />
-            <element signature="e#8061#8257#0" expanded="false" />
-            <element signature="e#8113#8255#0" expanded="false" />
-            <element signature="e#8358#8464#0" expanded="false" />
-            <element signature="e#8394#8422#0" expanded="false" />
-            <element signature="e#8432#8462#0" expanded="false" />
-            <element signature="e#8555#11385#0" expanded="false" />
-            <element signature="e#8591#8750#0" expanded="false" />
-            <element signature="e#9009#9135#0" expanded="false" />
-            <element signature="e#9168#9264#0" expanded="false" />
-            <element signature="e#9366#9426#0" expanded="false" />
-            <element signature="e#10207#10287#0" expanded="false" />
-            <element signature="e#10336#10420#0" expanded="false" />
-            <element signature="e#10475#10684#0" expanded="false" />
-            <element signature="e#10735#10847#0" expanded="false" />
-            <element signature="e#10947#11009#0" expanded="false" />
-            <element signature="e#11053#11263#0" expanded="false" />
-            <marker date="1462016368373" expanded="false" signature="3354:3582" placeholder="..." />
-            <marker date="1462016368373" expanded="false" signature="5335:5352" placeholder="..." />
-            <marker date="1462016368373" expanded="true" signature="12754:12768" placeholder="..." />
+            <element signature="e#9638#9709#0" expanded="false" />
+            <element signature="e#9831#10027#0" expanded="false" />
+            <element signature="e#9883#10025#0" expanded="false" />
+            <element signature="e#10128#10234#0" expanded="false" />
+            <element signature="e#10164#10192#0" expanded="false" />
+            <element signature="e#10202#10232#0" expanded="false" />
+            <element signature="e#10325#13155#0" expanded="false" />
+            <element signature="e#10361#10520#0" expanded="false" />
+            <element signature="e#10779#10905#0" expanded="false" />
+            <element signature="e#10938#11034#0" expanded="false" />
+            <element signature="e#11136#11196#0" expanded="false" />
+            <element signature="e#11237#11309#0" expanded="false" />
+            <element signature="e#11354#11429#0" expanded="false" />
+            <element signature="e#11480#11711#0" expanded="false" />
+            <element signature="e#11758#11866#0" expanded="false" />
+            <element signature="e#11977#12057#0" expanded="false" />
+            <element signature="e#12106#12190#0" expanded="false" />
+            <element signature="e#12245#12454#0" expanded="false" />
+            <element signature="e#12505#12617#0" expanded="false" />
+            <element signature="e#12717#12779#0" expanded="false" />
+            <element signature="e#12823#13033#0" expanded="false" />
+            <element signature="e#13158#13205#0" expanded="false" />
+            <element signature="e#13422#15448#0" expanded="false" />
+            <element signature="e#13520#15444#0" expanded="false" />
+            <element signature="e#13631#13746#0" expanded="false" />
+            <element signature="e#13932#14058#0" expanded="false" />
+            <element signature="e#14091#14186#0" expanded="false" />
+            <element signature="e#14654#14802#0" expanded="false" />
+            <element signature="e#15160#15436#0" expanded="false" />
+            <element signature="n#!!block;n#updatePreview#0" expanded="false" />
+            <element signature="e#15508#15861#0" expanded="false" />
+            <element signature="e#15747#15854#0" expanded="false" />
+            <element signature="e#15923#17164#0" expanded="false" />
+            <element signature="e#16259#16672#0" expanded="false" />
+            <element signature="e#16748#17155#0" expanded="false" />
+            <element signature="e#16995#17053#0" expanded="false" />
+            <element signature="e#17071#17144#0" expanded="false" />
+            <element signature="e#17210#17481#0" expanded="false" />
+            <element signature="e#17258#17477#0" expanded="false" />
+            <element signature="e#17328#17368#0" expanded="false" />
+            <element signature="e#17405#17444#0" expanded="false" />
+            <marker date="1462201566215" expanded="false" signature="3354:3582" placeholder="..." />
+            <marker date="1462201566215" expanded="false" signature="5335:5352" placeholder="..." />
+            <marker date="1462201566215" expanded="false" signature="14524:14538" placeholder="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/assets/js/views/dashboard.js">
+    <entry file="file://$PROJECT_DIR$/public/assets/js/views/schoolsnew.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.54347825">
-          <caret line="19" column="20" selection-start-line="19" selection-start-column="20" selection-end-line="19" selection-end-column="20" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="40" column="6" selection-start-line="30" selection-start-column="4" selection-end-line="40" selection-end-column="6" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/templates/Dashboard.html">
+    <entry file="file://$PROJECT_DIR$/public/assets/css/styles.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.3809524">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state vertical-scroll-proportion="-13.1470585">
+          <caret line="359" column="21" selection-start-line="359" selection-start-column="21" selection-end-line="359" selection-end-column="21" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/templates/Home.html">
+    <entry file="file://$PROJECT_DIR$/main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33291456">
-          <caret line="11" column="36" selection-start-line="11" selection-start-column="36" selection-end-line="11" selection-end-column="36" />
+        <state vertical-scroll-proportion="0.48627">
+          <caret line="155" column="42" selection-start-line="155" selection-start-column="42" selection-end-line="155" selection-end-column="42" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/assets/js/engine.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.62814647">
-          <caret line="31" column="92" selection-start-line="31" selection-start-column="55" selection-end-line="31" selection-end-column="92" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/assets/js/views/navigationbar.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5423341">
-          <caret line="30" column="41" selection-start-line="30" selection-start-column="41" selection-end-line="30" selection-end-column="41" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/assets/js/views/teachers.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.62814647">
-          <caret line="152" column="17" selection-start-line="152" selection-start-column="17" selection-end-line="152" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/templates/SchoolsView.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.0">
-          <caret line="0" column="19" selection-start-line="0" selection-start-column="9" selection-end-line="0" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/assets/js/views/schools.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.597701">
-          <caret line="80" column="44" selection-start-line="80" selection-start-column="34" selection-end-line="80" selection-end-column="44" />
-          <folding>
-            <element signature="e#246#805#0" expanded="false" />
-            <element signature="e#859#978#0" expanded="false" />
-            <element signature="e#1012#1897#0" expanded="false" />
-            <element signature="e#1152#1284#0" expanded="false" />
-            <element signature="e#1414#1624#0" expanded="false" />
-            <element signature="e#1630#1795#0" expanded="false" />
-            <element signature="e#1845#1889#0" expanded="false" />
-            <element signature="e#1991#2252#0" expanded="false" />
-            <element signature="e#2758#2839#0" expanded="false" />
-            <element signature="e#2867#2942#0" expanded="false" />
-            <element signature="e#3290#3498#0" expanded="false" />
-            <element signature="e#3332#3438#0" expanded="false" />
-            <element signature="e#6267#6274#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/public/assets/js/main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4473684">
-          <caret line="245" column="8" selection-start-line="245" selection-start-column="8" selection-end-line="245" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/assets/js/responses.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.028604118">
-          <caret line="34" column="6" selection-start-line="34" selection-start-column="6" selection-end-line="34" selection-end-column="72" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="154" column="0" selection-start-line="154" selection-start-column="0" selection-end-line="154" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1029,47 +1078,51 @@
     <entry file="file://$PROJECT_DIR$/public/assets/js/views/schoolsedit.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="52" column="0" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
+          <caret line="90" column="49" selection-start-line="90" selection-start-column="49" selection-end-line="90" selection-end-column="49" />
           <folding>
-            <element signature="e#434#691#0" expanded="false" />
-            <element signature="e#743#1287#0" expanded="false" />
-            <element signature="e#941#1004#0" expanded="false" />
-            <element signature="e#1089#1230#0" expanded="false" />
-            <element signature="e#2128#2874#0" expanded="false" />
-            <element signature="e#2351#2571#0" expanded="false" />
-            <element signature="e#2478#2549#0" expanded="false" />
-            <element signature="e#2656#2804#0" expanded="false" />
-            <element signature="e#2933#2999#0" expanded="false" />
-            <element signature="e#3029#3673#0" expanded="false" />
-            <element signature="e#3360#3406#0" expanded="false" />
-            <element signature="e#3490#3634#0" expanded="false" />
-            <element signature="e#3836#5296#0" expanded="false" />
-            <element signature="e#4017#5156#0" expanded="false" />
-            <element signature="e#4329#5140#0" expanded="false" />
-            <element signature="e#4413#4481#0" expanded="false" />
-            <element signature="e#4528#4691#0" expanded="false" />
-            <element signature="e#4733#4824#0" expanded="false" />
-            <element signature="e#4847#5070#0" expanded="false" />
-            <element signature="e#5241#5257#0" expanded="false" />
+            <element signature="e#667#924#0" expanded="false" />
+            <element signature="e#976#1520#0" expanded="false" />
+            <element signature="e#1174#1237#0" expanded="false" />
+            <element signature="e#1322#1463#0" expanded="false" />
+            <element signature="e#1591#1982#0" expanded="false" />
+            <element signature="e#3020#3099#0" expanded="false" />
+            <element signature="e#3520#3586#0" expanded="false" />
+            <element signature="e#4243#4297#0" expanded="false" />
+            <element signature="e#4389#4541#0" expanded="false" />
+            <element signature="e#5254#6065#0" expanded="false" />
+            <element signature="e#5338#5406#0" expanded="false" />
+            <element signature="e#5453#5616#0" expanded="false" />
+            <element signature="e#5658#5749#0" expanded="false" />
+            <element signature="e#5772#5995#0" expanded="false" />
+            <element signature="e#6166#6182#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/templates/SchoolsEdit.html">
+    <entry file="file://$PROJECT_DIR$/public/assets/js/views/schools.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-10.735294">
-          <caret line="27" column="30" selection-start-line="27" selection-start-column="30" selection-end-line="27" selection-end-column="30" />
-          <folding>
-            <element signature="n#style#0;n#input#0;n#div#0;n#div#0;n#form#0;n#div#1;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/assets/css/styles.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.74120605">
-          <caret line="377" column="0" selection-start-line="377" selection-start-column="0" selection-end-line="377" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.026652452">
+          <caret line="139" column="48" selection-start-line="139" selection-start-column="44" selection-end-line="139" selection-end-column="48" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/assets/js/views/students.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="26" column="29" selection-start-line="26" selection-start-column="8" selection-end-line="26" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/assets/js/responses.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.45652175">
+          <caret line="71" column="28" selection-start-line="71" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
+          <folding>
+            <marker date="1462215256691" expanded="true" signature="477:541" placeholder="..." />
+            <marker date="1462215256691" expanded="true" signature="1090:1150" placeholder="..." />
+          </folding>
         </state>
       </provider>
     </entry>

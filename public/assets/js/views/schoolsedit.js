@@ -3,13 +3,22 @@ window.SchoolsEdit = Backbone.View.extend({
         "submit": "beforeSend",
         "click #cancelbtn": "goBack",
         "click #addNewClass": "addClass",
+        "blur .emptyField": "isEmpty",
         "change #filePicker": "convertPhoto",
+        "change select": "isEmpty",
         "click #btnCrop": "getFoto",
         "click #btnDelClass": "deleteClass",
         "click .deleteClass": "confirmDelete",
+        "mouseover #btnEditDetails": "pop"
 
     },
 
+    //Initializes popover content
+    pop: function () {
+
+        setPopOver("Nome, Morada e Fotografia");
+
+    },
 
     //Solicita confirmação para apagar a turma
     confirmDelete: function (e) {
@@ -50,8 +59,6 @@ window.SchoolsEdit = Backbone.View.extend({
 
         reader.onload = function (readerEvent) {
             var image = new Image();
-
-
             image.src = readerEvent.target.result;
             showCropper(".form", image, 600, 300, 16 / 9);
             console.log(image.src);
@@ -71,33 +78,41 @@ window.SchoolsEdit = Backbone.View.extend({
         $(".cropBG").remove();
     },
 
-
+//Verifies if an input is empty
+    isEmpty: function (e) {
+        isElemValid($(e.currentTarget));
+    },
     //Before Submit
     beforeSend: function (e) {
         e.preventDefault();
 
         var self = this;
-        console.log($("#schooleditform").serializeArray());
-        modem('POST', 'schools/' + self.school.id,
+        //Se algum dos campos estiver vazio
+        var allListElements = $("#schooleditform .mandatory");
+        //Verifies if all inputs are OK
+        var isValid = isFormValid(allListElements);
+        //If they are
+        if (isValid) {
+            modem('POST', 'schools/' + self.school.id,
 
-            //Response Handler
-            function () {
+                //Response Handler
+                function () {
 
-                sucssesMsg($("#schooleditform"), "Escola editada com sucesso", 500);
-                setTimeout(function () {
-                    document.location.reload(true);
-                }, 500);
+                    sucssesMsg($("#schooleditform"), "Escola editada com sucesso", 500);
+                    setTimeout(function () {
+                        document.location.reload(true);
+                    }, 500);
 
-            },
+                },
 
-            //Error Handling
-            function (xhr, ajaxOptions, thrownError) {
-                failMsg($("#schooleditform"), "Não foi possível editar a escola. \n (" + JSON.parse(xhr.responseText).error + ").");
-            },
+                //Error Handling
+                function (xhr, ajaxOptions, thrownError) {
+                    failMsg($("#schooleditform"), "Não foi possível editar a escola. \n (" + JSON.parse(xhr.responseText).error + ").");
+                },
 
-            $("#schooleditform").serializeArray()
-        );
-
+                $("#schooleditform").serializeArray()
+            );
+        }
     },
 
     //Go Back To Previous Page
@@ -108,23 +123,32 @@ window.SchoolsEdit = Backbone.View.extend({
 
     addClass: function (e) {
         e.preventDefault();
+
         var self = this;
+        //Se algum dos campos estiver vazio
+        var allListElements = $("#newclassform .mandatory");
+        //Verifies if all inputs are OK
+        var isValid = isFormValid(allListElements);
+        //If they are
+        if (isValid) {
+            var self = this;
 
-        var newClass = $("#newclassform").serializeArray();
-        newClass.push({name: "school", value: self.school.id});
+            var newClass = $("#newclassform").serializeArray();
+            newClass.push({name: "school", value: self.school.id});
 
-        //Send Info To Server
-        modem('POST', 'schools/' + self.school.id + '/newclass',
-            //Response Handler
-            function () {
-                self.render();
-            },
-            //Error Handling
-            function (xhr, ajaxOptions, thrownError) {
-                failMsg($("#classes"), "Não foi possível adicionar a tuurma. \n (" + JSON.parse(xhr.responseText).error + ").");
-            },
-            newClass
-        );
+            //Send Info To Server
+            modem('POST', 'schools/' + self.school.id + '/newclass',
+                //Response Handler
+                function () {
+                    self.render();
+                },
+                //Error Handling
+                function (xhr, ajaxOptions, thrownError) {
+                    failMsg($("#classes"), "Não foi possível adicionar a tuurma. \n (" + JSON.parse(xhr.responseText).error + ").");
+                },
+                newClass
+            );
+        }
     },
 
     //Class Initializer
