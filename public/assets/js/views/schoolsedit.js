@@ -5,7 +5,10 @@ window.SchoolsEdit = Backbone.View.extend({
         "click #addNewClass": "addClass",
         "blur .emptyField": "isEmpty",
         "change #filePicker": "convertPhoto",
+<<<<<<< HEAD
         "change select": "isEmpty",
+=======
+>>>>>>> origin/Cris
         "click #btnCrop": "getFoto",
         "click #btnDelClass": "deleteClass",
         "click .deleteClass": "confirmDelete",
@@ -59,6 +62,11 @@ window.SchoolsEdit = Backbone.View.extend({
 
         reader.onload = function (readerEvent) {
             var image = new Image();
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> origin/Cris
             image.src = readerEvent.target.result;
             showCropper(".form", image, 600, 300, 16 / 9);
             console.log(image.src);
@@ -78,10 +86,14 @@ window.SchoolsEdit = Backbone.View.extend({
         $(".cropBG").remove();
     },
 
+<<<<<<< HEAD
 //Verifies if an input is empty
     isEmpty: function (e) {
         isElemValid($(e.currentTarget));
     },
+=======
+
+>>>>>>> origin/Cris
     //Before Submit
     beforeSend: function (e) {
         e.preventDefault();

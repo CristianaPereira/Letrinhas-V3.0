@@ -69,14 +69,47 @@ window.SchoolsView = Backbone.View.extend({
     //Preenche a div com os dados de um professor
     fillPreview: function (schoolData) {
         var self = this;
+<<<<<<< HEAD
+=======
+        $('#modalConfirmDel').modal("hide");
+        modem('POST', 'schools/' + e.target.value + '/remove',
+            //Response Handler
+            function () {
+                sucssesMsg($("#schoolsDiv"), "Escola apagada com sucesso!", 2000);
+                setTimeout(function () {
+                    document.location.reload(true);
+                }, 2000);
+            },
+            //Error Handling
+            function (xhr, ajaxOptions, thrownError) {
+                console.log("ups");
+            }
+        );
+    },
+
+    //Search School
+    searchSchool: function (e) {
+
+        $(".listButton").hide();
+        $(".listButton:containsi(" + $(e.currentTarget).val() + ")").show();
+
+    },
+    enchePreview: function (schoolData) {
+        var self = this;
+        console.log(schoolData);
+>>>>>>> origin/Cris
 
         $('#schoolsPreview').empty();
 
         var $divFoto = $("<div>", {
-            class: "col-md-4"
+            class: "col-md-5"
         }).append('<img src="' + schoolData.b64 + '"  class="dataImage">');
 
+<<<<<<< HEAD
         var $divDados = $("<div>", {class: "col-md-8"}).append(
+=======
+        var $divDados = $("<div>", {class: "col-md-7"}).append(
+>>>>>>> origin/Cris
             $('<label>', {
                 class: "dataTitle col-md-12 row", text: schoolData.nome
             }),

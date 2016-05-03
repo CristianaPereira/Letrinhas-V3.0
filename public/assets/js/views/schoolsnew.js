@@ -4,16 +4,24 @@ window.SchoolsNew = Backbone.View.extend({
         "blur .emptyField": "isEmpty",
         "submit": "beforeSend",
         "change #filePicker": "convertPhoto",
+<<<<<<< HEAD
         "click #btnCrop": "getFoto",
         "mouseover #subEscola": "pop"
+=======
+        "click #btnCrop": "getFoto"
+>>>>>>> origin/Cris
     },
     //Initializes popover content
     pop: function () {
 
+<<<<<<< HEAD
         setPopOver("Nome, Morada e Fotografia");
 
     },
     //Convert Photo To defined size
+=======
+    //Convert Photo To Base64 String
+>>>>>>> origin/Cris
     convertPhoto: function (e) {
         var file = e.target.files[0];
 
@@ -28,7 +36,11 @@ window.SchoolsNew = Backbone.View.extend({
         }
         reader.readAsDataURL(file);
     },
+<<<<<<< HEAD
     //crops a foto
+=======
+    //Recorta a foto
+>>>>>>> origin/Cris
     getFoto: function (e) {
         e.preventDefault();
         var canvas = $("#preview")[0];
@@ -37,6 +49,7 @@ window.SchoolsNew = Backbone.View.extend({
         $("#base64textarea").val(dataUrl);
         $("#iFoto").attr('src', dataUrl);
         $(".cropBG").remove();
+<<<<<<< HEAD
         $(".profile-pic").removeClass("emptyField");
     },
 
@@ -47,6 +60,9 @@ window.SchoolsNew = Backbone.View.extend({
         }
     },
 
+=======
+    },
+>>>>>>> origin/Cris
 
     //Before Sending Request To Server
     beforeSend: function (e) {
