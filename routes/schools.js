@@ -164,49 +164,42 @@ exports.newClass = function (req, res) {
     //Fetch School
     console.log('Fetching School' + req.params.id + ''.green);
     console.log(req.body);
-    if (req.body.name && req.body.year) {
-        var presentYear = new Date().getFullYear();
+    var presentYear = new Date().getFullYear();
 
-        db.get(req.params.id, function (err, body) {
+    db.get(req.params.id, function (err, body) {
 
-            if (err) {
-                res.send(err.statusCode, {error: "Erro ao procurar escola"});
-            }
-            else {
+        if (err) {
+            res.send(err.statusCode, {error: "Erro ao procurar escola"});
+        }
+        else {
 
-                //Generate New Class Skeleton
-                var newClass = {
-                    _id: "T" + presentYear + req.body.year + new Date().getTime() + (body.turmas.length + 1),
-                    nome: req.body.name,
-                    ano: req.body.year,
-                    anoLectivo: presentYear,
-                    professores: []
-                };
+            //Generate New Class Skeleton
+            var newClass = {
+                _id: "T" + presentYear + req.body.year + new Date().getTime() + (body.turmas.length + 1),
+                nome: req.body.name,
+                ano: req.body.year,
+                anoLectivo: presentYear,
+                professores: []
+            };
 
-                //Add New Class Skeleton to School
-                body.turmas.push(newClass);
+            //Add New Class Skeleton to School
+            body.turmas.push(newClass);
 
-                console.log(body.turmas);
-                //Update School
-                db.insert(body, body._id, function (err) {
-                    if (err) {
-                        res.send(err.statusCode, {error: "Erro ao inserir turma na escola"});
-                    }
-                    else {
-                        console.log('New class was inserted into the school'.green);
-                        res.status(200).json({});
-                    }
-                });
+            console.log(body.turmas);
+            //Update School
+            db.insert(body, body._id, function (err) {
+                if (err) {
+                    res.send(err.statusCode, {error: "Erro ao inserir turma na escola"});
+                }
+                else {
+                    console.log('New class was inserted into the school'.green);
+                    res.status(200).json({});
+                }
+            });
 
-            }
+        }
 
-        });
-    } else {
-        console.log('Parameters Missing');
-        res.send(401, {error: "Alguns parametros são de preenchimento obrigatório"});
-    }
-
-
+    });
 }
 
 exports.removeClass = function (req, res) {

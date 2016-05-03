@@ -1,70 +1,70 @@
-<!--FORMULARIO -->
-<div class="form">
-    <div class="col-md-12">
-        <div class="panel panel-default">
-            <div align="center" class="titleBox">
-                <img class="titleImage">
-        <span class="titleText">
-            Inserir novo aluno
-        </span>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-12">
-        <div class="panel panel-info">
-            <div class="panel-heading"><i class="fa fa-gears"></i> Detalhes
-                <i id="infoPop" class="fa fa-info-circle" style="float: right;"></i>
-            </div>
-            <div class="panel-body">
-                <form id="newstudentform" role="form" method="POST" action="/students" enctype="multipart/form-data">
-                    <div class="form-group row">
-                        <div class="col-md-5">
-                            <div class="profile-pic row">
-                                <input type="file" class="form-control" id="filePicker" accept="image/jpg"
-                                       name="img" style="background-color:#e9e9ff;">
-                                <img id="iFoto">
-                                <input type="hidden" id="base64textarea" class="form-control mandatory"
-                                       accept="image/jpg" name="b64">
-                                <div class="emptyState-container"><i class="fa fa-image fa-2x"></i></div>
-                            </div>
-                        </div>
-                        <div class="col-md-7">
-                            <div class="col-md-12 row">
-                                <input type="text" class="form-control mandatory" id="InputNome"
-                                       placeholder="Nome" name="name">
-                                <span class="glyphicon " data-toggle="popover" data-trigger="hover"
-                                      data-placement="right" data-content="My popover content."><i
-                                        class="fa fa-user"></i></span>
-                            </div>
-                            <div class="col-md-12 row">
-                                <input type="number" class="form-control mandatory" id="InputNrAluno"
-                                       placeholder="Número"
-                                       name="number">
-                                <span class="glyphicon " data-toggle="popover" data-trigger="hover"
-                                      data-placement="right" data-content="My popover content."><i
-                                        class="fa fa-graduation-cap"></i></span>
-                            </div>
-                            <div class="col-md-12">
-                                <!-- Student Class -->
-                                <div class="input-group m-bot15">
-                                    <span class="input-group-addon btn-white"><i class="fa fa-university"></i></span>
-                                    <select class="form-control mandatory" id="selectTurma"></select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-12">
-                        <div class="btn-group" role="group" aria-label="...">
-                            <button id="backbtn" type="reset" class="btn btn-default">Cancelar</button>
-                            <button id="newstudentbtn" type="submit" class="btn btn-success">Inserir</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
+<div class="topcoat-navigation-bar">
+    <div class="topcoat-navigation-bar__item center full">
+        <h3 align="center" class="topcoat-navigation-bar__title">
+            <img src="../img/letrinhas2.png" style="height:40px">
+            <img src="../img/alunos.png" style="height:40px;">
+            Registar Aluno
+        </h3>
     </div>
 </div>
 
+<div>
 
+    <form id="newstudentform" role="form" method="POST" action="/students" enctype="multipart/form-data">
 
+        <div class="panel-body insertContainer">
+
+            <legend>Dados do Aluno:</legend>
+
+            <!-- File Picker -->
+            <div class="col-md-6">
+                <div class="profile-pic text-center">
+                    <img id="fPicker" alt="">
+                    <input type="file" class="form-control preenche" id="filePicker" accept="image/jpg" name="img"
+                           style="background-color:#e9e9ff;">
+                    <input type="hidden" id="base64textarea" name="b64">
+                </div>
+            </div>
+
+            <!-- Student Data -->
+            <div class="col-md-6">
+
+                <!-- Student Name -->
+                <div class="input-group m-bot15">
+                    <span class="input-group-addon btn-white"><i class="fa fa-user"></i></span>
+                    <input type="text" class="form-control preenche" id="InputNome" placeholder="Nome" name="name">
+                </div>
+
+                </br>
+
+                <!-- Student Number -->
+                <div class="input-group m-bot15">
+                    <span class="input-group-addon btn-white"><i class="fa fa-graduation-cap"></i></span>
+                    <input type="number" class="form-control preenche" id="InputNrAluno" placeholder="Número"
+                           name="number">
+                </div>
+
+                </br>
+
+                <!-- Student Class -->
+                <div class="input-group m-bot15">
+                    <span class="input-group-addon btn-white"><i class="fa fa-university"></i></span>
+                    <select class="form-control preenche" id="selectTurma"></select>
+                </div>
+
+                </br></br>
+
+                <div class="btn-group">
+                    <button id="backbtn" type="reset" class="btn btn-default">Cancelar</button>
+                    <button id="newstudentbtn" type="submit" class="btn btn-success">Submeter</button>
+                </div>
+            </div>
+
+        </div>
+        <div class="form-group">
+            <input type="text" id="hidenIDTurma" class="form-control preenche" name='class' style="display:none">
+            <select class="form-control" id="hidenTurma" style="display:none"
+                    style="background-color:#e9e9ff;"></select>
+        </div>
+    </form>
+</div>

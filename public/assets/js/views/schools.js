@@ -5,6 +5,48 @@ window.SchoolsView = Backbone.View.extend({
         "click #orderBy": "orderSchools"
     },
 
+    orderSchools: function (e) {
+        var mylist = $('#schoolsContent');
+
+        var listitems = mylist.children('div').get();
+
+        listitems.sort(function (a, b) {
+            return $(a).children('span').text().toUpperCase().localeCompare($(b).children('span').text().toUpperCase());
+        });
+        //ordenar de forma descendente/ascendente
+        if (!$(e.currentTarget).children('i').hasClass("fa-sort-alpha-asc")) {
+            listitems = listitems.reverse();
+            $(e.currentTarget).children('i').addClass("fa-sort-alpha-asc")
+            $(e.currentTarget).children('i').removeClass("fa-sort-alpha-desc")
+        } else {
+            $(e.currentTarget).children('i').removeClass("fa-sort-alpha-asc")
+            $(e.currentTarget).children('i').addClass("fa-sort-alpha-desc")
+        }
+        $.each(listitems, function (index, item) {
+            mylist.append(item);
+        });
+    },
+
+    //Check Auth
+    auth: function (e) {
+        if (!window.sessionStorage.getItem("keyo")) {
+            app.navigate("/#", true);
+            return false;
+        }
+        return true;
+    },
+
+    //Solicita confirmação para apagar o professor
+    confirmDelete: function (id, nome) {
+
+        var modal = delModal("Apagar escola",
+            "Tem a certeza que pretende eliminar a escola <label>" + nome + " </label> ?",
+            "deletebtn", id);
+
+        $('#schoolsDiv').append(modal);
+        $('#modalConfirmDel').modal("show");
+    },
+
     //Remove School
     deleteSchool: function (e) {
         var self = this;
@@ -31,73 +73,9 @@ window.SchoolsView = Backbone.View.extend({
         $(".listButton:containsi(" + $(e.currentTarget).val() + ")").show();
 
     },
-
-    orderSchools: function (e) {
-        var mylist = $('#schoolsContent');
-
-        var listitems = mylist.children('div').get();
-
-        listitems.sort(function (a, b) {
-            return $(a).children('span').text().toUpperCase().localeCompare($(b).children('span').text().toUpperCase());
-        });
-        //ordenar de forma descendente/ascendente
-        if (!$(e.currentTarget).children('i').hasClass("fa-sort-alpha-asc")) {
-            listitems = listitems.reverse();
-            $(e.currentTarget).children('i').addClass("fa-sort-alpha-asc")
-            $(e.currentTarget).children('i').removeClass("fa-sort-alpha-desc")
-        } else {
-            $(e.currentTarget).children('i').removeClass("fa-sort-alpha-asc")
-            $(e.currentTarget).children('i').addClass("fa-sort-alpha-desc")
-        }
-        $.each(listitems, function (index, item) {
-            mylist.append(item);
-        });
-    },
-
-
-    //Solicita confirmação para apagar o professor
-    confirmDelete: function (id, nome) {
-
-        var modal = delModal("Apagar escola",
-            "Tem a certeza que pretende eliminar a escola <label>" + nome + " </label> ?",
-            "deletebtn", id);
-
-        $('#schoolsDiv').append(modal);
-        $('#modalConfirmDel').modal("show");
-    },
-
-    //Preenche a div com os dados de um professor
-    fillPreview: function (schoolData) {
-        var self = this;
-<<<<<<< HEAD
-=======
-        $('#modalConfirmDel').modal("hide");
-        modem('POST', 'schools/' + e.target.value + '/remove',
-            //Response Handler
-            function () {
-                sucssesMsg($("#schoolsDiv"), "Escola apagada com sucesso!", 2000);
-                setTimeout(function () {
-                    document.location.reload(true);
-                }, 2000);
-            },
-            //Error Handling
-            function (xhr, ajaxOptions, thrownError) {
-                console.log("ups");
-            }
-        );
-    },
-
-    //Search School
-    searchSchool: function (e) {
-
-        $(".listButton").hide();
-        $(".listButton:containsi(" + $(e.currentTarget).val() + ")").show();
-
-    },
     enchePreview: function (schoolData) {
         var self = this;
         console.log(schoolData);
->>>>>>> origin/Cris
 
         $('#schoolsPreview').empty();
 
@@ -105,11 +83,7 @@ window.SchoolsView = Backbone.View.extend({
             class: "col-md-5"
         }).append('<img src="' + schoolData.b64 + '"  class="dataImage">');
 
-<<<<<<< HEAD
-        var $divDados = $("<div>", {class: "col-md-8"}).append(
-=======
         var $divDados = $("<div>", {class: "col-md-7"}).append(
->>>>>>> origin/Cris
             $('<label>', {
                 class: "dataTitle col-md-12 row", text: schoolData.nome
             }),
@@ -141,13 +115,8 @@ window.SchoolsView = Backbone.View.extend({
         //getAssocClasses(teacherData._id, teacherData.nome, false);
 
     },
-
-    //Check Auth
-    auth: function (e) {
-        if (!window.sessionStorage.getItem("keyo")) {
-            showLoginModal($("body"));
-        }
-        return true;
+    //Class Initializer
+    initialize: function () {
     },
 
     //Class Renderer
@@ -169,6 +138,7 @@ window.SchoolsView = Backbone.View.extend({
                 $('#schoolsContent').empty();
                 //Teachers Counter
                 $('#schoolsBadge').text(json.length);
+                //  $('#teachersContent').empty();
                 //Preenche a lista de professores registados( e com estado activo)
                 $.each(json, function (key, data) {
                     //Botao de editar
@@ -176,6 +146,7 @@ window.SchoolsView = Backbone.View.extend({
                         //href: "#teachers/data.doc._id/edit",
                         href: "#schools/" + data.doc._id + "/edit",
                         val: data.doc._id,
+
                         title: "Editar escola",
                     }).append('<i class="fa fa-edit"></i>');
 
@@ -194,29 +165,22 @@ window.SchoolsView = Backbone.View.extend({
                     }).append("<img src=" + data.doc.b64 + "><span>" + data.doc.nome + "</span>")
                         .append($("<div>", {class: "editDeleteOp"}).append($edit, $delete))
                         .click(function () {
-                            self.fillPreview(data.doc);
+                            self.enchePreview(data.doc);
                         });
 
                     $('#schoolsContent').append($div);
                 });
-                self.fillPreview(json[0].doc);
+                self.enchePreview(json[0].doc);
             },
 
             //Error Handling
             function (xhr, ajaxOptions, thrownError) {
-                //Se o erro retornado for de acesso negado, reencaminha o utilizador para a página de login
-                if (JSON.parse(xhr.status)) {
-                    showLoginModal($("#teachersDiv"));
-                }
+
             }
         );
 
         return this;
 
-    },
-
-    //Class Initializer
-    initialize: function () {
     }
 
 });

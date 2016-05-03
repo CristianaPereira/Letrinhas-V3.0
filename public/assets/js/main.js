@@ -241,9 +241,6 @@ var Router = Backbone.Router.extend({
 
     schoolsNew: function () {
         var self = this;
-
-        self.navbar();
-
         templateLoader.load(["SchoolsNew"],
             function () {
                 var v = new SchoolsNew({});
