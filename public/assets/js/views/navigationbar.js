@@ -22,19 +22,21 @@ window.NavigationBarView = Backbone.View.extend({
 
     //Class Initializer
     initialize: function (id) {
+        console.log("ini")
+        this.$el.appendTo('body');
     },
 
     //Class Renderer
     render: function () {
         $(this.el).html(this.template());
-        modem('GET', 'me', function (user) {
-            $("#userName").empty();
-            $("#userName").append(user.nome + ' <i class="fa fa-gear"></i>');
-            console.log("getImg")
-        }, function (error) {
-            console.log('Error getting user ' + window.localStorage.getItem("ProfID"));
-        });
+        $("#userName").empty();
+        $("#userName").append($("<img>", {
+            "src": window.sessionStorage.getItem("imgb64"),
+            width: "40px"
+        }), window.sessionStorage.getItem("name"), ' <i class="fa fa-gear"></i>');
+
         return this;
+
     }
 
 });

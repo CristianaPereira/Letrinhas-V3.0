@@ -1,12 +1,27 @@
 window.SchoolsNew = Backbone.View.extend({
     events: {
         "click #backbtn": "goBack",
+        "blur .emptyField": "isEmpty",
         "submit": "beforeSend",
         "change #filePicker": "convertPhoto",
+<<<<<<< HEAD
+        "click #btnCrop": "getFoto",
+        "mouseover #subEscola": "pop"
+=======
         "click #btnCrop": "getFoto"
+>>>>>>> origin/Cris
     },
+    //Initializes popover content
+    pop: function () {
 
+<<<<<<< HEAD
+        setPopOver("Nome, Morada e Fotografia");
+
+    },
+    //Convert Photo To defined size
+=======
     //Convert Photo To Base64 String
+>>>>>>> origin/Cris
     convertPhoto: function (e) {
         var file = e.target.files[0];
 
@@ -21,7 +36,11 @@ window.SchoolsNew = Backbone.View.extend({
         }
         reader.readAsDataURL(file);
     },
+<<<<<<< HEAD
+    //crops a foto
+=======
     //Recorta a foto
+>>>>>>> origin/Cris
     getFoto: function (e) {
         e.preventDefault();
         var canvas = $("#preview")[0];
@@ -30,42 +49,54 @@ window.SchoolsNew = Backbone.View.extend({
         $("#base64textarea").val(dataUrl);
         $("#iFoto").attr('src', dataUrl);
         $(".cropBG").remove();
+<<<<<<< HEAD
+        $(".profile-pic").removeClass("emptyField");
     },
+
+    //Verifies if an input is empty
+    isEmpty: function (e) {
+        if ($(e.currentTarget).val().length != 0) {
+            $(e.currentTarget).removeClass("emptyField");
+        }
+    },
+
+=======
+    },
+>>>>>>> origin/Cris
 
     //Before Sending Request To Server
     beforeSend: function (e) {
         e.preventDefault();
-        modem('POST', 'schools',
-            //Response Handler
-            function (json) {
-                sucssesMsg($(".form"), "Escola inserida com sucesso!", 1000);
-                setTimeout(function () {
-                    app.navigate("schools/" + json + "/edit", {
-                        trigger: true
-                    });
-                }, 1200);
-            },
 
-            //Error Handling
-            function (xhr, ajaxOptions, thrownError) {
+        //Se algum dos campos estiver vazio
+        var allListElements = $(".mandatory");
+        //Verifies if all inputs are OK
+        var isValid = isFormValid(allListElements);
+        //If they are
+        if (isValid) {
+            modem('POST', 'schools',
+                //Response Handler
+                function (json) {
+                    sucssesMsg($(".form"), "Escola inserida com sucesso!", 1000);
+                    setTimeout(function () {
+                        app.navigate("schools/" + json + "/edit", {
+                            trigger: true
+                        });
+                    }, 1200);
+                },
 
-                console.log(xhr);
-                console.log(ajaxOptions);
-                console.log(thrownError);
+                //Error Handling
+                function (xhr, ajaxOptions, thrownError) {
+                    failMsg($(".form"), "Lamentamos mas não foi possível inserir a escola!", 1000);
+                    console.log(xhr);
+                    console.log(ajaxOptions);
+                    console.log(thrownError);
 
-                //Redirect If Everyting Ok
-                if (xhr.status == 200) {
-                    console.log("School Created Successfully");
-                    app.navigate('schools', {
-                        trigger: true
-                    });
-                }
+                },
 
-            },
-
-            $("#newschoolform").serializeArray()
-        );
-
+                $("#newschoolform").serializeArray()
+            );
+        }
     },
 
     //Cancel New School
@@ -82,6 +113,7 @@ window.SchoolsNew = Backbone.View.extend({
     //Class Renderer
     render: function () {
         $(this.el).html(this.template());
+        $('#infoPop').popover();
         return this;
     }
 });

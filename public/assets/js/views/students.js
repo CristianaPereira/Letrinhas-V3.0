@@ -1,8 +1,12 @@
 window.StudentsView = Backbone.View.extend({
     events: {
         "click #newstudentbtn": "newStudent",
+<<<<<<< HEAD
+=======
         "click #editbtn": "editStudent",
+>>>>>>> origin/Cris
         "click #deletebtn": "deleteStudent",
+        "click .fa-trash-o": "confirmDelete"
     },
 
     //Check Auth
@@ -14,10 +18,24 @@ window.StudentsView = Backbone.View.extend({
         return true;
     },
 
+<<<<<<< HEAD
+    //Solicita confirmação para apagar o professor
+    confirmDelete: function (e) {
+        var id = ($(e.currentTarget).parent().attr("id"));
+        var value = ($(e.currentTarget).parent().attr("value"));
+        console.log(value)
+        var modal = delModal("Apagar aluno",
+            "Tem a certeza que pretende eliminar o aluno <label>" + value + " </label> ?",
+            "deletebtn", $(e.currentTarget).parent().attr("id"));
+
+        $('#studentsDiv').append(modal);
+        $('#modalConfirmDel').modal("show");
+=======
     //Edit Student Navigation
     editStudent: function (e) {
         e.preventDefault();
         app.navigate('students/' + e.target.value, true);
+>>>>>>> origin/Cris
     },
     //Solicita confirmação para apagar o professor
     confirmDelete: function (id, nome) {
@@ -101,6 +119,14 @@ window.StudentsView = Backbone.View.extend({
                 $("#studentsBadge").text(json.length);
                 //Append School Buttons To Template
                 $("#studentsContent").empty();
+<<<<<<< HEAD
+                $.each(json, function (key, data) {
+                    //Botao de editar
+                    var $edit = $("<a>", {
+                        //href: "#teachers/data.doc._id/edit",
+                        href: "#students/" + data.doc._id + "/edit",
+                        value: data.doc._id,
+=======
 
                 $.each(json, function (i) {
 
@@ -109,11 +135,25 @@ window.StudentsView = Backbone.View.extend({
                         //href: "#teachers/data.doc._id/edit",
                         href: "#students/" + this.doc._id + "/edit",
                         val: this.doc._id,
+>>>>>>> origin/Cris
                         title: "Editar aluno",
                     }).append('<i class="fa fa-edit"></i>');
                     //Botao de eliminar
                     var $delete = $("<a>", {
                         href: "#students",
+<<<<<<< HEAD
+                        id: data.doc._id,
+                        value: data.doc.nome,
+                        title: "Apagar aluno",
+                    }).append('<i class="fa fa-trash-o"></i>');
+
+                    var $div = $("<div>", {
+                        class: "listButton divWidget"
+                    }).append("<img src=" + data.doc.b64 + "><span>" + data.doc.nome + "</span>")
+                        .append($("<div>", {class: "editDeleteOp"}).append($edit, $delete))
+                        .click(function () {
+                            self.fillPreview(data.doc);
+=======
                         val: this.doc._id,
                         title: "Apagar aluno",
                     }).append('<i class="fa fa-trash-o"></i>')
@@ -128,6 +168,7 @@ window.StudentsView = Backbone.View.extend({
                         .append($("<div>", {class: "editDeleteOp"}).append($edit, $delete))
                         .click(function () {
                             self.fillPreview(json[i].doc);
+>>>>>>> origin/Cris
                         });
 
                     $("#studentsContent").append($div);
