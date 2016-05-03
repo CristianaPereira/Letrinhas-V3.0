@@ -188,65 +188,6 @@ window.getUserRole = function (permissionLevel) {
     }
 };
 
-window.setPopOver = function (campos) {
-    $('#infoPop').popover({
-        placement: 'left',
-        toggle: 'popover',
-        trigger: "hover",
-        content: '<i class="fa fa-square-o"></i>' +
-        " Todos os campos são de preenchimento obrigatório. <br />" +
-        "(" + campos + ")",
-        html: true
-    });
-};
-
-//Checks if all form inputs are OK
-window.isFormValid = function (elementsList) {
-    var isValid = true;
-    $.each(elementsList, function (key, elem) {
-
-        if (!$(elem).val()) {
-            //Se for o b64, muda a border do pai
-            if ($(elem).is("[type=hidden]")) {
-                $(elem).parent().addClass("emptyField");
-                return;
-            }
-            //Se o elemento for um select
-            if ($(elem).is("select")) {
-                $(elem).parent().addClass("emptyField");
-                $(elem).addClass("emptyField");
-                return;
-            }
-            $(elem).addClass("emptyField");
-            isValid = false;
-            $("#infoPop").css("color", "#c9302c");
-            $('#infoPop').popover("show");
-            setTimeout(function () {
-                $('#infoPop').popover("hide");
-            }, 1500);
-        }
-    });
-    return isValid;
-}
-
-//Checks if an element is ok
-window.isElemValid = function (elem) {
-    if ($(elem).val()) {
-        //Se for o b64, muda a border do pai
-        if ($(elem).is("[type=hidden]")) {
-            $(elem).parent().removeClass("emptyField");
-            return;
-        }
-        //Se o elemento for um select
-        if ($(elem).is("select")) {
-            $(elem).parent().removeClass("emptyField");
-            $(elem).removeClass("emptyField");
-            return;
-        }
-        $(elem).removeClass("emptyField");
-
-    }
-}
 
 //Aperfeiçoamente da funcao ":contains" do JQuery para case insensitive
 //(http://stackoverflow.com/questions/187537/is-there-a-case-insensitive-jquery-contains-selector)
@@ -431,10 +372,6 @@ window.attemptLogin = function () {
 
         //Response Handler
         function (json) {
-            //Guarda o nome a foto
-            window.sessionStorage.setItem("imgb64", json.imgb64);                  //Store Credentials Base64
-            window.sessionStorage.setItem("name", json.nome);                  //Store Credentials Base64
-
             //Hides Login Modal
             $("#mLogin").modal("hide");
             //Reloads actual view
