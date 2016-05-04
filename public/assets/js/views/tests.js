@@ -531,6 +531,8 @@ window.TestsView = Backbone.View.extend({
 
     //Class Initializer
     initialize: function () {
+
+
     },
 
     //Class Renderer
@@ -565,57 +567,57 @@ window.TestsView = Backbone.View.extend({
                     }
 
                     //Select Test Type Image
-                    var $imgT = '';
-                    switch ((this.doc.type).toLowerCase()) {
-                        case 'text':
-                            $imgT = "../img/testeTexto.png";
+                    var imgT = '';
+                    switch (this.doc.tipo) {
+                        case 'Texto':
+                            imgT = "../img/testeTexto.png";
                             break;
-                        case 'list':
-                            $imgT = "../img/testLista.png";
+                        case 'Lista':
+                            imgT = "../img/testLista.png";
                             break;
                         case 'Multimédia':
-                            $imgT = "../img/testMul.png";
+                            imgT = "../img/testMul.png";
                             break;
-                        case 'interpretation':
-                            $imgT = "../img/testInterpretacao.png";
+                        case 'Interpretação':
+                            imgT = "../img/testInterpretacao.png";
                             break;
                         default:
-                            $imgT = "../img/page-loader.gif";
+                            imgT = "../img/page-loader.gif";
                             break;
                     }
-
+                    ;
 
                     //Select Test Class Image
-                    var $imgC = '';
-                    switch ((this.doc.class).toLowerCase()) {
-                        case 'português':
-                            $imgC = "../img/portugues.png";
+                    var imgC = '';
+                    switch (this.doc.disciplina) {
+                        case 'Português':
+                            imgC = "../img/portugues.png";
                             break;
                         case 'Inglês':
-                            $imgC = "../img/ingles.png";
+                            imgC = "../img/ingles.png";
                             break;
                         case 'Matemática':
-                            $imgC = "../img/mate.png";
+                            imgC = "../img/mate.png";
                             break;
                         case 'Estudo do Meio':
-                            $imgC = "../img/estudoMeio.png";
+                            imgC = "../img/estudoMeio.png";
                             break;
                         case 'Outra língua':
-                            $imgC = "../img/outroLinguas2.png";
+                            imgC = "../img/outroLinguas2.png";
                             break;
                         case 'Outra':
-                            $imgC = "../img/outro.png";
+                            imgC = "../img/outro.png";
                             break;
                         default:
-                            $imgC = "../img/page-loader.gif";
+                            imgC = "../img/page-loader.gif";
                             break;
                     }
                     ;
 
                     //Select BG Color
-                    var $color = "#53BDDC";
+                    var color = "#53BDDC";
                     if (this.doc.isMine)
-                        $color = "#60CC60";
+                        color = "#60CC60";
 
                     //Construct Button
                     var $div = $("<button>", {
