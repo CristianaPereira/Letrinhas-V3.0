@@ -1,8 +1,23 @@
 window.StudentsNewView = Backbone.View.extend({
     events: {
         "click #backbtn": "back",
+        "blur .emptyField": "isEmpty",
         "submit": "beforeSend",
         "change #filePicker": "convertPhoto",
+        "click #btnCrop": "getFoto",
+        "mouseover #newstudentbtn": "pop"
+    },
+    //Initializes popover content
+    pop: function () {
+
+        setPopOver("Nome, Número e Turma");
+
+    },
+    //Verifies if an input is empty
+    isEmpty: function (e) {
+        if ($(e.currentTarget).val().length != 0) {
+            $(e.currentTarget).removeClass("emptyField");
+        }
     },
 
     //Check Auth
@@ -12,6 +27,18 @@ window.StudentsNewView = Backbone.View.extend({
             return false;
         }
         return true;
+    },
+
+    //crops a foto
+    getFoto: function (e) {
+        e.preventDefault();
+        var canvas = $("#preview")[0];
+        var dataUrl = canvas.toDataURL('image/jpeg');
+
+        $("#base64textarea").val(dataUrl);
+        $("#iFoto").attr('src', dataUrl);
+        $(".cropBG").remove();
+        $(".profile-pic").removeClass("emptyField");
     },
 
     //Convert Photo To Base64 String
@@ -24,37 +51,12 @@ window.StudentsNewView = Backbone.View.extend({
 
         reader.onload = function (readerEvent) {
             var image = new Image();
-            image.onload = function () {
-
-                //Image Resize
-                var canvas = document.createElement('canvas');
-                var MAX_WIDTH = 450;
-                var MAX_HEIGHT = 350;
-                var width = image.width;
-                var height = image.height;
-
-                if (width > height) {
-                    if (width > MAX_WIDTH) {
-                        height *= MAX_WIDTH / width;
-                        width = MAX_WIDTH;
-                    }
-                } else {
-                    if (height > MAX_HEIGHT) {
-                        width *= MAX_HEIGHT / height;
-                        height = MAX_HEIGHT;
-                    }
-                }
-                canvas.width = width;
-                canvas.height = height;
-                canvas.getContext('2d').drawImage(image, 0, 0, width, height);
-
-                var dataUrl = canvas.toDataURL('image/jpeg');
-                $("#base64textarea").val(dataUrl);
-
-            }
             image.src = readerEvent.target.result;
+            showCropper(".form", image, 300, 1);
+
         }
         reader.readAsDataURL(file);
+
     },
 
     //Return to last visited page
@@ -66,26 +68,31 @@ window.StudentsNewView = Backbone.View.extend({
     //Before Sending Request To Server
     beforeSend: function (e) {
         e.preventDefault();
-
-        //Send Form Via Ajax
-        modem('POST', 'students',
-            //Response Handler
-            function () {
-                sucssesMsg($("#newstudentform"), "Aluno criado com sucesso",2000);
-                setTimeout(function () {
-                    app.navigate('/students', {
-                        trigger: true
-                    });
-                }, 2000);
-            },
-            //Error Handling
-            function (xhr, ajaxOptions, thrownError) {
-                failMsg($("#newstudentform"), "Não foi possível criar o novo aluno. \n (" + JSON.parse(xhr.responseText).error + ").");
-            },
-            //Data To Send
-            $("#newstudentform").serializeArray()
-        );
-
+        //Se algum dos campos estiver vazio
+        var allListElements = $(".mandatory");
+        //Verifies if all inputs are OK
+        var isValid = isFormValid(allListElements);
+        //If they are
+        if (isValid) {
+            //Send Form Via Ajax
+            modem('POST', 'students',
+                //Response Handler
+                function () {
+                    sucssesMsg($("#newstudentform"), "Aluno criado com sucesso", 2000);
+                    setTimeout(function () {
+                        app.navigate('/students', {
+                            trigger: true
+                        });
+                    }, 2000);
+                },
+                //Error Handling
+                function (xhr, ajaxOptions, thrownError) {
+                    failMsg($("#newstudentform"), "Não foi possível criar o novo aluno. \n (" + JSON.parse(xhr.responseText).error + ").");
+                },
+                //Data To Send
+                $("#newstudentform").serializeArray()
+            );
+        }
 
     },
 

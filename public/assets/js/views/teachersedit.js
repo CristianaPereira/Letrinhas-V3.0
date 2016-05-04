@@ -99,7 +99,7 @@ window.TeachersEditView = Backbone.View.extend({
 
 
             image.src = readerEvent.target.result;
-            showCropper("#editTeacherView", image, 600, 300, 1);
+            showCropper("#editTeacherView", image, 300, 1);
             console.log(image.src);
 
         }

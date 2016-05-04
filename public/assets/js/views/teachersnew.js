@@ -12,7 +12,7 @@ window.TeachersNewView = Backbone.View.extend({
 
     //Exibe o cropper
     photoCropper: function () {
-        showCropper("#newteacherform", 600, 300, 300, 1);
+        showCropper("#newteacherform", 600, 300, 1);
     },
     //Recorta a foto
     getFoto: function (e) {

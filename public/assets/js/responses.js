@@ -68,7 +68,7 @@ window.delModal = function (title, content, option, value) {
         '            <p class="infoP" ><b>Atenção</b> : Esta acção não poderá ser revertida.</p>' +
         '        </div>' +
         '        <div class="modal-footer">' +
-        '            <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>' +
+        '            <button type="button" class="btn btn-default" onClick=' + rmvDelModal() + ' data-dismiss="modal">Cancelar</button>' +
         '            <button id="' + option + '" value="' + value + '" type="button" class="btn btn-danger"> Apagar' +
         '               <span class="glyphicon glyphicon glyphicon-trash"></span>' +
         '            </button>' +
@@ -77,4 +77,12 @@ window.delModal = function (title, content, option, value) {
         '</div>';
 
     return code;
-}
+};
+
+window.rmvDelModal = function () {
+    console.log("df");
+    $('#modalConfirmDel').remove();x
+
+
+
+};
