@@ -21,6 +21,7 @@ var schools = require('./routes/schools'),
     teachers = require('./routes/teachers'),
     students = require('./routes/students'),
     tests = require('./routes/tests'),
+    resolutions = require('./routes/resolutions'),
     questions = require('./routes/questions'),
     submissions = require('./routes/submissions'),
     fileHandler = require('./routes/fileHandler');
@@ -209,6 +210,9 @@ app.route('/questions/:id')
 app.route('/tests')
     .get(auth, tself, perms(2), tests.getAll);
 
+//Resolutions
+app.route('/resolutions')
+    .get(auth, tself, perms(2), resolutions.getAll);
 
 //This Needs To Be Revised
 app.route('/schools/class')

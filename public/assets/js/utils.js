@@ -188,6 +188,65 @@ window.getUserRole = function (permissionLevel) {
     }
 };
 
+window.setPopOver = function (campos) {
+    $('#infoPop').popover({
+        placement: 'left',
+        toggle: 'popover',
+        trigger: "hover",
+        content: '<i class="fa fa-square-o"></i>' +
+        " Todos os campos são de preenchimento obrigatório. <br />" +
+        "(" + campos + ")",
+        html: true
+    });
+};
+
+//Checks if all form inputs are OK
+window.isFormValid = function (elementsList) {
+    var isValid = true;
+    $.each(elementsList, function (key, elem) {
+
+        if (!$(elem).val()) {
+            //Se for o b64, muda a border do pai
+            if ($(elem).is("[type=hidden]")) {
+                $(elem).parent().addClass("emptyField");
+                return;
+            }
+            //Se o elemento for um select
+            if ($(elem).is("select")) {
+                $(elem).parent().addClass("emptyField");
+                $(elem).addClass("emptyField");
+                return;
+            }
+            $(elem).addClass("emptyField");
+            isValid = false;
+            $("#infoPop").css("color", "#c9302c");
+            $('#infoPop').popover("show");
+            setTimeout(function () {
+                $('#infoPop').popover("hide");
+            }, 1500);
+        }
+    });
+    return isValid;
+}
+
+//Checks if an element is ok
+window.isElemValid = function (elem) {
+    if ($(elem).val()) {
+        //Se for o b64, muda a border do pai
+        if ($(elem).is("[type=hidden]")) {
+            $(elem).parent().removeClass("emptyField");
+            return;
+        }
+        //Se o elemento for um select
+        if ($(elem).is("select")) {
+            $(elem).parent().removeClass("emptyField");
+            $(elem).removeClass("emptyField");
+            return;
+        }
+        $(elem).removeClass("emptyField");
+
+    }
+}
 
 //Aperfeiçoamente da funcao ":contains" do JQuery para case insensitive
 //(http://stackoverflow.com/questions/187537/is-there-a-case-insensitive-jquery-contains-selector)
@@ -283,13 +342,25 @@ window.showLoginModal = function (form) {
 
 //Mostra o formulário de login no form indicado
 //showCropper("nomeFormulario/div", maxWidth da tela, Width do resultado, height do resultado , ratio (1=quadrado) (16/9=rectangulo);
-window.showCropper = function (form, base_image, maxWidth, resWidth, aspectRatio) {
+window.showCropper = function (form, base_image, resWidth, aspectRatio) {
+
+    console.log(base_image.height);
+    console.log(base_image.width);
+
+    //Se a imagem for verticalmente maior
+    if (base_image.width < base_image.height) {
+        var maxHeight = 300;
+        var maxWidth = base_image.width * maxHeight / base_image.height;
+    } else {
+        var maxWidth = 400;
+        var maxHeight = base_image.height * maxWidth / base_image.width;
+    }
 
     //Carrega
     var resHeight = resWidth / aspectRatio;
 
     base_image.onload = function () {
-        var height = base_image.height * maxWidth / base_image.width;
+
         var $cropperModal = $("<div>", {
             id: "cropperPanel",
             class: "panel panel-info",
@@ -309,7 +380,7 @@ window.showCropper = function (form, base_image, maxWidth, resWidth, aspectRatio
                 // MODAl HEATHER
             )).append(
             $("<div>", {class: "panel-body"}).append(
-                '<div><canvas id="viewport" width="' + maxWidth + '" height="' + height + '" ></canvas>' +
+                '<div><canvas id="viewport" width="' + maxWidth + '" height="' + maxHeight + '" ></canvas>' +
                 '<canvas id="preview" width="' + resWidth + 'px" height="' + resHeight + 'px" style="display: none;"></canvas></div>'
             )
         ).append(
@@ -325,7 +396,7 @@ window.showCropper = function (form, base_image, maxWidth, resWidth, aspectRatio
             context = canvas.getContext('2d');
 
 
-        context.drawImage(base_image, 0, 0, base_image.width, base_image.height, 0, 0, maxWidth, height);
+        context.drawImage(base_image, 0, 0, base_image.width, base_image.height, 0, 0, maxWidth, maxHeight);
 
 
         //-------
