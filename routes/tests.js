@@ -17,7 +17,7 @@ exports.upDate = function (req, res) {
     res.redirect('/#tests');
 };
 
-exports.new = function (req, res) {
+exports.newOld = function (req, res) {
     console.log('Tests new,'.green);
     var dati = new Date();
     var idTeste = 'T' + dati.getTime();
@@ -118,7 +118,7 @@ exports.getAll = function (req, res) {
 
             for (var i in body.rows) {
 
-                if (body.rows[i].doc.professorId && body.rows[i].doc.professorId == user)
+                if (body.rows[i].doc.profID && body.rows[i].doc.profID == user)
                     body.rows[i].doc.isMine = true;
 
             }
@@ -142,4 +142,46 @@ exports.getAll = function (req, res) {
         }
 
     });
+};
+
+exports.new = function (req, res) {
+    console.log('Tests new,'.green);
+    var dati = new Date();
+    var idTeste = 'T' + dati.getTime();
+
+    var perguntas = new Array();
+
+    for (var i = 0; i < req.body.nPrg; i++) {
+        perguntas[i] = req.body['p' + i];
+    }
+
+    console.log("Perguntas: " + perguntas);
+    var teste = {
+        "titulo": req.body.titulo,
+        "descricao": req.body.descricao,
+        "disciplina": req.body.disciplina,
+        "anoEscolar": req.body.ano_escolar,
+        "perguntas": perguntas,
+        "data": dati,
+        "estado": true,
+        "professorId": req.body.profID,
+        "tipo": req.body.tipo,
+        "nRepeticoes": req.body.nRepeticoes,
+    };
+
+    console.log(teste);
+
+    db.insert(teste, idTeste, function (err, body) {
+        if (err) {
+            console.log('test new, an error ocourred'.red);
+            return res.status(500).json({
+                'result': 'nok',
+                'message': err
+            });
+        }
+        console.log('New test added'.green);
+        res.redirect('/#tests');
+
+    });
+
 };
