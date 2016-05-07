@@ -2,11 +2,19 @@ window.QuestionsTextNew = Backbone.View.extend({
     events: {
         "click #showEqualizer": "showEqualizer",
         "click #record": "initRecord",
+        "keyup #txtSearch": "searchTests",
         "click #backbtn": "goBack",
         "change #uploadSoundFile": "uploadSoundFile",
-        "submit": "beforeSend"
+        "blur .emptyField": "isEmpty",
+        "submit": "beforeSend",
+        "mouseover #subTxt": "pop"
     },
+    //Initializes popover content
+    pop: function () {
 
+        setPopOver("Titulo, Discuplina, Ano escolar, Pergunta, Descrição, Texto e Audio");
+
+    },
     //Check Auth
     auth: function () {
         if (!window.sessionStorage.getItem("keyo")) {
@@ -16,27 +24,45 @@ window.QuestionsTextNew = Backbone.View.extend({
         return true;
     },
 
+    //Search School
+    searchSchool: function (e) {
+
+        $(".listButton").hide();
+        $(".listButton:containsi(" + $(e.currentTarget).val() + ")").show();
+
+    },
+
     //Go back to the last visited page
     goBack: function (e) {
         e.preventDefault();
         window.history.back();
     },
-
-    //Before Sending Request To Server
-    beforeSend: function (e){
-        e.preventDefault();
-
-        modem('POST', 'questions',
-            function (json) {
-            },
-            //Error Handling
-            function (xhr, ajaxOptions, thrownError) {
-            },
-            new FormData($("#newTextTestForm")[0])
-        );
-        
+    //Verifies if an input is empty
+    isEmpty: function (e) {
+        if ($(e.currentTarget).val().length != 0) {
+            $(e.currentTarget).removeClass("emptyField");
+        }
     },
-    
+    //Before Sending Request To Server
+    beforeSend: function (e) {
+        e.preventDefault();
+        //Se algum dos campos estiver vazio
+        var allListElements = $(".mandatory");
+        //Verifies if all inputs are OK
+        var isValid = isFormValid(allListElements);
+        //If they are
+        if (isValid) {
+            modem('POST', 'questions',
+                function (json) {
+                },
+                //Error Handling
+                function (xhr, ajaxOptions, thrownError) {
+                },
+                new FormData($("#newTextTestForm")[0])
+            );
+        }
+    },
+
     //Show Voice Recorder Equalizer
     showEqualizer: function (e) {
         e.preventDefault();
@@ -65,10 +91,11 @@ window.QuestionsTextNew = Backbone.View.extend({
     },
 
     //Upload Sound File
-    uploadSoundFile: function(){
+    uploadSoundFile: function () {
         var files = $("#uploadSoundFile").prop('files');
         $("#soundPath")
             .attr("placeholder", files[0].name)
+            .attr("value", files[0].name)
             .css('border', 'solid 1px #cccccc');
     },
 
@@ -89,9 +116,12 @@ window.QuestionsTextNew = Backbone.View.extend({
             return false;
         }
 
+        getCategories();
+
         $(this.el).html(this.template());
         return this;
 
     },
 
-});
+})
+;

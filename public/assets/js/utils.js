@@ -1,7 +1,32 @@
 /**
  * Created by Cris on 17/03/2016.
  */
+/*
 
+ $("<div>", { class: "col-md-8 col-sm-8" }
+ */
+
+
+/*
+ modem('GET', 'me',
+
+ //Response Handler
+ function (json) {
+ $.each(json, function (i, key) {
+ });
+
+
+ },
+
+ //Error Handling
+ function (xhr, ajaxOptions, thrownError) {
+ }
+ );
+
+
+
+
+ */
 //Populates schools and classes dropdowns ( for edit and new teacher)
 window.populateDDSchools = function () {
     //Get Schools If User Has Required Permissions
@@ -187,7 +212,65 @@ window.getUserRole = function (permissionLevel) {
             return "Utilizador";
     }
 };
+window.getCategories = function () {
+    //Gets all registed categories
+    modem('GET', 'category',
 
+        //Response Handler
+        function (json) {
+
+            $.each(json, function (i, key) {
+                console.log(key.doc);
+                $("#selectSubject").append($("<option>", {html: key.doc.subject, id: key.doc._id, value: key.doc._id}));
+
+                //Populates dd with the contents of selects subject
+                var myEl = document.getElementById('selectSubject');
+
+                myEl.addEventListener('change', function () {
+                    var selectedSubject = $(this).children(":selected").attr("id");
+                    if (key.doc._id === selectedSubject) {
+                        //Limpa a dd
+                        $("#selectContent").html("");
+                        $.each(key.doc.content, function (id, content) {
+                            $("#selectContent").append($("<option>", {
+                                html: content.name,
+                                id: content._id,
+                                value: content._id
+                            }));
+                        });
+                    }
+                }, false);
+
+                //Populates dd with the contents of selects subject
+                var myEll = document.getElementById('selectContent');
+                myEll.addEventListener('change', function () {
+                    var selectedSubject = $("#selectSubject").children(":selected").attr("id");
+                    var selectedContent = $(this).children(":selected").attr("id");
+                    if (key.doc._id === selectedSubject) {
+                        //Limpa a dd
+                        $("#selectSpecification").html("");
+                        $.each(key.doc.content, function (id, content) {
+                            if (content._id === selectedContent) {
+                                $.each(content.specification, function (ids, specif) {
+                                    $("#selectSpecification").append($("<option>", {
+                                        html: specif.name,
+                                        id: specif._id,
+                                        value: specif._id
+                                    }));
+                                });
+                            }
+                        });
+                    }
+                }, false);
+
+            });
+        },
+
+        //Error Handling
+        function (xhr, ajaxOptions, thrownError) {
+        }
+    );
+};
 window.setPopOver = function (campos) {
     $('#infoPop').popover({
         placement: 'left',
@@ -481,4 +564,4 @@ window.sortJsonByCol = function (property) {
         return sortStatus;
     };
 
-}
+};

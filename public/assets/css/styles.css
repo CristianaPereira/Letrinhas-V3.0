@@ -288,11 +288,12 @@ a {
     padding: 0 50px;
 }
 
+/*
 .form-control {
     height: 30px;
     padding: 5px 10px;
 }
-
+*/
 .formBar {
     background-color: #b0aac2;
     margin-bottom: 0px;
@@ -322,10 +323,11 @@ a {
     padding: 20px;
 }
 
+/*
 .form-control {
     padding-right: 30px;
 }
-
+*/
 .form-control + .glyphicon {
     position: absolute;
     right: 0;
@@ -944,4 +946,11 @@ option:hover {
 
 .jcrop-holder {
     margin: auto;
+}
+
+.questBox {
+    padding: 15px;
+    margin: 15px;
+    border-radius: 5px;
+    border: 1px solid #8FA7A5;
 }

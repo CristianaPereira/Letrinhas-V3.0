@@ -1,7 +1,6 @@
 require('colors');
 
 var nano = require('nano')(process.env.COUCHDB);
-var db = nano.use('dev_testes');
 var db2 = nano.use('dev_perguntas');
 
 var fs = require('fs-extra'),       //File System - for file manipulation
@@ -391,7 +390,7 @@ exports.newOld = function (req, res) {
 exports.getAll = function (req, res) {
     console.log('all questions'.green);
 
-    db.list({'include_docs': true, 'limit': undefined, 'descending': true}, function (err, body) {
+    db2.list({'include_docs': true, 'limit': undefined, 'descending': true}, function (err, body) {
         if (err) {
             return res.status(500).json({
                 'result': 'nok',
@@ -802,38 +801,23 @@ exports.new = function (req, res) {
 
 exports.test = function (req, res) {
 
+    console.log("Inserting new Question");
     console.log(req.body);
+    console.log(req.body.content);
 
-    if(req.body.filePath){
+    if (req.body.filePath) {
         //Date And ID's Generator
         var $date = new Date();
         var $idQuest = 'Q' + $date.getTime();
-        var $idTest = 'T' + $date.getTime();
-
         //Image Data Sync
         var $imgData = fs.readFileSync(req.body.filePath);
 
         //Check if File is a MP3 File
         if ((mime.lookup(req.body.filePath)).startsWith("audio")) {
-
-            //Test Object
-            var $test = {
-                "title": req.body.title,
-                "class": req.body.class,
-                "schoolYear": req.body.schoolYear,
-                "nRepetitions": 0,
-                "description": req.body.description,
-                "questions": {0: $idQuest},
-                "state": Boolean(req.body.state),
-                "type": req.body.type,
-                "profID": req.params.id,
-                "creationDate": $date
-            };
-
             //Test Question
             var $question = {
                 "title": req.body.title,
-                "class": req.body.class,
+                "subject": req.body.subject + ":" + req.body.content + ":" + req.body.specification,
                 "schoolYear": req.body.schoolYear,
                 "question": req.body.question,
                 "description": req.body.description,
@@ -869,7 +853,7 @@ exports.test = function (req, res) {
                     //Iterate SID's
                     $question.content["sid"] = [];
                     var $sid = req.body.sid.split(',');
-                    for(var i in $sid){
+                    for (var i in $sid) {
                         $question.content.sid.push($sid[i]);
                     }
 
@@ -879,30 +863,23 @@ exports.test = function (req, res) {
                     break;
             }
 
-            //Insert Test in DB
-            db.insert($test, $idTest, function (err, body) {
+
+            db2.multipart.insert($question, [{
+                name: 'voice.mp3',
+                data: $imgData,
+                content_type: 'audio/mp3'
+            }], $idQuest, function (err, body) {
                 if (err) {
-                    console.log('Test new, an error ocourred'.green);
+                    console.log('questions new, an error ocourred'.green);
                     res.send(500);
                 }
                 else {
-                    db2.multipart.insert($question, [{
-                        name: 'voice.mp3',
-                        data: $imgData,
-                        content_type: 'audio/mp3'
-                    }], $idQuest, function (err, body) {
-                        if (err) {
-                            console.log('questions new, an error ocourred'.green);
-                            res.send(500);
-                        }
-                        else {
-                            console.log('New Test Added'.red);
-                        }
-
-                    });
+                    console.log('New Test Added'.red);
                 }
+
             });
 
+            console.log("New Question");
         }
         else {
             console.log("Invalid File Type");
@@ -916,7 +893,7 @@ exports.test = function (req, res) {
 };
 
 
-function wordPrefix($col){
+function wordPrefix($col) {
     var $col = ($col)
         .replace(/(\r\n|\n|\r)/gm, " ")  //Replaces all 3 types of line breaks with a space
         .replace(/\s+/g, " ")            //Replace all double white spaces with single spaces
