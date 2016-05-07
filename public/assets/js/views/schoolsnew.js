@@ -7,12 +7,12 @@ window.SchoolsNew = Backbone.View.extend({
         "click #btnCrop": "getFoto",
         "mouseover #subEscola": "pop"
     },
+
     //Initializes popover content
     pop: function () {
-
         setPopOver("Nome, Morada e Fotografia");
-
     },
+
     //Convert Photo To defined size
     convertPhoto: function (e) {
         var file = e.target.files[0];

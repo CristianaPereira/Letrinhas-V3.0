@@ -39,6 +39,8 @@ window.SchoolsView = Backbone.View.extend({
     //Solicita confirmação para apagar o professor
     confirmDelete: function (id, nome) {
 
+
+
         var modal = delModal("Apagar escola",
             "Tem a certeza que pretende eliminar a escola <label>" + nome + " </label> ?",
             "deletebtn", id);
@@ -73,6 +75,7 @@ window.SchoolsView = Backbone.View.extend({
         $(".listButton:containsi(" + $(e.currentTarget).val() + ")").show();
 
     },
+
     enchePreview: function (schoolData) {
         var self = this;
         console.log(schoolData);
@@ -115,6 +118,7 @@ window.SchoolsView = Backbone.View.extend({
         //getAssocClasses(teacherData._id, teacherData.nome, false);
 
     },
+
     //Class Initializer
     initialize: function () {
     },

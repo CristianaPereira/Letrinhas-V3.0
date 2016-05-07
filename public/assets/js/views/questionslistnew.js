@@ -23,8 +23,9 @@ window.QuestionsListNew = Backbone.View.extend({
     },
 
     //Before Sending Request To Server
-    beforeSend: function (e){
+    beforeSend: function (e) {
         e.preventDefault();
+        console.log(new FormData($("#newListTestForm")[0]))
 
         modem('POST', 'questions',
             function (json) {
@@ -65,7 +66,7 @@ window.QuestionsListNew = Backbone.View.extend({
     },
 
     //Upload Sound File
-    uploadSoundFile: function(){
+    uploadSoundFile: function () {
         var files = $("#uploadSoundFile").prop('files');
         $("#soundPath")
             .attr("placeholder", files[0].name)
@@ -74,7 +75,8 @@ window.QuestionsListNew = Backbone.View.extend({
 
 
     //Class Initializer
-    initialize: function () {},
+    initialize: function () {
+    },
 
     //Class Renderer
     render: function () {

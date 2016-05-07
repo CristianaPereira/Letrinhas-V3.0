@@ -146,6 +146,7 @@ exports.getAll = function (req, res) {
 
 exports.new = function (req, res) {
     console.log('Tests new,'.green);
+    console.log(req.body)
     var dati = new Date();
     var idTeste = 'T' + dati.getTime();
 

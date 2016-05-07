@@ -21,6 +21,7 @@ var schools = require('./routes/schools'),
     teachers = require('./routes/teachers'),
     students = require('./routes/students'),
     tests = require('./routes/tests'),
+    category = require('./routes/category'),
     resolutions = require('./routes/resolutions'),
     questions = require('./routes/questions'),
     submissions = require('./routes/submissions'),
@@ -82,7 +83,7 @@ router.use(function (req, res, next) {
         });
 
     }
-    else{
+    else {
         next();
     }
 
@@ -205,6 +206,9 @@ app.route('/questions')
 
 app.route('/questions/:id')
     .get(auth, perms(2), questions.get);
+
+app.route('/category')
+    .get(auth, perms(2), category.getAll);
 
 //Tests
 app.route('/tests')
