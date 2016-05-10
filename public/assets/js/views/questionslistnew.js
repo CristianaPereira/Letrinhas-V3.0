@@ -26,6 +26,17 @@ window.QuestionsListNew = Backbone.View.extend({
     beforeSend: function (e) {
         e.preventDefault();
         console.log(new FormData($("#newListTestForm")[0]))
+        //Recolhe as listas
+        var wordsLists = $(".list");
+        var lists = [];
+        //Adiciona as listas que estivrem preenchidas
+        $.each(wordsLists, function (i, list) {
+            //Se a coluna não estiver vazia, separa as palavras para um array
+            if ($(list).val()) {
+                lists.push({words: $(list).val().replace(/\n/g, " ").split(" ")});
+            }
+        });
+        $("#columns").val(JSON.stringify(lists));
 
         modem('POST', 'questions',
             function (json) {
@@ -86,7 +97,7 @@ window.QuestionsListNew = Backbone.View.extend({
         if (!self.auth()) {
             return false;
         }
-
+        getCategories();
         $(this.el).html(this.template());
         return this;
     },

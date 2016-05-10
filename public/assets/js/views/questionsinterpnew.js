@@ -34,7 +34,7 @@ window.QuestionsInterpNew = Backbone.View.extend({
 
         //Generate Answers Locations
         var $sid = [];
-        $("#inputPanel").find(".badge").each(function(){
+        $("#inputPanel").find(".badge").each(function () {
             $sid.push((this.id).substring(3));
         });
 
@@ -87,7 +87,7 @@ window.QuestionsInterpNew = Backbone.View.extend({
     },
 
     //Finalize Text Marking
-    writeText: function(e){
+    writeText: function (e) {
         e.preventDefault();
 
         $("#inputTextArea").show();
@@ -106,15 +106,6 @@ window.QuestionsInterpNew = Backbone.View.extend({
 
         alert("Atenção: \nMarcar o texto deve ser um processo final. \nCaso altere o texto ou pretenda remarcar o mesmo, todas as marcações anteriores serão removidas!");
 
-        // var $text = $("#inputTextArea").val();
-        // var $words = $("#inputTextArea").val()
-        //     .replace(/(\r\n|\n|\r)/gm, " ")  //Replaces all 3 types of line breaks with a space
-        //     .replace(/\s+/g, " ")            //Replace all double white spaces with single spaces
-        //     .split(" ");
-        //
-        // //Make Array Unique
-        // $words = self.unique($words);
-
         var $words = $("#inputTextArea").val()
             .replace(/(\r\n|\n|\r)/gm, "<br>")  //Replaces all 3 types of line breaks with a space
             .replace(/\s+/g, " ")            //Replace all double white spaces with single spaces
@@ -123,15 +114,14 @@ window.QuestionsInterpNew = Backbone.View.extend({
         var $result = [];
 
         //Replace String With Selectable Span
-        for(var i in $words){
-            if($words[i] == "<br>")
+        for (var i in $words) {
+            if ($words[i] == "<br>")
                 $result.push("<br>");
             else
-                $result.push("<span id='sid" + i +"' class='selectable'>" + $words[i] + "</span>");
+                $result.push("<span id='sid" + i + "' class='selectable'>" + $words[i] + "</span>");
         }
 
         $("#inputPanel").append($result.join(' '));
-
 
         $("#inputTextArea").hide();
         $("#markText").hide();
@@ -169,6 +159,7 @@ window.QuestionsInterpNew = Backbone.View.extend({
             return false;
         }
 
+        getCategories();
         $(this.el).html(this.template());
         return this;
     },

@@ -110,7 +110,7 @@ window.SchoolsEdit = Backbone.View.extend({
                     failMsg($("#schooleditform"), "Não foi possível editar a escola. \n (" + JSON.parse(xhr.responseText).error + ").");
                 },
 
-                $("#schooleditform").serializeArray()
+                new FormData($("#schooleditform")[0])
             );
         }
     },

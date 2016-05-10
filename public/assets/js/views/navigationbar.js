@@ -31,6 +31,7 @@ window.NavigationBarView = Backbone.View.extend({
             $("#userName").empty();
             $("#userName").append(user.nome + ' <i class="fa fa-gear"></i>');
             console.log("getImg")
+            window.sessionStorage.setItem("username", user._id);
         }, function (error) {
             console.log('Error getting user ' + window.localStorage.getItem("ProfID"));
         });

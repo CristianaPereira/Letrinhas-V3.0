@@ -27,6 +27,53 @@
 
 
  */
+
+//Faz shuffle das posicoes dos elementos Dom
+//https://css-tricks.com/snippets/jquery/shuffle-dom-elements/
+(function ($) {
+
+    $.fn.shuffle = function () {
+
+        var allElems = this.get(),
+            getRandom = function (max) {
+                return Math.floor(Math.random() * max);
+            },
+            shuffled = $.map(allElems, function () {
+                var random = getRandom(allElems.length),
+                    randEl = $(allElems[random]).clone(true)[0];
+                allElems.splice(random, 1);
+                return randEl;
+            });
+
+        this.each(function (i) {
+            $(this).replaceWith($(shuffled[i]));
+        });
+
+        return $(shuffled);
+
+    };
+
+})(jQuery);
+
+window.orderContentList = function (mylist, e) {
+    var listitems = mylist.children('div').get();
+
+    listitems.sort(function (a, b) {
+        return $(a).children('span').text().toUpperCase().localeCompare($(b).children('span').text().toUpperCase());
+    });
+    //ordenar de forma descendente/ascendente
+    if (!$(e.currentTarget).children('i').hasClass("fa-sort-alpha-asc")) {
+        listitems = listitems.reverse();
+        $(e.currentTarget).children('i').addClass("fa-sort-alpha-asc")
+        $(e.currentTarget).children('i').removeClass("fa-sort-alpha-desc")
+    } else {
+        $(e.currentTarget).children('i').removeClass("fa-sort-alpha-asc")
+        $(e.currentTarget).children('i').addClass("fa-sort-alpha-desc")
+    }
+    $.each(listitems, function (index, item) {
+        mylist.append(item);
+    });
+};
 //Populates schools and classes dropdowns ( for edit and new teacher)
 window.populateDDSchools = function () {
     //Get Schools If User Has Required Permissions
@@ -212,6 +259,7 @@ window.getUserRole = function (permissionLevel) {
             return "Utilizador";
     }
 };
+
 window.getCategories = function () {
     //Gets all registed categories
     modem('GET', 'category',
@@ -271,6 +319,7 @@ window.getCategories = function () {
         }
     );
 };
+
 window.setPopOver = function (campos) {
     $('#infoPop').popover({
         placement: 'left',
@@ -425,11 +474,7 @@ window.showLoginModal = function (form) {
 
 //Mostra o formulário de login no form indicado
 //showCropper("nomeFormulario/div", maxWidth da tela, Width do resultado, height do resultado , ratio (1=quadrado) (16/9=rectangulo);
-window.showCropper = function (form, base_image, resWidth, aspectRatio) {
-
-    console.log(base_image.height);
-    console.log(base_image.width);
-
+window.showCropper = function (form, base_image, resWidth, aspectRatio, result) {
     //Se a imagem for verticalmente maior
     if (base_image.width < base_image.height) {
         var maxHeight = 300;
@@ -470,7 +515,7 @@ window.showCropper = function (form, base_image, resWidth, aspectRatio) {
             $("<div>", {}).append(
                 $("<button>", {
                     type: "submit", id: "btnCrop", class: "btn btn-lg btn-login btn-block",
-                    text: "Recortar"
+                    text: "Recortar", value: result
                 })
             ));
         $(form).append($("<div>", {class: 'cropBG'}).append($cropperModal));
