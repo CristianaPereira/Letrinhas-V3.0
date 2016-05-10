@@ -7,19 +7,10 @@ window.TeachersView = Backbone.View.extend({
         "click #orderBy": "orderProfs"
     },
 
-    orderProfs: function () {
+    orderProfs: function (e) {
         var mylist = $('#teachersContent');
 
-        var listitems = mylist.children('div').get();
-
-        listitems.sort(function (a, b) {
-            console.log($(a).children('span').text());
-            return $(a).children('span').text().toUpperCase().localeCompare($(b).children('span').text().toUpperCase());
-        });
-
-        $.each(listitems, function (index, item) {
-            mylist.append(item);
-        });
+        orderContentList(mylist, e);
     },
     //filtra os profs que correspondem à pesquisa (case insensitive)
     searchProf: function (e) {

@@ -77,8 +77,7 @@ window.SchoolsNew = Backbone.View.extend({
                     console.log(thrownError);
 
                 },
-
-                $("#newschoolform").serializeArray()
+                new FormData($("#newschoolform")[0])
             );
         }
     },

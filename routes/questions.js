@@ -52,341 +52,6 @@ exports.upDate = function (rep, res) {
     });
 };
 
-exports.newOld = function (req, res) {
-    console.log('questions new, allmost completeeeeee!'.yellow);
-
-    var dati = new Date();
-    var idPerg = 'P' + dati.getTime();
-    var idTeste = 'T' + dati.getTime();
-    var pergunta;
-
-    switch (req.body.tipo) {
-        case "Texto":
-            pergunta = {
-                "anoEscolar": req.body.ano_escolar,
-                "titulo": req.body.titulo,
-                "disciplina": req.body.disciplina,
-                "pergunta": req.body.pergunta,
-                "conteudo": {
-                    "texto": req.body.texto,
-                },
-                "tipoTeste": req.body.tipo,
-                "dataCri": dati,
-                "estado": true,
-                "profID": req.body.profID,
-            };
-            var teste = {
-                "titulo": req.body.titulo,
-                "descricao": req.body.descricao,
-                "disciplina": req.body.disciplina,
-                "anoEscolar": req.body.ano_escolar,
-                "perguntas": [idPerg],
-                "data": dati,
-                "estado": true,
-                "professorId": req.body.profID,
-                "tipo": req.body.tipo,
-                "nRepeticoes": 0,
-            };
-
-            var file;
-            if (req.files) file = req.files.file;
-
-            var imgData = require('fs').readFileSync(file.path);
-
-            db.multipart.insert(pergunta, [{
-                name: 'voz.mp3',
-                data: imgData,
-                content_type: 'audio/mp3'
-            }], idPerg, function (err, body) {
-                if (err) {
-                    console.log('questions new, an error ocourred'.green);
-
-                    return res.status(500).json({
-                        'result': 'nok',
-                        'message': err
-                    });
-                }
-                console.log("Aqui mesmo!!");
-                console.log('questions added'.red);
-                //res.json(body);
-                //res.json({'result': 'ok'});
-                res.redirect('/#tests');
-            });
-
-            db2.insert(teste, idTeste, function (err, body) {
-                if (err) {
-                    console.log('questions new, an error ocourred'.green);
-
-                    return res.status(500).json({
-                        'result': 'nok',
-                        'message': err
-                    });
-                }
-                console.log('teste added'.green);
-
-            });
-
-            break;
-        case "Lista":
-            pergunta = {
-                "anoEscolar": req.body.ano_escolar,
-                "titulo": req.body.titulo,
-                "disciplina": req.body.disciplina,
-                "pergunta": req.body.pergunta,
-                "conteudo": {
-                    "palavrasCL1": getPalavras(req.body.cl1),
-                    "palavrasCL2": getPalavras(req.body.cl2),
-                    "palavrasCL3": getPalavras(req.body.cl3),
-                },
-                "tipoTeste": req.body.tipo,
-                "dataCri": dati,
-                "estado": true,
-                "professorId": req.body.profID,
-
-            };
-            var teste = {
-                "titulo": req.body.titulo,
-                "descricao": req.body.descricao,
-                "disciplina": req.body.disciplina,
-                "anoEscolar": req.body.ano_escolar,
-                "perguntas": [idPerg],
-                "data": dati,
-                "estado": true,
-                "professorId": req.body.profID,
-                "tipo": req.body.tipo,
-                "nRepeticoes": 0,
-            };
-
-            var file;
-            if (req.files) file = req.files.file;
-
-            var imgData = require('fs').readFileSync(file.path);
-
-            db.multipart.insert(pergunta, [{
-                name: 'voz.mp3',
-                data: imgData,
-                content_type: 'audio/mp3'
-            }], idPerg, function (err, body) {
-                if (err) {
-                    console.log('questions new, an error ocourred'.green);
-
-                    return res.status(500).json({
-                        'result': 'nok',
-                        'message': err
-                    });
-                }
-                console.log('new question added'.red);
-                //res.json(body);
-                //res.json({'result': 'ok'});
-                res.redirect('/#tests');
-            });
-
-            db2.insert(teste, idTeste, function (err, body) {
-                if (err) {
-                    console.log('questions new, an error ocourred'.green);
-
-                    return res.status(500).json({
-                        'result': 'nok',
-                        'message': err
-                    });
-                }
-                console.log('teste added'.green);
-            });
-            break;
-        case "Multimédia":
-            var opcoes = new Array();
-            var anexos = new Array();
-            for (i = 0; i < req.body.numResp; i++) {
-                var cntd;
-                switch (req.body.MtipoResp) {
-                    case 'texto':
-                        cntd = req.body['resposta' + i];
-                        break;
-                    case 'imagem':
-                        cntd = "";
-
-                        var file;
-                        if (req.files) file = req.files['resposta' + i];
-
-                        var imgData = require('fs').readFileSync(file.path);
-
-                        var anx = {
-                            name: 'op' + (i + 1) + '.jpg',
-                            data: imgData,
-                            content_type: 'image/jpg'
-                        };
-                        anexos.push(anx);
-                        break;
-                    default:
-                }
-                var op = {
-                    "tipo": req.body.MtipoResp,
-                    "conteudo": cntd,
-                };
-                opcoes.push(op);
-            }
-
-            var conteudo;
-            switch (req.body.MtipoPerg) {
-                case 'texto':
-                    conteudo = {
-                        "idCategoria": 0,
-                        "tipoDoCorpo": req.body.MtipoPerg,
-                        "corpo": req.body.corpo,
-                        "opcoes": opcoes,
-                        "opcaoCerta": 1,
-                    };
-                    break;
-                case 'imagem':
-                    var file;
-                    if (req.files) file = req.files.corpo;
-
-                    var imgData = require('fs').readFileSync(file.path);
-                    conteudo = {
-                        "idCategoria": 0,
-                        "tipoDoCorpo": req.body.MtipoPerg,
-                        "corpo": "",
-                        "opcoes": opcoes,
-                        "opcaoCerta": "1",
-                    };
-                    var anx = {
-                        name: 'corpo.jpg',
-                        data: imgData,
-                        content_type: 'image/jpg'
-                    };
-                    anexos.push(anx);
-                    break;
-
-                case 'audio':
-                    var file;
-                    if (req.files) file = req.files.corpo;
-
-                    var imgData = require('fs').readFileSync(file.path);
-                    conteudo = {
-                        "idCategoria": 0,
-                        "tipoDoCorpo": req.body.MtipoPerg,
-                        "corpo": "",
-                        "opcoes": opcoes,
-                        "opcaoCerta": "1",
-                    };
-                    var anx = {
-                        name: 'corpo.mp3',
-                        data: imgData,
-                        content_type: 'audio/mp3'
-                    };
-                    anexos.push(anx);
-                    break;
-                default:
-
-            }
-
-            pergunta = {
-                "anoEscolar": req.body.ano_escolar,
-                "titulo": req.body.tituloPerg,
-                "disciplina": req.body.disciplina,
-                "pergunta": req.body.Mpergunta,
-                "conteudo": conteudo,
-                "tipoTeste": req.body.tipo,
-                "dataCri": dati,
-                "estado": true,
-                "professorId": req.body.profIDs,
-
-            };
-
-            db.multipart.insert(pergunta, anexos, idPerg, function (err, body) {
-                if (err) {
-                    console.log('questions multimédia new, an error ocourred'.green);
-
-                    return res.status(500).json({
-                        'result': 'nok',
-                        'message': err
-                    });
-                }
-                console.log('questions Multimedia added'.green);
-
-                res.redirect('/#questionsMultimedia/new');
-            });
-
-            //Terminar
-            break;
-        case "Interpretação":
-            var posicoes = new Array();
-            for (var i = 0; i < req.body.nMarcas; i++) {
-                posicoes[i] = req.body['pos' + i];
-            }
-
-            pergunta = {
-                "anoEscolar": req.body.ano_escolar,
-                "titulo": req.body.titulo,
-                "disciplina": req.body.disciplina,
-                "pergunta": req.body.pergunta,
-                "conteudo": {
-                    "texto": req.body.texto,
-                    "posicaoResposta": posicoes,
-                },
-                "tipoTeste": req.body.tipo,
-                "dataCri": dati,
-                "estado": true,
-                "professorId": req.body.profID,
-
-            };
-
-            var teste = {
-                "titulo": req.body.titulo,
-                "descricao": req.body.descricao,
-                "disciplina": req.body.disciplina,
-                "anoEscolar": req.body.ano_escolar,
-                "perguntas": [idPerg],
-                "data": dati,
-                "estado": true,
-                "professorId": req.body.profID,
-                "tipo": req.body.tipo,
-                "nRepeticoes": 0,
-            };
-
-            var file;
-            if (req.files) file = req.files.file;
-
-            var imgData = require('fs').readFileSync(file.path);
-
-            db.multipart.insert(pergunta, [{
-                name: 'voz.mp3',
-                data: imgData,
-                content_type: 'audio/mp3'
-            }], idPerg, function (err, body) {
-                if (err) {
-                    console.log('questions interp new, an error ocourred'.red);
-
-                    return res.status(500).json({
-                        'result': 'nok',
-                        'message': err
-                    });
-                }
-                console.log('questions interp added'.green);
-                //res.json(body);
-                //res.json({'result': 'ok'});
-                res.redirect('/#tests');
-            });
-
-
-            db2.insert(teste, idTeste, function (err, body) {
-                if (err) {
-                    console.log('questions interp new, an error ocourred in new test'.red);
-
-                    return res.status(500).json({
-                        'result': 'nok',
-                        'message': err
-                    });
-                }
-                console.log('teste added'.green);
-            });
-            break;
-    }
-    ;
-
-
-};
-
 exports.getAll = function (req, res) {
     console.log('all questions'.green);
 
@@ -420,474 +85,107 @@ exports.get = function (req, res) {
     });
 };
 
-//Função para devolver um array de palavras
-function getPalavras(texto) {
-    var listaPalavras = new Array();
-    var palavra = '';
-
-    var isCaracter = false;
-    for (i = 0; i < texto.length; i++) {
-        //de acordo com a tabela ascii 1º caracter possivel '!' CODE 33
-        if (texto.charCodeAt(i) < 33) {
-            //se o caracter anterior for válido
-            if (isCaracter) {
-                //enterga a palavra à lista
-                listaPalavras.push(palavra);
-                //limpa a palavra
-                palavra = '';
-                //não e um caracter válido (ex: "enter", "space", "tab")
-                isCaracter = false;
-            }
-        }
-        else {
-            //adiciona o caracter à palavra
-            palavra += texto.charAt(i);
-            //confirma que era uma caracter
-            isCaracter = true;
-        }
-    }
-
-    //entregar o resto
-    if (palavra.length > 0) {
-        listaPalavras.push(palavra);
-    }
-
-    return listaPalavras;
-}
-
-
-// R E V A M P
-exports.new = function (req, res) {
-
-    //Insert New Test
-    console.log(req.files);
-
-
-    return false;
-
-    console.log('questions new, allmost completeeeeee!'.yellow);
-
-    var dati = new Date();
-    var idPerg = 'P' + dati.getTime();
-    var idTeste = 'T' + dati.getTime();
-    var pergunta;
-
-    switch (req.body.tipo) {
-        case "Texto":
-            pergunta = {
-                "anoEscolar": req.body.ano_escolar,
-                "titulo": req.body.titulo,
-                "disciplina": req.body.disciplina,
-                "pergunta": req.body.pergunta,
-                "conteudo": {
-                    "texto": req.body.texto,
-                },
-                "tipoTeste": req.body.tipo,
-                "dataCri": dati,
-                "estado": true,
-                "profID": req.body.profID,
-            };
-            var teste = {
-                "titulo": req.body.titulo,
-                "descricao": req.body.descricao,
-                "disciplina": req.body.disciplina,
-                "anoEscolar": req.body.ano_escolar,
-                "perguntas": [idPerg],
-                "data": dati,
-                "estado": true,
-                "professorId": req.body.profID,
-                "tipo": req.body.tipo,
-                "nRepeticoes": 0,
-            };
-
-            var file;
-            if (req.files) file = req.files.file;
-
-            var imgData = require('fs').readFileSync(file.path);
-
-            db.multipart.insert(pergunta, [{
-                name: 'voz.mp3',
-                data: imgData,
-                content_type: 'audio/mp3'
-            }], idPerg, function (err, body) {
-                if (err) {
-                    console.log('questions new, an error ocourred'.green);
-
-                    return res.status(500).json({
-                        'result': 'nok',
-                        'message': err
-                    });
-                }
-                console.log("Aqui mesmo!!");
-                console.log('questions added'.red);
-                //res.json(body);
-                //res.json({'result': 'ok'});
-                res.redirect('/#tests');
-            });
-
-            db2.insert(teste, idTeste, function (err, body) {
-                if (err) {
-                    console.log('questions new, an error ocourred'.green);
-
-                    return res.status(500).json({
-                        'result': 'nok',
-                        'message': err
-                    });
-                }
-                console.log('teste added'.green);
-
-            });
-
-            break;
-        case "Lista":
-            pergunta = {
-                "anoEscolar": req.body.ano_escolar,
-                "titulo": req.body.titulo,
-                "disciplina": req.body.disciplina,
-                "pergunta": req.body.pergunta,
-                "conteudo": {
-                    "palavrasCL1": getPalavras(req.body.cl1),
-                    "palavrasCL2": getPalavras(req.body.cl2),
-                    "palavrasCL3": getPalavras(req.body.cl3),
-                },
-                "tipoTeste": req.body.tipo,
-                "dataCri": dati,
-                "estado": true,
-                "professorId": req.body.profID,
-
-            };
-            var teste = {
-                "titulo": req.body.titulo,
-                "descricao": req.body.descricao,
-                "disciplina": req.body.disciplina,
-                "anoEscolar": req.body.ano_escolar,
-                "perguntas": [idPerg],
-                "data": dati,
-                "estado": true,
-                "professorId": req.body.profID,
-                "tipo": req.body.tipo,
-                "nRepeticoes": 0,
-            };
-
-            var file;
-            if (req.files) file = req.files.file;
-
-            var imgData = require('fs').readFileSync(file.path);
-
-            db.multipart.insert(pergunta, [{
-                name: 'voz.mp3',
-                data: imgData,
-                content_type: 'audio/mp3'
-            }], idPerg, function (err, body) {
-                if (err) {
-                    console.log('questions new, an error ocourred'.green);
-
-                    return res.status(500).json({
-                        'result': 'nok',
-                        'message': err
-                    });
-                }
-                console.log('new question added'.red);
-                //res.json(body);
-                //res.json({'result': 'ok'});
-                res.redirect('/#tests');
-            });
-
-            db2.insert(teste, idTeste, function (err, body) {
-                if (err) {
-                    console.log('questions new, an error ocourred'.green);
-
-                    return res.status(500).json({
-                        'result': 'nok',
-                        'message': err
-                    });
-                }
-                console.log('teste added'.green);
-            });
-            break;
-        case "Multimédia":
-            var opcoes = new Array();
-            var anexos = new Array();
-            for (i = 0; i < req.body.numResp; i++) {
-                var cntd;
-                switch (req.body.MtipoResp) {
-                    case 'texto':
-                        cntd = req.body['resposta' + i];
-                        break;
-                    case 'imagem':
-                        cntd = "";
-
-                        var file;
-                        if (req.files) file = req.files['resposta' + i];
-
-                        var imgData = require('fs').readFileSync(file.path);
-
-                        var anx = {
-                            name: 'op' + (i + 1) + '.jpg',
-                            data: imgData,
-                            content_type: 'image/jpg'
-                        };
-                        anexos.push(anx);
-                        break;
-                    default:
-                }
-                var op = {
-                    "tipo": req.body.MtipoResp,
-                    "conteudo": cntd,
-                };
-                opcoes.push(op);
-            }
-
-            var conteudo;
-            switch (req.body.MtipoPerg) {
-                case 'texto':
-                    conteudo = {
-                        "idCategoria": 0,
-                        "tipoDoCorpo": req.body.MtipoPerg,
-                        "corpo": req.body.corpo,
-                        "opcoes": opcoes,
-                        "opcaoCerta": 1,
-                    };
-                    break;
-                case 'imagem':
-                    var file;
-                    if (req.files) file = req.files.corpo;
-
-                    var imgData = require('fs').readFileSync(file.path);
-                    conteudo = {
-                        "idCategoria": 0,
-                        "tipoDoCorpo": req.body.MtipoPerg,
-                        "corpo": "",
-                        "opcoes": opcoes,
-                        "opcaoCerta": "1",
-                    };
-                    var anx = {
-                        name: 'corpo.jpg',
-                        data: imgData,
-                        content_type: 'image/jpg'
-                    };
-                    anexos.push(anx);
-                    break;
-
-                case 'audio':
-                    var file;
-                    if (req.files) file = req.files.corpo;
-
-                    var imgData = require('fs').readFileSync(file.path);
-                    conteudo = {
-                        "idCategoria": 0,
-                        "tipoDoCorpo": req.body.MtipoPerg,
-                        "corpo": "",
-                        "opcoes": opcoes,
-                        "opcaoCerta": "1",
-                    };
-                    var anx = {
-                        name: 'corpo.mp3',
-                        data: imgData,
-                        content_type: 'audio/mp3'
-                    };
-                    anexos.push(anx);
-                    break;
-                default:
-
-            }
-
-            pergunta = {
-                "anoEscolar": req.body.ano_escolar,
-                "titulo": req.body.tituloPerg,
-                "disciplina": req.body.disciplina,
-                "pergunta": req.body.Mpergunta,
-                "conteudo": conteudo,
-                "tipoTeste": req.body.tipo,
-                "dataCri": dati,
-                "estado": true,
-                "professorId": req.body.profIDs,
-
-            };
-
-            db.multipart.insert(pergunta, anexos, idPerg, function (err, body) {
-                if (err) {
-                    console.log('questions multimédia new, an error ocourred'.green);
-
-                    return res.status(500).json({
-                        'result': 'nok',
-                        'message': err
-                    });
-                }
-                console.log('questions Multimedia added'.green);
-
-                res.redirect('/#questionsMultimedia/new');
-            });
-
-            //Terminar
-            break;
-        case "Interpretação":
-            var posicoes = new Array();
-            for (var i = 0; i < req.body.nMarcas; i++) {
-                posicoes[i] = req.body['pos' + i];
-            }
-
-            pergunta = {
-                "anoEscolar": req.body.ano_escolar,
-                "titulo": req.body.titulo,
-                "disciplina": req.body.disciplina,
-                "pergunta": req.body.pergunta,
-                "conteudo": {
-                    "texto": req.body.texto,
-                    "posicaoResposta": posicoes,
-                },
-                "tipoTeste": req.body.tipo,
-                "dataCri": dati,
-                "estado": true,
-                "professorId": req.body.profID,
-
-            };
-
-            var teste = {
-                "titulo": req.body.titulo,
-                "descricao": req.body.descricao,
-                "disciplina": req.body.disciplina,
-                "anoEscolar": req.body.ano_escolar,
-                "perguntas": [idPerg],
-                "data": dati,
-                "estado": true,
-                "professorId": req.body.profID,
-                "tipo": req.body.tipo,
-                "nRepeticoes": 0,
-            };
-
-            var file;
-            if (req.files) file = req.files.file;
-
-            var imgData = require('fs').readFileSync(file.path);
-
-            db.multipart.insert(pergunta, [{
-                name: 'voz.mp3',
-                data: imgData,
-                content_type: 'audio/mp3'
-            }], idPerg, function (err, body) {
-                if (err) {
-                    console.log('questions interp new, an error ocourred'.red);
-
-                    return res.status(500).json({
-                        'result': 'nok',
-                        'message': err
-                    });
-                }
-                console.log('questions interp added'.green);
-                //res.json(body);
-                //res.json({'result': 'ok'});
-                res.redirect('/#tests');
-            });
-
-
-            db2.insert(teste, idTeste, function (err, body) {
-                if (err) {
-                    console.log('questions interp new, an error ocourred in new test'.red);
-
-                    return res.status(500).json({
-                        'result': 'nok',
-                        'message': err
-                    });
-                }
-                console.log('teste added'.green);
-            });
-            break;
-    }
-    ;
-
-
-};
-
 exports.test = function (req, res) {
 
     console.log("Inserting new Question");
-    console.log(req.body);
-    console.log(req.body.content);
+    // console.log(req.body);
+    //console.log(req.body.content);
 
-    if (req.body.filePath) {
-        //Date And ID's Generator
-        var $date = new Date();
-        var $idQuest = 'Q' + $date.getTime();
-        //Image Data Sync
-        var $imgData = fs.readFileSync(req.body.filePath);
 
-        //Check if File is a MP3 File
-        if ((mime.lookup(req.body.filePath)).startsWith("audio")) {
-            //Test Question
-            var $question = {
-                "title": req.body.title,
-                "subject": req.body.subject + ":" + req.body.content + ":" + req.body.specification,
-                "schoolYear": req.body.schoolYear,
-                "question": req.body.question,
-                "description": req.body.description,
-                "content": {},
-                "state": Boolean(req.body.state),
-                "type": req.body.type,
-                "profID": req.params.id,
-                "creationDate": $date
-            };
+    //Date And ID's Generator
+    var $date = new Date();
+    var $idQuest = 'Q' + $date.getTime();
 
-            //Select Question Type
-            switch ($question.type) {
-                case "text":
-                    $question.content["text"] = req.body.text;
-                    break;
 
-                case "list":
-                    if (req.body.cl1)
-                        $question.content["wordsCL1"] = wordPrefix(req.body.cl1);
+    console.log(req.body)
+    console.log("----------------")
+    //Test Question
+    var $question = {
+        "title": req.body.title,
+        "subject": req.body.subject + ":" + req.body.content + ":" + req.body.specification,
+        "schoolYear": req.body.schoolYear,
+        "question": req.body.question,
+        "description": req.body.description,
+        "content": {},
+        "state": Boolean(req.body.state),
+        "type": req.body.type,
+        "profID": req.params.id,
+        "creationDate": $date
+    };
+    console.log($question)
+    //Select Question Type
+    switch ($question.type) {
+        case "text":
+            $question.content["text"] = req.body.text;
+            break;
 
-                    if (req.body.cl2)
-                        $question.content["wordsCL2"] = wordPrefix(req.body.cl2);
+        case "list":
+            $question.content["column"] = JSON.parse(req.body.column);
+            break;
 
-                    if (req.body.cl3)
-                        $question.content["wordsCL3"] = wordPrefix(req.body.cl3);
+        case "interpretation":
+            //Content Text
+            $question.content["text"] = req.body.text;
 
-                    break;
-
-                case "interpretation":
-                    //Content Text
-                    $question.content["text"] = req.body.text;
-
-                    //Iterate SID's
-                    $question.content["sid"] = [];
-                    var $sid = req.body.sid.split(',');
-                    for (var i in $sid) {
-                        $question.content.sid.push($sid[i]);
-                    }
-
-                    break;
-
-                default:
-                    break;
+            //Iterate SID's
+            $question.content["sid"] = [];
+            var $sid = req.body.sid.split(',');
+            for (var i in $sid) {
+                $question.content.sid.push($sid[i]);
             }
 
-
-            db2.multipart.insert($question, [{
-                name: 'voice.mp3',
-                data: $imgData,
-                content_type: 'audio/mp3'
-            }], $idQuest, function (err, body) {
-                if (err) {
-                    console.log('questions new, an error ocourred'.green);
-                    res.send(500);
-                }
-                else {
-                    console.log('New Test Added'.red);
-                }
-
-            });
-
-            console.log("New Question");
-        }
-        else {
-            console.log("Invalid File Type");
-            res.send(401, {error: "Invalid File Type"});
-        }
+            break;
+        case "multimedia":
+            console.log(JSON.parse(req.body.answers));
+            $question.content["questionType"] = req.body.questionType;
+            $question.content["answerType"] = req.body.answerType;
+            //Se a pegunta nao for do tipo audio (imagem ou texto
+            if (req.body.questionType != "audio") {
+                $question.content["question"] = req.body.contentQuest;
+            }
+            $question.content["answers"] = JSON.parse(req.body.answers);
+            break;
+        default:
+            break;
     }
 
+    //Check if ther's a file and if its a MP3 File
+    if ((req.body.filePath) && (mime.lookup(req.body.filePath)).startsWith("audio")) {
+        //Image Data Sync
+        var $imgData = fs.readFileSync(req.body.filePath);
+        //Inserts new document with attachment
+        db2.multipart.insert($question, [{
+            name: 'voice.mp3',
+            data: $imgData,
+            content_type: 'audio/mp3'
+        }], $idQuest, function (err, body) {
+            if (err) {
+                console.log('questions new, an error ocourred'.green);
+                res.send(500);
+            }
+            else {
+                console.log('New Test Added'.red);
+            }
+        });
+        //Inserts new document without attachment
+    } else {
+        db2.insert($question, $idQuest, function (err, body) {
+            if (err) {
+                console.log('questions new, an error ocourred'.yellow);
+                res.send(500);
+            }
+            else {
+                console.log('New Test Added'.red);
+            }
 
+        });
+    }
+    console.log("New Question");
+
+
+    console.log("-----------------------------");
+    console.log($question);
+    console.log("-----------------------------");
     res.send(200);
 
 };

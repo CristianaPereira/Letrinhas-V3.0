@@ -12,6 +12,6 @@ exports.fileDownload = function (req, res) {
             "Authorization": "Basic " + new Buffer(process.env.USERNAME + ":" + process.env.PASSWORD).toString("base64")
         }
     }).pipe(res);
-    
+
 
 };

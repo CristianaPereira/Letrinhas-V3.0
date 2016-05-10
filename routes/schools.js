@@ -26,6 +26,7 @@ exports.get = function (req, res) {
 
 exports.new = function (req, res) {
 
+    console.log(req.body)
     //Check For Required Fields
     if (req.body.name && req.body.address && req.body.b64) {
 
@@ -35,7 +36,7 @@ exports.new = function (req, res) {
             "turmas": [],
             "b64": req.body.b64
         }
-        var id = "NEW|Escola" + new Date().getTime();
+        var id = "School" + new Date().getTime();
         db.insert(school, id, function (err) {
             if (err)
                 return res.status(500).json({

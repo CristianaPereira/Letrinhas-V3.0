@@ -54,11 +54,11 @@ var Router = Backbone.Router.extend({
 
         "resolutions": "resolutions",
         //Tests Routing
-        "tests": "tests",
-        "questionsText/new" : "textTestNew",
-        "multimediaTest/new" : "multimediaTestNew",
-        "listTest/new" : "listTestNew",
-        "interpretationTest/new" : "interpretationTestNew"
+        "questions": "questions",
+        "questionsText/new": "textTestNew",
+        "multimediaTest/new": "multimediaTestNew",
+        "listTest/new": "listTestNew",
+        "interpretationTest/new": "interpretationTestNew"
 
     },
 
@@ -314,20 +314,20 @@ var Router = Backbone.Router.extend({
     },
 
     //Tests Templates
-    tests: function () {
+    questions: function () {
         var self = this;
 
         self.navbar();
 
-        templateLoader.load(["TestsView"],
+        templateLoader.load(["QuestionsView"],
             function () {
-                var v = new TestsView({});
+                var v = new QuestionsView({});
                 self.showView(v, $('#content'));
             }
         );
     },
 
-    textTestNew: function(){
+    textTestNew: function () {
         var self = this;
 
         self.navbar();
@@ -340,7 +340,7 @@ var Router = Backbone.Router.extend({
         );
     },
 
-    multimediaTestNew: function(){
+    multimediaTestNew: function () {
         var self = this;
 
         self.navbar();
@@ -353,7 +353,7 @@ var Router = Backbone.Router.extend({
         );
     },
 
-    listTestNew: function(){
+    listTestNew: function () {
         var self = this;
 
         self.navbar();
@@ -366,7 +366,7 @@ var Router = Backbone.Router.extend({
         );
     },
 
-    interpretationTestNew: function(){
+    interpretationTestNew: function () {
         var self = this;
 
         self.navbar();
@@ -380,7 +380,6 @@ var Router = Backbone.Router.extend({
     }
 
 });
-
 
 
 templateLoader.load(["Home"],

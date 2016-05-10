@@ -1,0 +1,119 @@
+<div id="questionsDiv" class="mainDiv">
+    <div class="col-md-12">
+        <section class="panel subMenu">
+
+            <ul class="nav navbar-nav">
+                <li><a>Total: <label id="questionsBadge" class=""></label>
+                </a></li>
+                <li>
+                    <div class="input-group" style="width: 350px;padding-top: 11px;">
+                        <input id="txtSearch" type="text" class="form-control" placeholder="Pesquisar"
+                               aria-describedby="basic-addon2">
+                        <span class="input-group-addon"> <i class="fa fa-search"></i></span>
+                    </div>
+                </li>
+                <li><a id="orderBy" class="order"><i class="fa fa-sort-alpha-asc"></i> </a></li>
+
+
+                <!-- New question -->
+                <li class="dropdown">
+                    <a href="#" data-toggle="dropdown" class="dropdown-toggle"><i class="fa fa-file-text"><span
+                            class="badge-over">  <i class="fa fa-plus-circle"></i></span></i> </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#questionsText/new" id="textTestbtn" class="order">
+                            <img src="../../img/text.png" style="height:20px">
+                            <span> Texto </span></a></li>
+                        <li><a href="#multimediaTest/new" id="multimediaTestbtn" class="order">
+                            <img src="../../img/multimedia.png" style="height:20px">
+                            <span> Multimédia </span></a>
+                        </li>
+                        <li><a href="#listTest/new" id="listTestbtn" class="order">
+                            <img src="../../img/list.png" style="height:20px">
+                            <span> Lista </span></a>
+                        </li>
+                        <li><a href="#interpretationTest/new" id="interpretationTestbtn" class="order">
+                            <img src="../../img/interpretation.png" style="height:20px">
+                            <span> Interpretação </span></a>
+                        </li>
+
+                        <li class="divider"></li>
+                        <li><a class="order">
+                            <img src="../../img/whitespaces.png" style="height:20px">
+                            <span> Espaços </span></a></li>
+                        <li><a class="order">
+                            <img src="../../img/connections.png" style="height:20px">
+                            <span> Ligações </span></a>
+                        </li>
+                        <li><a class="order">
+                            <img src="../../img/regions.png" style="height:20px">
+                            <span> Regiões </span></a>
+                        </li>
+                        <li><a class="order">
+                            <img src="../../img/boxes.png" style="height:20px">
+                            <span> Caixas </span></a>
+                        </li>
+                    </ul>
+                </li>
+                <!-- Filter by -->
+                <li class="dropdown">
+                    <a href="#" data-toggle="dropdown" class="dropdown-toggle"><i class="fa fa-filter"></i> Tipo </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="filter">
+                            <input type="checkbox" value="text" checked>
+                            <img src="../../img/text.png" style="height:20px">
+                            <span> Texto </span></a></li>
+                        <li><a class="filter">
+                            <input type="checkbox" value="multimedia" checked>
+                            <img src="../../img/multimedia.png" style="height:20px">
+                            <span> Multimédia </span></a>
+                        </li>
+                        <li><a class="filter">
+                            <input type="checkbox" value="list" checked>
+                            <img src="../../img/list.png" style="height:20px">
+                            <span> Lista </span></a>
+                        </li>
+                        <li><a class="filter">
+                            <input type="checkbox" value="interpretation" checked>
+                            <img src="../../img/interpretation.png" style="height:20px">
+                            <span> Interpretação </span></a>
+                        </li>
+
+                        <li class="divider"></li>
+                        <li><a class="filter">
+                            <input type="checkbox" value="whitespaces" checked>
+                            <img src="../../img/whitespaces.png" style="height:20px">
+                            <span> Espaços </span></a></li>
+                        <li><a class="filter">
+                            <input type="checkbox" value="connections" checked>
+                            <img src="../../img/connections.png" style="height:20px">
+                            <span> Ligações </span></a>
+                        </li>
+                        <li><a class="filter">
+                            <input type="checkbox" value="regions" checked>
+                            <img src="../../img/regions.png" style="height:20px">
+                            <span> Regiões </span></a>
+                        </li>
+                        <li><a class="filter">
+                            <input type="checkbox" value="boxes" checked>
+                            <img src="../../img/boxes.png" style="height:20px">
+                            <span> Caixas </span></a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+
+        </section>
+        <!-- END REGIONAL STATS PORTLET-->
+    </div>
+    <div class=" panel-body col-md-5" align=center>
+        <div id="questionsContent" class=" panel-body col-md-12" align=center>
+
+        </div>
+    </div>
+    <div class="col-md-7" style="padding: 30px; " align="center">
+        <div id="questionsPreview" class="col-md-12 divWidget" align="center">
+
+        </div>
+    </div>
+</div>

@@ -2,9 +2,10 @@
  * --------------------------------------- */
 
 html {
-    height: 100%;
-    position: fixed;
+    /* height: 100%;
+     position: fixed;*/
     min-width: 100%;
+    min-height: 100%;
 }
 
 body {
@@ -23,6 +24,18 @@ body {
 }
 
 #page {
+}
+
+audio {
+    width: 100%;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+input[type=checkbox] {
+    vertical-align: middle;
+    width: 15px;
+    height: 15px;
 }
 
 #studentsContent {
@@ -319,7 +332,7 @@ a {
     border: 1px solid #4DB8B8;
 }
 
-#teachersPreview {
+#teachersPreview, #testsPreview {
     padding: 20px;
 }
 
@@ -415,10 +428,8 @@ label {
 }
 
 .listButton > img {
-    height: 45px;
-    border-radius: 50%;
-    width: 45px;
-    overflow: hidden;
+    height: 35px;
+    border-radius: 5px;
 }
 
 .listButton > span {
@@ -526,12 +537,42 @@ label {
     text-align: center;
 }
 
+/* bootstrap 3 helpers */
+
+.navbar-form input, .form-inline input {
+    width: auto;
+}
+
+.navbar {
+    margin-bottom: 0;
+}
+
+.subnav {
+    margin: 0;
+    top: 0px;
+    z-index: 1020;
+    background-color: rgb(247, 247, 247);
+    border-bottom: 1px solid #E1E1E1;
+    padding: 8px 0px 0px 0px;
+}
+
+.subnav.affix {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 10;
+}
+
 .subMenu > header {
     padding: 10px 15px;
     border-bottom: 1px solid transparent;
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
     height: inherit;
+}
+
+.subMenu > ul {
+    display: flex;
 }
 
 .my-group .form-control {
@@ -851,11 +892,19 @@ div.upload input {
     padding: 5px 10px;
 }
 
-.input-group-addon > select {
+.input-group > span {
+    min-width: 35px;
+}
+
+.input-group-addon > select, .input-group-addon > button {
     height: 100%;
     background-color: transparent;
     border: none;
     padding: 0px 5px;
+}
+
+.input-group-addon > button:hover {
+    transform: scale(1.2);
 }
 
 option:hover {
@@ -950,7 +999,38 @@ option:hover {
 
 .questBox {
     padding: 15px;
-    margin: 15px;
     border-radius: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     border: 1px solid #8FA7A5;
+    width: 100%;
+
+}
+
+.asnwerBox {
+    background-color: #DFECF5;
+    border: 1px solid #B8D0E8;
+    border-radius: 5px;
+    height: 100px;
+    width: 100%;
+
+}
+
+.centered {
+    text-align: center;
+}
+
+.markedWord {
+    display: inline-block;
+    min-width: 10px;
+    padding: 3px 7px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    color: #673AB7;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    background-color: #F5D5FD;
+    border-radius: 10px;
 }

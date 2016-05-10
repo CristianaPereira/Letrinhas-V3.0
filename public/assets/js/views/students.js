@@ -49,9 +49,7 @@ window.StudentsView = Backbone.View.extend({
     //Fill School Preview
     fillPreview: function (studentData) {
         var position = $("#studentsContent").offset();
-        console.log(position);
-        console.log();
-        console.log($("html").height());
+
         $("#studentsContent").css('max-height', ($("html").height() - position.top - 20) + 'px');
         var self = this;
         $('#studentsPreview').empty();

@@ -61,17 +61,21 @@ router.use(function (req, res, next) {
     if (req.busboy != null) {
 
         req.busboy.on('file', function (fieldname, file, filename) {
+                if (filename) {
 
-            req.body['filePath'] = __dirname + "\\tmp\\" + filename;
-            console.log("Uploading: " + filename);
-            //Path where image will be uploaded
-            fstream = fs.createWriteStream(__dirname + '\\tmp\\' + filename);
-            file.pipe(fstream);
-            fstream.on('close', function () {
-                console.log("Upload Finished of " + filename);
-            });
-
-        });
+                    req.body['filePath'] = __dirname + "\\tmp\\" + filename;
+                    console.log("Uploading: " + filename);
+                    //Path where image will be uploaded
+                    fstream = fs.createWriteStream(__dirname + '\\tmp\\' + filename);
+                    file.pipe(fstream);
+                    fstream.on('close', function () {
+                        console.log("Upload Finished of " + filename);
+                    });
+                } else {
+                    file.resume();
+                }
+            }
+        );
 
 
         req.busboy.on('field', function (key, value) {
@@ -87,7 +91,8 @@ router.use(function (req, res, next) {
         next();
     }
 
-});
+})
+;
 
 // Validating Login Credentials
 var auth = function (req, res, next) {
