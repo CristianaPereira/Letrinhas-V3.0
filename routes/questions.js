@@ -87,106 +87,111 @@ exports.get = function (req, res) {
 
 exports.test = function (req, res) {
 
-    console.log("Inserting new Question");
-    // console.log(req.body);
-    //console.log(req.body.content);
+    //If there's any empty field, stops right here
 
+    if (JSON.stringify(req.body).indexOf('""') != -1) {
 
-    //Date And ID's Generator
-    var $date = new Date();
-    var $idQuest = 'Q' + $date.getTime();
-
-
-    console.log(req.body)
-    console.log("----------------")
-    //Test Question
-    var $question = {
-        "title": req.body.title,
-        "subject": req.body.subject + ":" + req.body.content + ":" + req.body.specification,
-        "schoolYear": req.body.schoolYear,
-        "question": req.body.question,
-        "description": req.body.description,
-        "content": {},
-        "state": Boolean(req.body.state),
-        "type": req.body.type,
-        "profID": req.params.id,
-        "creationDate": $date
-    };
-    console.log($question)
-    //Select Question Type
-    switch ($question.type) {
-        case "text":
-            $question.content["text"] = req.body.text;
-            break;
-
-        case "list":
-            $question.content["column"] = JSON.parse(req.body.column);
-            break;
-
-        case "interpretation":
-            //Content Text
-            $question.content["text"] = req.body.text;
-
-            //Iterate SID's
-            $question.content["sid"] = [];
-            var $sid = req.body.sid.split(',');
-            for (var i in $sid) {
-                $question.content.sid.push($sid[i]);
-            }
-
-            break;
-        case "multimedia":
-            console.log(JSON.parse(req.body.answers));
-            $question.content["questionType"] = req.body.questionType;
-            $question.content["answerType"] = req.body.answerType;
-            //Se a pegunta nao for do tipo audio (imagem ou texto
-            if (req.body.questionType != "audio") {
-                $question.content["question"] = req.body.contentQuest;
-            }
-            $question.content["answers"] = JSON.parse(req.body.answers);
-            break;
-        default:
-            break;
-    }
-
-    //Check if ther's a file and if its a MP3 File
-    if ((req.body.filePath) && (mime.lookup(req.body.filePath)).startsWith("audio")) {
-        //Image Data Sync
-        var $imgData = fs.readFileSync(req.body.filePath);
-        //Inserts new document with attachment
-        db2.multipart.insert($question, [{
-            name: 'voice.mp3',
-            data: $imgData,
-            content_type: 'audio/mp3'
-        }], $idQuest, function (err, body) {
-            if (err) {
-                console.log('questions new, an error ocourred'.green);
-                res.send(500);
-            }
-            else {
-                console.log('New Test Added'.red);
-            }
+        console.log('Required Arguments Missing'.green);
+        return res.status(406).json({
+            'result': 'Campos em falta'
         });
-        //Inserts new document without attachment
     } else {
-        db2.insert($question, $idQuest, function (err, body) {
-            if (err) {
-                console.log('questions new, an error ocourred'.yellow);
-                res.send(500);
-            }
-            else {
-                console.log('New Test Added'.red);
-            }
+        //Date And ID's Generator
+        var $date = new Date();
+        var $idQuest = 'Q' + $date.getTime();
 
-        });
+
+        console.log(req.body)
+        console.log("----------------")
+        //Test Question
+        var $question = {
+            "title": req.body.title,
+            "subject": req.body.subject + ":" + req.body.content + ":" + req.body.specification,
+            "schoolYear": req.body.schoolYear,
+            "question": req.body.question,
+            "description": req.body.description,
+            "content": {},
+            "state": Boolean(req.body.state),
+            "type": req.body.type,
+            "profID": req.params.id,
+            "creationDate": $date
+        };
+        console.log($question)
+        //Select Question Type
+        switch ($question.type) {
+            case "text":
+                $question.content["text"] = req.body.text;
+                break;
+
+            case "list":
+                $question.content["column"] = JSON.parse(req.body.column);
+                break;
+
+            case "interpretation":
+                //Content Text
+                $question.content["text"] = req.body.text;
+
+                //Iterate SID's
+                $question.content["sid"] = [];
+                var $sid = req.body.sid.split(',');
+                for (var i in $sid) {
+                    $question.content.sid.push($sid[i]);
+                }
+
+                break;
+            case "multimedia":
+                console.log(JSON.parse(req.body.answers));
+                $question.content["questionType"] = req.body.questionType;
+                $question.content["answerType"] = req.body.answerType;
+                //Se a pegunta nao for do tipo audio (imagem ou texto
+                if (req.body.questionType != "audio") {
+                    $question.content["question"] = req.body.contentQuest;
+                }
+                $question.content["answers"] = JSON.parse(req.body.answers);
+                break;
+            default:
+                break;
+        }
+
+        //Check if ther's a file and if its a MP3 File
+        if ((req.body.filePath) && (mime.lookup(req.body.filePath)).startsWith("audio")) {
+            //Image Data Sync
+            var $imgData = fs.readFileSync(req.body.filePath);
+            //Inserts new document with attachment
+            db2.multipart.insert($question, [{
+                name: 'voice.mp3',
+                data: $imgData,
+                content_type: 'audio/mp3'
+            }], $idQuest, function (err, body) {
+                if (err) {
+                    console.log('questions new, an error ocourred'.green);
+                    res.send(500);
+                }
+                else {
+                    console.log('New Test Added'.red);
+                }
+            });
+            //Inserts new document without attachment
+        } else {
+            db2.insert($question, $idQuest, function (err, body) {
+                if (err) {
+                    console.log('questions new, an error ocourred'.yellow);
+                    res.send(500);
+                }
+                else {
+                    console.log('New Test Added'.red);
+                }
+
+            });
+        }
+        console.log("New Question");
+
+
+        console.log("-----------------------------");
+        console.log($question);
+        console.log("-----------------------------");
+        res.send(200);
     }
-    console.log("New Question");
-
-
-    console.log("-----------------------------");
-    console.log($question);
-    console.log("-----------------------------");
-    res.send(200);
 
 };
 

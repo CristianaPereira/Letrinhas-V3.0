@@ -2,6 +2,8 @@ window.QuestionsView = Backbone.View.extend({
     events: {
         "click #deletebtn": "deleteQuestion",
         'click [type="checkbox"]': "filterBy",
+        'click .contentFilter': "filterBycontent",
+        "keyup #txtSearch": "searchTests",
         "click #orderBy": "orderQuestions"
     },
 
@@ -12,6 +14,20 @@ window.QuestionsView = Backbone.View.extend({
             return false;
         }
         return true;
+    },
+
+    //Search School
+    searchTests: function (e) {
+        $(".listButton").hide();
+        $(".listButton:containsi(" + $(e.currentTarget).val() + ")").show();
+
+
+        //Esconde os testes cujas checkboxes não estão seleccionadas
+        $.each($(".listButton"), function (i, k) {
+            if ($(k).attr("value").indexOf($(e.currentTarget).val()) != -1) {
+                $(k).show();
+            }
+        });
     },
 
     //Solicita confirmação para apagar o professor
@@ -68,12 +84,27 @@ window.QuestionsView = Backbone.View.extend({
     },
 
     //Applys filters
-    filterBy: function (e) {
+    filterBy: function () {
         //Mostra todos os testes
-        $(".listButton").show();
+
         //Esconde os testes cujas checkboxes não estão seleccionadas
         $.each($("input:checkbox:not(:checked)"), function (i, k) {
             $(".listButton[type=" + $(k).attr("value") + "]").hide();
+        });
+    },
+
+    //Applys filters
+    filterBycontent: function (e) {
+
+        var self = this;
+        $(".listButton").show();
+        self.filterBy();
+        //Dos teste que estao visiveis
+        $.each($(".listButton:visible"), function (i, k) {
+            //Se nao pertencerem à categoria escolhida, esconde-os
+            if ($(k).attr("value").indexOf($(e.target).attr("value")) == -1) {
+                $(k).hide();
+            }
         });
     },
 
@@ -266,7 +297,67 @@ window.QuestionsView = Backbone.View.extend({
         if (!self.auth()) {
             return false;
         }
+        //Gets all registed categories
+        modem('GET', 'category',
 
+            //Response Handler
+            function (json) {
+
+                $.each(json, function (i, key) {
+                    var $content = $("<ul >", {class: "dropdown-menu pull-left"});
+
+                    $("#selectSubject").append(
+                        $("<li>", {class: "dropdown-submenu pull-left"}).append(
+                            $("<a>", {
+                                class: "dropdown-toggle contentFilter",
+                                "data-toggle": "dropdown",
+                                html: key.doc.subject,
+                                value: key.doc._id
+                            }).append(
+                                $("<b >", {class: "caret"})
+                            ),
+                            $content
+                        )
+                    );
+
+                    $.each(key.doc.content, function (idc, content) {
+                        var $description = $("<ul >", {class: "dropdown-menu pull-left"});
+                        $content.append(
+                            $("<li>", {class: "dropdown-submenu pull-left"}).append(
+                                $("<a>", {
+                                    class: "dropdown-toggle contentFilter",
+
+                                    html: content.name,
+                                    value: content._id
+                                }).append(
+                                    $("<b >", {class: "caret"})
+                                ),
+                                $description
+                            )
+                        );
+                        $.each(content.specification, function (ids, specif) {
+
+                            $description.append(
+                                $("<li>", {class: "dropdown-submenu pull-left"}).append(
+                                    $("<a>", {
+                                        class: "dropdown-toggle contentFilter",
+                                        "data-toggle": "dropdown",
+                                        html: specif.name,
+                                        value: specif._id
+                                    })
+                                )
+                            );
+
+                        });
+                    });
+
+                });
+            },
+
+            //Error Handling
+            function (xhr, ajaxOptions, thrownError) {
+            }
+        );
 
         $(this.el).html(this.template());
 
@@ -317,7 +408,8 @@ window.QuestionsView = Backbone.View.extend({
                     var $div = $("<div>", {
                         class: "listButton divWidget",
                         style: "background-color:" + background,
-                        type: quest.doc.type
+                        type: quest.doc.type,
+                        value: quest.doc.subject
                     }).append("<img src=" + $imgT + "><img  src='" + $imgC + "'><span>" + quest.doc.title + "</span>")
                         //  .append($edit)
                         .append($("<div>", {class: "editDeleteOp"}).append($edit, $delete))

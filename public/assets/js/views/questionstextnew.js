@@ -2,7 +2,6 @@ window.QuestionsTextNew = Backbone.View.extend({
     events: {
         "click #showEqualizer": "showEqualizer",
         "click #record": "initRecord",
-        "keyup #txtSearch": "searchTests",
         "click #backbtn": "goBack",
         "change #uploadSoundFile": "uploadSoundFile",
         "blur .emptyField": "isEmpty",
@@ -15,52 +14,42 @@ window.QuestionsTextNew = Backbone.View.extend({
         setPopOver("Titulo, Discuplina, Ano escolar, Pergunta, Descrição, Texto e Audio");
 
     },
+
     //Check Auth
     auth: function () {
         if (!window.sessionStorage.getItem("keyo")) {
-            app.navigate("/#", true);
             return false;
         }
         return true;
     },
 
-    //Search School
-    searchSchool: function (e) {
 
-        $(".listButton").hide();
-        $(".listButton:containsi(" + $(e.currentTarget).val() + ")").show();
-
-    },
 
     //Go back to the last visited page
     goBack: function (e) {
         e.preventDefault();
         window.history.back();
     },
+
     //Verifies if an input is empty
     isEmpty: function (e) {
         if ($(e.currentTarget).val().length != 0) {
             $(e.currentTarget).removeClass("emptyField");
         }
     },
+
     //Before Sending Request To Server
     beforeSend: function (e) {
         e.preventDefault();
-        //Se algum dos campos estiver vazio
-        var allListElements = $(".mandatory");
-        //Verifies if all inputs are OK
-        var isValid = isFormValid(allListElements);
-        //If they are
-        if (isValid) {
-            modem('POST', 'questions',
-                function (json) {
-                },
-                //Error Handling
-                function (xhr, ajaxOptions, thrownError) {
-                },
-                new FormData($("#newTextTestForm")[0])
-            );
-        }
+        modem('POST', 'questions',
+            function (json) {
+            },
+            //Error Handling
+            function (xhr, ajaxOptions, thrownError) {
+                failMsg($(".form"), "Não foi possível inserir a nova pergunta. \n (" + JSON.parse(xhr.responseText).result + ").");
+            },
+            new FormData($("#newTextTestForm")[0])
+        );
     },
 
     //Show Voice Recorder Equalizer

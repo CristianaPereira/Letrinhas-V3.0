@@ -33,6 +33,7 @@ window.NavigationBarView = Backbone.View.extend({
             console.log("getImg")
             window.sessionStorage.setItem("username", user._id);
         }, function (error) {
+            showLoginModal($("body"));
             console.log('Error getting user ' + window.localStorage.getItem("ProfID"));
         });
         return this;
