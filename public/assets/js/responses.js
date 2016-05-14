@@ -42,7 +42,7 @@ window.failMsg = function (form, txt) {
     $('#infoModal').modal("show");
     setTimeout(function () {
         $('#infoModal').modal("hide").delay(3000);
-    }, 2000);
+    }, txt.length * 30);
 };
 /**
  *

@@ -1,61 +1,123 @@
 require('colors');
 
 var nano = require('nano')(process.env.COUCHDB);
-var db2 = nano.use('dev_perguntas');
+var dbQuest = nano.use('dev_perguntas');
 
 var fs = require('fs-extra'),       //File System - for file manipulation
     mime = require('mime');
 
 //Como as perguntas nuca se poderão alterar
 //usa-se o upDate apenas para desabilitar a pergunta
-exports.upDate = function (rep, res) {
-    console.log('questions upDate,'.blue);
-    console.log(rep.params['id']);
-    var estado = false;
+exports.upDate = function (req, res) {
 
-    db.get(rep.params['id'], function (err, body) {
-        if (err) {
-            console.log("Não foi possivel aceder a " + rep.params['id'] + '\n'
-                + "erro: " + err);
-        }
-
-        db.update = function (obj, key, callback) {
-            db.get(key, function (error, existing) {
-                if (!error) obj._rev = existing._rev;
-                db.insert(obj, key, callback);
-            });
-        };
-
-        body.estado = estado;
-        console.log(body);
-
-        db.update(body, body._id, function (err1, res) {
-            if (err1) return console.log(rep.params['id'] + " wasn't update!".red + '\n' + err1);
-            console.log("The data of " + rep.params['id'] + ' was Updated!'.green);
+    //If there's any empty field, stops right here
+    if (JSON.stringify(req.body).indexOf('""') != -1) {
+        console.log('Required Arguments Missing'.green);
+        return res.status(406).json({
+            'result': 'Campos em falta'
         });
-        switch (rep.body.tipo) {
-            case 'Texto':
-                //res.redirect('/#tests');
-                break;
-            case 'Lista':
-                //res.redirect('/#tests');
-                break;
-            case 'Multimédia':
-                res.redirect('/#questionsMultimedia/new');
-                break;
-            case 'Interpretacao':
-                //res.redirect('/#tests');
-                break;
-            default:
-                res.redirect('/#tests');
-        }
-    });
+    } else {
+        dbQuest.get(req.params.id, function (err, body) {
+            if (err) {
+                console.log("Não foi possivel aceder a " + req.params['id'] + '\n'
+                    + "erro: " + err);
+                return res.status(err.statusCode).json({});
+            }
+            console.log(body)
+            //If the teacher trying to edit isn't the author of the question, stops right here
+            if (req.params.userID != body.profID) {
+                console.log("You shall not pass!You have no permissions.".red);
+                return res.status(403).json({
+                    'result': 'Apenas o criador da pergunta (' + body.profID + ') tem permissões para a alterar.'
+                });
+
+            } else {
+                body.title = req.body.title;
+                body.subject = req.body.subject + ":" + req.body.content + ":" + req.body.specification;
+                body.schoolYear = req.body.schoolYear;
+                body.question = req.body.question;
+                body.description = req.body.description;
+                body.content = {};
+                body.state = Boolean(req.body.state);
+
+
+                switch (body.type) {
+                    case "text":
+                        body.content["text"] = req.body.text;
+                        break;
+
+                    case "list":
+                        body.content["column"] = JSON.parse(req.body.column);
+                        break;
+
+                    case "interpretation":
+                        //Content Text
+                        body.content["text"] = req.body.text;
+
+                        //Iterate SID's
+                        body.content["sid"] = [];
+                        var $sid = req.body.sid.split(',');
+                        for (var i in $sid) {
+                            body.content.sid.push($sid[i]);
+                        }
+
+                        break;
+                    case "multimedia":
+                        console.log(JSON.parse(req.body.answers));
+                        body.content["questionType"] = req.body.questionType;
+                        body.content["answerType"] = req.body.answerType;
+                        //Se a pegunta nao for do tipo audio (imagem ou texto
+                        if (req.body.questionType != "audio") {
+                            body.content["question"] = req.body.contentQuest;
+                        }
+                        body.content["answers"] = JSON.parse(req.body.answers);
+                        break;
+                    default:
+                        break;
+                }
+
+                //Check if ther's a file and if its a MP3 File
+                if ((req.body.filePath) && (mime.lookup(req.body.filePath)).startsWith("audio")) {
+                    //Image Data Sync
+                    var $imgData = fs.readFileSync(req.body.filePath);
+                    //Inserts new document with attachment
+                    dbQuest.multipart.insert(body, [{
+                        name: 'voice.mp3',
+                        data: $imgData,
+                        content_type: 'audio/mp3'
+                    }], body._id, function (err, body) {
+                        if (err) {
+                            console.log('questions new, an error ocourred'.green);
+                            res.send(500);
+                        }
+                        else {
+                            console.log('New Test Added'.red);
+                        }
+                    });
+                    //Inserts new document without attachment
+                } else {
+                    dbQuest.insert(body, body._id, function (err, body) {
+                        if (err) {
+                            console.log('questions edit, an error ocourred'.yellow);
+                            res.send(500);
+                        }
+                        else {
+                            console.log('Questions successful edited'.red);
+                        }
+                    });
+                }
+                console.log("Edited Question");
+                res.send(200);
+            }
+
+        });
+    }
 };
 
 exports.getAll = function (req, res) {
     console.log('all questions'.green);
 
-    db2.list({'include_docs': true, 'limit': undefined, 'descending': true}, function (err, body) {
+    dbQuest.list({'include_docs': true, 'limit': undefined, 'descending': true}, function (err, body) {
         if (err) {
             return res.status(500).json({
                 'result': 'nok',
@@ -71,7 +133,7 @@ exports.get = function (req, res) {
     var id = req.params.id;
     console.log('one question get'.green);
 
-    db.get(id, function (err, body) {
+    dbQuest.get(id, function (err, body) {
         if (err) {
             console.log('ERRO!:'.red);
             console.log(err);
@@ -113,7 +175,7 @@ exports.test = function (req, res) {
             "content": {},
             "state": Boolean(req.body.state),
             "type": req.body.type,
-            "profID": req.params.id,
+            "profID": req.params.userID,
             "creationDate": $date
         };
         console.log($question)
@@ -158,7 +220,7 @@ exports.test = function (req, res) {
             //Image Data Sync
             var $imgData = fs.readFileSync(req.body.filePath);
             //Inserts new document with attachment
-            db2.multipart.insert($question, [{
+            dbQuest.multipart.insert($question, [{
                 name: 'voice.mp3',
                 data: $imgData,
                 content_type: 'audio/mp3'
@@ -173,7 +235,7 @@ exports.test = function (req, res) {
             });
             //Inserts new document without attachment
         } else {
-            db2.insert($question, $idQuest, function (err, body) {
+            dbQuest.insert($question, $idQuest, function (err, body) {
                 if (err) {
                     console.log('questions new, an error ocourred'.yellow);
                     res.send(500);
@@ -185,11 +247,6 @@ exports.test = function (req, res) {
             });
         }
         console.log("New Question");
-
-
-        console.log("-----------------------------");
-        console.log($question);
-        console.log("-----------------------------");
         res.send(200);
     }
 

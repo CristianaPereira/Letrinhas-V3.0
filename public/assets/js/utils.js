@@ -246,13 +246,13 @@ window.desassocClass = function (elem) {
 //Return a String identifier of a level
 window.getUserRole = function (permissionLevel) {
     switch (permissionLevel) {
-        case '1' :
+        case 1 :
             return "Auxiliar";
             break;
-        case '2' :
+        case 2 :
             return "Professor";
             break;
-        case '3' :
+        case 3 :
             return "Administrador de Sistema";
             break;
         default:
@@ -263,12 +263,9 @@ window.getUserRole = function (permissionLevel) {
 window.getCategories = function () {
     //Gets all registed categories
     modem('GET', 'category',
-
         //Response Handler
         function (json) {
-
             $.each(json, function (i, key) {
-                console.log(key.doc);
                 $("#selectSubject").append($("<option>", {html: key.doc.subject, id: key.doc._id, value: key.doc._id}));
 
                 //Populates dd with the contents of selects subject
@@ -312,6 +309,72 @@ window.getCategories = function () {
                 }, false);
 
             });
+        },
+
+        //Error Handling
+        function (xhr, ajaxOptions, thrownError) {
+        }
+    );
+};
+
+window.getSetCategories = function (cate) {
+    var res = cate.split(":");
+    //Gets all registed categories
+    modem('GET', 'category',
+        //Response Handler
+        function (json) {
+            $.each(json, function (i, key) {
+                $("#selectSubject").append(
+                    $("<option>", {html: key.doc.subject, id: key.doc._id, value: key.doc._id})
+                );
+                //Populates dd with the contents of selects subject
+                var myEl = document.getElementById('selectSubject');
+
+                console.log("change")
+                myEl.addEventListener('change', function () {
+
+                    var selectedSubject = $(this).children(":selected").attr("id");
+                    if (key.doc._id === selectedSubject) {
+                        //Limpa a dd
+                        $("#selectContent").html("");
+                        $.each(key.doc.content, function (id, content) {
+                            $("#selectContent").append($("<option>", {
+                                html: content.name,
+                                id: content._id,
+                                value: content._id
+                            }));
+                        });
+                    }
+                }, false);
+                $("#selectSubject").val(res[0]).change();
+                $(myEl).trigger("change");
+                //Populates dd with the contents of selects subject
+                var myEll = document.getElementById('selectContent');
+                console.log("change")
+                myEll.addEventListener('change', function () {
+                    var selectedSubject = $("#selectSubject").children(":selected").attr("id");
+                    var selectedContent = $(this).children(":selected").attr("id");
+                    if (key.doc._id === selectedSubject) {
+                        //Limpa a dd
+                        $("#selectSpecification").html("");
+                        $.each(key.doc.content, function (id, content) {
+                            if (content._id === selectedContent) {
+                                $.each(content.specification, function (ids, specif) {
+                                    $("#selectSpecification").append($("<option>", {
+                                        html: specif.name,
+                                        id: specif._id,
+                                        value: specif._id
+                                    }));
+                                });
+                            }
+                        });
+                    }
+                }, false);
+            });
+            console.log(res[0])
+
+
+            $("#" + res[1]).attr("selected", true)
         },
 
         //Error Handling
@@ -469,6 +532,7 @@ window.showLoginModal = function (form) {
         ;
     $(form).append($loginModal);
 
+    $("#mLogin").modal({backdrop: 'static', keyboard: true});
     $("#mLogin").modal("show");
 };
 

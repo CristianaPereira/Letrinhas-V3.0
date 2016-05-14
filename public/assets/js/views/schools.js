@@ -40,7 +40,6 @@ window.SchoolsView = Backbone.View.extend({
     confirmDelete: function (id, nome) {
 
 
-
         var modal = delModal("Apagar escola",
             "Tem a certeza que pretende eliminar a escola <label>" + nome + " </label> ?",
             "deletebtn", id);
@@ -88,14 +87,17 @@ window.SchoolsView = Backbone.View.extend({
 
         var $divDados = $("<div>", {class: "col-md-7"}).append(
             $('<label>', {
-                class: "dataTitle col-md-12 row", text: schoolData.nome
+                class: "dataTitle col-md-12 row", text: schoolData.name
             }),
-            $('<label>', {
-                class: "col-md-4 lblDataDetails", text: "Morada:"
-            }),
-            $('<label>', {
-                class: "col-md-8 ", text: schoolData.morada
-            }))
+
+            $('<div>', {
+                class: "row"
+            }).append(
+                $('<span class="glyphicon "><i class="fa fa-map"></i></span>'),
+                $('<label>', {
+                    class: "col-md-8 ", text: schoolData.address
+                })
+            ))
 
 
         $('#schoolsPreview').append($divFoto, $divDados)
@@ -103,18 +105,18 @@ window.SchoolsView = Backbone.View.extend({
         ;
         $('#classesList').append('<div id="prfSchool" class="col-md-12" align=left></div> </br>');
 
-        $.each(schoolData.turmas, function () {
+        $.each(schoolData.classes, function () {
 
             var $class = $('<button>', {
                 class: "classBtn",
-                html: this.ano + "º " + this.nome + " "
+                html: this.year + "º " + this.name + " "
             })
 
 
             $("#classesList").append($class);
 
         });
-        $("#classesList").prepend('<label id="assocClasses"> Existe ' + schoolData.turmas.length + ' turma(s) associada(s).</label>')
+        $("#classesList").prepend('<label id="assocClasses"> Existe ' + schoolData.classes.length + ' turma(s) associada(s).</label>')
         //getAssocClasses(teacherData._id, teacherData.nome, false);
 
     },
@@ -161,12 +163,12 @@ window.SchoolsView = Backbone.View.extend({
                         title: "Apagar professor",
                     }).append('<i class="fa fa-trash-o"></i>')
                         .click(function () {
-                            self.confirmDelete(data.doc._id, data.doc.nome);
+                            self.confirmDelete(data.doc._id, data.doc.name);
                         });
 
                     var $div = $("<div>", {
                         class: "listButton divWidget"
-                    }).append("<img src=" + data.doc.b64 + "><span>" + data.doc.nome + "</span>")
+                    }).append("<img src=" + data.doc.b64 + "><span>" + data.doc.name + "</span>")
                         .append($("<div>", {class: "editDeleteOp"}).append($edit, $delete))
                         .click(function () {
                             self.enchePreview(data.doc);

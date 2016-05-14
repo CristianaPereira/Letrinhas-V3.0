@@ -10,8 +10,7 @@ html {
 
 body {
     font-family: arial, helvetica;
-    padding-bottom: 90px;
-    padding-top: 50px;
+
     min-width: 350px;
 
     /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#fac7da+0,f5efe3+15,ffffff+50,e6f1f2+85,92cabc+100 */
@@ -86,6 +85,16 @@ body {
 }
 
 #page {
+    padding-bottom: 90px;
+    padding-top: 50px;
+}
+
+#homeBar img {
+    height: 50px;
+}
+
+#homeBar li {
+    margin-left: 15px;
 }
 
 audio {
@@ -357,6 +366,7 @@ a {
 
 #section0 {
     background: url("../../img/study-with-books.jpg");
+    padding: 20px;
 }
 
 #slide1 {
@@ -692,12 +702,12 @@ label {
 }
 
 .titleImage {
-    height: 50px;
+    height: 20px;
     vertical-align: middle;
 }
 
 .titleText {
-    font-size: 30px;
+    font-size: 20px;
     vertical-align: middle;
 }
 
@@ -1008,6 +1018,14 @@ option:hover {
     background-color: #C2DEF3;
 }
 
+.panel-edit {
+    border-color: #F8D4DD;
+}
+
+.panel-edit > .panel-heading {
+    background-color: #F8D4DD;
+}
+
 .btn-success {
     background-color: #69B67B;
 
@@ -1026,7 +1044,7 @@ option:hover {
     box-shadow: 0 0 3px gray;
     font-size: 12px;
     font-weight: bold;
-    padding: 0;
+    padding: 4px;
 }
 
 .round-button:hover {

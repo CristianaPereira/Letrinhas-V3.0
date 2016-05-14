@@ -192,7 +192,7 @@ exports.getAll = function (req, res) {
 };
 
 exports.get = function (req, res) {
-    var id = req.params.id;
+    var id = req.params.userID;
     console.log('teacher get: '.green + id);
     db.get(id, function (err, body) {
         if (err) {
@@ -205,11 +205,55 @@ exports.get = function (req, res) {
         delete body._rev;
         delete body.password;
         delete body.pin;
-        //Return Result
-        res.json(body);
+
+
+        //gets schools ans classes
+        db2.list({
+            'include_docs': true,
+            'attachments': true,
+            'limit': undefined,
+            'descending': false
+        }, function (err, schools) {
+            if (err) {
+                return res.status(500).json({
+                    'result': 'nok',
+                    'message': err
+                });
+            }
+
+            body.classes = getClasses(schools, id);
+            //Return Result
+            res.json(body);
+        });
+
     });
 };
 
+//Returns an array of all classes teached by some professor
+function getClasses(schools, idProf) {
+    profClasses = [];
+    //Search all schools
+    for (var school in schools.rows) {
+        var escola = schools.rows[school].doc;
+        //If professor belongs to that schools
+        if (JSON.stringify(escola).indexOf(idProf) != -1) {
+            classes = {id: escola.name};
+            classes["class"] = [];
+        }
+        //Search all classes
+        for (var turma in escola.classes) {
+            //If professor belongs to that class
+            if (JSON.stringify(escola.classes[turma]).indexOf(idProf) != -1) {
+                classes["class"].push({
+                    id: escola.classes[turma]._id,
+                    name: escola.classes[turma].year + "º " + escola.classes[turma].name
+                })
+            }
+        }
+        profClasses.push(classes)
+    }
+    return profClasses;
+}
 
 //Função para associar professores às turmas
 function insertProfTurma(idProf, escola, turmas) {

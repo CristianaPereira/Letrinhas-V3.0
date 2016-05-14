@@ -10,7 +10,6 @@ window.QuestionsView = Backbone.View.extend({
     //Check Auth
     auth: function () {
         if (!window.sessionStorage.getItem("keyo")) {
-            app.navigate("/#", true);
             return false;
         }
         return true;
@@ -86,7 +85,7 @@ window.QuestionsView = Backbone.View.extend({
     //Applys filters
     filterBy: function () {
         //Mostra todos os testes
-
+        $(".listButton").show();
         //Esconde os testes cujas checkboxes não estão seleccionadas
         $.each($("input:checkbox:not(:checked)"), function (i, k) {
             $(".listButton[type=" + $(k).attr("value") + "]").hide();
@@ -297,6 +296,7 @@ window.QuestionsView = Backbone.View.extend({
         if (!self.auth()) {
             return false;
         }
+
         //Gets all registed categories
         modem('GET', 'category',
 
@@ -389,9 +389,9 @@ window.QuestionsView = Backbone.View.extend({
                         background = "#FBF6B4";
 
                     var $edit = $("<a>", {
-                            href: "#teachers/" + this.doc._id + "/edit",
+                            href: "#questionsText/" + this.doc._id,
                             val: this.doc._id,
-                            title: "Editar questione",
+                            title: "Editar pergunta",
                         }).append('<i id="btnEdit" class="fa fa-edit"></i>')
                         ;
 

@@ -2,15 +2,9 @@ window.NavigationBarView = Backbone.View.extend({
 
     events: {
         "click #menuSair": "logout",
-        "click .navbar-collapse.in": "closeBar",
     },
 
-    closeBar: function () {
 
-        $(this).collapse('hide');
-
-
-    },
     logout: function (e) {
         e.preventDefault();
         console.log("out");

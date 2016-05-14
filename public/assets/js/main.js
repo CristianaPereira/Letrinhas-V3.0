@@ -4,6 +4,16 @@ Backbone.View.prototype.close = function () {
     this.undelegateEvents();
 };
 
+Backbone.ajax = function () {
+    var args = Array.prototype.slice.call(arguments, 0);
+
+    args[0].beforeSend = function (xhr) {
+        xhr.setRequestHeader('Authorization', 'Basic ' + window.sessionStorage.getItem("keyo"));
+    };
+
+    return Backbone.$.ajax.apply(Backbone.$, args);
+};
+
 var Router = Backbone.Router.extend({
     currentView: undefined,
     showView: function (view, elem, sub) {
@@ -25,9 +35,6 @@ var Router = Backbone.Router.extend({
 
         //Default Page
         "": "index",
-
-        //Menu Principal
-        "dashboard": "dashboard",
 
         //Teachers Routing
         "teachers": "teachers",
@@ -55,7 +62,10 @@ var Router = Backbone.Router.extend({
         "resolutions": "resolutions",
         //Tests Routing
         "questions": "questions",
-        "questionsText/new": "textTestNew",
+
+        "questionsText/new": "questionsTextNew",
+        "questionsText/:id": "questionsTextEdit",
+
         "multimediaTest/new": "multimediaTestNew",
         "listTest/new": "listTestNew",
         "interpretationTest/new": "interpretationTestNew"
@@ -98,21 +108,6 @@ var Router = Backbone.Router.extend({
         );
     },
 
-    //Home Template
-    dashboard: function () {
-        var self = this;
-
-        this.navbar();
-
-        //Load Template
-        templateLoader.load(["Dashboard"],
-            function () {
-                var v = new Dashboard({});
-                self.showView(v, $('#content'));
-            }
-        );
-
-    },
     //Home Template
     resolutions: function () {
         var self = this;
@@ -174,8 +169,14 @@ var Router = Backbone.Router.extend({
 
         templateLoader.load(["UserView"],
             function () {
-                var v = new UserView({});
-                self.showView(v, $('#content'));
+                var ss = new Me({});
+                ss.fetch(function () {
+                    var v = new UserView({
+                        model: ss
+                    });
+                    self.showView(v, $('#content'));
+                })
+
             }
         );
     },
@@ -258,10 +259,19 @@ var Router = Backbone.Router.extend({
         var self = this;
 
         this.navbar();
+
         templateLoader.load(["SchoolsEdit"],
             function () {
-                var v = new SchoolsEdit({id: id});
-                self.showView(v, $('#content'));
+                var ss = new School({
+                    id: id
+                });
+                ss.fetch(function () {
+                    var v = new SchoolsEdit({
+                        model: ss
+                    });
+                    self.showView(v, $('#content'));
+                })
+
             }
         );
     },
@@ -318,16 +328,20 @@ var Router = Backbone.Router.extend({
         var self = this;
 
         self.navbar();
-
         templateLoader.load(["QuestionsView"],
             function () {
-                var v = new QuestionsView({});
-                self.showView(v, $('#content'));
+                var ss = new Question({});
+                ss.fetchAll(function () {
+                    var v = new QuestionsView({
+                        model: ss
+                    });
+                    self.showView(v, $('#content'));
+                })
             }
         );
     },
 
-    textTestNew: function () {
+    questionsTextNew: function () {
         var self = this;
 
         self.navbar();
@@ -336,6 +350,27 @@ var Router = Backbone.Router.extend({
             function () {
                 var v = new QuestionsTextNew({});
                 self.showView(v, $('#content'));
+            }
+        );
+    },
+
+    questionsTextEdit: function (id) {
+        var self = this;
+
+        self.navbar();
+
+        templateLoader.load(["QuestionsTextEdit"],
+            function () {
+                var ss = new Question({
+                    id: id
+                });
+                ss.fetch(function () {
+                    var v = new QuestionsTextEdit({
+                        model: ss
+                    });
+                    self.showView(v, $('#content'));
+                })
+
             }
         );
     },

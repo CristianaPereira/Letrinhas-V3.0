@@ -6,14 +6,14 @@
                 <img class="titleImage">
         <span class="titleText">
            <img src="../img/text.png" style="height:30px;">
-       Nova pergunta de Texto
+       Editar pergunta de Texto
         </span>
             </div>
         </div>
     </div>
     <div class="col-md-12">
-        <div class="panel panel-info">
-            <div class="panel-heading"><i class="fa fa-gears"></i> Detalhes do teste
+        <div class="panel panel-edit">
+            <div class="panel-heading"><i class="fa fa-gears"></i> Detalhes da pergunta
                 <i id="infoPop" class="fa fa-info-circle" style="float: right;"></i>
             </div>
             <div class="panel-body">
@@ -64,6 +64,7 @@
                         <label for="InputDescricao">Descrição:</label>
                         <input type="text" class="form-control mandatory" id="InputDescricao"
                                placeholder="Ex: Teste de apoio para alunos con dificuldades de leitura"
+                               value="<%= description %>"
                                name="description">
 
                     </div>
@@ -72,6 +73,7 @@
                             <label for="InputTitulo">Título:</label>
                             <input type="text" class="form-control mandatory" id="InputTitulo"
                                    placeholder="Ex: Anita vai às compras"
+                                   value="<%= title %>"
                                    name="title">
                         </div>
                     </div>
@@ -81,17 +83,18 @@
                             <label for="InputPergunta">Pergunta:</label>
                             <input type="text" class="form-control mandatory" id="InputPergunta"
                                    placeholder="Ex: Leia o segunte texto" name="question"
-                            >
+                                   value="<%= question %>">
                         </div>
 
                     </div>
+
                     <!-- TEXTO -->
                     <div class="form-group">
                         <div class="col-sm-12">
                             </br>
                             <label for="InputTexto">Texto</label>
                     <textarea class="form-control mandatory" rows="7" id="InputTexto" name="text" style="resize: none;"
-                    ></textarea>
+                    ><%= contentText %></textarea>
                         </div>
                     </div>
 
@@ -111,6 +114,9 @@
                         <hr class="formBar">
                         </br>
                     </div>
+                    <audio class="col-md-12" controls="controls">
+                        <source src="<%= voice %>" type="audio/mpeg">
+                    </audio>
                     <div class="form-group">
 
                         <div class="col-sm-3" style="padding-right: 0px;">
@@ -209,13 +215,9 @@
                         </a>
                     </div>
                 </div>
-
-                <div class="col-sm-12" id="rTexto" style="height:270px; overflow:auto; background-color:#ecdcbc">
-                </div>
             </div>
 
         </div>
     </div>
 </div>
 <!-- ########################################### -->
-

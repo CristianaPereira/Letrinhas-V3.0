@@ -1,18 +1,24 @@
-window.QuestionsTextNew = Backbone.View.extend({
+window.QuestionsTextEdit = Backbone.View.extend({
     events: {
+        'load #selectSubject': 'create',
         "click #showEqualizer": "showEqualizer",
         "click #record": "initRecord",
         "click #backbtn": "goBack",
         "change #uploadSoundFile": "uploadSoundFile",
+        "change #selectSubject": "alert",
         "blur .emptyField": "isEmpty",
         "submit": "beforeSend",
         "mouseover #subTxt": "pop"
     },
+
+    alert: function () {
+        //alert("asdfas");
+    },
     //Initializes popover content
     pop: function () {
-
+        $("#selectSubject").val("6b348c67c111a8e7f010c054b4001b85");
+        console.log("here")
         setPopOver("Titulo, Discuplina, Ano escolar, Pergunta, Descrição, Texto e Audio");
-
     },
 
     //Check Auth
@@ -40,15 +46,18 @@ window.QuestionsTextNew = Backbone.View.extend({
     //Before Sending Request To Server
     beforeSend: function (e) {
         e.preventDefault();
-        modem('POST', 'questions',
+        modem('PUT', 'questions/' + this.model.toJSON().id,
             function (json) {
+                success($("body"), "OK", 1000);
+
             },
             //Error Handling
             function (xhr, ajaxOptions, thrownError) {
-                failMsg($(".form"), "Não foi possível inserir a nova pergunta. \n (" + JSON.parse(xhr.responseText).result + ").");
+                failMsg($("body"), "Não foi possível inserir a nova pergunta. \n (" + JSON.parse(xhr.responseText).result + ").");
             },
             new FormData($("#newTextTestForm")[0])
-        );
+        )
+        ;
     },
 
     //Show Voice Recorder Equalizer
@@ -90,24 +99,51 @@ window.QuestionsTextNew = Backbone.View.extend({
     //Class Initializer
     initialize: function () {
         var self = this;
-        self.bd = 'dev_testes';
-        self.bd2 = 'dev_perguntas';
-        self.site = 'http://185.15.22.235:5984';
+    },
+
+    create: function () {
+        console.log("sd")
     },
 
     //Class Renderer
     render: function () {
         var self = this;
-
         //Check Local Auth
         if (!self.auth()) {
             return false;
         }
 
-        getCategories();
 
-        $(this.el).html(this.template());
-        return this;
+        $(self.el).html(self.template(self.model.toJSON()));
+        getSetCategories(self.model.toJSON().subject);
+
+        var question = new Question({id: "Q1462970445206"})
+        var questionDetails = {
+            "id": "Q1462970445206",
+            "title": "Stewie s",
+            "subject": "6b348c67c111a8e7f010c054b4001b85:undefined:undefined",
+            "question": "quantos models",
+            "description": "Descicao model",
+            "content": {
+                "text": "angulo model"
+            },
+            "profID": "reginacenoura@gmail.com",
+            "creationDate": "2016-05-11T12:40:45.206Z"
+        };
+        question.set({title: 'Stewie Griffin'}); // This triggers a change and will alert;
+        console.log(question)
+
+        question.save(questionDetails, {
+
+            success: function (user) {
+                alert(JSON.stringify(user));
+            }
+        });
+
+
+        var data = this.model.toJSON();
+        console.log(data)
+        return self;
 
     },
 

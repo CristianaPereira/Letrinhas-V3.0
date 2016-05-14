@@ -134,8 +134,7 @@ window.TeachersView = Backbone.View.extend({
                 //Error Handling Given The Error Nature
                 //Se o erro retornado for de acesso negado, reencaminha o utilizador para a página de login
                 if (JSON.parse(xhr.status)) {
-                    showLoginModal($("#teachersDiv"));
-                    console.log(md5("teste1234"));
+
                     /* failMsg($("#teachersDiv"), "Ocorreu um imprevisto. \n (" + JSON.parse(xhr.responseText).result + ").");
                      setTimeout(function () {
                      app.navigate('/inicio', {

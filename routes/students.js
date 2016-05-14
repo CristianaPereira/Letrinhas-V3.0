@@ -38,19 +38,6 @@ exports.new = function (req, res) {
 
 };
 
-exports.getAll = function (req, res) {
-
-    console.log('students getAll'.green);
-
-    db.list({'include_docs': true, 'attachments': true, 'limit': undefined, 'descending': true}, function (err, body) {
-        if (err) {
-            res.send(err.statusCode, {error: "Erro a procurar alunos"});
-        }
-
-        res.json(body.rows);
-    });
-};
-
 exports.get = function (req, res) {
     var id = req.params.id;
     console.log('student get: '.green + id);
@@ -68,28 +55,22 @@ exports.get = function (req, res) {
 exports.editStudent = function (req, res) {
 
     if (req.body.name != '' && req.body.number != '') {
-
         //Fetch School
         console.log('Edit Student: Fetching Student ' + req.params.id + ''.green);
-
         //Search School Info
         db.get(req.params.id, function (err, body) {
-
             if (err) {
                 //Report Error (School Doenst Exists)
                 console.log("Error Editing Student");
                 res.send(err.statusCode, {error: "Aluno Invalido"});
             }
             else {
-
                 body.nome = req.body.name;
                 body.numero = req.body.number;
 
                 if (req.body.b64 != '')
                     body.b64 = req.body.b64;
-
                 db.insert(body, body._id, function (err) {
-
                     if (err) {
                         //Report Error (Student Doesn't Exists)
                         console.log("Error Editing Student");
@@ -99,13 +80,9 @@ exports.editStudent = function (req, res) {
                         console.log("Student Edited");
                         res.send(200);
                     }
-
                 });
-
             }
-
         });
-
     }
     else {
         console.log('Parameters Missing');
@@ -113,9 +90,9 @@ exports.editStudent = function (req, res) {
     }
 };
 
-exports.getStudents = function (req, res) {
+exports.getAll = function (req, res) {
 
-    var user = req.params.id;
+    var user = req.params.userID;
 
     var escolas = [];
 

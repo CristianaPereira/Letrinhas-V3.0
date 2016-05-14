@@ -1,5 +1,19 @@
 window.ResolutionsView = Backbone.View.extend({
-    events: {},
+    events: {
+
+        'click [type="checkbox"]': "filterBy",
+    },
+
+
+    //Applys filters
+    filterBy: function () {
+        //Mostra todos os testes
+        $(".listButton").show();
+        //Esconde os testes cujas checkboxes não estão seleccionadas
+        $.each($("input:checkbox:not(:checked)"), function (i, k) {
+            $(".listButton[type=" + $(k).attr("value") + "]").hide();
+        });
+    },
 
 
     initialize: function () {
@@ -46,12 +60,13 @@ window.ResolutionsView = Backbone.View.extend({
                                     var $div = $("<div>", {
                                         class: "col-md-4"
                                     }).append($("<div>", {
-                                        class: "boxButton divWidget"
-
+                                        class: "boxButton divWidget",
+                                        type: data.doc.type,
+                                        value: data.doc.subject
                                     }).append(
                                             +'<label>Demo:</label>'
                                             + '<audio id="vozProf" controls style="width:100%">'
-                                            + '<source src="photo/' + self.bd2 + '/' + data.doc._id + '/gravacao.amr" type="audio/amr">'
+                                            + '<source src="http://127.0.0.1:5984/dev_resolucoes/' + data.doc._id + '/gravacao.mp3" type="audio/mp3">'
                                             + '</audio><hr> ' +
 
                                             "<img width='25px' src=" + student.doc.b64 + "><span>" + student.doc.nome + "</span>")
@@ -79,7 +94,20 @@ window.ResolutionsView = Backbone.View.extend({
             function (xhr, ajaxOptions, thrownError) {
             }
         );
+        modem('GET', 'resolutions',
 
+            //Response Handler
+            function (json) {
+                $.each(json, function (i, key) {
+                });
+
+
+            },
+
+            //Error Handling
+            function (xhr, ajaxOptions, thrownError) {
+            }
+        );
         return this;
     },
 });

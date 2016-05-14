@@ -265,7 +265,6 @@ window.QuestionsMultimediaNew = Backbone.View.extend({
 //Check Auth
     auth: function () {
         if (!window.sessionStorage.getItem("keyo")) {
-            app.navigate("/#", true);
             return false;
         }
         return true;
