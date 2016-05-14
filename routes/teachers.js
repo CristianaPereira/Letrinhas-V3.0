@@ -20,23 +20,23 @@ nano.auth(process.env.USERNAME, process.env.PASSWORD, function (err, response, h
 
 exports.new = function (req, res) {
     console.log('teachers new'.green);
-    //Verify Fields
     console.log(req.body);
-    if (req.body.name && req.body.password && req.body.codPin && req.body.telefone && req.body.imgb64 && req.body.tipo) {
+
+    //Verify Fields
+    if (JSON.stringify(req.body).indexOf('""') == -1) {
         var state = false;
 
         if (req.body.estado == "Ativo") {
             state = true;
         }
         var newteacher = {
-            "estado": state,
-            "nome": req.body.name,
+            "state": state,
+            "name": req.body.name,
             "password": req.body.password,
             "pin": req.body.codPin,
-            "telefone": req.body.telefone,
-            "tipoFuncionario": req.body.tipo,
+            "phoneNumber": req.body.telefone,
             "permissionLevel": req.body.tipo,
-            "imgb64": req.body.imgb64,
+            "b64": req.body.b64,
         };
 
         db.insert(newteacher, req.body.email, function (err, body) {
@@ -44,16 +44,16 @@ exports.new = function (req, res) {
                 console.log("(L-131) - Não foi possivel inserir " + req.body.email + '\n' + "erro: " + err);
             else {
                 res.json(body);
-                console.log('New teacher ' + req.body.nome + ' was inserted!'.green);
+                console.log('New teacher ' + req.body.name + ' was inserted!'.green);
 
             }
         });
 
-        var escolas = JSON.parse(req.body.turmas);
+        var escolas = JSON.parse(req.body.classes);
 
         for (var items in escolas) {
             console.log("Ver escola :" + escolas[items].id);
-            insertProfTurma(req.body.email, escolas[items].id, escolas[items].turmas);
+            insertProfTurma(req.body.email, escolas[items].id, escolas[items].classes);
             console.log("-------------");
         }
 
@@ -180,14 +180,32 @@ exports.getAll = function (req, res) {
             console.log(err);
         }
         //Removes Sensitive Information
-        for (var items in body.rows) {
-            delete body.rows[items].value;
-            delete body.rows[items].doc._rev;
-            delete body.rows[items].doc.password;
-            delete body.rows[items].doc.pin;
-        }
 
-        res.json(body.rows);
+        //gets schools ans classes
+        db2.list({
+            'include_docs': true,
+            'attachments': true,
+            'limit': undefined,
+            'descending': false
+        }, function (err, schools) {
+            if (err) {
+                return res.status(500).json({
+                    'result': 'nok',
+                    'message': err
+                });
+            }
+            for (var items = 0; items < body.rows.length; items++) {
+                delete body.rows[items].value;
+                delete body.rows[items].doc._rev;
+                delete body.rows[items].doc.password;
+                delete body.rows[items].doc.pin;
+                console.log(body.rows[items].doc._id)
+                body.rows[items].doc.classes = getClasses(schools, body.rows[items].doc._id);
+            }
+            //Return Result
+            res.json(body.rows);
+        });
+
     });
 };
 
@@ -231,7 +249,9 @@ exports.get = function (req, res) {
 
 //Returns an array of all classes teached by some professor
 function getClasses(schools, idProf) {
-    profClasses = [];
+    console.log("getting classes".green)
+    var profClasses = [];
+    var classes;
     //Search all schools
     for (var school in schools.rows) {
         var escola = schools.rows[school].doc;
@@ -252,6 +272,7 @@ function getClasses(schools, idProf) {
         }
         profClasses.push(classes)
     }
+    console.log(profClasses)
     return profClasses;
 }
 

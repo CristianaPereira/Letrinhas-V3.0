@@ -1,16 +1,62 @@
 window.SchoolsNew = Backbone.View.extend({
     events: {
         "click #backbtn": "goBack",
-        "blur .emptyField": "isEmpty",
-        "submit": "beforeSend",
+        "click #addNewClass": "addNewClass",
+        "click .deleteClass": "deleteClass",
         "change #filePicker": "convertPhoto",
         "click #btnCrop": "getFoto",
+        "blur .emptyField": "isEmpty",
+        "submit": "beforeSend",
         "mouseover #subEscola": "pop"
     },
 
     //Initializes popover content
     pop: function () {
         setPopOver("Nome, Morada e Fotografia");
+    },
+
+    addNewClass: function (e) {
+        e.preventDefault();
+        var ano = $("#dbYear").val();
+        if (ano != undefined) {
+            //Creates new class object
+            var newClass = {
+                "name": $("#classDesig").val(), "year": ano,
+            };
+            //IF that class isn't already listed
+            if ($("#classesInput").val().indexOf(JSON.stringify(newClass)) == -1) {
+                var obj = jQuery.parseJSON($("#classesInput").val());
+                obj.push(newClass);
+                $("#classesInput").val(JSON.stringify(obj));
+
+                $("#classesList").append(
+                    $('<div>', {class: "row"}).append(
+                        $('<p>', {class: "col-md-4 col-sm-4", html: ano + "º " + $("#classDesig").val()}),
+                        $('<div>', {class: "col-md-8 col-sm-8"}).append(
+                            $('<button>', {
+                                class: "deleteClass round-button fa fa-trash",
+                                value: JSON.stringify(newClass)
+                            })
+                        )
+                    )
+                )
+            }
+        }
+    },
+
+    //Removes a listed class
+    deleteClass: function (e) {
+        e.preventDefault();
+        var objToRemove = jQuery.parseJSON($(e.currentTarget).val());
+        var obj = jQuery.parseJSON($("#classesInput").val());
+        $.each(obj, function (i, classe) {
+            if (classe.name == objToRemove.name && classe.year == objToRemove.year) {
+                obj.splice(i, 1);
+                $(e.currentTarget).parent().parent().remove();
+                $("#classesInput").val(JSON.stringify(obj));
+                return;
+            }
+        })
     },
 
     //Convert Photo To defined size
@@ -28,6 +74,7 @@ window.SchoolsNew = Backbone.View.extend({
         }
         reader.readAsDataURL(file);
     },
+
     //crops a foto
     getFoto: function (e) {
         e.preventDefault();
@@ -47,7 +94,6 @@ window.SchoolsNew = Backbone.View.extend({
         }
     },
 
-
     //Before Sending Request To Server
     beforeSend: function (e) {
         e.preventDefault();
@@ -58,27 +104,27 @@ window.SchoolsNew = Backbone.View.extend({
         var isValid = isFormValid(allListElements);
         //If they are
         if (isValid) {
-            modem('POST', 'schools',
-                //Response Handler
-                function (json) {
+
+            //Recolhe os dados da view
+            var schoolDetails = $('#newschoolform').serializeObject();
+            //Cria um novo model
+            var school = new School(schoolDetails);
+            //Converte o json das classes em objecto
+            school.set({classes: jQuery.parseJSON($("#classesInput").val())})
+
+            school.save(null, {
+                success: function (user) {
                     sucssesMsg($(".form"), "Escola inserida com sucesso!", 1000);
                     setTimeout(function () {
-                        app.navigate("schools/" + json + "/edit", {
+                        app.navigate("schools", {
                             trigger: true
                         });
-                    }, 1200);
+                    }, 1500);
                 },
-
-                //Error Handling
-                function (xhr, ajaxOptions, thrownError) {
+                error: function () {
                     failMsg($(".form"), "Lamentamos mas não foi possível inserir a escola!", 1000);
-                    console.log(xhr);
-                    console.log(ajaxOptions);
-                    console.log(thrownError);
-
-                },
-                new FormData($("#newschoolform")[0])
-            );
+                }
+            });
         }
     },
 
@@ -86,11 +132,6 @@ window.SchoolsNew = Backbone.View.extend({
     goBack: function (e) {
         e.preventDefault();
         window.history.back();
-    },
-
-
-    //Class Initializer
-    initialize: function () {
     },
 
     //Class Renderer

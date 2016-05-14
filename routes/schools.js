@@ -29,14 +29,32 @@ exports.new = function (req, res) {
     console.log(req.body)
     //Check For Required Fields
     if (req.body.name && req.body.address && req.body.b64) {
-
+        var presentYear = new Date().getFullYear();
         var school = {
             "name": req.body.name,
             "address": req.body.address,
             "classes": [],
             "b64": req.body.b64
         }
+        for (var i = 0; i < req.body.classes.length; i++) {
+            console.log("classes")
+            console.log(req.body.classes[i])
+            //Generate New Class Skeleton
+            var newClass = {
+                _id: "T" + presentYear + req.body.classes[i].year + new Date().getTime() + (req.body.classes.length + 1),
+                name: req.body.classes[i].name,
+                year: req.body.classes[i].year,
+                scholarYear: presentYear,
+                profs: []
+            };
+
+            //Add New Class Skeleton to School
+            school.classes.push(newClass);
+            console.log(school)
+        }
+
         var id = "School" + new Date().getTime();
+        console.log(school)
         db.insert(school, id, function (err) {
             if (err)
                 return res.status(500).json({

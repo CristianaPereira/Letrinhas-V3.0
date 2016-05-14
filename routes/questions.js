@@ -124,8 +124,8 @@ exports.getAll = function (req, res) {
                 'message': err
             });
         }
-
         res.json(body.rows);
+
     });
 };
 

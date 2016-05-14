@@ -1,24 +1,47 @@
 var Teacher = Backbone.Model.extend({
-  initialize: function (options) {
-    this.id = options.id;
-  },
-  fetch: function (after_fetch) {
-    var self = this;
-    modem('GET', 'teachers/' + this.id,
-      function (json) {
-        self.set("nome", json.nome);
-        self.set("telefone", json.telefone);
-        self.set("password", json.password);
-        self.set("pin", json.pin);
-        self.set("estado",json.true);
-          console.log("models/teacher");
-        after_fetch();
-      },
-      //Precisamos enviar para a Tabela escolas o id do professor.
-      function (xhr, ajaxOptions, thrownError) {
-        var json = JSON.parse(xhr.responseText);
-        error_launch(json.message);
-      }
-    );
-  }
+    initialize: function () {
+
+    },
+    fetch: function (after_fetch) {
+        var self = this;
+        modem('GET', 'me', function (teacherData) {
+            self.set("_id", teacherData._id);
+            self.set("nome", teacherData.nome);
+            self.set("imgb64", teacherData.imgb64);
+            self.set("telefone", teacherData.telefone);
+            self.set("schools", teacherData.classes);
+            self.set("permissionLevel", getUserRole(teacherData.permissionLevel));
+            after_fetch();
+        }, function (error) {
+            console.log('Error getting my data!');
+            var json = JSON.parse(xhr.responseText);
+            error_launch(json.message);
+        });
+    }
+});
+
+var Teachers = Backbone.Collection.extend({
+    model: Teacher,
+    fetch: function (after_fetch) {
+        var self = this;
+        modem('GET', 'teachers',
+            function (json) {
+                for (i = 0; i < json.length; i++) {
+                    self.models.push(new Teacher(json[i].doc));
+                }
+                after_fetch();
+            },
+            function () {
+            }
+        );
+    },
+    //Gets specific item from collection
+    getByID: function (id) {
+        var self = this;
+        return (
+            self.models.find(function (model) {
+                return model.get('_id') === id;
+            }).attributes
+        )
+    }
 });

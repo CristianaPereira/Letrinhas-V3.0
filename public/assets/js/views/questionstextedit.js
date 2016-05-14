@@ -99,6 +99,7 @@ window.QuestionsTextEdit = Backbone.View.extend({
     //Class Initializer
     initialize: function () {
         var self = this;
+
     },
 
     create: function () {
@@ -116,30 +117,30 @@ window.QuestionsTextEdit = Backbone.View.extend({
 
         $(self.el).html(self.template(self.model.toJSON()));
         getSetCategories(self.model.toJSON().subject);
+        /*
+         var question = new Question({id: "Q1462970445206"})
+         var questionDetails = {
+         "id": "Q1462970445206",
+         "title": "Stewie s",
+         "subject": "6b348c67c111a8e7f010c054b4001b85:undefined:undefined",
+         "question": "quantos models",
+         "description": "Descicao model",
+         "content": {
+         "text": "angulo model"
+         },
+         "profID": "reginacenoura@gmail.com",
+         "creationDate": "2016-05-11T12:40:45.206Z"
+         };
+         question.set({title: 'Stewie Griffin'}); // This triggers a change and will alert;
+         console.log(question)
 
-        var question = new Question({id: "Q1462970445206"})
-        var questionDetails = {
-            "id": "Q1462970445206",
-            "title": "Stewie s",
-            "subject": "6b348c67c111a8e7f010c054b4001b85:undefined:undefined",
-            "question": "quantos models",
-            "description": "Descicao model",
-            "content": {
-                "text": "angulo model"
-            },
-            "profID": "reginacenoura@gmail.com",
-            "creationDate": "2016-05-11T12:40:45.206Z"
-        };
-        question.set({title: 'Stewie Griffin'}); // This triggers a change and will alert;
-        console.log(question)
+         question.save(questionDetails, {
 
-        question.save(questionDetails, {
-
-            success: function (user) {
-                alert(JSON.stringify(user));
-            }
-        });
-
+         success: function (user) {
+         alert(JSON.stringify(user));
+         }
+         });
+         */
 
         var data = this.model.toJSON();
         console.log(data)

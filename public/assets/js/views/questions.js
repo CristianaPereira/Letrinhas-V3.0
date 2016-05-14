@@ -3,6 +3,7 @@ window.QuestionsView = Backbone.View.extend({
         "click #deletebtn": "deleteQuestion",
         'click [type="checkbox"]': "filterBy",
         'click .contentFilter': "filterBycontent",
+        'click .listButton': "enchePreview",
         "keyup #txtSearch": "searchTests",
         "click #orderBy": "orderQuestions"
     },
@@ -108,7 +109,9 @@ window.QuestionsView = Backbone.View.extend({
     },
 
     //Text Preview
-    enchePreview: function (question) {
+    enchePreview: function (e) {
+        //gets model info
+        question = this.model.getByID($(e.currentTarget).attr("id"));
         var self = this;
         //Clear Preview
         $("#questionsPreview").empty();
@@ -296,6 +299,9 @@ window.QuestionsView = Backbone.View.extend({
         if (!self.auth()) {
             return false;
         }
+        var data = self.model.toJSON();
+
+        $(this.el).html(this.template({collection: data}));
 
         //Gets all registed categories
         modem('GET', 'category',
@@ -358,76 +364,75 @@ window.QuestionsView = Backbone.View.extend({
             function (xhr, ajaxOptions, thrownError) {
             }
         );
+        /*
 
-        $(this.el).html(this.template());
+         //Return Questions
+         modem('GET', 'questions',
 
-        //Return Questions
-        modem('GET', 'questions',
+         //Response Handler
+         function (json) {
+         $('#questionsBadge').text(json.length);
 
-            //Response Handler
-            function (json) {
-                $('#questionsBadge').text(json.length);
+         //Append Question Buttons To Template
+         $.each(json, function (i, quest) {
 
-                //Append Question Buttons To Template
-                $.each(json, function (i, quest) {
-
-                    //     console.log(quest.doc)
-                    //Select Question Type Image
-                    // console.log(quest);
-                    var $imgT = "../img/" + (quest.doc.type).toLowerCase() + ".png";
-
-
-                    //Select quest Class Image
-                    var subject = (quest.doc.subject).split(":");
-                    console.log(subject[0])
-                    var $imgC = "../img/" + subject[0] + ".png";
+         //     console.log(quest.doc)
+         //Select Question Type Image
+         // console.log(quest);
+         var $imgT = "../img/" + (quest.doc.type).toLowerCase() + ".png";
 
 
-                    //Select BG Color
-                    var background = "none";
-                    if (window.sessionStorage.getItem("username") == quest.doc.profID)
-                        background = "#FBF6B4";
+         //Select quest Class Image
+         var subject = (quest.doc.subject).split(":");
+         //         console.log(subject[0])
+         var $imgC = "../img/" + subject[0] + ".png";
 
-                    var $edit = $("<a>", {
-                            href: "#questionsText/" + this.doc._id,
-                            val: this.doc._id,
-                            title: "Editar pergunta",
-                        }).append('<i id="btnEdit" class="fa fa-edit"></i>')
-                        ;
 
-                    //Botao de eliminar
-                    var $delete = $("<a>", {
+         //Select BG Color
+         var background = "none";
+         if (window.sessionStorage.getItem("username") == quest.doc.profID)
+         background = "#FBF6B4";
 
-                        val: quest.doc._id,
-                        title: "Apagar pergunta",
-                    }).append('<i class="fa fa-trash-o"></i>')
-                        .click(function () {
-                            self.confirmDelete(quest.doc._id, quest.doc.title, quest.doc.profID);
-                        });
-                    //Separa o nome para recolher apenas o primeiro e o utimo
-                    var $div = $("<div>", {
-                        class: "listButton divWidget",
-                        style: "background-color:" + background,
-                        type: quest.doc.type,
-                        value: quest.doc.subject
-                    }).append("<img src=" + $imgT + "><img  src='" + $imgC + "'><span>" + quest.doc.title + "</span>")
-                        //  .append($edit)
-                        .append($("<div>", {class: "editDeleteOp"}).append($edit, $delete))
-                        .click(function () {
-                            self.enchePreview(quest.doc);
-                        });
+         var $edit = $("<a>", {
+         href: "#questionsText/" + this.doc._id,
+         val: this.doc._id,
+         title: "Editar pergunta",
+         }).append('<i id="btnEdit" class="fa fa-edit"></i>')
+         ;
 
-                    $("#questionsContent").append($div);
-                })
-                ;
-                self.enchePreview(json[0].doc);
-            },
+         //Botao de eliminar
+         var $delete = $("<a>", {
 
-            //Error Handling
-            function (xhr, ajaxOptions, thrownError) {
-                failMsg($("#questionsContent"), "Não foi possível listar as perguntas. \n (" + JSON.parse(xhr.responseText).error + ").");
-            }
-        );
+         val: quest.doc._id,
+         title: "Apagar pergunta",
+         }).append('<i class="fa fa-trash-o"></i>')
+         .click(function () {
+         self.confirmDelete(quest.doc._id, quest.doc.title, quest.doc.profID);
+         });
+         //Separa o nome para recolher apenas o primeiro e o utimo
+         var $div = $("<div>", {
+         class: "listButton divWidget",
+         style: "background-color:" + background,
+         type: quest.doc.type,
+         value: quest.doc.subject
+         }).append("<img src=" + $imgT + "><img  src='" + $imgC + "'><span>" + quest.doc.title + "</span>")
+         //  .append($edit)
+         .append($("<div>", {class: "editDeleteOp"}).append($edit, $delete))
+         .click(function () {
+         self.enchePreview(quest.doc);
+         });
+
+         $("#questionsContent").append($div);
+         })
+         ;
+         self.enchePreview(json[0].doc);
+         },
+
+         //Error Handling
+         function (xhr, ajaxOptions, thrownError) {
+         failMsg($("#questionsContent"), "Não foi possível listar as perguntas. \n (" + JSON.parse(xhr.responseText).error + ").");
+         }
+         );*/
 
         return this;
     }

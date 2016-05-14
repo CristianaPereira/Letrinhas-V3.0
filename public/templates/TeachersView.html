@@ -43,9 +43,36 @@
 </div>
 <div id="teachersDiv" class="mainDiv">
     <div class=" panel-body col-md-5" align=center>
+
+
         <div id="teachersContent" class=" panel-body col-md-12" align=center>
 
+
+            <% _.each(collection,function(prof){ %>
+            <div class="row">
+                <div class="listButton divWidget"
+                     id='<%= prof._id %>'>
+
+                    <img src="<%= prof.b64 %>">
+                    <span><%= prof.name %></span>
+                    <div class="editDeleteOp">
+                        <a href="#teachers/<%= prof._id %>/edit" title="Editar professor">
+                            <i id="btnEdit" class="fa fa-edit"></i>
+                        </a>
+                        <a href="#teachers" title="Apagar professor">
+                            <i class="fa fa-trash-o"></i>
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+            <% }); %>
+
+
         </div>
+
+
     </div>
     <div class="col-md-7" style="padding: 30px; " align="center">
         <div id="teachersPreview" class="col-md-12 divWidget" align="center">

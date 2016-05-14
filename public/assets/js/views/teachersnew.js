@@ -2,7 +2,7 @@ window.TeachersNewView = Backbone.View.extend({
     events: {
         "click #newteacherbtn": "beforeSend",
         "click #buttonCancelar": "goBack",
-        "click #btnFoto": "photoCropper",
+        "change #filePicker": "convertPhoto",
         "click #btnCrop": "getFoto",
         "click #addTurma": "addTurma",
         "click #rmvTurmas": "rmvTurmas",
@@ -11,8 +11,21 @@ window.TeachersNewView = Backbone.View.extend({
     },
 
     //Exibe o cropper
-    photoCropper: function () {
-        showCropper("#newteacherform", 600, 300, 1);
+    //Convert Photo To Base64 String
+    convertPhoto: function (e) {
+        var file = e.target.files[0];
+
+        // Load the image
+        var reader = new FileReader();
+
+        reader.onload = function (readerEvent) {
+            var image = new Image();
+            image.src = readerEvent.target.result;
+            showCropper("#newteacherform", image, 300, 1);
+            console.log(image.src);
+
+        }
+        reader.readAsDataURL(file);
     },
     //Recorta a foto
     getFoto: function (e) {
@@ -39,20 +52,7 @@ window.TeachersNewView = Backbone.View.extend({
     //Verifica se o e-mail já esta registado
     isEmailAvail: function () {
         //Se o email ja estiver a ser usado
-        modem('GET', 'teachers/' + $("#inputEmail").val(),
-            function (json) {
-                if (json != null) {
-                    $("#inputEmail").addClass("emptyField");
-                    $("#validationLbl").text("O email " + $("#inputEmail").val() + " já está a ser utilizado.");
-                    return false;
-                }
-            },
-            function (xhr, ajaxOptions, thrownError) {
 
-            }
-        );
-        $("#validationLbl").text("");
-        $("#inputEmail").removeClass("emptyField");
         return true;
     },
 
@@ -132,7 +132,7 @@ window.TeachersNewView = Backbone.View.extend({
             function (xhr, ajaxOptions, thrownError) {
                 failMsg($("#newteacherform"), "Não foi possível inserir o novo utilizador. \n (" + JSON.parse(xhr.responseText).result + ").");
             },
-            $("#newteacherform").serialize()
+            new FormData($("#newteacherform")[0])
         );
     },
 

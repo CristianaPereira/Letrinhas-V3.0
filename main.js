@@ -173,7 +173,7 @@ app.route('/category')
 
 app.route('/questions')
     .post(auth, tself, perms(2), questions.test)
-    .get(auth, perms(2), questions.getAll);
+    .get(auth, tself, perms(2), questions.getAll);
 
 app.route('/questions/:id')
     .put(auth, tself, questions.upDate)
@@ -191,17 +191,15 @@ app.route('/schools')
     .get(auth, perms(3), schools.getAll);
 
 app.route('/schools/:id')
-    .post(auth, perms(3), schools.editSchool)
-    .get(auth, perms(3), schools.get);
+    .put(auth, perms(3), schools.editSchool)
+    .get(auth, perms(3), schools.get)
+    .delete(auth, perms(3), schools.removeSchool);
 
 app.route('/schools/:id/newclass')
     .post(auth, perms(3), schools.newClass);
 
 app.route('/schools/:id/removeclass')
     .post(auth, perms(3), schools.removeClass);
-
-app.route('/schools/:id/remove')
-    .post(auth, perms(3), schools.removeSchool);
 
 //-----------------------------------------------------STUDENTS
 

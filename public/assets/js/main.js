@@ -131,8 +131,13 @@ var Router = Backbone.Router.extend({
 
         templateLoader.load(["TeachersView"],
             function () {
-                var v = new TeachersView({});
-                self.showView(v, $('#content'));
+                var ss = new Teachers();
+                ss.fetch(function () {
+                    var v = new TeachersView({
+                        model: ss
+                    });
+                    self.showView(v, $('#content'));
+                })
             }
         );
     },
@@ -239,14 +244,22 @@ var Router = Backbone.Router.extend({
 
         templateLoader.load(["SchoolsView"],
             function () {
-                var v = new SchoolsView({});
-                self.showView(v, $('#content'));
+                var ss = new Schools();
+                ss.fetch(function () {
+                    var v = new SchoolsView({
+                        model: ss
+                    });
+                    self.showView(v, $('#content'));
+                })
             }
         );
     },
 
     schoolsNew: function () {
         var self = this;
+
+        self.navbar();
+
         templateLoader.load(["SchoolsNew"],
             function () {
                 var v = new SchoolsNew({});
@@ -330,8 +343,8 @@ var Router = Backbone.Router.extend({
         self.navbar();
         templateLoader.load(["QuestionsView"],
             function () {
-                var ss = new Question({});
-                ss.fetchAll(function () {
+                var ss = new Questions();
+                ss.fetch(function () {
                     var v = new QuestionsView({
                         model: ss
                     });

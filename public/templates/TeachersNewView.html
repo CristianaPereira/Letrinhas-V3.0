@@ -47,14 +47,15 @@
                        id="InputTelefone" placeholder="Telefone" name="telefone" required>
                 <span class="glyphicon glyphicon-earphone"></span>
             </div>
-            <div class="col-sm-3">
-                <button id="btnFoto" type="button" class="btn btn-default"><span class="add-on"><i
-                        class="fa fa-image"></i></span>
-                    Escolher fotografia
-                </button>
-                <input type="hidden" id="base64textarea" class="form-control" accept="image/jpg"
-                       name="imgb64">
-
+            <div class="col-md-12 center-child row">
+                <div class="profile-pic">
+                    <input type="file" class="form-control  " id="filePicker" accept="image/jpg" name="img"
+                           style="background-color:#e9e9ff;">
+                    <input type="hidden" id="base64textarea" class="form-control mandatory" accept="image/jpg"
+                           name="b64"
+                    >
+                    <div class="emptyState-container"><i class="fa fa-image fa-2x"></i></div>
+                </div>
             </div>
             <div class="col-sm-1">
                 <img id="iFoto" class="smallImgPreView">

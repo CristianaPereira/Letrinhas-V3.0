@@ -27,6 +27,24 @@
 
 
  */
+$.fn.serializeObject = function()
+{
+    var o = {};
+    var a = this.serializeArray();
+    $.each(a, function() {
+        if (o[this.name] !== undefined) {
+            if (!o[this.name].push) {
+                o[this.name] = [o[this.name]];
+            }
+            o[this.name].push(this.value || '');
+        } else {
+            o[this.name] = this.value || '';
+        }
+    });
+    return o;
+};
+
+
 
 //Faz shuffle das posicoes dos elementos Dom
 //https://css-tricks.com/snippets/jquery/shuffle-dom-elements/
@@ -87,7 +105,7 @@ window.populateDDSchools = function () {
             classList += '<option disabled selected>Turma</option>';
             //Lista as escolas
             for (i = 0; i < json.length; i++) {
-                schoolsList += '<option id="' + json[i].doc._id + '">' + json[i].doc.nome + '</option>';
+                schoolsList += '<option id="' + json[i].doc._id + '">' + json[i].doc.name + '</option>';
             }
             schoolsList += "</select>";
             classList += "</select>";
@@ -102,8 +120,8 @@ window.populateDDSchools = function () {
                     if (json[i].doc._id === selectedSchool) {
                         classList = '<span class="input-group-addon btn-white"><i class="fa fa-users"></i></span><select class="form-control" id="dbTurmas">';
                         classList += '<option disabled selected>Turma</option>';
-                        for (j = 0; j < json[i].doc.turmas.length; j++) {
-                            classList += '<option id="' + json[i].doc.turmas[j]._id + '">' + json[i].doc.turmas[j].ano + 'º' + json[i].doc.turmas[j].nome + '</option>';
+                        for (j = 0; j < json[i].doc.classes.length; j++) {
+                            classList += '<option id="' + json[i].doc.classes[j]._id + '">' + json[i].doc.classes[j].year + 'º' + json[i].doc.classes[j].name + '</option>';
                         }
                     }
                 }
@@ -162,10 +180,10 @@ window.getAssocClasses = function (idProf, nomeProf, editable) {
             //Verifica a lista de escolas
             $.each(schoolsList, function (key, school) {
                 //Verifica a lista de turmas
-                $.each(school.doc.turmas, function (kTurma, turma) {
-                    var trm = turma.ano + "º " + turma.nome;
+                $.each(school.doc.classes, function (kTurma, turma) {
+                    var trm = turma.year + "º " + turma.name;
                     //Verifica a lista de turmas
-                    $.each(turma.professores, function (kProf, prof) {
+                    $.each(turma.profs, function (kProf, prof) {
                         if (prof._id == idProf) {
                             var $class = '<li >' + trm + '</li>';
                             if (editable) {
@@ -179,7 +197,7 @@ window.getAssocClasses = function (idProf, nomeProf, editable) {
                                 }).append($("<div>", {
                                     class: "col-md-8 col-sm-8"
                                 }).append('<i class="fa fa-university"></i>' +
-                                    '<label style="margin-left: 7px;">' + school.doc.nome + '</label>').append('<ul>' + $class + '</ul>'));
+                                    '<label style="margin-left: 7px;">' + school.doc.name + '</label>').append('<ul>' + $class + '</ul>'));
                                 $("#prfSchool").append($row);
 
                             } else {

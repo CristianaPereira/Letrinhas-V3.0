@@ -82,6 +82,7 @@ window.SchoolsEdit = Backbone.View.extend({
     isEmpty: function (e) {
         isElemValid($(e.currentTarget));
     },
+
     //Before Submit
     beforeSend: function (e) {
         e.preventDefault();
@@ -93,25 +94,18 @@ window.SchoolsEdit = Backbone.View.extend({
         var isValid = isFormValid(allListElements);
         //If they are
         if (isValid) {
-            modem('POST', 'schools/' + self.data.id,
-
-                //Response Handler
-                function () {
-
-                    sucssesMsg($("#schooleditform"), "Escola editada com sucesso", 500);
-                    setTimeout(function () {
-                        document.location.reload(true);
-                    }, 500);
-
+            var school = new School({id: self.data.id})
+            //Recolhe os dados da view
+            var schoolDetails = $('#schooleditform').serializeObject();
+            school.save(schoolDetails, {
+                success: function (user) {
+                    sucssesMsg($(".form"), "Escola alterada com sucesso!", 1000);
+                    document.location.reload(true);
                 },
-
-                //Error Handling
-                function (xhr, ajaxOptions, thrownError) {
-                    failMsg($("#schooleditform"), "Não foi possível editar a escola. \n (" + JSON.parse(xhr.responseText).error + ").");
-                },
-
-                new FormData($("#schooleditform")[0])
-            );
+                error: function () {
+                    failMsg($(".form"), "Lamentamos mas não foi possível inserir a escola!", 1000);
+                }
+            });
         }
     },
 

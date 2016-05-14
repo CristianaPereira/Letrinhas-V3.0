@@ -975,10 +975,6 @@ div.upload input {
     padding: 0px 5px;
 }
 
-.input-group-addon > button:hover {
-    transform: scale(1.2);
-}
-
 option:hover {
     background-color: red;
 }
@@ -986,20 +982,20 @@ option:hover {
 .input-group-addon.addon-button {
 
     height: 100%;
-    border: 1px solid #51a70f;
+    border: 1px solid #D5A4B1;
     font-size: 12px;
     font-family: arial, helvetica, sans-serif;
     text-decoration: none;
     text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.3);
     font-weight: bold;
-    color: #FFFFFF;
-    background-color: #69B67B;
+    color: #6A5158;
+    background-color: #F8D5DD;
 
 }
 
 .input-group-addon.addon-button:hover {
 
-    background-color: #449D44;
+    background-color: #EFD4DB;
 
 }
 
