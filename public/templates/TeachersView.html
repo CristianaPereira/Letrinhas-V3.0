@@ -9,7 +9,7 @@
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                <li><a href="#teachers">Total: <label id="teachersBadge" class=""></label>
+                <li><a href="#teachers">Total: <%= collection.length %><label id="teachersBadge" class=""></label>
                 </a></li>
                 <li class="divider-vertical"></li>
                 <li>
@@ -51,7 +51,7 @@
             <% _.each(collection,function(prof){ %>
             <div class="row">
                 <div class="listButton divWidget"
-                     id='<%= prof._id %>'>
+                     id='<%= prof._id %>' value="<%= prof.name %>">
 
                     <img src="<%= prof.b64 %>">
                     <span><%= prof.name %></span>
@@ -59,17 +59,14 @@
                         <a href="#teachers/<%= prof._id %>/edit" title="Editar professor">
                             <i id="btnEdit" class="fa fa-edit"></i>
                         </a>
-                        <a href="#teachers" title="Apagar professor">
+                        <a href="#teachers" class="delete" title="Apagar professor">
                             <i class="fa fa-trash-o"></i>
                         </a>
                     </div>
 
                 </div>
-
             </div>
             <% }); %>
-
-
         </div>
 
 

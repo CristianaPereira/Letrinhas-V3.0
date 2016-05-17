@@ -45,14 +45,13 @@ var Router = Backbone.Router.extend({
         //School Routing
         "schools": "schools",
         "schools/new": "schoolsNew",
-        "schools/:id": "schoolsInfo",
         "schools/:id/edit": "schoolsEdit",
 
         //Students Routing
         "students": "students",
         "students/new": "studentsNew",
-        "students/:id": "studentsEdit",
-        "student/view": "studentInfo",
+        "students/:id/edit": "studentsEdit",
+
 
         //Touch questions Routing
         "questionsTouch": "questionsTouch",
@@ -159,13 +158,21 @@ var Router = Backbone.Router.extend({
         var self = this;
 
         self.navbar();
-
         templateLoader.load(["TeachersEditView"],
             function () {
-                var v = new TeachersEditView({id: id});
-                self.showView(v, $('#content'));
+                var ss = new Teacher({
+                    id: id
+                });
+                ss.fetch(function () {
+                    var v = new TeachersEditView({
+                        model: ss
+                    });
+                    self.showView(v, $('#content'));
+                })
+
             }
         );
+
     },
 
     user: function () {
@@ -191,13 +198,18 @@ var Router = Backbone.Router.extend({
         var self = this;
 
         self.navbar();
-
         templateLoader.load(["StudentsView"],
             function () {
-                var v = new StudentsView({});
-                self.showView(v, $('#content'));
+                var ss = new Students();
+                ss.fetch(function () {
+                    var v = new StudentsView({
+                        model: ss
+                    });
+                    self.showView(v, $('#content'));
+                })
             }
         );
+
     },
 
     studentsNew: function () {
@@ -217,24 +229,22 @@ var Router = Backbone.Router.extend({
         var self = this;
 
         this.navbar();
-
         templateLoader.load(["StudentsEdit"],
             function () {
-                var v = new StudentsEdit({id: id});
-                self.showView(v, $('#content'));
+                var ss = new Student({
+                    id: id
+                });
+                ss.fetch(function () {
+                    var v = new StudentsEdit({
+                        model: ss
+                    });
+                    self.showView(v, $('#content'));
+                })
+
             }
         );
     },
 
-    studentInfo: function () {
-        var self = this;
-        templateLoader.load(["StudentInfo"],
-            function () {
-                var v = new StudentInfo({});
-                self.showView(v, $('#content'));
-            }
-        );
-    },
 
     //School Templates
     schools: function () {
@@ -289,18 +299,6 @@ var Router = Backbone.Router.extend({
         );
     },
 
-    schoolsInfo: function (id) {
-        var self = this;
-
-        self.navbar();
-
-        templateLoader.load(["SchoolsInfo"],
-            function () {
-                var v = new SchoolsInfo({id: id});
-                self.showView(v, $('#content'));
-            }
-        );
-    },
 
     //Questions template
     questionsTouch: function () {

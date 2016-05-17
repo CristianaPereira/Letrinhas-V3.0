@@ -44,27 +44,25 @@ window.SchoolsView = Backbone.View.extend({
 
         $('#schoolsPreview').empty();
 
+        var $hr = '<div class="col-md-12" ><hr class="dataHr"></div>';
         var $divFoto = $("<div>", {
             class: "col-md-5"
         }).append('<img src="' + schoolData.b64 + '"  class="dataImage">');
 
-        var $divDados = $("<div>", {class: "col-md-7"}).append(
-            $('<label>', {
-                class: "dataTitle col-md-12 row", text: schoolData.name
-            }),
+        var $divDados =
 
-            $('<div>', {
-                class: "row"
-            }).append(
-                $('<span class="glyphicon "><i class="fa fa-map"></i></span>'),
-                $('<label>', {
-                    class: "col-md-8 ", text: schoolData.address
-                })
-            ))
-
-
-        $('#schoolsPreview').append($divFoto, $divDados)
-            .append('<div class="col-md-12" ><hr class="dataHr"></div><div id="classesList" class="col-md-12" align=left></div>')
+            $("<div>", {class: "col-md-7 row"}).append(
+                $('<div>', {
+                    class: "row"
+                }).append(
+                    $('<label>', {
+                        class: "fa fa-map", text: " " + schoolData.address
+                    })
+                ))
+        $('#schoolsPreview').append($('<label>', {
+                class: "dataTitle col-md-12", text: schoolData.name
+            }), $hr, $divFoto, $divDados)
+            .append($hr, '<div id="classesList" class="col-md-12" align=left></div>')
         ;
         $('#classesList').append('<div id="prfSchool" class="col-md-12" align=left></div> </br>');
 
@@ -89,6 +87,7 @@ window.SchoolsView = Backbone.View.extend({
 
         var id = $(e.currentTarget).parent().parent().attr("id");
         var nome = $(e.currentTarget).parent().parent().attr("value");
+
         var modal = delModal("Apagar escola",
             "Tem a certeza que pretende eliminar a escola <label>" + nome + " </label> ?",
             "deletebtn", id);
@@ -105,13 +104,14 @@ window.SchoolsView = Backbone.View.extend({
 
         school.destroy({
             success: function () {
-                sucssesMsg($("#schoolsDiv"), "Escola apagada com sucesso!", 2000);
+                sucssesMsg($("#schoolsDiv"), "Escola apagada com sucesso!");
                 setTimeout(function () {
                     document.location.reload(true);
                 }, 2000);
             },
-            error: function () {
-                failMsg($("#schoolsDiv"), "Lamentamos mas não foi possível eliminar a escola!", 1000);
+            error: function (model, response) {
+                console.log(response)
+                failMsg($("#schoolsDiv"), "Não foi possível remover a turma. \n (" + JSON.parse(response.responseText).result + ").");
             }
         });
 

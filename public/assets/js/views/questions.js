@@ -64,7 +64,7 @@ window.QuestionsView = Backbone.View.extend({
         modem('POST', 'questions/' + e.target.value + '/remove',
             //Response Handler
             function () {
-                sucssesMsg($("#schoolsDiv"), "Escola apagada com sucesso!", 2000);
+                sucssesMsg($("#schoolsDiv"), "Escola apagada com sucesso!");
                 setTimeout(function () {
                     document.location.reload(true);
                 }, 2000);

@@ -94,12 +94,12 @@ window.SchoolsEdit = Backbone.View.extend({
         var isValid = isFormValid(allListElements);
         //If they are
         if (isValid) {
-            var school = new School({id: self.data.id})
+            var school = new School({id: self.data._id})
             //Recolhe os dados da view
             var schoolDetails = $('#schooleditform').serializeObject();
             school.save(schoolDetails, {
                 success: function (user) {
-                    sucssesMsg($(".form"), "Escola alterada com sucesso!", 1000);
+                    sucssesMsg($(".form"), "Escola alterada com sucesso!");
                     document.location.reload(true);
                 },
                 error: function () {
@@ -119,15 +119,15 @@ window.SchoolsEdit = Backbone.View.extend({
         e.preventDefault();
 
         var self = this;
+        console.log(self.model)
         //Se algum dos campos estiver vazio
         var allListElements = $("#newclassform .mandatory");
         //Verifies if all inputs are OK
         var isValid = isFormValid(allListElements);
         //If they are
         if (isValid) {
-            var self = this;
             //Send Info To Server
-            modem('POST', 'schools/' + this.data.id + '/newclass',
+            modem('POST', 'schools/' + self.data._id + '/newclass',
                 //Response Handler
                 function () {
                     //Response Handler
@@ -143,9 +143,9 @@ window.SchoolsEdit = Backbone.View.extend({
     },
 
     //Class Initializer
-    initialize: function (id) {
+    initialize: function () {
         var self = this;
-        self.data = self.model.toJSON();
+        self.data = this.model.toJSON();
     },
 
     //Class Renderer

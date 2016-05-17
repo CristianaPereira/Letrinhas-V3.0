@@ -1,93 +1,28 @@
 window.TeachersEditView = Backbone.View.extend({
     events: {
         "click #buttonCancelar": "buttonCancelar",
-        "click #addTurma": "addTurma",
-        "click #btnEditDetails": "beforeSend",
-        "click #btnEditTurmas": "editTurmas",
-        "click #btnEditPsw": "editPsw",
-        "change #inputFoto": "carregaFoto",
         "change #filePicker": "convertPhoto",
         "click #btnCrop": "getFoto",
+        "click #btnEditDetails": "editDetails",
+
+        "click #addTurma": "addTurma",
+        "click .deleteClass ": "rmvTurmas",
+        "click #btnEditTurmas": "assocTurmas",
+        "click .desassocClass": "confirmDesassocTurmas",
+        "click #desassocTurma": "desassocTurmas",
+
         "mouseover #pwdIcon": "verPwd",
         "mouseout #pwdIcon": "escondePwd",
         "keyup #ConfirmPasswd": "confirmPwd",
-
+        "click #btnEditPsw": "editPsw",
 
     },
-    //Sends an udate classes to server
-    editTurmas: function (e) {
-        var self = this;
+    buttonCancelar: function (e) {
         e.preventDefault();
-        modem('POST', 'teachers/editClasses',
-            //Response Handler
-            function (json) {
-                sucssesMsg($("#editTeacherView"), "Turmas associadas com sucesso.", 2000);
-                setTimeout(function () {
-                    getAssocClasses($("#inputEmail").val(), $("#InputNome").val(), true);
-                    $("#teacherClasses").val("{}");
-                    $("#assocTurma").empty();
-                }, 2000);
-
-            },
-            //Error Handling
-            function (xhr, ajaxOptions, thrownError) {
-                failMsg($("#editTeacherView"), "Não foi possível alterar os dados. \n (" + JSON.parse(xhr.responseText).result + ").");
-                console.log("NOT OK");
-
-            },
-            $("#teacherClasses").serialize() + "&email=" + encodeURIComponent($("#inputEmail").val())
-        );
-
-    },
-    //Before Sending Request To Server
-    beforeSend: function (e) {
-        var isValid = true;
-        e.preventDefault();
-        console.log($("#frmEditDetails").serialize());
-        //Send Form Submit To Server
-        modem('POST', 'teachers/editDetails',
-            //Response Handler
-            function (json) {
-                sucssesMsg($("body"), "Dados alterados com sucesso.", 2000);
-                setTimeout(function () {
-                    document.location.reload(true);
-                }, 2000);
-            },
-            //Error Handling
-            function (xhr, ajaxOptions, thrownError) {
-                failMsg($("#newteacherform"), "Não foi possível alterar os dados. \n (" + JSON.parse(xhr.responseText).result + ").");
-            },
-
-            $("#frmEditDetails").serialize()
-        );
+        window.history.back();
     },
 
-    //Before Sending Request To Server
-    editPsw: function (e) {
-        var isValid = true;
-        e.preventDefault();
-        $("#txtOldPasswd").val(md5($("#txtOldPasswd").val()));
-        $("#txtNewPassword").val(md5($("#txtNewPassword").val()));
-        //Send Form Submit To Server
-        modem('POST', 'teachers/editPasswd',
-            //Response Handler
-            function (json) {
-                sucssesMsg($("#editTeacherView"), "Dados alterados com sucesso.", 2000);
-                setTimeout(function () {
-                    app.navigate('/teachers', {
-                        trigger: true
-                    });
-                }, 2000);
-            },
-            //Error Handling
-            function (xhr, ajaxOptions, thrownError) {
-                failMsg($("#editTeacherView"), "Não foi possível alterar a password. \n (" + JSON.parse(xhr.responseText).result + ").");
-            },
-            $("#frmEditPasswd").serialize() + "&email=" + encodeURIComponent($("#inputEmail").val())
-        );
-    },
     //Convert Photo To Base64 String
-
     convertPhoto: function (e) {
         var file = e.target.files[0];
 
@@ -96,10 +31,8 @@ window.TeachersEditView = Backbone.View.extend({
 
         reader.onload = function (readerEvent) {
             var image = new Image();
-
-
             image.src = readerEvent.target.result;
-            showCropper("#editTeacherView", image, 300, 1);
+            showCropper(".form", image, 300, 1);
             console.log(image.src);
 
         }
@@ -113,13 +46,128 @@ window.TeachersEditView = Backbone.View.extend({
         var dataUrl = canvas.toDataURL('image/jpeg');
         $("#base64textarea").val(dataUrl);
         $("#iFoto").attr('src', dataUrl);
-        console.log(dataUrl);
         $(".cropBG").remove();
+        $(".profile-pic").removeClass("emptyField");
+    },
+
+    //Before Sending Request To Server
+    editDetails: function (e) {
+        var isValid = true;
+        e.preventDefault();
+        //Send Form Submit To Server
+
+        var teacher = new Teacher({id: this.data._id})
+        //Recolhe os dados da view
+        var teacherDetails = $('#editTeacherForm').serializeObject();
+
+        teacher.save(teacherDetails, {
+            success: function () {
+                sucssesMsg($("#editTeacherForm"), "Dados alterados com sucesso.");
+                setTimeout(function () {
+                    document.location.reload(true);
+                }, 1000);
+            },
+            error: function (model, response) {
+                console.log(response)
+                failMsg($("#editTeacherForm"), "Não foi possível alterar os dados. \n (" + JSON.parse(response.responseText).result + ").");
+            }
+        });
+
     },
 
     //Adiciona a escola e a turma ao objecto
-    addTurma: function () {
+    addTurma: function (e) {
+        e.preventDefault();
         assocClass();
+    },
+
+    //Desassocia todas as escolas e respectivas turmas
+    rmvTurmas: function (e) {
+        e.preventDefault();
+        desassocClass(e.currentTarget);
+    },
+
+    //Sends an udate classes to server
+    assocTurmas: function (e) {
+        var self = this;
+        e.preventDefault();
+        modem('POST', 'teachers/editClasses',
+            //Response Handler
+            function (json) {
+                sucssesMsg($("#editTeacherForm"), "Turmas associadas com sucesso.");
+                setTimeout(function () {
+                    document.location.reload(true);
+                }, 1000);
+            },
+            //Error Handling
+            function (xhr, ajaxOptions, thrownError) {
+                failMsg($("#editTeacherView"), "Não foi possível alterar os dados. \n (" + JSON.parse(xhr.responseText).result + ").");
+                console.log("NOT OK");
+
+            },
+            new FormData($('<form>', {}).append(
+                $("#assocTurma"),
+                $('<input>', {name: "id", value: $("#inputEmail").val()})
+            )[0])
+        );
+
+    },
+
+    //Solicita confirmação para apagar o professor
+
+    confirmDesassocTurmas: function (e) {
+        e.preventDefault();
+        var id = $(e.currentTarget).parent().parent().attr("id");
+        var nome = $(e.currentTarget).parent().parent().attr("value");
+        console.log()
+        var modal = delModal("Apagar professor",
+            "Tem a certeza que pretende desassociar a turma <label>" + nome + " </label> ?",
+            "desassocTurma", id);
+
+        $('#editTeacherForm').append(modal);
+        $('#modalConfirmDel').modal("show");
+    },
+
+    //Sends an udate classes to server
+    desassocTurmas: function (e) {
+        var self = this;
+        e.preventDefault();
+        $('#modalConfirmDel').modal("hide");
+        var classe = $(e.currentTarget).attr("value").split(":");
+
+        modem('POST', 'teachers/rmvClass',
+            //Response Handler
+            function (json) {
+                sucssesMsg($("#editTeacherForm"), "Turma desassociada com sucesso.");
+                setTimeout(function () {
+                    document.location.reload(true);
+                }, 1005);
+
+            },
+            //Error Handling
+            function (xhr, ajaxOptions, thrownError) {
+                failMsg($("#editTeacherForm"), "Não foi possível alterar os dados. \n (" + JSON.parse(xhr.responseText).result + ").");
+                console.log("NOT OK");
+
+            },
+            new FormData($('<form>', {}).append(
+                $('<input>', {name: "school", value: classe[0]}),
+                $('<input>', {name: "class", value: classe[1]}),
+                $('<input>', {name: "id", value: $("#inputEmail").val()})
+            )[0])
+        );
+
+    },
+
+    verPwd: function () {
+        $("#pwdIcon").attr("style", "color:#66cc66");
+        $("#InputPasswd").attr("type", "text");
+
+    },
+
+    escondePwd: function () {
+        $("#pwdIcon").attr("style", "color:#cccccc");
+        $("#InputPasswd").attr("type", "password");
     },
 
     confirmPwd: function () {
@@ -136,58 +184,54 @@ window.TeachersEditView = Backbone.View.extend({
         }
     },
 
-    escondePwd: function () {
-        $("#pwdIcon").attr("style", "color:#cccccc");
-        $("#InputPasswd").attr("type", "password");
-    },
-
-    verPwd: function () {
-        $("#pwdIcon").attr("style", "color:#66cc66");
-        $("#InputPasswd").attr("type", "text");
-
-    },
-
-    buttonCancelar: function (e) {
+    //Before Sending Request To Server
+    editPsw: function (e) {
+        var isValid = true;
+        //Se algum dos campos estiver vazio
+        var allListElements = $(".mandatory");
+        //Verifies if all inputs are OK
+        var isValid = isFormValid(allListElements);
         e.preventDefault();
-        window.history.back();
+
+        if (isValid) {
+            $("#txtOldPasswd").val(md5($("#txtOldPasswd").val()));
+            $("#txtNewPassword").val(md5($("#txtNewPassword").val()));
+            //Send Form Submit To Server
+            modem('POST', 'teachers/editPasswd',
+                //Response Handler
+                function (json) {
+                    sucssesMsg($("#editTeacherForm"), "Palavra-passe alterada com sucesso.");
+                    setTimeout(function () {
+                        document.location.reload(true);
+                    }, 1005);
+                },
+                //Error Handling
+                function (xhr, ajaxOptions, thrownError) {
+
+                    failMsg($("#editTeacherForm"), "Não foi possível alterar a password. \n (" + JSON.parse(xhr.responseText).result + ").");
+                    setTimeout(function () {
+                        document.location.reload(true);
+                    }, 1005);
+                },
+                new FormData($("#frmEditPasswd").append(
+                    $('<input>', {name: "id", value: $("#inputEmail").val()}).hide()
+                    ) [0]
+                )
+            )
+            ;
+        }
     },
 
     initialize: function (id) {
-        var self = this;
-        self.bd = 'dev_professores';
-        self.site = 'http://185.15.22.235:5984';
-        self.teacherID = id;
+        this.data = this.model.toJSON();
     },
 
     render: function () {
         var self = this;
-        $(this.el).html(this.template());
+
         //Gets teacher data and shows his/her info
-        modem('GET', 'teachers/' + self.teacherID.id, function (prof) {
-            console.log(prof);
-            $(".titleImage").attr('src', prof.imgb64);
-            $("#iFoto").attr('src', prof.imgb64);
-            $(".titleText").text(prof.nome);
-
-            $("#InputNome").val(prof.nome);
-            $("#inputEmail").val(prof._id);
-            $("#InputTelefone").val(prof.telefone);
-
-            $("#dbUserType > option").eq(prof.permissionLevel - 1).attr('selected', 'selected');
-            $('#classesList').append('<div id="prfSchool" class="col-md-12" align=left><label id="assocClasses">' + prof.nome + ', não tem turmas associadas.</label></div>');
-            ;
-            getAssocClasses(prof._id, prof.nome, true);
-            if (prof.estado) {
-                document.getElementById('selectEstado').selectedIndex = 0;
-            }
-            else {
-                document.getElementById('selectEstado').selectedIndex = 1;
-            }
-
-        }, function (error) {
-            console.log('Error getting teacher list!');
-        });
-
+        $(this.el).html(this.template(self.data));
+        console.log(self.data)
         //Preenche as dd das escolas e das turmas
         populateDDSchools();
 

@@ -50,7 +50,7 @@
 
                     <div class="input-group  row">
                         <span class="input-group-addon">
-                            <select id="dbYear" name="year" class="mandatory">
+                            <select id="dbYear" name="year">
                                 <option selected="" disabled="">Ano escolar</option>
                                 <optgroup label="1º Ciclo do Ensino Básico">
                                     <option value="1">1º Ano</option>
@@ -74,7 +74,7 @@
                                 </optgroup>
                             </select>
                             </span>
-                        <input class="form-control mandatory" type="text" id="classDesig" placeholder="Designação">
+                        <input class="form-control" type="text" id="classDesig" placeholder="Designação">
                             <span class="input-group-addon addon-button">
                             <button id="addNewClass" value="Adicionar Turma"
                                     style="border: none;background-color: transparent;">Adicionar Turma
@@ -83,7 +83,7 @@
 
                     </div>
                     <input id="classesInput" name="classes" type="hidden" value="[]">
-                    <legend>Turmas associadas</legend>
+                    <legend>Turmas associadas <label id="schoolsBadge" class="badge">0</label></legend>
                     <div id="classesList" class="col-md-12" align="left">
 
                     </div>

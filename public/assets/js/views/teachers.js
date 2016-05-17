@@ -2,10 +2,11 @@ window.TeachersView = Backbone.View.extend({
 
     events: {
         "click #newteacherbtn": "newTeacher",
-        "click #btnDelProf": "deleteTeacher",
-        "click .deleteClass": "deleteClass",
+        "click #deletebtn": "deleteTeacher",
         "keyup #txtSearch": "searchProf",
         'click .listButton': "enchePreview",
+        "click .delete": "confirmDelete",
+
         "click #orderBy": "orderProfs"
     },
 
@@ -28,11 +29,14 @@ window.TeachersView = Backbone.View.extend({
     },
 
     //Solicita confirmação para apagar o professor
-    confirmDelete: function (obj) {
+    confirmDelete: function (e) {
+
+        var id = $(e.currentTarget).parent().parent().attr("id");
+        var nome = $(e.currentTarget).parent().parent().attr("value");
 
         var modal = delModal("Apagar professor",
-            "Tem a certeza que pretende eliminar o professor <label>" + obj + " </label> ?",
-            "btnDelProf", obj);
+            "Tem a certeza que pretende eliminar o professor <label>" + nome + " </label> ?",
+            "deletebtn", id);
 
         $('#teachersDiv').append(modal);
         $('#modalConfirmDel').modal("show");
@@ -42,19 +46,20 @@ window.TeachersView = Backbone.View.extend({
         var self = this;
         $('#modalConfirmDel').modal("hide");
         //Apaga o professor seleccionado
-        modem('POST', 'teachers/' + $(e.currentTarget).attr('value') + '/del',
-            function (json) {
 
-                sucssesMsg($("#teachersDiv"), "O utilizador " + $(e.currentTarget).attr('value') + " foi apagado com sucesso", 2000);
+        var teacher = new Teacher({id: e.target.value})
+
+        teacher.destroy({
+            success: function () {
+                sucssesMsg($("#teachersDiv"), "Professor apagado com sucesso!");
                 setTimeout(function () {
                     document.location.reload(true);
                 }, 2000);
             },
-            //Error Handling
-            function (xhr, ajaxOptions, thrownError) {
-                console.log("ups");
+            error: function () {
+                failMsg($("#teachersDiv"), "Lamentamos mas não foi possível eliminar o professor!", 1000);
             }
-        );
+        });
 
 
     },
@@ -62,8 +67,9 @@ window.TeachersView = Backbone.View.extend({
     enchePreview: function (e) {
         var self = this;
         //gets model info
-        teacherData = self.model.getByID($(e.currentTarget).attr("id"));
-
+        var teacherData = self.model.getByID($(e.currentTarget).attr("id"));
+        console.log(teacherData)
+        var $hr = '<div class="col-md-12" ><hr class="dataHr"></div>';
         $('#teachersPreview').empty();
 
         var $divFoto = $("<div>", {
@@ -72,76 +78,56 @@ window.TeachersView = Backbone.View.extend({
 
         var $divDados = $("<div>", {
             class: "col-md-8"
-        }).append('<label class="dataTitle col-md-12">' + teacherData.name + '</label><br>')
+        })
             .append('<label class="col-md-12 dataSubTitle">' + getUserRole(teacherData.permissionLevel) + '</label><br>')
             .append('<label class="col-md-4 lblDataDetails">E-mail:</label> <label class="col-md-8">' + teacherData._id + '</label><br>')
-            .append('<label class="col-md-4 lblDataDetails">Nome:</label> <label class="col-md-8">' + teacherData.name + '</label><br>')
             .append('<label class="col-md-4 lblDataDetails">Telefone:</label> <label  class="col-md-8">' + teacherData.phoneNumber + ' </label><br>')
 
-        $('#teachersPreview').append($divFoto, $divDados)
+        $('#teachersPreview').append($('<label>', {
+                class: "dataTitle col-md-12", text: teacherData.name
+            }), $hr, $divFoto, $divDados)
             .append('<div class="col-md-12" ><hr class="dataHr"></div><div id="classesList" class="col-md-12" align=left></div>')
         ;
         $('#classesList').append('<div id="prfSchool" class="col-md-12" align=left></div>');
-        getAssocClasses(teacherData._id, teacherData.name, false);
+        var nTurmas = 0;
+        console.log(teacherData.classes)
+        $.each(teacherData.classes, function (iS, school) {
+            console.log(school)
+
+
+            $.each(school.class, function (iS, classe) {
+                console.log(classe)
+                var $class = $('<button>', {class: "classBtn", html: classe.name});
+                //Se a escola já estiver listada, e a turma não, adiciona a turma
+                if (!$('div#' + school.id).length) {
+                    var $row = $("<div>", {
+                        class: "row",
+                        id: school.id
+                    }).append($("<div>", {
+                        class: "col-md-12 col-sm-12"
+                    }).append('<i class="fa fa-university"></i>' +
+                        '<label style="margin-left: 7px;">' + school.name + '</label>').append(
+                        '</br>'));
+                    $("#prfSchool").append($row);
+
+                }
+                $('div#' + school.id).append($class);
+
+                nTurmas++;
+
+            });
+
+        });
+
+        $("#prfSchool").prepend('<label id="assocClasses">' + nomeProf + ', tem ' + nTurmas + ' turma(s) associada(s).</label>');
+
     },
 
-//Class Renderer
+
     render: function () {
         var self = this;
-        var data = self.model.toJSON();
-        $(this.el).html(this.template({collection: data}));
-        /*
 
-         modem('GET', 'teachers',
-         //Response Handler
-         function (json) {
-         //Teachers Counter
-         $('#teachersBadge').text(json.length);
-         //Preenche a lista de professores registados( e com estado activo)
-         $.each(json, function (key, data) {
-         //Botao de editar
-         var $edit = $("<a>", {
-         href: "#teachers/" + data.doc._id + "/edit",
-         val: data.doc._id,
-         title: "Editar professor",
-         }).append('<i id="btnEdit" class="fa fa-edit"></i>')
-         ;
-
-         //Botao de eliminar
-         var $delete = $("<a>", {
-         href: "#teachers",
-         val: data.doc._id,
-         title: "Apagar professor",
-         }).append('<i class="fa fa-trash-o"></i>')
-         .click(function () {
-         self.confirmDelete($(this).val());
-         });
-         //Separa o nome para recolher apenas o primeiro e o utimo
-         var splName = (data.doc.nome).split(" ");
-         var $div = $("<div>", {
-         class: "listButton divWidget"
-         }).append("<img src=" + data.doc.imgb64 + "><span>" + splName[0] + " " + splName[splName.length - 1] + "</span>")
-         //  .append($edit)
-         .append($("<div>", {class: "editDeleteOp"}).append($edit, $delete))
-         .click(function () {
-         self.enchePreview(data.doc);
-         });
-
-         $('#teachersContent').append($div);
-         });
-         self.enchePreview(json[0].doc);
-         },
-         //Error Handling
-         function (xhr, ajaxOptions, thrownError) {
-         //Error Handling Given The Error Nature
-         //Se o erro retornado for de acesso negado, reencaminha o utilizador para a página de login
-         if (JSON.parse(xhr.status)) {
-
-
-         }
-         }
-         );
-         */
+        $(this.el).html(this.template({collection: self.model.toJSON()}));
         return this;
     },
 })

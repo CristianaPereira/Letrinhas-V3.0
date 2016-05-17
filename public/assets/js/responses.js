@@ -2,7 +2,7 @@
  * Created by Cris on 11/03/2016.
  */
 
-window.sucssesMsg = function (form, txt, time) {
+window.sucssesMsg = function (form, txt) {
     var $edit = $("<div>", {
         class: "modal fade",
         tabindex: "-1",
@@ -20,7 +20,7 @@ window.sucssesMsg = function (form, txt, time) {
     $('#infoModal').modal("show");
     setTimeout(function () {
         $('#infoModal').modal("hide");
-    }, time);
+    }, txt.length * 30);
 
 };
 

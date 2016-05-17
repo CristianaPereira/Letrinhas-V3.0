@@ -1,22 +1,37 @@
 var Teacher = Backbone.Model.extend({
-    initialize: function () {
+    urlRoot: 'teachers',
+    defaults: {},
+    initialize: function (options) {
 
     },
     fetch: function (after_fetch) {
         var self = this;
-        modem('GET', 'me', function (teacherData) {
-            self.set("_id", teacherData._id);
-            self.set("nome", teacherData.nome);
-            self.set("imgb64", teacherData.imgb64);
-            self.set("telefone", teacherData.telefone);
-            self.set("schools", teacherData.classes);
-            self.set("permissionLevel", getUserRole(teacherData.permissionLevel));
-            after_fetch();
-        }, function (error) {
-            console.log('Error getting my data!');
-            var json = JSON.parse(xhr.responseText);
-            error_launch(json.message);
-        });
+        modem('GET', 'teachers/' + this.id,
+            function (teacherData) {
+                var classLength = 0;
+                //If teacher exists
+                if (teacherData) {
+                    //Adiciona os dados ao model
+                    self.attributes = (teacherData);
+                    self.attributes.classes.sort(sortJsonByCol('id'));
+
+                    //Conta o numero de turmas associadas
+                    $.each(self.attributes.classes, function (i, classe) {
+                        $.each(classe.class, function (ic, cl) {
+                            classLength++;
+                        })
+                    })
+                    self.set({classLength: classLength})
+                } else {
+                    self.set({id: null})
+                }
+
+
+                after_fetch();
+            }, function (xhr, ajaxOptions, thrownError) {
+                //If an error occurs, set id to null
+                console.log(JSON.parse(xhr.responseText).result);
+            });
     }
 });
 

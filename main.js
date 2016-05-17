@@ -51,7 +51,21 @@ var router = express.Router();
 // Route middleware that will happen on every request
 router.use(function (req, res, next) {
     // log each request to the console
-    console.log("Route Request: ".blue + req.method, req.url);
+    switch (req.method) {
+        case "GET":
+            console.log("Route Request: ".green + req.method, req.url);
+            break;
+        case "PUT":
+            console.log("Route Request: ".yellow + req.method, req.url);
+            break;
+        case "DELETE":
+            console.log("Route Request: ".red + req.method, req.url);
+            break;
+        case "POST":
+            console.log("Route Request: ".blue + req.method, req.url);
+            break;
+    }
+
     next();
 });
 
@@ -97,11 +111,11 @@ router.use(function (req, res, next) {
 var auth = function (req, res, next) {
     //Check For Login User
     var login = basicAuth(req);
-    console.log(login)
-    //console.log(login);
     if (login) {
         db.get(login.name, {revs_info: true}, function (err, body) {
             if (!err) {
+                //console.log(body.password)
+                // console.log(login.pass)
                 if (body.password == login.pass) {
                     //Login Successfully
                     console.log("Login Successfully");
@@ -110,7 +124,6 @@ var auth = function (req, res, next) {
                 }
                 else {
                     //Report Error (Rong Password)
-                    console.log(body.password);
                     console.log("Login Attempt Failed - Wrong info");
                     res.status(401).json({});
                 }
@@ -210,12 +223,10 @@ app.route('/students')
 
 
 app.route('/students/:id')
-    .post(auth, perms(2), students.editStudent)
-    .get(auth, perms(2), students.get);
+    .put(auth, perms(2), students.editStudent)
+    .get(auth, perms(2), students.get)
+    .delete(auth, perms(3), students.removeStudent);
 
-//Student Routing
-app.route('/students/:id/remove')
-    .post(auth, perms(3), students.removeStudent);
 
 //-----------------------------------------------------TEACHERS
 
@@ -227,10 +238,10 @@ app.route('/teachers')
     .get(auth, perms(3), teachers.getAll);
 
 app.route('/teachers/:id')//GETS SPECIFIC USER
-    .get(auth, perms(3), teachers.get);
+    .get(auth, perms(3), teachers.get)
+    .delete(auth, perms(3), teachers.delete)
+    .put(auth, perms(3), teachers.updateDetails);
 
-app.route('/teachers/editDetails')
-    .post(auth, perms(3), teachers.updateDetails);
 
 app.route('/teachers/editPasswd')
     .post(auth, perms(3), teachers.editPasswd);
@@ -241,8 +252,6 @@ app.route('/teachers/editClasses')
 app.route('/teachers/rmvClass')
     .post(auth, perms(3), teachers.rmvClass);
 
-app.route('/teachers/:id/del')
-    .post(auth, perms(3), teachers.delete);
 
 //-----------------------------------------------------TESTS
 

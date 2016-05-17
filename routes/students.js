@@ -7,20 +7,12 @@ var dbe = nano.use('dev_escolas');
 
 exports.new = function (req, res) {
 
+    console.log(req.body)
     //Verify Fields
-    if (req.body.name && req.body.number && req.body.class && req.body.b64) {
+    if (JSON.stringify(req.body).indexOf('""') == -1) {
 
         //!TEMPORARY! - Separating Class From School
-        var sclass = (req.body.class).split(":");
-
-        var newStudent = {
-            "nome": req.body.name,
-            "estado": true,
-            "numero": req.body.number,
-            "escola": sclass[0],
-            "turma": sclass[1],
-            "b64": req.body.b64,
-        };
+        var newStudent = req.body;
 
         db.insert(newStudent, (req.body.name).replace(/\s+/g, '') + new Date().getTime(), function (err) {
             if (err)
@@ -54,7 +46,7 @@ exports.get = function (req, res) {
 //NEW
 exports.editStudent = function (req, res) {
 
-    if (req.body.name != '' && req.body.number != '') {
+    if (JSON.stringify(req.body).indexOf('""') == -1) {
         //Fetch School
         console.log('Edit Student: Fetching Student ' + req.params.id + ''.green);
         //Search School Info
@@ -108,21 +100,19 @@ exports.getAll = function (req, res) {
         }
 
         //Fetch Classes
-        var classes = "";
 
         for (var i in body.rows) {
 
-            for (var j in body.rows[i].doc.turmas) {
+            for (var j in body.rows[i].doc.classes) {
 
-                for (var k in body.rows[i].doc.turmas[j].professores) {
+                for (var k in body.rows[i].doc.classes[j].profs) {
 
-                    if (body.rows[i].doc.turmas[j].professores[k]._id == user)
-                        classes += body.rows[i].doc.turmas[j]._id + " ";
-                    escolas.push({
-                        "_id": body.rows[i].doc.turmas[j]._id,
-                        "details": body.rows[i].doc.nome + ", " + body.rows[i].doc.turmas[j].ano + "º " + body.rows[i].doc.turmas[j].nome
-                    })
-                    //classes.push({"_id": body.rows[i].doc.turmas[j]._id});
+                    if (body.rows[i].doc.classes[j].profs[k]._id == user)
+                        escolas.push({
+                            "_id": body.rows[i].doc.classes[j]._id,
+                            "details": body.rows[i].doc.name + ", " + body.rows[i].doc.classes[j].year + "º " + body.rows[i].doc.classes[j].name
+                        })
+                    //classes.push({"_id": body.rows[i].doc.classes[j]._id});
 
                 }
 
@@ -130,7 +120,7 @@ exports.getAll = function (req, res) {
 
         }
 
-        console.log(classes);
+        console.log(escolas);
 
         //Fetch Students From Classes
         db.list({
@@ -147,15 +137,15 @@ exports.getAll = function (req, res) {
             //Filtra "os meus alunos"
             for (var i = 0; i < students.rows.length; i++) {
 
-                var search = new RegExp(students.rows[i].doc.turma);
-                if (!search.test(classes))
+                var search = new RegExp(students.rows[i].doc.class);
+                if (!search.test(escolas))
                     students.rows.splice(i, 1);
             }
             //Adiciona a string da escola
             for (var i = 0; i < students.rows.length; i++) {
                 //Adiciona o campo com o nome da escola e aturma por extenso
                 for (var esc in escolas) {
-                    if (escolas[esc]._id == students.rows[i].doc.turma) {
+                    if (escolas[esc]._id == students.rows[i].doc.class) {
                         students.rows[i].doc.schoolDetails = escolas[esc].details;
                     }
                 }
