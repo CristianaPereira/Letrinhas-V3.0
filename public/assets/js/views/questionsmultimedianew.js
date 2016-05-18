@@ -4,12 +4,17 @@ window.QuestionsMultimediaNew = Backbone.View.extend({
         "change #selectAnswerType": "getAnswerType",
         "change input[type=file]": "getQuestion",
         "change #rightAnswer": "getAnswer",
+        "blur .emptyField": "isEmpty",
         "click #btnCrop": "getFoto",
         "click #addWrngAnswr": "addWrngAnswr",
+        "mouseover #subTxt": "pop",
         "submit": "beforeSend"
 
     },
-
+    //Initializes popover content
+    pop: function () {
+        setPopOver("Ano, Disciplina, Conteúdo, Especificação, Título, Pergunta e Respostas");
+    },
     //Changes content input type
     getContentType: function () {
         $('#questionContent').empty();
@@ -20,10 +25,10 @@ window.QuestionsMultimediaNew = Backbone.View.extend({
         switch ($('#selectContentType').val()) {
             case "text":
                 span = "fa fa-font";
-                elements = elements.add($("<input>", {
-                    type: "text", class: "form-control mandatory",
+                elements = elements.add($("<textarea>", {
+                    class: "form-control mandatory",
                     placeholder: "Ex: Qual o resultado de 16 - 7 ?",
-                    name: "contentQuest"
+                    name: "contentQuest", rows: "5", style: "resize: none;"
                 }));
                 break;
             case "audio":
@@ -61,6 +66,13 @@ window.QuestionsMultimediaNew = Backbone.View.extend({
                 ),
                 elements
             ));
+    },
+
+    //Verifies if an input is empty
+    isEmpty: function (e) {
+        if ($(e.currentTarget).val().length != 0) {
+            $(e.currentTarget).removeClass("emptyField");
+        }
     },
 
     //Changes answer input type
@@ -174,6 +186,7 @@ window.QuestionsMultimediaNew = Backbone.View.extend({
     ,
 
     addWrngAnswr: function (e) {
+        e.preventDefault();
         //Conta o numero de respostas erradas listadas
         var nWrongAnswers = $(".wrongAnswer").length;
         if (nWrongAnswers < 4) {
@@ -238,26 +251,38 @@ window.QuestionsMultimediaNew = Backbone.View.extend({
 //Before Sending Request To Server
     beforeSend: function (e) {
         e.preventDefault();
-        //Obtem as respostas erradas
-        var nWrongAnswers = $(".wrongAnswer");
-        var answers = [];
-        //Adiciona a primeira resposta  (correcta)
-        answers.push({_id: 0, content: $("#rightAnswer").val()});
-        //Adiciona as restantes(erradas)
-        $.each(nWrongAnswers, function (i, answer) {
-            answers.push({_id: i + 1, content: $(answer).val()});
-        });
-        $("#inputAnswers").val(JSON.stringify(answers));
-        //Se algum dos campos estiver vazio
 
-        modem('POST', 'questions',
-            function (json) {
-            },
-            //Error Handling
-            function (xhr, ajaxOptions, thrownError) {
-            },
-            new FormData($("#newMultimediaTestForm")[0])
-        );
+        e.preventDefault();
+        //Se algum dos campos estiver vazio
+        var allListElements = $(".mandatory");
+        //Verifies if all inputs are OK
+        var isValid = isFormValid(allListElements);
+        //If they are
+        if (isValid) {
+
+
+            //Obtem as respostas erradas
+            var nWrongAnswers = $(".wrongAnswer");
+            var answers = [];
+            //Adiciona a primeira resposta  (correcta)
+            answers.push({_id: 0, content: $("#rightAnswer").val()});
+            //Adiciona as restantes(erradas)
+            $.each(nWrongAnswers, function (i, answer) {
+                answers.push({_id: i + 1, content: $(answer).val()});
+            });
+            $("#inputAnswers").val(JSON.stringify(answers));
+            //Se algum dos campos estiver vazio
+
+            modem('POST', 'questions',
+                function (json) {
+                },
+                //Error Handling
+                function (xhr, ajaxOptions, thrownError) {
+                },
+                new FormData($("#newMultimediaTestForm")[0])
+            );
+
+        }
 
     }
     ,

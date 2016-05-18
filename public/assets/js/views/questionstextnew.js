@@ -11,7 +11,7 @@ window.QuestionsTextNew = Backbone.View.extend({
     //Initializes popover content
     pop: function () {
 
-        setPopOver("Titulo, Discuplina, Ano escolar, Pergunta, Descrição, Texto e Audio");
+        setPopOver("Ano, Disciplina, Conteúdo, Especificação, Título, Pergunta, Texto e Som.");
 
     },
 
@@ -40,15 +40,31 @@ window.QuestionsTextNew = Backbone.View.extend({
     //Before Sending Request To Server
     beforeSend: function (e) {
         e.preventDefault();
-        modem('POST', 'questions',
-            function (json) {
-            },
-            //Error Handling
-            function (xhr, ajaxOptions, thrownError) {
-                failMsg($(".form"), "Não foi possível inserir a nova pergunta. \n (" + JSON.parse(xhr.responseText).result + ").");
-            },
-            new FormData($("#newTextTestForm")[0])
-        );
+        //Se algum dos campos estiver vazio
+        var allListElements = $(".mandatory");
+        //Verifies if all inputs are OK
+        var isValid = isFormValid(allListElements);
+        //If they are
+        if (isValid) {
+
+            modem('POST', 'questions',
+                function () {
+                    sucssesMsg($(".form"), "Pergunta inserida com sucesso!");
+                    setTimeout(function () {
+                        app.navigate("questions", {
+                            trigger: true
+                        });
+                    }, 1500);
+                },
+                //Error Handling
+                function (xhr, ajaxOptions, thrownError) {
+                    failMsg($(".form"), "Não foi possível inserir a nova pergunta. \n (" + JSON.parse(xhr.responseText).result + ").");
+                },
+                new FormData($("#newTextTestForm")[0])
+            );
+
+        }
+
     },
 
     //Show Voice Recorder Equalizer

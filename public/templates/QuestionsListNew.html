@@ -20,160 +20,162 @@
                 <form id="newListTestForm" role="form" method="POST" action="/questions" enctype="multipart/form-data">
 
                     <!-- TUTULO-DISCIPLINA-ANOESCOLAR -->
+                    <div class="col-sm-2 row">
+                        <select class="form-control mandatory" id="selectAno" name="schoolYear">
+                            <option selected disabled>Ano escolar</option>
+                            <optgroup label="1º Ciclo do Ensino Básico">
+                                <option value="1">1º Ano</option>
+                                <option value="2">2º Ano</option>
+                                <option value="3">3º Ano</option>
+                                <option value="4">4º Ano</option>
+                            </optgroup>
+                            <optgroup label="2º Ciclo do Ensino Básico">
+                                <option value="5">5º Ano</option>
+                                <option value="6">6º Ano</option>
+                            </optgroup>
+                            <optgroup label="3º Ciclo do Ensino Básico">
+                                <option value="7">7º Ano</option>
+                                <option value="8">8º Ano</option>
+                                <option value="9">9º Ano</option>
+                            </optgroup>
+                            <optgroup label="Ensino Secundário">
+                                <option value="10">10º Ano</option>
+                                <option value="11">11º Ano</option>
+                                <option value="12">12º Ano</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div class="col-sm-3 row">
+                        <select class="form-control mandatory" id="selectSubject" name="subject">
+                            <option disabled selected>Disciplina</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3 row">
+                        <select class="form-control mandatory" id="selectContent" name="content">
+                            <option disabled selected>Conteúdo</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4 row">
+                        <select class="form-control mandatory" id="selectSpecification" name="specification">
+                            <option disabled selected>Especificação</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6 row">
+                        <div class="input-group">
+                            <span class="input-group-addon btn-white"><i class="fa fa-tag"></i></span>
+                            <input type="text" class="form-control mandatory" id="InputTitulo"
+                                   placeholder="Título da pergunta"
+                                   name="title">
+                        </div>
+
+                    </div>
+                    <!-- PERGUNTA-DESCRIÇÃO -->
+                    <div class="col-sm-6 row">
+                        <div class="input-group">
+                            <span class="input-group-addon btn-white"><i class="fa fa-question"></i></span>
+                            <input type="text" class="form-control mandatory" id="InputPergunta"
+                                   placeholder="Pergunta" name="question">
+                        </div>
+
+                    </div>
+
+                    <!-- Lista de palavras -->
                     <div class="form-group">
-                        <div class="row">
-                            <div class="col-sm-2 ">
-                                <label for="selectAno">Ano Escolar:</label>
-                                <select class="form-control" id="selectAno" name="year">
-                                    <optgroup label="1º Ciclo do Ensino Básico">
-                                        <option>1º</option>
-                                        <option>2º</option>
-                                        <option>3º</option>
-                                        <option>4º</option>
-                                        <optgroup label="2º Ciclo Ensino Básico">
-                                            <option>5º</option>
-                                            <option>6º</option>
-                                            <optgroup label="3º Ciclo Ensino Básico">
-                                                <option>7º</option>
-                                                <option>8º</option>
-                                                <option>9º</option>
-                                                <optgroup label="Ensino Secundário">
-                                                    <option>10º</option>
-                                                    <option>11º</option>
-                                                    <option>12º</option>
-                                                </optgroup>
-                                            </optgroup>
-                                        </optgroup>
-                                    </optgroup>
-                                </select>
-                            </div>
-                            <div class="col-sm-3 ">
-                                <label for="selectSubject">Disciplina:</label>
-                                <select class="form-control" id="selectSubject" name="subject">
-                                </select>
-                            </div>
-                            <div class="col-sm-3 ">
-                                <label for="selectContent">Conteúdo:</label>
-                                <select class="form-control" id="selectContent" name="content">
-                                </select>
-                            </div>
-                            <div class="col-sm-4 ">
-                                <label for="selectContent">Especificação:</label>
-                                <select class="form-control" id="selectSpecification" name="specification">
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- PERGUNTA-DESCRIÇÃO -->
-                        <div class="form-group">
-                            <div class="col-sm-6">
-                                <label for="InputTitulo">Título:</label>
-                                <input type="text" class="form-control preenche" id="InputTitulo"
-                                       placeholder="Ex: Anita vai ao médico" name="title">
-                            </div>
-                            <div class="col-sm-6">
-                                <label for="InputPergunta">Pergunta:</label>
-                                <input type="text" class="form-control preenche" id="InputPergunta"
-                                       placeholder="Ex: Leia as palavras..." name="question">
-                            </div>
-                        </div>
-
-                        <!-- Lista de palavras -->
-                        <div class="form-group">
-                            <div class="col-sm-4">
-                                </br>
-                                <div class="form-group">
-                                    <label for="col1">Coluna 1:</label>
-                        <textarea class="form-control list" rows="10" id="col1"
+                        <div class="col-sm-4">
+                            </br>
+                            <div class="form-group">
+                                <label for="col1">Coluna 1:</label>
+                        <textarea class="form-control list  mandatory" rows="10" id="col1"
                                   style="resize: none;"></textarea>
-                                </div>
                             </div>
-                            <div class="col-sm-4">
-                                </br>
-                                <div class="form-group">
-                                    <label for="col2">Coluna 2:</label>
+                        </div>
+                        <div class="col-sm-4">
+                            </br>
+                            <div class="form-group">
+                                <label for="col2">Coluna 2:</label>
                                     <textarea class="form-control list" rows="10" id="col2"
                                               style="resize: none;"></textarea>
-                                </div>
                             </div>
-                            <div class="col-sm-4">
-                                </br>
-                                <div class="form-group">
-                                    <label for="col3">Coluna 3:</label>
+                        </div>
+                        <div class="col-sm-4">
+                            </br>
+                            <div class="form-group">
+                                <label for="col3">Coluna 3:</label>
                                     <textarea class="form-control list" rows="10" id="col3"
                                               style="resize: none;"></textarea>
-                                </div>
-                            </div>
-
-                        </div>
-                        <input type="text" class="form-control mandatory" id="columns"
-
-                               name="columns">
-                        <div id="painelInvisivel" class="form-group  col-sm-4" style="display:none">
-                            <div class="col-sm-2">
-                                <select class="form-control" id="selectEstado" name="state">
-                                    <option>1</option>
-                                </select>
-                            </div>
-                            <div class="col-sm-2">
-                                <select class="form-control" id="selectTipo" name="type">
-                                    <option>list</option>
-                                </select>
-
                             </div>
                         </div>
 
-                        <!-- Audio -->
-                        <div class="col-sm-12">
-                            <h4>Detalhes do Áudio</h4>
-                            <hr style="background-color: #b0aac2;">
-                            </br>
+                    </div>
+                    <input type="hidden" class="form-control" id="columns"
+
+                           name="columns">
+                    <div id="painelInvisivel" class="form-group  col-sm-4" style="display:none">
+                        <div class="col-sm-2">
+                            <select class="form-control" id="selectEstado" name="state">
+                                <option>1</option>
+                            </select>
                         </div>
-                        <div class="form-group">
-                            <div class="col-sm-3" style="padding-right: 0px;">
-                <span class="file-input btn btn-block btn-primary btn-file">
-                Carregar ficheiro de som…
-                  <input id="uploadSoundFile" accept="audio/mp3"
-                         style="position: absolute;opacity: 0;top: 0px;left: 5%;width: 90%;height: 100%;"
-                         type="file" id="inputSom" accept="audio/mp3" name="file">
-                </span>
-                            </div>
-                            <div class="col-sm-3" style="padding-left: 0px;">
-                                <input type="text" class="form-control" id="soundPath"
-                                       placeholder="Nenhum ficheiro seleccionado"
-                                >
-                            </div>
-                            <div class="col-sm-1" style="vertical-align:bottom">
-                                <label style="margin-top: 10px;">OU</label>
-                            </div>
-                            <div class="col-sm-3" style="vertical-align:bottom">
-                                <button id="showEqualizer" class="btn btn-default">
-                                    <span class="glyphicon glyphicon-record" style="color:#ff0000"></span>
-                                    Gravar ficheiro de som
+                        <div class="col-sm-2">
+                            <select class="form-control" id="selectTipo" name="type">
+                                <option>list</option>
+                            </select>
+
+                        </div>
+                    </div>
+
+                    <!-- Audio -->
+                    <div class="col-sm-12">
+                        <h4>Detalhes do Áudio</h4>
+                        <hr style="background-color: #b0aac2;">
+                        </br>
+                    </div>
+                    <div class="form-group">
+
+                        <div class="col-sm-3" style="padding-right: 0px;">
+                        <span class="file-input btn btn-block btn-primary btn-file">
+                        Carregar ficheiro de som…
+                          <input id="uploadSoundFile" accept="audio/mp3"
+                                 style="position: absolute;opacity: 0;top: 0px;left: 5%;width: 90%;height: 100%;"
+                                 type="file" accept="audio/mp3" name="file">
+                        </span>
+                        </div>
+                        <div class="col-sm-3" style="padding-left: 0px;">
+                            <input type="text" class="form-control mandatory" id="soundPath"
+                                   placeholder="Nenhum ficheiro seleccionado"
+                            >
+                        </div>
+                        <div class="col-sm-1" style="vertical-align:bottom">
+                            <label style="margin-top: 10px;">OU</label>
+                        </div>
+                        <div class="col-sm-3" style="vertical-align:bottom">
+                            <button id="showEqualizer" class="btn btn-default">
+                                <span class="glyphicon glyphicon-record" style="color:#ff0000"></span>
+                                Gravar ficheiro de som
+                            </button>
+                        </div>
+                    </div>
+                    </br>
+
+
+                    <div class="col-sm-12">
+                        </br>
+                        <div class="col-sm-5 col-md-offset-7">
+                            <div class="col-sm-6">
+                                <button id="backbtn" type="reset"
+                                        class="btn btn-default btn-block btn-cancel">
+                                    Cancelar
                                 </button>
                             </div>
-                        </div>
-                        </br>
-
-
-                        <div class="col-sm-12">
-                            </br>
-                            <div class="col-sm-5 col-md-offset-7">
-                                <div class="col-sm-6">
-                                    <button id="backbtn" type="reset"
-                                            class="btn btn-default btn-block btn-cancel">
-                                        Cancelar
-                                    </button>
-                                </div>
-                                <div class="col-sm-6">
-                                    <button id="subTxt" type="submit" class="btn btn-success btn-block btn-created"
-                                            title="Todos os campos são de preenchimento obrigatório.">
-                                        Submeter
-                                    </button>
-                                </div>
-
+                            <div class="col-sm-6">
+                                <button id="subTxt" type="submit" class="btn btn-success btn-block btn-created"
+                                        title="Todos os campos são de preenchimento obrigatório.">
+                                    Submeter
+                                </button>
                             </div>
+
                         </div>
+                    </div>
 
 
                 </form>

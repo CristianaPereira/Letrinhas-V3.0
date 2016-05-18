@@ -120,7 +120,7 @@ window.QuestionsView = Backbone.View.extend({
             .append(
                 $('<label>', {
                     class: "dataTitle col-md-12 row", text: question.title
-                }).append("<hr>"),
+                }).append('<hr class="dataHr">'),
 
                 $('<div>', {
                     class: "form-group"
@@ -294,9 +294,9 @@ window.QuestionsView = Backbone.View.extend({
         if (!self.auth()) {
             return false;
         }
-        var data = self.model.toJSON();
-
-        $(this.el).html(this.template({collection: data}));
+        self.data = self.model.toJSON();
+        self.data.sort(sortJsonByCol('title'));
+        $(this.el).html(this.template({collection: self.data}));
 
         //Gets all registed categories
         modem('GET', 'category',

@@ -122,22 +122,20 @@
     <div class=" panel-body col-md-5" align="center">
         <div id="questionsContent" class=" panel-body col-md-12" align="center">
             <% _.each(collection,function(question){ %>
-            <div class="row">
-                <div class="listButton divWidget" value=" <%= question.subject %>"
-                     id='<%= question._id %>'
-                <% if ( question.profID == window.sessionStorage.getItem('username') ){ %>
-                style="background-color:#FBF6B4"
-                <% } %>
-                >
+            <div class="listButton divWidget row" value=" <%= question.subject %>"
+                 id='<%= question._id %>'
+            <% if ( question.profID == window.sessionStorage.getItem('username') ){ %>
+            style="background-color:#FBF6B4"
+            <% } %>
+            >
 
-                <img src="../img/<%= question.type %>.png">
-                <img src='../img/<%= question.subject.split(":")[0] %>.png'>
-                <span><%= question.title %></span>
-                <div class="editDeleteOp">
-                    <a href="#questionsText/Q1463132090184" title="Editar pergunta"><i
-                            id="btnEdit" value="<%= question._id %>" class="fa fa-edit"></i></a>
-                    <a title="Apagar pergunta"><i class="fa fa-trash-o"></i></a>
-                </div>
+            <img src="../img/<%= question.type %>.png">
+            <img src='../img/<%= question.subject.split(":")[0] %>.png'>
+            <span><%= question.title %></span>
+            <div class="editDeleteOp">
+                <a href="#questionsText/Q1463132090184" title="Editar pergunta"><i
+                        id="btnEdit" value="<%= question._id %>" class="fa fa-edit"></i></a>
+                <a title="Apagar pergunta"><i class="fa fa-trash-o"></i></a>
             </div>
         </div>
         <% }); %>

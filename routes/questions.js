@@ -10,6 +10,7 @@ var fs = require('fs-extra'),       //File System - for file manipulation
 //usa-se o upDate apenas para desabilitar a pergunta
 exports.upDate = function (req, res) {
 
+    console.log(req.body)
     //If there's any empty field, stops right here
     if (JSON.stringify(req.body).indexOf('""') != -1) {
         console.log('Required Arguments Missing'.green);
@@ -34,7 +35,7 @@ exports.upDate = function (req, res) {
             } else {
                 body.title = req.body.title;
                 body.subject = req.body.subject + ":" + req.body.content + ":" + req.body.specification;
-                body.schoolYear = req.body.schoolYear;
+                body.schoolYear = parseInt(req.body.schoolYear);
                 body.question = req.body.question;
                 body.content = {};
                 body.state = Boolean(req.body.state);
@@ -168,7 +169,7 @@ exports.test = function (req, res) {
         var $question = {
             "title": req.body.title,
             "subject": req.body.subject + ":" + req.body.content + ":" + req.body.specification,
-            "schoolYear": req.body.schoolYear,
+            "schoolYear": parseInt(req.body.schoolYear),
             "question": req.body.question,
             "content": {},
             "state": Boolean(req.body.state),
@@ -225,7 +226,7 @@ exports.test = function (req, res) {
             }], $idQuest, function (err, body) {
                 if (err) {
                     console.log('questions new, an error ocourred'.green);
-                    res.send(500);
+                    res.status(500).json({});
                 }
                 else {
                     console.log('New Test Added'.red);
@@ -236,7 +237,7 @@ exports.test = function (req, res) {
             dbQuest.insert($question, $idQuest, function (err, body) {
                 if (err) {
                     console.log('questions new, an error ocourred'.yellow);
-                    res.send(500);
+                    res.status(500).json({});
                 }
                 else {
                     console.log('New Test Added'.red);
@@ -245,7 +246,7 @@ exports.test = function (req, res) {
             });
         }
         console.log("New Question");
-        res.send(200);
+        res.status(200).json({});
     }
 
 };

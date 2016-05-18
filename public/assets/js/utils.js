@@ -385,7 +385,7 @@ window.isFormValid = function (elementsList) {
             }
             //Se o elemento for um select
             if ($(elem).is("select")) {
-                $(elem).parent().addClass("emptyField");
+                // $(elem).parent().addClass("emptyField");
                 $(elem).addClass("emptyField");
                 return;
             }

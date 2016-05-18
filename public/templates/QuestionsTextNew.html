@@ -20,66 +20,66 @@
                 <form id="newTextTestForm" role="form" method="POST" action="/questions" enctype="multipart/form-data">
                     <!-- TUTULO-DISCIPLINA-ANOESCOLAR -->
                     <div class="col-sm-2 row">
-                        <select class="form-control" id="selectAno" name="year">
+                        <select class="form-control mandatory" id="selectAno" name="schoolYear">
+                            <option selected disabled>Ano escolar</option>
                             <optgroup label="1º Ciclo do Ensino Básico">
-                                <option>1º</option>
-                                <option>2º</option>
-                                <option>3º</option>
-                                <option>4º</option>
-                                <optgroup label="2º Ciclo Ensino Básico">
-                                    <option>5º</option>
-                                    <option>6º</option>
-                                    <optgroup label="3º Ciclo Ensino Básico">
-                                        <option>7º</option>
-                                        <option>8º</option>
-                                        <option>9º</option>
-                                        <optgroup label="Ensino Secundário">
-                                            <option>10º</option>
-                                            <option>11º</option>
-                                            <option>12º</option>
-                                        </optgroup>
-                                    </optgroup>
-                                </optgroup>
+                                <option value="1">1º Ano</option>
+                                <option value="2">2º Ano</option>
+                                <option value="3">3º Ano</option>
+                                <option value="4">4º Ano</option>
+                            </optgroup>
+                            <optgroup label="2º Ciclo do Ensino Básico">
+                                <option value="5">5º Ano</option>
+                                <option value="6">6º Ano</option>
+                            </optgroup>
+                            <optgroup label="3º Ciclo do Ensino Básico">
+                                <option value="7">7º Ano</option>
+                                <option value="8">8º Ano</option>
+                                <option value="9">9º Ano</option>
+                            </optgroup>
+                            <optgroup label="Ensino Secundário">
+                                <option value="10">10º Ano</option>
+                                <option value="11">11º Ano</option>
+                                <option value="12">12º Ano</option>
                             </optgroup>
                         </select>
                     </div>
                     <div class="col-sm-3 row">
-                        <select class="form-control" id="selectSubject" name="subject">
+                        <select class="form-control mandatory" id="selectSubject" name="subject">
                             <option disabled selected>Disciplina</option>
                         </select>
                     </div>
                     <div class="col-sm-3 row">
-                        <select class="form-control" id="selectContent" name="content">
+                        <select class="form-control mandatory" id="selectContent" name="content">
                             <option disabled selected>Conteúdo</option>
                         </select>
                     </div>
                     <div class="col-sm-4 row">
-                        <select class="form-control" id="selectSpecification" name="specification">
+                        <select class="form-control mandatory" id="selectSpecification" name="specification">
                             <option disabled selected>Especificação</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <div class="col-sm-6 row">
-                            <label for="InputTitulo">Título:</label>
+                    <div class="col-sm-6 row">
+                        <div class="input-group">
+                            <span class="input-group-addon btn-white"><i class="fa fa-tag"></i></span>
                             <input type="text" class="form-control mandatory" id="InputTitulo"
-                                   placeholder="Ex: Anita vai às compras"
+                                   placeholder="Título da pergunta"
                                    name="title">
                         </div>
+
                     </div>
                     <!-- PERGUNTA-DESCRIÇÃO -->
-                    <div class="form-group">
-                        <div class="col-sm-6">
-                            <label for="InputPergunta">Pergunta:</label>
+                    <div class="col-sm-6 row">
+                        <div class="input-group">
+                            <span class="input-group-addon btn-white"><i class="fa fa-question"></i></span>
                             <input type="text" class="form-control mandatory" id="InputPergunta"
-                                   placeholder="Ex: Leia o segunte texto" name="question"
-                            >
+                                   placeholder="Pergunta" name="question">
                         </div>
 
                     </div>
                     <!-- TEXTO -->
                     <div class="form-group">
                         <div class="col-sm-12">
-                            </br>
                             <label for="InputTexto">Texto</label>
                     <textarea class="form-control mandatory" rows="7" id="InputTexto" name="text" style="resize: none;"
                     ></textarea>

@@ -4,7 +4,15 @@ window.QuestionsListNew = Backbone.View.extend({
         "click #record": "initRecord",
         "change #uploadSoundFile": "uploadSoundFile",
         "click #backbtn": "goBack",
+        "blur .emptyField": "isEmpty",
+        "mouseover #subTxt": "pop",
         "submit": "beforeSend"
+    },
+    //Initializes popover content
+    pop: function () {
+
+        setPopOver("Ano, Disciplina, Conteúdo, Especificação, Título, Pergunta, Coluna");
+
     },
 
     //Check Auth
@@ -22,31 +30,50 @@ window.QuestionsListNew = Backbone.View.extend({
         window.history.back();
     },
 
+    //Verifies if an input is empty
+    isEmpty: function (e) {
+        if ($(e.currentTarget).val().length != 0) {
+            $(e.currentTarget).removeClass("emptyField");
+        }
+    },
+
     //Before Sending Request To Server
     beforeSend: function (e) {
         e.preventDefault();
-        console.log(new FormData($("#newListTestForm")[0]))
-        //Recolhe as listas
-        var wordsLists = $(".list");
-        var lists = [];
-        //Adiciona as listas que estivrem preenchidas
-        $.each(wordsLists, function (i, list) {
-            //Se a coluna não estiver vazia, separa as palavras para um array
-            if ($(list).val()) {
-                lists.push({words: $(list).val().replace(/\n/g, " ").split(" ")});
-            }
-        });
-        $("#columns").val(JSON.stringify(lists));
+        //Se algum dos campos estiver vazio
+        var allListElements = $(".mandatory");
+        //Verifies if all inputs are OK
+        var isValid = isFormValid(allListElements);
+        //If they are
+        if (isValid) {
+            //Recolhe as listas
+            var wordsLists = $(".list");
+            var lists = [];
+            //Adiciona as listas que estivrem preenchidas
+            $.each(wordsLists, function (i, list) {
+                //Se a coluna não estiver vazia, separa as palavras para um array
+                if ($(list).val()) {
+                    lists.push({words: $(list).val().replace(/\n/g, " ").split(" ")});
+                }
+            });
+            $("#columns").val(JSON.stringify(lists));
 
-        modem('POST', 'questions',
-            function (json) {
-            },
-            //Error Handling
-            function (xhr, ajaxOptions, thrownError) {
-            },
-            new FormData($("#newListTestForm")[0])
-        );
+            modem('POST', 'questions',
+                function () {
+                    sucssesMsg($(".form"), "Pergunta inserida com sucesso!");
+                    setTimeout(function () {
+                        app.navigate("questions", {
+                            trigger: true
+                        });
+                    }, 1500);
+                },
+                //Error Handling
+                function (xhr, ajaxOptions, thrownError) {
+                },
+                new FormData($("#newListTestForm")[0])
+            );
 
+        }
     },
 
     //Show Voice Recorder Equalizer
@@ -81,6 +108,7 @@ window.QuestionsListNew = Backbone.View.extend({
         var files = $("#uploadSoundFile").prop('files');
         $("#soundPath")
             .attr("placeholder", files[0].name)
+            .attr("value", files[0].name)
             .css('border', 'solid 1px #cccccc');
     },
 

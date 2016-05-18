@@ -133,7 +133,7 @@ window.TeachersView = Backbone.View.extend({
 
     render: function () {
         var self = this;
-
+        self.data.sort(sortJsonByCol('title'));
         $(this.el).html(this.template({collection: self.data}));
         return this;
     },
