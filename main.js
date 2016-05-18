@@ -2,7 +2,7 @@ require('colors');
 
 //Database
 var nano = require('nano')(process.env.COUCHDB);
-var db = nano.use('dev_professores');
+var db = nano.use('let_teachers');
 
 //Requirements
 var express = require('express'),
@@ -53,16 +53,16 @@ router.use(function (req, res, next) {
     // log each request to the console
     switch (req.method) {
         case "GET":
-            console.log("Route Request: ".green + req.method, req.url);
+            console.log("Route Request: " + req.method.green, req.url);
             break;
         case "PUT":
-            console.log("Route Request: ".yellow + req.method, req.url);
+            console.log("Route Request: " + req.method.yellow, req.url);
             break;
         case "DELETE":
-            console.log("Route Request: ".red + req.method, req.url);
+            console.log("Route Request: " + req.method.red, req.url);
             break;
         case "POST":
-            console.log("Route Request: ".blue + req.method, req.url);
+            console.log("Route Request: " + req.method.blue, req.url);
             break;
     }
 
@@ -231,7 +231,7 @@ app.route('/students/:id')
 //-----------------------------------------------------TEACHERS
 
 app.route('/me')//GETS ACTUAL USER DATA
-    .get(auth, tself, teachers.get);
+    .get(auth, tself, teachers.getMyData);
 
 app.route('/teachers')
     .post(auth, perms(3), teachers.new)
@@ -256,6 +256,7 @@ app.route('/teachers/rmvClass')
 //-----------------------------------------------------TESTS
 
 app.route('/tests')
+    .post(auth, tself, perms(2), tests.new)
     .get(auth, tself, perms(2), tests.getAll);
 
 

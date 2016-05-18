@@ -23,6 +23,27 @@ window.sucssesMsg = function (form, txt) {
     }, txt.length * 30);
 
 };
+window.alertMsg = function (form, txt) {
+    var $edit = $("<div>", {
+        class: "modal fade",
+        tabindex: "-1",
+        id: "infoModal",
+        role: "dialog",
+        "aria-labelledby": "basicModal",
+        "aria-hidden": "true"
+    }).append('<div id="infoModalContent" class="modal-dialog"></div>');
+
+    $(form).append($edit);
+
+    $('#infoModalContent').html('<div id="popUpAlert" class="alert alert-warning">'
+        + '<strong>Atenção!</strong> ' + txt
+        + '</div>');
+    $('#infoModal').modal("show");
+    setTimeout(function () {
+        $('#infoModal').modal("hide");
+    }, txt.length * 30);
+
+};
 
 window.failMsg = function (form, txt) {
     var $edit = $("<div>", {

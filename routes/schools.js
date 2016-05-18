@@ -2,8 +2,8 @@ require('colors');
 
 //DB Info
 var nano = require('nano')(process.env.COUCHDB);
-var db = nano.use('dev_escolas');
-var dbAlunos = nano.use('dev_alunos');
+var db = nano.use('let_schools');
+var dbAlunos = nano.use('let_students');
 
 //Get School ID Info
 exports.get = function (req, res) {
@@ -39,7 +39,7 @@ exports.new = function (req, res) {
         for (var i = 0; i < req.body.classes.length; i++) {
             //Generate New Class Skeleton
             var newClass = {
-                _id: "T" + presentYear + req.body.classes[i].year + new Date().getTime() + (req.body.classes.length + 1),
+                _id: "T" + presentYear + req.body.classes[i].year + new Date().getTime() + i,
                 name: req.body.classes[i].name,
                 year: req.body.classes[i].year,
                 scholarYear: presentYear,

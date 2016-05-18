@@ -62,7 +62,7 @@ window.StudentsEdit = Backbone.View.extend({
         //If they are
         if (isValid) {
             //Send Student Changes to Server
-            var student = new Student({id: this.data.id});
+            var student = new Student({id: this.data._id});
             var studentDetails = $('#editstudentform').serializeObject();
             student.save(studentDetails, {
                 success: function () {

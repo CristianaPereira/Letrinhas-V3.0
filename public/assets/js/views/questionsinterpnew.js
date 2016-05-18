@@ -104,24 +104,20 @@ window.QuestionsInterpNew = Backbone.View.extend({
 
         var self = this;
 
-        alert("Atenção: \nMarcar o texto deve ser um processo final. \nCaso altere o texto ou pretenda remarcar o mesmo, todas as marcações anteriores serão removidas!");
+        alertMsg($(".form"), "Marcar o texto deve ser um processo final. \nCaso altere o texto ou pretenda remarcar o mesmo, todas as marcações anteriores serão removidas!")
 
         var $words = $("#inputTextArea").val()
-            .replace(/(\r\n|\n|\r)/gm, "<br>")  //Replaces all 3 types of line breaks with a space
+            .replace(/(\r\n|\n|\r)/gm, " <br> ")  //Replaces all 3 types of line breaks with a space
             .replace(/\s+/g, " ")            //Replace all double white spaces with single spaces
             .split(" ");
-
+        console.log($words)
         var $result = [];
 
-        //Replace String With Selectable Span
+        //Replace String With Selectable Span (Não esquecer os PARAGRAFOS)
         for (var i in $words) {
-            if ($words[i] == "<br>")
-                $result.push("<br>");
-            else
-                $result.push("<span id='sid" + i + "' class='selectable'>" + $words[i] + "</span>");
+            $result.push("<span id='sid" + i + "' class='selectable'>" + $words[i] + "</span>");
         }
-
-        $("#inputPanel").append($result.join(' '));
+        $("#inputPanel").empty().append($result.join(' '));
 
         $("#inputTextArea").hide();
         $("#markText").hide();
@@ -134,6 +130,7 @@ window.QuestionsInterpNew = Backbone.View.extend({
     //Mark Word
     selectWord: function (e) {
         $(e.target).toggleClass("badge");
+        console.log($(e.target).attr("id"))
     },
 
     //Make Unique String Array

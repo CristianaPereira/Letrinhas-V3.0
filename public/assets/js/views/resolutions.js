@@ -18,7 +18,7 @@ window.ResolutionsView = Backbone.View.extend({
 
     initialize: function () {
         var self = this;
-        self.bd2 = 'dev_resolucoes';
+        self.bd2 = 'let_resolutions';
 
     }
     ,
@@ -66,7 +66,7 @@ window.ResolutionsView = Backbone.View.extend({
                                     }).append(
                                             +'<label>Demo:</label>'
                                             + '<audio id="vozProf" controls style="width:100%">'
-                                            + '<source src="http://127.0.0.1:5984/dev_resolucoes/' + data.doc._id + '/gravacao.mp3" type="audio/mp3">'
+                                            + '<source src="http://127.0.0.1:5984/let_resolutions/' + data.doc._id + '/gravacao.mp3" type="audio/mp3">'
                                             + '</audio><hr> ' +
 
                                             "<img width='25px' src=" + student.doc.b64 + "><span>" + student.doc.nome + "</span>")

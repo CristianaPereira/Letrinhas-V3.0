@@ -1,0 +1,141 @@
+<div id="testsDiv" class="mainDiv">
+
+    <div class="col-md-12">
+        <section class="panel subMenu">
+
+            <ul class="nav navbar-nav">
+                <li><a>Total: <label id="testsBadge" class=""></label>
+                </a></li>
+                <li>
+                    <div class="input-group" style="width: 350px;padding-top: 11px;">
+                        <input id="txtSearch" type="text" class="form-control" placeholder="Pesquisar"
+                               aria-describedby="basic-addon2">
+                        <span class="input-group-addon"> <i class="fa fa-search"></i></span>
+                    </div>
+                </li>
+                <li><a id="orderBy" class="order"><i class="fa fa-sort-alpha-asc"></i> </a></li>
+
+
+                <li><a href="#tests/new" title="Adicionar teste">
+                    <i class="fa fa-file-text-o"></i><span class="badge-over">  <i
+                        class="fa fa-plus-circle"></i></span></i>
+
+                </a></li>
+                <!-- Filter by -->
+                <li class="dropdown">
+                    <a href="#" data-toggle="dropdown" class="dropdown-toggle"><i class="fa fa-filter"></i> Tipo </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="filter">
+                            <input type="checkbox" value="text" checked>
+                            <img src="../../img/text.png" style="height:20px">
+                            <span> Texto </span></a></li>
+                        <li><a class="filter">
+                            <input type="checkbox" value="multimedia" checked>
+                            <img src="../../img/multimedia.png" style="height:20px">
+                            <span> Multimédia </span></a>
+                        </li>
+                        <li><a class="filter">
+                            <input type="checkbox" value="list" checked>
+                            <img src="../../img/list.png" style="height:20px">
+                            <span> Lista </span></a>
+                        </li>
+                        <li><a class="filter">
+                            <input type="checkbox" value="interpretation" checked>
+                            <img src="../../img/interpretation.png" style="height:20px">
+                            <span> Interpretação </span></a>
+                        </li>
+
+                        <li class="divider"></li>
+                        <li><a class="filter">
+                            <input type="checkbox" value="whitespaces" checked>
+                            <img src="../../img/whitespaces.png" style="height:20px">
+                            <span> Espaços </span></a></li>
+                        <li><a class="filter">
+                            <input type="checkbox" value="connections" checked>
+                            <img src="../../img/connections.png" style="height:20px">
+                            <span> Ligações </span></a>
+                        </li>
+                        <li><a class="filter">
+                            <input type="checkbox" value="regions" checked>
+                            <img src="../../img/regions.png" style="height:20px">
+                            <span> Regiões </span></a>
+                        </li>
+                        <li><a class="filter">
+                            <input type="checkbox" value="boxes" checked>
+                            <img src="../../img/boxes.png" style="height:20px">
+                            <span> Caixas </span></a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-filter"></i> Disciplina
+                        <b class="caret"></b></a>
+                    <ul class="dropdown-menu" id="selectSubject">
+                        <li class="dropdown-submenu pull-left">
+                            <a class=" contentFilter"
+                               data-toggle="dropdown"
+                               value=""
+                               aria-expanded="false">Ver todas</a>
+                        </li>
+
+                    </ul>
+                </li>
+            </ul>
+        </section>
+        <!-- END REGIONAL STATS PORTLET-->
+    </div>
+
+    <div class=" panel-body col-md-5" align="center">
+        <div id="testsContent" class=" panel-body col-md-12" align="center">
+            <% _.each(collection,function(test){ %>
+            <div class="row">
+                <div class="listButton divWidget" value=" <%= test.subject %>"
+                     id='<%= test._id %>'
+                <% if ( test.profID == window.sessionStorage.getItem('username') ){ %>
+                style="background-color:#FBF6B4"
+                <% } %>
+                >
+                <img src='../img/<%= test.subject.split(":")[0] %>.png'>
+                <span><%= test.title %></span>
+                <div class="editDeleteOp">
+                    <a href="#testsText/Q1463132090184" title="Editar pergunta"><i
+                            id="btnEdit" value="<%= test._id %>" class="fa fa-edit"></i></a>
+                    <a title="Apagar pergunta"><i class="fa fa-trash-o"></i></a>
+                </div>
+            </div>
+        </div>
+        <% }); %>
+    </div>
+
+</div>
+<div class="col-md-7" style="padding: 30px; " align="center">
+
+    <div class="col-md-12 divWidget">
+        <label class="dataTitle col-md-12"></label>
+
+    </div>
+    <div id="testsPreview" class="col-md-12 divWidget" align="center">
+        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+
+            <ol class="carousel-indicators">
+
+            </ol>
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner" role="listbox">
+
+            </div>
+
+            <!-- Left and right controls -->
+            <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev" style="
+    color: #F9D0DC;">
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next" style="
+    color: #F9D0DC;">
+                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </div>
+</div>

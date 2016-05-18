@@ -90,8 +90,8 @@ window.QuestionsTextNew = Backbone.View.extend({
     //Class Initializer
     initialize: function () {
         var self = this;
-        self.bd = 'dev_testes';
-        self.bd2 = 'dev_perguntas';
+        self.bd = 'let_tests';
+        self.bd2 = 'let_questions';
         self.site = 'http://185.15.22.235:5984';
     },
 

@@ -385,23 +385,11 @@ a {
 }
 
 .smallImgPreView {
-    position: absolute;
-    height: 30px;
-    width: 30px;
-    border: 1px solid #cccccc;
-    border-radius: 3px;
+    max-height: 25px;
+    border-radius: 5px;
     right: 15px;
     transition: all 1.5s ease-in-out;
     z-index: 1000;
-}
-
-.smallImgPreView:hover {
-    transform: scale(5.5);
-    overflow: hidden;
-    position: absolute;
-    border-radius: 2px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-    border: 1px solid #4DB8B8;
 }
 
 #teachersPreview, #testsPreview {
@@ -423,6 +411,21 @@ a {
     position: absolute;
     right: 0;
     padding: 8px 27px;
+}
+
+.btn-Add {
+    font-size: 14px;
+
+    -ms-touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background-color: #B3DB86;
+    float: right;
 }
 
 input::-webkit-outer-spin-button,
@@ -500,7 +503,7 @@ label {
 }
 
 .listButton > img {
-    height: 35px;
+    height: 30px;
     border-radius: 5px;
 }
 
@@ -514,14 +517,51 @@ label {
 .listButton > a {
     float: right;
     margin: 5px;
+    margin-bottom: 5px;
 }
 
 .lblDataDetails {
     font-weight: bold;
 }
 
+.carousel-indicators {
+    top: -10px;
+}
+
+.carousel-control .glyphicon-chevron-left, .carousel-control .icon-prev {
+    margin-left: -50px;
+}
+
+.carousel-control .glyphicon-chevron-right, .carousel-control .icon-next {
+    margin-right: -50px;
+}
+
+.carousel-indicators li {
+    background-color: #F9CFDC;
+}
+
+.carousel-indicators .active {
+    background-color: #96CCBF;
+}
+
+.carousel-control.left, .carousel-control.right {
+    background-image: none
+}
+
 .fa-remove, .fa-trash-o {
     color: #B22222;
+}
+
+.fa-remove:hover, .fa-trash-o:hover {
+    color: #C97979;
+}
+
+.fa-plus {
+    color: #B3DB86;
+}
+
+.fa-plus:hover {
+    color: #608A32;
 }
 
 .dataTitle {
@@ -542,7 +582,7 @@ label {
     border-radius: 5px;
     -webkit-border-radius: 5px;
     padding: 10px;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
     text-align: left;
     border-color: transparent;
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.275);
@@ -897,7 +937,8 @@ div.upload input {
 
 .editDeleteOp {
     position: absolute;
-    top: 10px;
+    top: 15px;
+    height: initial;
     right: 10px;
 }
 

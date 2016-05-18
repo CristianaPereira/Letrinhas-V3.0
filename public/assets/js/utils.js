@@ -135,8 +135,8 @@ window.populateDDSchools = function (school, classe) {
 };
 
 window.assocClass = function () {
-    var escola = $("#dbSchools").val();
-    var turma = $("#dbClasses").val();
+    var escola = $("#dbSchools option:selected").val();
+    var turma = $("#dbClasses option:selected").val();
     if (escola != undefined && turma != undefined) {
         var obj = jQuery.parseJSON($("#teacherClasses").val());
         //Se a escola já estiver listada, e a turma não, adiciona a turma
@@ -233,49 +233,59 @@ window.getCategories = function () {
         //Response Handler
         function (json) {
             $.each(json, function (i, key) {
-                $("#selectSubject").append($("<option>", {html: key.doc.subject, id: key.doc._id, value: key.doc._id}));
-
-                //Populates dd with the contents of selects subject
-                var myEl = document.getElementById('selectSubject');
-
-                myEl.addEventListener('change', function () {
-                    var selectedSubject = $(this).children(":selected").attr("id");
-                    if (key.doc._id === selectedSubject) {
-                        //Limpa a dd
-                        $("#selectContent").html("");
-                        $.each(key.doc.content, function (id, content) {
-                            $("#selectContent").append($("<option>", {
-                                html: content.name,
-                                id: content._id,
-                                value: content._id
-                            }));
-                        });
-                    }
-                }, false);
-
-                //Populates dd with the contents of selects subject
-                var myEll = document.getElementById('selectContent');
-                myEll.addEventListener('change', function () {
-                    var selectedSubject = $("#selectSubject").children(":selected").attr("id");
-                    var selectedContent = $(this).children(":selected").attr("id");
-                    if (key.doc._id === selectedSubject) {
-                        //Limpa a dd
-                        $("#selectSpecification").html("");
-                        $.each(key.doc.content, function (id, content) {
-                            if (content._id === selectedContent) {
-                                $.each(content.specification, function (ids, specif) {
-                                    $("#selectSpecification").append($("<option>", {
-                                        html: specif.name,
-                                        id: specif._id,
-                                        value: specif._id
-                                    }));
-                                });
-                            }
-                        });
-                    }
-                }, false);
-
+                $("#selectSubject").append($("<option>", {html: key.doc.subject, value: key.doc._id}));
             });
+
+            //Populates dd with the contents of selects subject
+            $('#selectSubject').change(
+                function () {
+                    console.log("chang")
+                    $.each(json, function (i, key) {
+                        var selectedSubject = $("#selectSubject").val();
+                        if (key.doc._id === selectedSubject) {
+                            //Limpa a dd
+                            $("#selectContent").html("");
+                            $("#selectContent").append('<option value="" disabled selected>Conteúdo</option>');
+                            $.each(key.doc.content, function (id, content) {
+                                $("#selectContent").append($("<option>", {
+                                    html: content.name,
+                                    id: content._id,
+                                    value: content._id
+                                }));
+                            });
+                        }
+                    });
+                }
+            )//Populates dd with the contents of selects subject
+             //Populates dd with the contents of selects subject
+            $('#selectContent').change(
+                function () {
+                    console.log("chang")
+                    $.each(json, function (i, key) {
+                        var selectedSubject = $("#selectSubject").val();
+                        var selectedContent = $("#selectContent").val();
+                        if (key.doc._id === selectedSubject) {
+                            //Limpa a dd
+                            $("#selectSpecification").html("");
+                            $("#selectSpecification").append('<option disabled value="" selected>Especificação</option>');
+
+                            $.each(key.doc.content, function (id, content) {
+                                if (content._id === selectedContent) {
+                                    $.each(content.specification, function (ids, specif) {
+                                        $("#selectSpecification").append($("<option>", {
+                                            html: specif.name,
+                                            id: specif._id,
+                                            value: specif._id
+                                        }));
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            )
+
+
         },
 
         //Error Handling

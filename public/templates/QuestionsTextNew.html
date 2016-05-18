@@ -20,7 +20,6 @@
                 <form id="newTextTestForm" role="form" method="POST" action="/questions" enctype="multipart/form-data">
                     <!-- TUTULO-DISCIPLINA-ANOESCOLAR -->
                     <div class="col-sm-2 row">
-                        <label for="selectAno">Ano Escolar:</label>
                         <select class="form-control" id="selectAno" name="year">
                             <optgroup label="1º Ciclo do Ensino Básico">
                                 <option>1º</option>
@@ -45,27 +44,19 @@
                         </select>
                     </div>
                     <div class="col-sm-3 row">
-                        <label for="selectSubject">Disciplina:</label>
                         <select class="form-control" id="selectSubject" name="subject">
+                            <option disabled selected>Disciplina</option>
                         </select>
                     </div>
                     <div class="col-sm-3 row">
-                        <label for="selectContent">Conteúdo:</label>
                         <select class="form-control" id="selectContent" name="content">
+                            <option disabled selected>Conteúdo</option>
                         </select>
                     </div>
                     <div class="col-sm-4 row">
-                        <label for="selectContent">Especificação:</label>
                         <select class="form-control" id="selectSpecification" name="specification">
+                            <option disabled selected>Especificação</option>
                         </select>
-                    </div>
-                    <div class="col-sm-12 row">
-
-                        <label for="InputDescricao">Descrição:</label>
-                        <input type="text" class="form-control mandatory" id="InputDescricao"
-                               placeholder="Ex: Teste de apoio para alunos con dificuldades de leitura"
-                               name="description">
-
                     </div>
                     <div class="form-group">
                         <div class="col-sm-6 row">

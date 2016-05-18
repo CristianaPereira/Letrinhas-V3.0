@@ -15,8 +15,8 @@ window.StudentInfo = Backbone.View.extend({
     initialize: function () {
         var self = this;
 
-        self.bd = 'dev_alunos';
-        self.bd2 = 'dev_escolas';
+        self.bd = 'let_students';
+        self.bd2 = 'let_schools';
         self.site = process.env.COUCHDB;
         self.aluno;
     },

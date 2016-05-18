@@ -4,7 +4,7 @@ var Question = Backbone.Model.extend({
     initialize: function (options) {
         this.id = options.id;
         this.site = "http://127.0.0.1:5984";
-        this.bd = "dev_perguntas";
+        this.bd = "let_questions";
     },
 
     fetch: function (after_fetch) {
@@ -13,12 +13,7 @@ var Question = Backbone.Model.extend({
         modem('GET', 'questions/' + this.id,
             //Response Handler
             function (json) {
-                console.log("fetching a question");
-                self.set("title", json.title);
-                self.set("description", json.description);
-                self.set("question", json.question);
-                self.set("contentText", json.content.text);
-                self.set("subject", json.subject);
+                self.attributes = json;
                 self.set("voice", self.site + "/" + self.bd + "/" + json._id + "/voice.mp3");
                 after_fetch();
             },
@@ -39,7 +34,9 @@ var Questions = Backbone.Collection.extend({
         var self = this;
         modem('GET', 'questions',
             function (json) {
+                //   json.sort(sortJsonByCol('id'));
                 for (i = 0; i < json.length; i++) {
+
                     self.models.push(new Question(json[i].doc));
                 }
                 after_fetch();
@@ -47,6 +44,7 @@ var Questions = Backbone.Collection.extend({
             function () {
             }
         );
+
     },
     //Gets specific item from collection
     getByID: function (id) {

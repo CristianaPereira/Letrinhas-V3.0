@@ -40,7 +40,7 @@ window.SchoolsView = Backbone.View.extend({
     enchePreview: function (e) {
         var self = this;
         //gets model info
-        schoolData = self.model.getByID($(e.currentTarget).attr("id"));
+        schoolData = self.collection.getByID($(e.currentTarget).attr("id"));
 
         $('#schoolsPreview').empty();
 
@@ -136,7 +136,7 @@ window.SchoolsView = Backbone.View.extend({
             return false;
         }
 
-        var data = self.model.toJSON();
+        var data = self.collection.toJSON();
         $(this.el).html(this.template({collection: data}));
 
         return this;

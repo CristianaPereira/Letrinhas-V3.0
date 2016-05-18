@@ -1,7 +1,7 @@
 require('colors');
 
 var nano = require('nano')(process.env.COUCHDB);
-var dbQuest = nano.use('dev_perguntas');
+var dbQuest = nano.use('let_questions');
 
 var fs = require('fs-extra'),       //File System - for file manipulation
     mime = require('mime');
@@ -36,7 +36,6 @@ exports.upDate = function (req, res) {
                 body.subject = req.body.subject + ":" + req.body.content + ":" + req.body.specification;
                 body.schoolYear = req.body.schoolYear;
                 body.question = req.body.question;
-                body.description = req.body.description;
                 body.content = {};
                 body.state = Boolean(req.body.state);
 
@@ -171,7 +170,6 @@ exports.test = function (req, res) {
             "subject": req.body.subject + ":" + req.body.content + ":" + req.body.specification,
             "schoolYear": req.body.schoolYear,
             "question": req.body.question,
-            "description": req.body.description,
             "content": {},
             "state": Boolean(req.body.state),
             "type": req.body.type,
@@ -186,12 +184,12 @@ exports.test = function (req, res) {
                 break;
 
             case "list":
-                $question.content["column"] = JSON.parse(req.body.column);
+                $question.content["columns"] = JSON.parse(req.body.columns);
                 break;
 
             case "interpretation":
-                //Content Text
-                $question.content["text"] = req.body.text;
+                //Content Text (Não esquecer os PARAGRAFOS)
+                $question.content["text"] = req.body.text.replace(/(\r\n)/gm, " <br> ").replace(/(\n|\r)/gm, " <br> ");
 
                 //Iterate SID's
                 $question.content["sid"] = [];

@@ -1,0 +1,181 @@
+<!--FORMULARIO -->
+<div class="form">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div align="center" class="titleBox">
+                <img class="titleImage">
+        <span class="titleText">
+           <img src="../img/text.png" style="height:30px;">
+       Novo teste
+        </span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="panel panel-info">
+            <div class="panel-heading"><i class="fa fa-gears"></i> Detalhes do teste
+                <i id="infoPop" class="fa fa-info-circle" style="float: right;"></i>
+            </div>
+            <div class="panel-body">
+                <form id="newTestForm">
+                    <!-- TUTULO-DISCIPLINA-ANOESCOLAR -->
+                    <div class="col-sm-2 row">
+                        <select class="form-control mandatory" id="selectAno" name="schoolYear">
+                            <option disabled selected>Ano Escolar</option>
+                            <optgroup label="1º Ciclo do Ensino Básico">
+                                <option>1º</option>
+                                <option>2º</option>
+                                <option>3º</option>
+                                <option>4º</option>
+                                <optgroup label="2º Ciclo Ensino Básico">
+                                    <option>5º</option>
+                                    <option>6º</option>
+                                    <optgroup label="3º Ciclo Ensino Básico">
+                                        <option>7º</option>
+                                        <option>8º</option>
+                                        <option>9º</option>
+                                        <optgroup label="Ensino Secundário">
+                                            <option>10º</option>
+                                            <option>11º</option>
+                                            <option>12º</option>
+                                        </optgroup>
+                                    </optgroup>
+                                </optgroup>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div class="col-sm-3 row">
+                        <select class="form-control mandatory" id="selectSubject" name="subject">
+                            <option value="" disabled selected>Disciplina</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3 row">
+                        <select class="form-control mandatory" id="selectContent" name="content">
+                            <option value="" disabled selected>Conteúdo</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4 row">
+                        <select class="form-control mandatory" id="selectSpecification" name="specification">
+                            <option value="" disabled selected>Especificação</option>
+                        </select>
+                    </div>
+                    <div class="row col-sm-12">
+                        <input type="text" class="form-control mandatory" placeholder="Título" name="title">
+                        <span class="glyphicon"><i class="fa fa-tag"></i></span>
+                    </div>
+                    <div class="row col-sm-12">
+                        <input type="text" class="form-control mandatory" placeholder="Descrição" name="description">
+                        <span class="glyphicon"><i class="fa fa-comment-o"></i></span>
+                    </div>
+                    <!-- BOTOES -->
+                    <legend>Perguntas <label id="questionsBadge" class="badge">
+                        0
+                    </label>
+                        <button type="button" class="btn-Add" data-toggle="modal" data-target="#myModal">
+                            +
+                        </button>
+                    </legend>
+                    <div id="questionsList"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 row">
+        <div class="btn-group" role="group" aria-label="...">
+            <button id="buttonCancelar" type="reset" class="btn btn-default">Cancelar</button>
+            <button id="newtestbtn" type="submit" class="btn btn-success">Inserir</button>
+        </div>
+    </div>
+</div>
+
+
+<!-- MODAL para apresentar o equalizador para gravar o som -->
+<div class="modal fade" id="myModalRecord" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"
+                                                                                                  class="glyphicon glyphicon-remove-sign"
+                                                                                                  style="color:#ee3030"></span>
+                </button>
+                <h3 class="modal-title" id="myModalLabel">
+                    <img src="../img/letrinhas2.png" style="height:40px">
+                    <img src="../img/audio_file.png" style="height:40px;">
+                    Estudio de som:
+                </h3>
+            </div>
+            <div class="modal-body" style="height:550px; background-color:#ddeeff">
+                <div class="col-md-12" align=center>
+                    <div id="viz">
+                        <canvas id="analyser" width="525" height="100" style="display: inline-block;
+                                                                     background: #202020;
+                                                                     box-shadow: 0px 0px 10px blue;">
+                        </canvas>
+
+                        <canvas id="wavedisplay" width="525" height="100" style="display: inline-block;
+           		                                                       background: #202020;
+           		                                                       box-shadow: 0px 0px 10px blue;">
+                        </canvas>
+                    </div>
+                    <div id="controls">
+           		<span id="record" class="btn badge btn-primary" style="font-size:16px" value=0>
+                 <span class="glyphicon glyphicon-record" style="color:#ee0000"></span>
+                 Gravar
+              </span>
+                        <audio id="Rplayer" controls class="players" style="visibility:hidden;width:60%">
+                            <source src="" type="audio/wave">
+                        </audio>
+                        <a id="save" class="btn badge btn-info" style="visibility:hidden;color:#ffffff" disabled>
+                            <span class="glyphicon glyphicon-download-alt" style="color:#00ee00"></span>
+                            Download
+                        </a>
+                    </div>
+                </div>
+                <div class="col-sm-12" id="rTexto" style="height:270px; overflow:auto; background-color:#ecdcbc">
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- ########################################### -->
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Modal Header</h4>
+            </div>
+            <div class="modal-body" id="allQuestions">
+                <% _.each(questions, function(question) { %>
+
+                <div class="listButton divWidget row" value=" <%= question.subject %>"
+                     id='<%= question._id %>'
+                <% if ( question.profID == window.sessionStorage.getItem('username') ){ %>
+                style="background-color:#FBF6B4"
+                <% } %>
+                >
+
+                <img src="../img/<%= question.type %>.png" class="smallImgPreView">
+                <img src='../img/<%= question.subject.split(":")[0] %>.png'>
+                <span><%= question.title %></span>
+                <div class="editDeleteOp">
+                    <span class="btn-white"><i value="<%=question._id%>"
+                                               class="fa fa-plus addQuestion"></i></span>
+                </div>
+
+            </div>
+            <% }); %>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+
+</div>
+</div>

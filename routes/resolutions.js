@@ -1,7 +1,7 @@
 require('colors');
 
 var nano = require('nano')(process.env.COUCHDB);
-var db = nano.use('dev_resolucoes');
+var db = nano.use('let_resolutions');
 
 exports.replace = function (req, res) {
 

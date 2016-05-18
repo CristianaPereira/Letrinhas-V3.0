@@ -67,8 +67,10 @@ var Router = Backbone.Router.extend({
 
         "multimediaTest/new": "multimediaTestNew",
         "listTest/new": "listTestNew",
-        "interpretationTest/new": "interpretationTestNew"
+        "interpretationTest/new": "interpretationTestNew",
 
+        "tests": "tests",
+        "tests/new": "testsNew"
     },
 
 
@@ -133,7 +135,7 @@ var Router = Backbone.Router.extend({
                 var ss = new Teachers();
                 ss.fetch(function () {
                     var v = new TeachersView({
-                        model: ss
+                        collection: ss
                     });
                     self.showView(v, $('#content'));
                 })
@@ -203,7 +205,7 @@ var Router = Backbone.Router.extend({
                 var ss = new Students();
                 ss.fetch(function () {
                     var v = new StudentsView({
-                        model: ss
+                        collection: ss
                     });
                     self.showView(v, $('#content'));
                 })
@@ -257,7 +259,7 @@ var Router = Backbone.Router.extend({
                 var ss = new Schools();
                 ss.fetch(function () {
                     var v = new SchoolsView({
-                        model: ss
+                        collection: ss
                     });
                     self.showView(v, $('#content'));
                 })
@@ -423,7 +425,44 @@ var Router = Backbone.Router.extend({
                 self.showView(v, $('#content'));
             }
         );
-    }
+    },
+
+
+    tests: function () {
+        var self = this;
+
+        self.navbar();
+
+        templateLoader.load(["TestsView"],
+            function () {
+                var ss = new Tests();
+                ss.fetch(function () {
+                    var v = new TestsView({
+                        collection: ss
+                    });
+                    self.showView(v, $('#content'));
+                })
+            }
+        );
+    },
+
+    testsNew: function () {
+        var self = this;
+
+        self.navbar();
+
+        templateLoader.load(["TestsNewView"],
+            function () {
+                var ss = new Questions();
+                ss.fetch(function () {
+                    var v = new TestsNewView({
+                        collection: ss
+                    });
+                    self.showView(v, $('#content'));
+                })
+            }
+        );
+    },
 
 });
 

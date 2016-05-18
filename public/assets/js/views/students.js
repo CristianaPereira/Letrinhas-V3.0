@@ -40,7 +40,7 @@ window.StudentsView = Backbone.View.extend({
                 sucssesMsg($("#studentsDiv"), "Aluno apagado com sucesso!");
                 setTimeout(function () {
                     document.location.reload(true);
-                }, 2000);
+                }, 1000);
             },
             error: function (model, response) {
                 console.log(response)
@@ -56,15 +56,15 @@ window.StudentsView = Backbone.View.extend({
 
         var self = this;
         //gets model info
-        studentData = self.model.getByID($(e.currentTarget).attr("id"));
+        studentData = self.collection.getByID($(e.currentTarget).attr("id"));
         $('#studentsPreview').empty();
         var $hr = '<div class="col-md-12" ><hr class="dataHr"></div>';
         var $divFoto = $("<div>", {
-            class: "col-md-4"
+            class: "col-md-3"
         }).append('<img src="' + studentData.b64 + '"  class="dataImage">');
 
         var $divDados = $("<div>", {
-            class: "col-md-8"
+            class: "col-md-9"
         }).append('<label class="col-md-4 lblDataDetails">Escola:</label> <label class="col-md-8">' + studentData.schoolDetails + '</label><br>')
             .append('<label class="col-md-4 lblDataDetails">Número:</label> <label class="col-md-8">' + studentData.number + '</label><br>')
 
@@ -86,7 +86,7 @@ window.StudentsView = Backbone.View.extend({
 
     //Class Initializer
     initialize: function () {
-        this.data = this.model.toJSON();
+        this.data = this.collection.toJSON();
     },
 
     //Class Renderer
@@ -97,6 +97,8 @@ window.StudentsView = Backbone.View.extend({
         if (!self.auth()) {
             return false;
         }
+
+        console.log(self.data)
         //Render Template
         $(this.el).html(this.template({collection: self.data}));
 

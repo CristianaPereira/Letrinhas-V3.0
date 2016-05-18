@@ -32,7 +32,7 @@ window.SchoolsEdit = Backbone.View.extend({
     deleteClass: function (e) {
         e.preventDefault();
         $('#modalConfirmDel').modal("hide");
-        modem('POST', 'schools/' + this.data.id + '/removeclass',
+        modem('POST', 'schools/' + this.data._id + '/removeclass',
             //Response Handler
             function () {
                 document.location.reload(true);

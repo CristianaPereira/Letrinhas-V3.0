@@ -2,8 +2,8 @@ require('colors');
 
 var nano = require('nano')(process.env.COUCHDB);
 
-var db = nano.use('dev_alunos');
-var dbe = nano.use('dev_escolas');
+var db = nano.use('let_students');
+var dbe = nano.use('let_schools');
 
 exports.new = function (req, res) {
 
@@ -12,7 +12,13 @@ exports.new = function (req, res) {
     if (JSON.stringify(req.body).indexOf('""') == -1) {
 
         //!TEMPORARY! - Separating Class From School
-        var newStudent = req.body;
+        var newStudent = {
+            "school": req.body.school,
+            "name": req.body.name,
+            "b64": req.body.b64,
+            "number": req.body.number,
+            "class": req.body.class
+        };
 
         db.insert(newStudent, (req.body.name).replace(/\s+/g, '') + new Date().getTime(), function (err) {
             if (err)
@@ -57,8 +63,8 @@ exports.editStudent = function (req, res) {
                 res.send(err.statusCode, {error: "Aluno Invalido"});
             }
             else {
-                body.nome = req.body.name;
-                body.numero = req.body.number;
+                body.name = req.body.name;
+                body.number = req.body.number;
 
                 if (req.body.b64 != '')
                     body.b64 = req.body.b64;
@@ -85,7 +91,7 @@ exports.editStudent = function (req, res) {
 exports.getAll = function (req, res) {
 
     var user = req.params.userID;
-
+    console.log('getting my students :' + user.bgBlue);
     var escolas = [];
 
     //Get Teacher Classes
@@ -132,31 +138,26 @@ exports.getAll = function (req, res) {
             if (err) {
                 return res.status(err.statusCode).json({});
             }
-            var students = body2;
+            var students = body2.rows;
 
             //Filtra "os meus alunos"
-            for (var i = 0; i < students.rows.length; i++) {
-
-                var search = new RegExp(students.rows[i].doc.class);
-                if (!search.test(escolas))
-                    students.rows.splice(i, 1);
-            }
             //Adiciona a string da escola
-            for (var i = 0; i < students.rows.length; i++) {
+
+            var myStudents = [];
+            for (var i = 0; i < students.length; i++) {
                 //Adiciona o campo com o nome da escola e aturma por extenso
                 for (var esc in escolas) {
-                    if (escolas[esc]._id == students.rows[i].doc.class) {
-                        students.rows[i].doc.schoolDetails = escolas[esc].details;
+
+                    if (escolas[esc]._id == students[i].doc.class) {
+                        students[i].doc.schoolDetails = escolas[esc].details;
+                        myStudents.push(students[i])
                     }
                 }
             }
 
-            res.json(students.rows);
-            console.log("fim2");
+            res.json(myStudents);
         });
-
     });
-
 };
 
 exports.removeStudent = function (req, res) {

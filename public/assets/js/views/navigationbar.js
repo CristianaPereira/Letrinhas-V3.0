@@ -22,8 +22,9 @@ window.NavigationBarView = Backbone.View.extend({
     render: function () {
         $(this.el).html(this.template());
         modem('GET', 'me', function (user) {
+            console.log(user)
             $("#userName").empty();
-            $("#userName").append(user.nome + ' <i class="fa fa-gear"></i>');
+            $("#userName").append(user.name + ' <i class="fa fa-gear"></i>');
             console.log("getImg")
             window.sessionStorage.setItem("username", user._id);
         }, function (error) {

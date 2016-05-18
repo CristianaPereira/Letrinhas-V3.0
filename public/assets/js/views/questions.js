@@ -116,22 +116,12 @@ window.QuestionsView = Backbone.View.extend({
         //Clear Preview
         $("#questionsPreview").empty();
 
-        //Question Description
         $("#questionsPreview")
             .append(
                 $('<label>', {
                     class: "dataTitle col-md-12 row", text: question.title
                 }).append("<hr>"),
-                $('<div>', {
-                    class: "form-group"
-                }).append(
-                    $('<label>', {
-                        class: "col-md-3 lblDataDetails", text: "Descrição:"
-                    }),
-                    $('<label>', {
-                        class: "col-md-9 ", text: question.description
-                    })
-                ),
+
                 $('<div>', {
                     class: "form-group"
                 }).append(
@@ -223,13 +213,18 @@ window.QuestionsView = Backbone.View.extend({
         $("#questionBox").append($('<div>', {class: 'questBox'}));
         var $text = $("#questionBox > div");
 
-        //Separa o texto e marca as palavras
+        //Separa o texto e marca as palavras (Não esquecer os PARAGRAFOS)
         var wordsList = question.content.text.split(" ");
-
+        console.log(wordsList)
         $.each(wordsList, function (i, word) {
-            var $span = $('<span>', {text: word});
-            if (question.content.sid.indexOf(i + "") != -1) {
-                $span.addClass("markedWord")
+            if (word == '<br>') {
+                var $span = $('<br>', {});
+            } else {
+                var $span = $('<span>', {text: word});
+                if (question.content.sid.indexOf(i + "") != -1) {
+                    $span.addClass("markedWord")
+                }
+
             }
             $text.append($span, " ");
         });
@@ -287,7 +282,7 @@ window.QuestionsView = Backbone.View.extend({
     //Class Initializer
     initialize: function () {
         var self = this;
-        self.bd2 = 'dev_perguntas';
+        self.bd2 = 'let_questions';
         self.site = 'http://127.0.0.1:5984';//process.env.COUCHDB;
     },
 

@@ -67,7 +67,7 @@ window.TeachersView = Backbone.View.extend({
     enchePreview: function (e) {
         var self = this;
         //gets model info
-        var teacherData = self.model.getByID($(e.currentTarget).attr("id"));
+        var teacherData = self.collection.getByID($(e.currentTarget).attr("id"));
         console.log(teacherData)
         var $hr = '<div class="col-md-12" ><hr class="dataHr"></div>';
         $('#teachersPreview').empty();
@@ -119,15 +119,22 @@ window.TeachersView = Backbone.View.extend({
 
         });
 
-        $("#prfSchool").prepend('<label id="assocClasses">' + nomeProf + ', tem ' + nTurmas + ' turma(s) associada(s).</label>');
-
+        $("#prfSchool").prepend(
+            $('<label>', {id: "assocClasses", text: 'Turma(s) associada(s) '}),
+            $('<label>', {class: "badge", text: " " + nTurmas})
+        )
+        ;
     },
 
+    //Class Initializer
+    initialize: function () {
+        this.data = this.collection.toJSON();
+    },
 
     render: function () {
         var self = this;
 
-        $(this.el).html(this.template({collection: self.model.toJSON()}));
+        $(this.el).html(this.template({collection: self.data}));
         return this;
     },
 })

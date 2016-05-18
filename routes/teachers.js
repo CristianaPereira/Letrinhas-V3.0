@@ -6,16 +6,16 @@ var request = require('request');
 var nano = require('nano')(process.env.COUCHDB);
 //var nano = require('nano')('http://185.15.22.235:5984');
 //var db = nano.use('professores');
-var db = nano.use('dev_professores');
-var db2 = nano.use('dev_escolas');
+var db = nano.use('let_teachers');
+var db2 = nano.use('let_schools');
 
 nano.auth(process.env.USERNAME, process.env.PASSWORD, function (err, response, headers) {
     nano = require('nano')({
         url: process.env.COUCHDB,
         cookie: headers['set-cookie']
     });
-    db = nano.use('dev_professores');
-    db2 = nano.use('dev_escolas');
+    db = nano.use('let_teachers');
+    db2 = nano.use('let_schools');
 });
 
 exports.new = function (req, res) {
@@ -26,11 +26,8 @@ exports.new = function (req, res) {
     if (JSON.stringify(req.body).indexOf('""') == -1) {
         var state = false;
 
-        if (req.body.state == 1) {
-            state = true;
-        }
         var newteacher = {
-            "state": state,
+            "state": true,
             "name": req.body.name,
             "password": req.body.password,
             "pin": req.body.pin,
@@ -296,6 +293,44 @@ exports.get = function (req, res) {
     });
 };
 
+exports.getMyData = function (req, res) {
+    var id = req.params.userID;
+    console.log('getting my data :' + id.bgBlue);
+    db.get(id, function (err, body) {
+        if (err) {
+            console.log("not found")
+            return res.status(204).json({
+                'result': 'nok',
+                'message': err
+            });
+        }
+        //Remove Sensitive Information
+        delete body._rev;
+        delete body.password;
+        delete body.pin;
+
+
+        //gets schools ans classes
+        db2.list({
+            'include_docs': true,
+            'attachments': true,
+            'limit': undefined,
+            'descending': false
+        }, function (err, schools) {
+            if (err) {
+                return res.status(500).json({
+                    'result': 'nok',
+                    'message': err
+                });
+            }
+            body.classes = getClasses(schools, id);
+            //Return Result
+            res.json(body);
+        });
+
+    });
+};
+
 //Returns an array of all classes teached by some professor
 function getClasses(schools, idProf) {
     console.log("getting classes".green)
@@ -362,8 +397,8 @@ function insertProfTurma(idProf, escola, turmas) {
                         console.log(schoolData.classes[turma].profs);
                     }
                 }
-                db2.insert(schoolData, schoolData._id);
             }
+            db2.insert(schoolData, schoolData._id);
 
         });
     }
