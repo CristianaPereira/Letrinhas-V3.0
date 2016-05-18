@@ -2,7 +2,7 @@
  * Created by Cris on 11/03/2016.
  */
 
-window.sucssesMsg = function (form, txt, time) {
+window.sucssesMsg = function (form, txt) {
     var $edit = $("<div>", {
         class: "modal fade",
         tabindex: "-1",
@@ -20,7 +20,28 @@ window.sucssesMsg = function (form, txt, time) {
     $('#infoModal').modal("show");
     setTimeout(function () {
         $('#infoModal').modal("hide");
-    }, time);
+    }, txt.length * 30);
+
+};
+window.alertMsg = function (form, txt) {
+    var $edit = $("<div>", {
+        class: "modal fade",
+        tabindex: "-1",
+        id: "infoModal",
+        role: "dialog",
+        "aria-labelledby": "basicModal",
+        "aria-hidden": "true"
+    }).append('<div id="infoModalContent" class="modal-dialog"></div>');
+
+    $(form).append($edit);
+
+    $('#infoModalContent').html('<div id="popUpAlert" class="alert alert-warning">'
+        + '<strong>Atenção!</strong> ' + txt
+        + '</div>');
+    $('#infoModal').modal("show");
+    setTimeout(function () {
+        $('#infoModal').modal("hide");
+    }, txt.length * 30);
 
 };
 
@@ -42,7 +63,7 @@ window.failMsg = function (form, txt) {
     $('#infoModal').modal("show");
     setTimeout(function () {
         $('#infoModal').modal("hide").delay(3000);
-    }, 2000);
+    }, txt.length * 30);
 };
 /**
  *

@@ -13,7 +13,8 @@
                 </li>
                 <li><a id="orderBy" class="order"><i class="fa fa-sort-alpha-asc"></i> </a></li>
                 <li><a href="#schools/new" title="Adicionar escola">
-                    <i class="fa fa-institution"><span class="badge-over">  <i class="fa fa-plus-circle"></i></span></i>
+                    <i class="fa fa-institution"><span class="badge-over">
+                        <i class="fa fa-plus-circle"></i></span></i>
                 </a></li>
             </ul>
         </section>
@@ -22,7 +23,25 @@
     <div class=" panel-body col-md-5" align=center>
 
         <div id="schoolsContent" class=" panel-body col-md-12" align=center>
+            <% _.each(collection,function(school){ %>
+            <div class="row">
+                <div class="listButton divWidget"
+                     id='<%= school._id %>' value="<%= school.name %>">
+                    <img src="<%= school.b64 %>">
+                    <span><%= school.name %></span>
+                    <div class="editDeleteOp">
+                        <a href="#schools/<%= school._id %>/edit" title="Editar escola">
+                            <i id="btnEdit" class="fa fa-edit"></i>
+                        </a>
+                        <a href="#schools" class="delete" title="Apagar escola">
+                            <i class="fa fa-trash-o"></i>
+                        </a>
+                    </div>
 
+                </div>
+
+            </div>
+            <% }); %>
         </div>
     </div>
 

@@ -2,7 +2,8 @@ window.StudentsView = Backbone.View.extend({
     events: {
         "click #newstudentbtn": "newStudent",
         "click #deletebtn": "deleteStudent",
-        "click .fa-trash-o": "confirmDelete"
+        'click .listButton': "fillPreview",
+        "click .delete": "confirmDelete"
     },
 
     //Check Auth
@@ -16,12 +17,13 @@ window.StudentsView = Backbone.View.extend({
 
     //Solicita confirmação para apagar o professor
     confirmDelete: function (e) {
-        var id = ($(e.currentTarget).parent().attr("id"));
-        var value = ($(e.currentTarget).parent().attr("value"));
-        console.log(value)
-        var modal = delModal("Apagar aluno",
-            "Tem a certeza que pretende eliminar o aluno <label>" + value + " </label> ?",
-            "deletebtn", $(e.currentTarget).parent().attr("id"));
+        var id = $(e.currentTarget).parent().parent().attr("id");
+        var nome = $(e.currentTarget).parent().parent().attr("value");
+
+        var modal = delModal("Apagar escola",
+            "Tem a certeza que pretende eliminar a escola <label>" + nome + " </label> ?",
+            "deletebtn", id);
+
 
         $('#studentsDiv').append(modal);
         $('#modalConfirmDel').modal("show");
@@ -30,44 +32,49 @@ window.StudentsView = Backbone.View.extend({
     //Delete Student
     deleteStudent: function (e) {
         e.preventDefault();
-        modem('POST', 'students/' + e.target.value + '/remove',
+        $('#modalConfirmDel').modal("hide");
+        var student = new Student({id: e.target.value})
 
-            //Response Handler
-            function () {
-                document.location.reload(true);
+        student.destroy({
+            success: function () {
+                sucssesMsg($("#studentsDiv"), "Aluno apagado com sucesso!");
+                setTimeout(function () {
+                    document.location.reload(true);
+                }, 1000);
             },
-
-            //Error Handling
-            function (xhr, ajaxOptions, thrownError) {
-
+            error: function (model, response) {
+                console.log(response)
+                failMsg($("#studentsDiv"), "Não foi possível remover o aluno. \n (" + JSON.parse(response.responseText).result + ").");
             }
-        );
+        });
 
 
     },
 
     //Fill School Preview
-    fillPreview: function (studentData) {
-        var position = $("#studentsContent").offset();
+    fillPreview: function (e) {
 
-        $("#studentsContent").css('max-height', ($("html").height() - position.top - 20) + 'px');
         var self = this;
+        //gets model info
+        studentData = self.collection.getByID($(e.currentTarget).attr("id"));
         $('#studentsPreview').empty();
-
+        var $hr = '<div class="col-md-12" ><hr class="dataHr"></div>';
         var $divFoto = $("<div>", {
-            class: "col-md-4"
+            class: "col-md-3"
         }).append('<img src="' + studentData.b64 + '"  class="dataImage">');
 
         var $divDados = $("<div>", {
-            class: "col-md-8"
-        }).append('<label class="dataTitle col-md-12 row">' + studentData.nome + '</label>')
-            .append('<label class="col-md-4 lblDataDetails">Escola:</label> <label class="col-md-8">' + studentData.schoolDetails + '</label><br>')
-            .append('<label class="col-md-4 lblDataDetails">Número:</label> <label class="col-md-8">' + studentData.numero + '</label><br>')
+            class: "col-md-9"
+        }).append('<label class="col-md-4 lblDataDetails">Escola:</label> <label class="col-md-8">' + studentData.schoolDetails + '</label><br>')
+            .append('<label class="col-md-4 lblDataDetails">Número:</label> <label class="col-md-8">' + studentData.number + '</label><br>')
 
-        $('#studentsPreview').append($divFoto, $divDados)
-            .append('<div class="col-md-12" ><hr class="dataHr"></div><div id="classesList" class="col-md-12" align=left></div>')
+        $('#studentsPreview').append(
+            $('<label>', {
+                class: "dataTitle col-md-12", text: studentData.name
+            }), $hr,
+            $divFoto, $divDados)
+            .append('<div class="col-md-12" ><hr class="dataHr"></div>')
         ;
-
     },
 
 
@@ -79,6 +86,7 @@ window.StudentsView = Backbone.View.extend({
 
     //Class Initializer
     initialize: function () {
+        this.data = this.collection.toJSON();
     },
 
     //Class Renderer
@@ -89,54 +97,10 @@ window.StudentsView = Backbone.View.extend({
         if (!self.auth()) {
             return false;
         }
+
+        self.data.sort(sortJsonByCol('name'));
         //Render Template
-        $(this.el).html(this.template());
-
-
-        //Get Shools Information
-        modem('GET', 'students',
-
-            //Response Handler
-            function (json) {
-                //StudentsCounter
-                $("#studentsBadge").text(json.length);
-                //Append School Buttons To Template
-                $("#studentsContent").empty();
-                $.each(json, function (key, data) {
-                    //Botao de editar
-                    var $edit = $("<a>", {
-                        //href: "#teachers/data.doc._id/edit",
-                        href: "#students/" + data.doc._id + "/edit",
-                        value: data.doc._id,
-                        title: "Editar aluno",
-                    }).append('<i class="fa fa-edit"></i>');
-                    //Botao de eliminar
-                    var $delete = $("<a>", {
-                        href: "#students",
-                        id: data.doc._id,
-                        value: data.doc.nome,
-                        title: "Apagar aluno",
-                    }).append('<i class="fa fa-trash-o"></i>');
-
-                    var $div = $("<div>", {
-                        class: "listButton divWidget"
-                    }).append("<img src=" + data.doc.b64 + "><span>" + data.doc.nome + "</span>")
-                        .append($("<div>", {class: "editDeleteOp"}).append($edit, $delete))
-                        .click(function () {
-                            self.fillPreview(data.doc);
-                        });
-
-                    $("#studentsContent").append($div);
-                });
-                self.fillPreview(json[0].doc);
-
-            },
-
-            //Error Handling
-            function (xhr, ajaxOptions, thrownError) {
-
-            }
-        )
+        $(this.el).html(this.template({collection: self.data}));
 
         return this;
     },

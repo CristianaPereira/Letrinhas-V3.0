@@ -2,24 +2,22 @@ require('colors');
 
 var nano = require('nano')(process.env.COUCHDB);
 
-var db = nano.use('dev_alunos');
-var dbe = nano.use('dev_escolas');
+var db = nano.use('let_students');
+var dbe = nano.use('let_schools');
 
 exports.new = function (req, res) {
 
+    console.log(req.body)
     //Verify Fields
-    if (req.body.name && req.body.number && req.body.class && req.body.b64) {
+    if (JSON.stringify(req.body).indexOf('""') == -1) {
 
         //!TEMPORARY! - Separating Class From School
-        var sclass = (req.body.class).split(":");
-
         var newStudent = {
-            "nome": req.body.name,
-            "estado": true,
-            "numero": req.body.number,
-            "escola": sclass[0],
-            "turma": sclass[1],
+            "school": req.body.school,
+            "name": req.body.name,
             "b64": req.body.b64,
+            "number": req.body.number,
+            "class": req.body.class
         };
 
         db.insert(newStudent, (req.body.name).replace(/\s+/g, '') + new Date().getTime(), function (err) {
@@ -38,19 +36,6 @@ exports.new = function (req, res) {
 
 };
 
-exports.getAll = function (req, res) {
-
-    console.log('students getAll'.green);
-
-    db.list({'include_docs': true, 'attachments': true, 'limit': undefined, 'descending': true}, function (err, body) {
-        if (err) {
-            res.send(err.statusCode, {error: "Erro a procurar alunos"});
-        }
-
-        res.json(body.rows);
-    });
-};
-
 exports.get = function (req, res) {
     var id = req.params.id;
     console.log('student get: '.green + id);
@@ -67,29 +52,23 @@ exports.get = function (req, res) {
 //NEW
 exports.editStudent = function (req, res) {
 
-    if (req.body.name != '' && req.body.number != '') {
-
+    if (JSON.stringify(req.body).indexOf('""') == -1) {
         //Fetch School
         console.log('Edit Student: Fetching Student ' + req.params.id + ''.green);
-
         //Search School Info
         db.get(req.params.id, function (err, body) {
-
             if (err) {
                 //Report Error (School Doenst Exists)
                 console.log("Error Editing Student");
                 res.send(err.statusCode, {error: "Aluno Invalido"});
             }
             else {
-
-                body.nome = req.body.name;
-                body.numero = req.body.number;
+                body.name = req.body.name;
+                body.number = req.body.number;
 
                 if (req.body.b64 != '')
                     body.b64 = req.body.b64;
-
                 db.insert(body, body._id, function (err) {
-
                     if (err) {
                         //Report Error (Student Doesn't Exists)
                         console.log("Error Editing Student");
@@ -99,13 +78,9 @@ exports.editStudent = function (req, res) {
                         console.log("Student Edited");
                         res.send(200);
                     }
-
                 });
-
             }
-
         });
-
     }
     else {
         console.log('Parameters Missing');
@@ -113,10 +88,10 @@ exports.editStudent = function (req, res) {
     }
 };
 
-exports.getStudents = function (req, res) {
+exports.getAll = function (req, res) {
 
-    var user = req.params.id;
-
+    var user = req.params.userID;
+    console.log('getting my students :' + user.bgBlue);
     var escolas = [];
 
     //Get Teacher Classes
@@ -131,21 +106,19 @@ exports.getStudents = function (req, res) {
         }
 
         //Fetch Classes
-        var classes = "";
 
         for (var i in body.rows) {
 
-            for (var j in body.rows[i].doc.turmas) {
+            for (var j in body.rows[i].doc.classes) {
 
-                for (var k in body.rows[i].doc.turmas[j].professores) {
+                for (var k in body.rows[i].doc.classes[j].profs) {
 
-                    if (body.rows[i].doc.turmas[j].professores[k]._id == user)
-                        classes += body.rows[i].doc.turmas[j]._id + " ";
-                    escolas.push({
-                        "_id": body.rows[i].doc.turmas[j]._id,
-                        "details": body.rows[i].doc.nome + ", " + body.rows[i].doc.turmas[j].ano + "º " + body.rows[i].doc.turmas[j].nome
-                    })
-                    //classes.push({"_id": body.rows[i].doc.turmas[j]._id});
+                    if (body.rows[i].doc.classes[j].profs[k]._id == user)
+                        escolas.push({
+                            "_id": body.rows[i].doc.classes[j]._id,
+                            "details": body.rows[i].doc.name + ", " + body.rows[i].doc.classes[j].year + "º " + body.rows[i].doc.classes[j].name
+                        })
+                    //classes.push({"_id": body.rows[i].doc.classes[j]._id});
 
                 }
 
@@ -153,7 +126,7 @@ exports.getStudents = function (req, res) {
 
         }
 
-        console.log(classes);
+        console.log(escolas);
 
         //Fetch Students From Classes
         db.list({
@@ -165,31 +138,26 @@ exports.getStudents = function (req, res) {
             if (err) {
                 return res.status(err.statusCode).json({});
             }
-            var students = body2;
+            var students = body2.rows;
 
             //Filtra "os meus alunos"
-            for (var i = 0; i < students.rows.length; i++) {
-
-                var search = new RegExp(students.rows[i].doc.turma);
-                if (!search.test(classes))
-                    students.rows.splice(i, 1);
-            }
             //Adiciona a string da escola
-            for (var i = 0; i < students.rows.length; i++) {
+
+            var myStudents = [];
+            for (var i = 0; i < students.length; i++) {
                 //Adiciona o campo com o nome da escola e aturma por extenso
                 for (var esc in escolas) {
-                    if (escolas[esc]._id == students.rows[i].doc.turma) {
-                        students.rows[i].doc.schoolDetails = escolas[esc].details;
+
+                    if (escolas[esc]._id == students[i].doc.class) {
+                        students[i].doc.schoolDetails = escolas[esc].details;
+                        myStudents.push(students[i])
                     }
                 }
             }
 
-            res.json(students.rows);
-            console.log("fim2");
+            res.json(myStudents);
         });
-
     });
-
 };
 
 exports.removeStudent = function (req, res) {

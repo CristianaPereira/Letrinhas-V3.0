@@ -1,8 +1,10 @@
 window.SchoolsView = Backbone.View.extend({
     events: {
-        "click #deletebtn": "deleteSchool",
+        "click #orderBy": "orderSchools",
         "keyup #txtSearch": "searchSchool",
-        "click #orderBy": "orderSchools"
+        'click .listButton': "enchePreview",
+        "click .delete": "confirmDelete",
+        "click #deletebtn": "deleteSchool",
     },
 
     orderSchools: function (e) {
@@ -27,19 +29,64 @@ window.SchoolsView = Backbone.View.extend({
         });
     },
 
-    //Check Auth
-    auth: function (e) {
-        if (!window.sessionStorage.getItem("keyo")) {
-            app.navigate("/#", true);
-            return false;
-        }
-        return true;
+    //Search School
+    searchSchool: function (e) {
+
+        $(".listButton").hide();
+        $(".listButton:containsi(" + $(e.currentTarget).val() + ")").show();
+
+    },
+
+    enchePreview: function (e) {
+        var self = this;
+        //gets model info
+        schoolData = self.collection.getByID($(e.currentTarget).attr("id"));
+
+        $('#schoolsPreview').empty();
+
+        var $hr = '<div class="col-md-12" ><hr class="dataHr"></div>';
+        var $divFoto = $("<div>", {
+            class: "col-md-5"
+        }).append('<img src="' + schoolData.b64 + '"  class="dataImage">');
+
+        var $divDados =
+
+            $("<div>", {class: "col-md-7 row"}).append(
+                $('<div>', {
+                    class: "row"
+                }).append(
+                    $('<label>', {
+                        class: "fa fa-map", text: " " + schoolData.address
+                    })
+                ))
+        $('#schoolsPreview').append($('<label>', {
+                class: "dataTitle col-md-12", text: schoolData.name
+            }), $hr, $divFoto, $divDados)
+            .append($hr, '<div id="classesList" class="col-md-12" align=left></div>')
+        ;
+        $('#classesList').append('<div id="prfSchool" class="col-md-12" align=left></div> </br>');
+
+        $.each(schoolData.classes, function () {
+
+            var $class = $('<button>', {
+                class: "classBtn",
+                html: this.year + "º " + this.name + " "
+            })
+
+
+            $("#classesList").append($class);
+
+        });
+        $("#classesList").prepend('<label id="assocClasses"> Existe ' + schoolData.classes.length + ' turma(s) associada(s).</label>')
+        //getAssocClasses(teacherData._id, teacherData.nome, false);
+
     },
 
     //Solicita confirmação para apagar o professor
-    confirmDelete: function (id, nome) {
+    confirmDelete: function (e) {
 
-
+        var id = $(e.currentTarget).parent().parent().attr("id");
+        var nome = $(e.currentTarget).parent().parent().attr("value");
 
         var modal = delModal("Apagar escola",
             "Tem a certeza que pretende eliminar a escola <label>" + nome + " </label> ?",
@@ -53,74 +100,30 @@ window.SchoolsView = Backbone.View.extend({
     deleteSchool: function (e) {
         var self = this;
         $('#modalConfirmDel').modal("hide");
-        modem('POST', 'schools/' + e.target.value + '/remove',
-            //Response Handler
-            function () {
-                sucssesMsg($("#schoolsDiv"), "Escola apagada com sucesso!", 2000);
+        var school = new School({id: e.target.value})
+
+        school.destroy({
+            success: function () {
+                sucssesMsg($("#schoolsDiv"), "Escola apagada com sucesso!");
                 setTimeout(function () {
                     document.location.reload(true);
                 }, 2000);
             },
-            //Error Handling
-            function (xhr, ajaxOptions, thrownError) {
-                console.log("ups");
+            error: function (model, response) {
+                console.log(response)
+                failMsg($("#schoolsDiv"), "Não foi possível remover a turma. \n (" + JSON.parse(response.responseText).result + ").");
             }
-        );
-    },
-
-    //Search School
-    searchSchool: function (e) {
-
-        $(".listButton").hide();
-        $(".listButton:containsi(" + $(e.currentTarget).val() + ")").show();
-
-    },
-
-    enchePreview: function (schoolData) {
-        var self = this;
-        console.log(schoolData);
-
-        $('#schoolsPreview').empty();
-
-        var $divFoto = $("<div>", {
-            class: "col-md-5"
-        }).append('<img src="' + schoolData.b64 + '"  class="dataImage">');
-
-        var $divDados = $("<div>", {class: "col-md-7"}).append(
-            $('<label>', {
-                class: "dataTitle col-md-12 row", text: schoolData.nome
-            }),
-            $('<label>', {
-                class: "col-md-4 lblDataDetails", text: "Morada:"
-            }),
-            $('<label>', {
-                class: "col-md-8 ", text: schoolData.morada
-            }))
-
-
-        $('#schoolsPreview').append($divFoto, $divDados)
-            .append('<div class="col-md-12" ><hr class="dataHr"></div><div id="classesList" class="col-md-12" align=left></div>')
-        ;
-        $('#classesList').append('<div id="prfSchool" class="col-md-12" align=left></div> </br>');
-
-        $.each(schoolData.turmas, function () {
-
-            var $class = $('<button>', {
-                class: "classBtn",
-                html: this.ano + "º " + this.nome + " "
-            })
-
-
-            $("#classesList").append($class);
-
         });
-        $("#classesList").prepend('<label id="assocClasses"> Existe ' + schoolData.turmas.length + ' turma(s) associada(s).</label>')
-        //getAssocClasses(teacherData._id, teacherData.nome, false);
 
     },
 
-    //Class Initializer
-    initialize: function () {
+    //Check Auth
+    auth: function (e) {
+        if (!window.sessionStorage.getItem("keyo")) {
+            app.navigate("/#", true);
+            return false;
+        }
+        return true;
     },
 
     //Class Renderer
@@ -133,55 +136,8 @@ window.SchoolsView = Backbone.View.extend({
             return false;
         }
 
-        $(this.el).html(this.template());
-        //Get Shools Information
-        modem('GET', 'schools',
-
-            //Response Handler
-            function (json) {
-                $('#schoolsContent').empty();
-                //Teachers Counter
-                $('#schoolsBadge').text(json.length);
-                //  $('#teachersContent').empty();
-                //Preenche a lista de professores registados( e com estado activo)
-                $.each(json, function (key, data) {
-                    //Botao de editar
-                    var $edit = $("<a>", {
-                        //href: "#teachers/data.doc._id/edit",
-                        href: "#schools/" + data.doc._id + "/edit",
-                        val: data.doc._id,
-
-                        title: "Editar escola",
-                    }).append('<i class="fa fa-edit"></i>');
-
-                    //Botao de eliminar
-                    var $delete = $("<a>", {
-                        href: "#schools",
-                        val: data.doc._id,
-                        title: "Apagar professor",
-                    }).append('<i class="fa fa-trash-o"></i>')
-                        .click(function () {
-                            self.confirmDelete(data.doc._id, data.doc.nome);
-                        });
-
-                    var $div = $("<div>", {
-                        class: "listButton divWidget"
-                    }).append("<img src=" + data.doc.b64 + "><span>" + data.doc.nome + "</span>")
-                        .append($("<div>", {class: "editDeleteOp"}).append($edit, $delete))
-                        .click(function () {
-                            self.enchePreview(data.doc);
-                        });
-
-                    $('#schoolsContent').append($div);
-                });
-                self.enchePreview(json[0].doc);
-            },
-
-            //Error Handling
-            function (xhr, ajaxOptions, thrownError) {
-
-            }
-        );
+        var data = self.collection.toJSON();
+        $(this.el).html(this.template({collection: data}));
 
         return this;
 

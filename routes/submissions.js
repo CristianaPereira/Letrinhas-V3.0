@@ -4,14 +4,14 @@ require('colors');
 var nano = require('nano')(process.env.COUCHDB);
 //var nano = require('nano')('http://185.15.22.235:5984');
 //var db = nano.use('resolucoes');
-var db = nano.use('dev_resolucoes');
+var db = nano.use('let_resolutions');
 
 nano.auth(process.env.USERNAME, process.env.PASSWORD, function(err, response, headers) {
   nano = require('nano')({
     url: process.env.COUCHDB,
     cookie: headers['set-cookie']
   });
-  db = nano.use('dev_resolucoes');
+  db = nano.use('let_resolutions');
 });
 
 exports.upDate = function(rep, res){

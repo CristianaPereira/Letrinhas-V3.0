@@ -10,7 +10,7 @@ window.StudentsNewView = Backbone.View.extend({
     //Initializes popover content
     pop: function () {
 
-        setPopOver("Nome, Número e Turma");
+        setPopOver("Nome, Número, Fotografia, Escola e Turma");
 
     },
     //Verifies if an input is empty
@@ -74,30 +74,32 @@ window.StudentsNewView = Backbone.View.extend({
         var isValid = isFormValid(allListElements);
         //If they are
         if (isValid) {
-            //Send Form Via Ajax
-            modem('POST', 'students',
-                //Response Handler
-                function () {
-                    sucssesMsg($("#newstudentform"), "Aluno criado com sucesso", 2000);
+            var studentDetails = $('#newstudentform').serializeObject();
+            console.log(studentDetails)
+            //Cria um novo model
+            var student = new Student(studentDetails);
+
+            student.save(null, {
+                success: function () {
+                    sucssesMsg($(".form"), "Aluno inserido com sucesso!");
                     setTimeout(function () {
-                        app.navigate('/students', {
+                        app.navigate("students", {
                             trigger: true
                         });
-                    }, 2000);
+                    }, 1500);
                 },
-                //Error Handling
-                function (xhr, ajaxOptions, thrownError) {
-                    failMsg($("#newstudentform"), "Não foi possível criar o novo aluno. \n (" + JSON.parse(xhr.responseText).error + ").");
-                },
-                //Data To Send
-                $("#newstudentform").serializeArray()
-            );
+                error: function () {
+                    failMsg($(".form"), "Lamentamos mas não foi possível inserir o aluno!", 1000);
+                }
+            });
         }
 
     },
 
     //Class Initializer
     initialize: function () {
+        //Get Schools If User Has Required Permissions
+        populateDDSchools();
     },
 
     //Class Renderer
@@ -111,52 +113,6 @@ window.StudentsNewView = Backbone.View.extend({
 
         $(this.el).html(this.template());
 
-        modem('GET', 'schools',
-
-            //Response Handler
-            function (json) {
-                // Preencher o select escola, com as escolas existentes e respetivas turmas:
-                //e o select que vai ajudar a devolver os ID's ao form e fazer a correta atualização na escola
-                var s = '<option value=""></option>';
-                var d = '<option value=""></option>';
-                for (i = 0; i < json.length; i++) {
-                    s += '<optgroup label="' + json[i].doc.nome + '">';
-                    //e adicionar as turmas...
-
-                    for (j = 0; j < json[i].doc.turmas.length; j++) {
-                        s += '<option value="' + json[i].doc.nome + '">' + json[i].doc.turmas[j].ano
-                            + 'º, ' + json[i].doc.turmas[j].nome + '</option>';
-                        d += '<option value="' + json[i].doc._id + '">' + json[i].doc.turmas[j]._id + '</option>';
-                    }
-                    s += "</optgroup>";
-                }
-                $("#selectTurma").html(s);
-                $("#hidenTurma").html(d);
-                //no hidden, contém no value o id da escola
-                //e no text o id da turma.
-
-                //adicionar os eventos para o select da turma.
-                var myEl = document.getElementById('selectTurma');
-                myEl.addEventListener('change', function () {
-                    var i = this.selectedIndex;
-                    //igualar os indexes
-                    var hidden = document.getElementById('hidenTurma');
-                    hidden.selectedIndex = i;
-                    //addicionar os id's necessários de escola:turma;
-                    var r = hidden.options[i].value + ':' + hidden.options[i].text;
-                    $("#hidenIDTurma").val(r);
-
-                }, false);
-
-            },
-
-            //Error Handling
-            function (xhr, ajaxOptions, throwError) {
-                var json = JSON.parse(xhr.responseText);
-                console.log("\Erro");
-                console.log(json.message.error);
-                console.log(json.result);
-            });
         return this;
     },
 

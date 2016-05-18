@@ -3,7 +3,7 @@
         <section class="panel subMenu">
 
             <ul class="nav navbar-nav">
-                <li><a>Total: <label id="studentsBadge" class=""></label>
+                <li><a>Total:<%= collection.length %> <label id="studentsBadge" class=""></label>
                 </a></li>
                 <li>
                     <div class="input-group" style="width: 350px;padding-top: 11px;">
@@ -26,6 +26,26 @@
     <div class=" panel-body col-md-5" align=center>
 
         <div id="studentsContent" class=" panel-body col-md-12" align=center>
+            <% _.each(collection,function(student){ %>
+            <div class="row">
+                <div class="listButton divWidget"
+                     id='<%= student._id %>' value="<%= student.name %>">
+
+                    <img src="<%= student.b64 %>">
+                    <span><%= student.name %></span>
+                    <div class="editDeleteOp">
+                        <a href="#students/<%= student._id %>/edit" title="Editar aluno">
+                            <i id="btnEdit" class="fa fa-edit"></i>
+                        </a>
+                        <a href="#students" class="delete" title="Apagar aluno">
+                            <i class="fa fa-trash-o"></i>
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+            <% }); %>
 
         </div>
     </div>

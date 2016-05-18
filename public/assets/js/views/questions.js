@@ -2,16 +2,32 @@ window.QuestionsView = Backbone.View.extend({
     events: {
         "click #deletebtn": "deleteQuestion",
         'click [type="checkbox"]': "filterBy",
+        'click .contentFilter': "filterBycontent",
+        'click .listButton': "enchePreview",
+        "keyup #txtSearch": "searchTests",
         "click #orderBy": "orderQuestions"
     },
 
     //Check Auth
     auth: function () {
         if (!window.sessionStorage.getItem("keyo")) {
-            app.navigate("/#", true);
             return false;
         }
         return true;
+    },
+
+    //Search School
+    searchTests: function (e) {
+        $(".listButton").hide();
+        $(".listButton:containsi(" + $(e.currentTarget).val() + ")").show();
+
+
+        //Esconde os testes cujas checkboxes não estão seleccionadas
+        $.each($(".listButton"), function (i, k) {
+            if ($(k).attr("value").indexOf($(e.currentTarget).val()) != -1) {
+                $(k).show();
+            }
+        });
     },
 
     //Solicita confirmação para apagar o professor
@@ -48,7 +64,7 @@ window.QuestionsView = Backbone.View.extend({
         modem('POST', 'questions/' + e.target.value + '/remove',
             //Response Handler
             function () {
-                sucssesMsg($("#schoolsDiv"), "Escola apagada com sucesso!", 2000);
+                sucssesMsg($("#schoolsDiv"), "Escola apagada com sucesso!");
                 setTimeout(function () {
                     document.location.reload(true);
                 }, 2000);
@@ -68,7 +84,7 @@ window.QuestionsView = Backbone.View.extend({
     },
 
     //Applys filters
-    filterBy: function (e) {
+    filterBy: function () {
         //Mostra todos os testes
         $(".listButton").show();
         //Esconde os testes cujas checkboxes não estão seleccionadas
@@ -77,28 +93,35 @@ window.QuestionsView = Backbone.View.extend({
         });
     },
 
+    //Applys filters
+    filterBycontent: function (e) {
+
+        var self = this;
+        $(".listButton").show();
+        self.filterBy();
+        //Dos teste que estao visiveis
+        $.each($(".listButton:visible"), function (i, k) {
+            //Se nao pertencerem à categoria escolhida, esconde-os
+            if ($(k).attr("value").indexOf($(e.target).attr("value")) == -1) {
+                $(k).hide();
+            }
+        });
+    },
+
     //Text Preview
-    enchePreview: function (question) {
+    enchePreview: function (e) {
+        //gets model info
+        question = this.model.getByID($(e.currentTarget).attr("id"));
         var self = this;
         //Clear Preview
         $("#questionsPreview").empty();
 
-        //Question Description
         $("#questionsPreview")
             .append(
                 $('<label>', {
                     class: "dataTitle col-md-12 row", text: question.title
-                }).append("<hr>"),
-                $('<div>', {
-                    class: "form-group"
-                }).append(
-                    $('<label>', {
-                        class: "col-md-3 lblDataDetails", text: "Descrição:"
-                    }),
-                    $('<label>', {
-                        class: "col-md-9 ", text: question.description
-                    })
-                ),
+                }).append('<hr class="dataHr">'),
+
                 $('<div>', {
                     class: "form-group"
                 }).append(
@@ -190,13 +213,18 @@ window.QuestionsView = Backbone.View.extend({
         $("#questionBox").append($('<div>', {class: 'questBox'}));
         var $text = $("#questionBox > div");
 
-        //Separa o texto e marca as palavras
+        //Separa o texto e marca as palavras (Não esquecer os PARAGRAFOS)
         var wordsList = question.content.text.split(" ");
-
+        console.log(wordsList)
         $.each(wordsList, function (i, word) {
-            var $span = $('<span>', {text: word});
-            if (question.content.sid.indexOf(i + "") != -1) {
-                $span.addClass("markedWord")
+            if (word == '<br>') {
+                var $span = $('<br>', {});
+            } else {
+                var $span = $('<span>', {text: word});
+                if (question.content.sid.indexOf(i + "") != -1) {
+                    $span.addClass("markedWord")
+                }
+
             }
             $text.append($span, " ");
         });
@@ -254,7 +282,7 @@ window.QuestionsView = Backbone.View.extend({
     //Class Initializer
     initialize: function () {
         var self = this;
-        self.bd2 = 'dev_perguntas';
+        self.bd2 = 'let_questions';
         self.site = 'http://127.0.0.1:5984';//process.env.COUCHDB;
     },
 
@@ -266,76 +294,140 @@ window.QuestionsView = Backbone.View.extend({
         if (!self.auth()) {
             return false;
         }
+        self.data = self.model.toJSON();
+        self.data.sort(sortJsonByCol('title'));
+        $(this.el).html(this.template({collection: self.data}));
 
-
-        $(this.el).html(this.template());
-
-        //Return Questions
-        modem('GET', 'questions',
+        //Gets all registed categories
+        modem('GET', 'category',
 
             //Response Handler
             function (json) {
-                $('#questionsBadge').text(json.length);
 
-                //Append Question Buttons To Template
-                $.each(json, function (i, quest) {
+                $.each(json, function (i, key) {
+                    var $content = $("<ul >", {class: "dropdown-menu pull-left"});
 
-                    //     console.log(quest.doc)
-                    //Select Question Type Image
-                    // console.log(quest);
-                    var $imgT = "../img/" + (quest.doc.type).toLowerCase() + ".png";
+                    $("#selectSubject").append(
+                        $("<li>", {class: "dropdown-submenu pull-left"}).append(
+                            $("<a>", {
+                                class: "dropdown-toggle contentFilter",
+                                "data-toggle": "dropdown",
+                                html: key.doc.subject,
+                                value: key.doc._id
+                            }).append(
+                                $("<b >", {class: "caret"})
+                            ),
+                            $content
+                        )
+                    );
 
+                    $.each(key.doc.content, function (idc, content) {
+                        var $description = $("<ul >", {class: "dropdown-menu pull-left"});
+                        $content.append(
+                            $("<li>", {class: "dropdown-submenu pull-left"}).append(
+                                $("<a>", {
+                                    class: "dropdown-toggle contentFilter",
 
-                    //Select quest Class Image
-                    var subject = (quest.doc.subject).split(":");
-                    console.log(subject[0])
-                    var $imgC = "../img/" + subject[0] + ".png";
+                                    html: content.name,
+                                    value: content._id
+                                }).append(
+                                    $("<b >", {class: "caret"})
+                                ),
+                                $description
+                            )
+                        );
+                        $.each(content.specification, function (ids, specif) {
 
+                            $description.append(
+                                $("<li>", {class: "dropdown-submenu pull-left"}).append(
+                                    $("<a>", {
+                                        class: "dropdown-toggle contentFilter",
+                                        "data-toggle": "dropdown",
+                                        html: specif.name,
+                                        value: specif._id
+                                    })
+                                )
+                            );
 
-                    //Select BG Color
-                    var background = "none";
-                    if (window.sessionStorage.getItem("username") == quest.doc.profID)
-                        background = "#FBF6B4";
-
-                    var $edit = $("<a>", {
-                            href: "#teachers/" + this.doc._id + "/edit",
-                            val: this.doc._id,
-                            title: "Editar questione",
-                        }).append('<i id="btnEdit" class="fa fa-edit"></i>')
-                        ;
-
-                    //Botao de eliminar
-                    var $delete = $("<a>", {
-
-                        val: quest.doc._id,
-                        title: "Apagar pergunta",
-                    }).append('<i class="fa fa-trash-o"></i>')
-                        .click(function () {
-                            self.confirmDelete(quest.doc._id, quest.doc.title, quest.doc.profID);
                         });
-                    //Separa o nome para recolher apenas o primeiro e o utimo
-                    var $div = $("<div>", {
-                        class: "listButton divWidget",
-                        style: "background-color:" + background,
-                        type: quest.doc.type
-                    }).append("<img src=" + $imgT + "><img  src='" + $imgC + "'><span>" + quest.doc.title + "</span>")
-                        //  .append($edit)
-                        .append($("<div>", {class: "editDeleteOp"}).append($edit, $delete))
-                        .click(function () {
-                            self.enchePreview(quest.doc);
-                        });
+                    });
 
-                    $("#questionsContent").append($div);
-                })
-                ;
-                self.enchePreview(json[0].doc);
+                });
             },
 
             //Error Handling
             function (xhr, ajaxOptions, thrownError) {
-                failMsg($("#questionsContent"), "Não foi possível listar as perguntas. \n (" + JSON.parse(xhr.responseText).error + ").");
             }
         );
+        /*
+
+         //Return Questions
+         modem('GET', 'questions',
+
+         //Response Handler
+         function (json) {
+         $('#questionsBadge').text(json.length);
+
+         //Append Question Buttons To Template
+         $.each(json, function (i, quest) {
+
+         //     console.log(quest.doc)
+         //Select Question Type Image
+         // console.log(quest);
+         var $imgT = "../img/" + (quest.doc.type).toLowerCase() + ".png";
+
+
+         //Select quest Class Image
+         var subject = (quest.doc.subject).split(":");
+         //         console.log(subject[0])
+         var $imgC = "../img/" + subject[0] + ".png";
+
+
+         //Select BG Color
+         var background = "none";
+         if (window.sessionStorage.getItem("username") == quest.doc.profID)
+         background = "#FBF6B4";
+
+         var $edit = $("<a>", {
+         href: "#questionsText/" + this.doc._id,
+         val: this.doc._id,
+         title: "Editar pergunta",
+         }).append('<i id="btnEdit" class="fa fa-edit"></i>')
+         ;
+
+         //Botao de eliminar
+         var $delete = $("<a>", {
+
+         val: quest.doc._id,
+         title: "Apagar pergunta",
+         }).append('<i class="fa fa-trash-o"></i>')
+         .click(function () {
+         self.confirmDelete(quest.doc._id, quest.doc.title, quest.doc.profID);
+         });
+         //Separa o nome para recolher apenas o primeiro e o utimo
+         var $div = $("<div>", {
+         class: "listButton divWidget",
+         style: "background-color:" + background,
+         type: quest.doc.type,
+         value: quest.doc.subject
+         }).append("<img src=" + $imgT + "><img  src='" + $imgC + "'><span>" + quest.doc.title + "</span>")
+         //  .append($edit)
+         .append($("<div>", {class: "editDeleteOp"}).append($edit, $delete))
+         .click(function () {
+         self.enchePreview(quest.doc);
+         });
+
+         $("#questionsContent").append($div);
+         })
+         ;
+         self.enchePreview(json[0].doc);
+         },
+
+         //Error Handling
+         function (xhr, ajaxOptions, thrownError) {
+         failMsg($("#questionsContent"), "Não foi possível listar as perguntas. \n (" + JSON.parse(xhr.responseText).error + ").");
+         }
+         );*/
 
         return this;
     }

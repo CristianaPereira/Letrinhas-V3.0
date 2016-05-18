@@ -1,95 +1,18 @@
 window.TeachersNewView = Backbone.View.extend({
     events: {
-        "click #newteacherbtn": "beforeSend",
+
         "click #buttonCancelar": "goBack",
-        "click #btnFoto": "photoCropper",
+
+        "change #filePicker": "convertPhoto",
         "click #btnCrop": "getFoto",
+
         "click #addTurma": "addTurma",
-        "click #rmvTurmas": "rmvTurmas",
+        "click .deleteClass ": "rmvTurmas",
+
+        "mouseover #newteacherbtn": "pop",
         "blur .emptyField": "isEmpty",
-        "blur #inputEmail": "isEmailAvail"
-    },
-
-    //Exibe o cropper
-    photoCropper: function () {
-        showCropper("#newteacherform", 600, 300, 1);
-    },
-    //Recorta a foto
-    getFoto: function (e) {
-        e.preventDefault();
-        var canvas = $("#preview")[0];
-        var dataUrl = canvas.toDataURL('image/jpeg');
-        $("#base64textarea").val(dataUrl);
-        $("#iFoto").attr('src', dataUrl);
-        console.log(dataUrl);
-        $(".cropBG").remove();
-    },
-    //Adiciona a escola e a turma ao objecto
-    addTurma: function () {
-        assocClass();
-    },
-
-    //Desassocia todas as escolas e respectivas turmas
-    rmvTurmas: function () {
-        $("#teacherClasses").val("{}");
-        $("#assocTurma").empty();
-    },
-
-
-    //Verifica se o e-mail já esta registado
-    isEmailAvail: function () {
-        //Se o email ja estiver a ser usado
-        modem('GET', 'teachers/' + $("#inputEmail").val(),
-            function (json) {
-                if (json != null) {
-                    $("#inputEmail").addClass("emptyField");
-                    $("#validationLbl").text("O email " + $("#inputEmail").val() + " já está a ser utilizado.");
-                    return false;
-                }
-            },
-            function (xhr, ajaxOptions, thrownError) {
-
-            }
-        );
-        $("#validationLbl").text("");
-        $("#inputEmail").removeClass("emptyField");
-        return true;
-    },
-
-    //Before Sending Request To Server
-    beforeSend: function (e) {
-        var isValid = true;
-        e.preventDefault();
-
-        //Se algum dos campos estiver vazio
-        var allListElements = $(".mandatory");
-        $.each(allListElements, function (key, elem) {
-            if ($(elem).val() != null && $(elem).val().length == 0) {
-                $(elem).addClass("emptyField");
-                $("#validationLbl").text("Todos os campos de preenchimento obrigatório");
-                isValid = false;
-            }
-        });
-
-
-        //Se o pin não for um numero
-        if (!isNumber($("#inputPin").val())) {
-            $("#inputPin").addClass("emptyField");
-            $("#validationLbl").text("O pin deverá conter apenas dígitos. (0-9)");
-            return false;
-        }
-        if (!this.isEmailAvail()) {
-            return false;
-        }
-        if (!matchingPswds($("#InputPasswd").val(), $("#ConfirmPasswd").val())) {
-            $("#InputPasswd").addClass("emptyField");
-            $("#ConfirmPasswd").addClass("emptyField");
-            $("#validationLbl").text("As passwords não coincidem.");
-            return false;
-        }
-        if (isValid) {
-            this.send();
-        }
+        "blur #inputEmail": "isEmailAvail",
+        "click #newteacherbtn": "beforeSend"
 
     },
 
@@ -99,6 +22,51 @@ window.TeachersNewView = Backbone.View.extend({
         window.history.back();
     },
 
+    //Exibe o cropper
+    convertPhoto: function (e) {
+        var file = e.target.files[0];
+
+        // Load the image
+        var reader = new FileReader();
+
+        reader.onload = function (readerEvent) {
+            var image = new Image();
+            image.src = readerEvent.target.result;
+            showCropper("#newteacherform", image, 300, 1);
+        }
+        reader.readAsDataURL(file);
+    },
+
+    //Recorta a foto
+    getFoto: function (e) {
+        e.preventDefault();
+        var canvas = $("#preview")[0];
+        var dataUrl = canvas.toDataURL('image/jpeg');
+        $("#base64textarea").val(dataUrl);
+        $("#iFoto").attr('src', dataUrl);
+        $(".cropBG").remove();
+        $(".profile-pic").removeClass("emptyField");
+    },
+
+    //Adiciona a escola e a turma ao objecto
+    addTurma: function (e) {
+        e.preventDefault();
+        assocClass();
+    },
+
+    //Desassocia todas as escolas e respectivas turmas
+    rmvTurmas: function (e) {
+        e.preventDefault();
+        desassocClass(e.currentTarget);
+    },
+
+
+    //Initializes popover content
+    pop: function () {
+        setPopOver("Nome, E-mail, Telefone, Palavra-passe e Pin");
+
+    },
+
     //Verifies if an input is empty
     isEmpty: function (e) {
         if ($(e.currentTarget).val().length != 0) {
@@ -106,34 +74,80 @@ window.TeachersNewView = Backbone.View.extend({
         }
     },
 
-    //Sending Request To Server
-    send: function () {
+    //Verifica se o e-mail ainda não etstá registado
+    isEmailAvail: function (ok) {
 
-        //Crypt Passwords
-        $("#InputPasswd").val(md5($("#InputPasswd").val()));
-        $("#oldPasw").val(md5($("#oldPasw").val()));
-        //Crypt PIN
-        var pin = $("#inputPin").val();
-        $("#inputPin").val(md5(pin));
-        //Tipo de utilizador
-        $("#dbUserType").val($("#dbUserType").prop('selectedIndex') + 1);
-        //Send Form Submit To Server
-        modem('POST', 'teachers',
-            //Response Handler
-            function (json) {
-                sucssesMsg($("#newteacherform"), "Utilizador inserido com sucesso", 2000);
-                setTimeout(function () {
-                    app.navigate('/teachers', {
-                        trigger: true
-                    });
-                }, 2000);
-            },
-            //Error Handling
-            function (xhr, ajaxOptions, thrownError) {
-                failMsg($("#newteacherform"), "Não foi possível inserir o novo utilizador. \n (" + JSON.parse(xhr.responseText).result + ").");
-            },
-            $("#newteacherform").serialize()
-        );
+
+        var teacher = new Teacher({id: $("#inputEmail").val()});
+
+        teacher.fetch(function () {
+            //Se o email ja estiver a ser usado
+            if (teacher.attributes._id) {
+                $("#inputEmail").addClass("emptyField");
+                $("#inputEmail").parent().find('p').remove();
+                $("#inputEmail").parent().append(
+                    $('<p>', {
+                        html: $("#inputEmail").val() + " já está registado.", style: "color: #c9302c"
+                    })
+                )
+                $("#inputEmail").val("");
+            } else {
+                $("#inputEmail").removeClass("emptyField");
+                $("#inputEmail").parent().find('p').remove()
+                ok = true;
+            }
+        })
+    },
+
+    //Before Sending Request To Server
+    beforeSend: function (e) {
+        var isValid = true;
+        e.preventDefault();
+
+        //Se algum dos campos estiver vazio
+        var allListElements = $(".mandatory");
+        //Verifies if all inputs are OK
+        var isValid = isFormValid(allListElements);
+
+        this.isEmailAvail(isValid);
+
+
+        //Se o pin não for um numero
+        if (!isNumber($("#inputPin").val())) {
+            $("#inputPin").addClass("emptyField");
+            isValid = false;
+        }
+
+        if (!matchingPswds($("#InputPasswd").val(), $("#ConfirmPasswd").val())) {
+            $("#InputPasswd").addClass("emptyField");
+            $("#ConfirmPasswd").addClass("emptyField");
+            return false;
+        }
+        console.log(isValid)
+        if (isValid) {
+            //Recolhe os dados da view
+            var teacherDetails = $('#newteacherform').serializeObject();
+            //Cria um novo model
+            var teacher = new Teacher(teacherDetails);
+            //Converte o json das classes em objecto
+            teacher.set({classes: jQuery.parseJSON($("#teacherClasses").val())})
+            teacher.set({password: md5(teacher.attributes.password)})
+            teacher.set({pin: md5(teacher.attributes.pin)})
+            teacher.save(null, {
+                success: function (user) {
+                    sucssesMsg($("#newteacherform"), "Professor inserido com sucesso!");
+                    setTimeout(function () {
+                        app.navigate("teachers", {
+                            trigger: true
+                        });
+                    }, 1500);
+                },
+                error: function () {
+                    failMsg($("#newteacherform"), "Lamentamos mas não foi possível inserir o professor!", 1000);
+                }
+            });
+        }
+
     },
 
     //Class Initializer

@@ -4,6 +4,16 @@ Backbone.View.prototype.close = function () {
     this.undelegateEvents();
 };
 
+Backbone.ajax = function () {
+    var args = Array.prototype.slice.call(arguments, 0);
+
+    args[0].beforeSend = function (xhr) {
+        xhr.setRequestHeader('Authorization', 'Basic ' + window.sessionStorage.getItem("keyo"));
+    };
+
+    return Backbone.$.ajax.apply(Backbone.$, args);
+};
+
 var Router = Backbone.Router.extend({
     currentView: undefined,
     showView: function (view, elem, sub) {
@@ -26,9 +36,6 @@ var Router = Backbone.Router.extend({
         //Default Page
         "": "index",
 
-        //Menu Principal
-        "dashboard": "dashboard",
-
         //Teachers Routing
         "teachers": "teachers",
         "teachers/new": "teachersNew",
@@ -38,14 +45,13 @@ var Router = Backbone.Router.extend({
         //School Routing
         "schools": "schools",
         "schools/new": "schoolsNew",
-        "schools/:id": "schoolsInfo",
         "schools/:id/edit": "schoolsEdit",
 
         //Students Routing
         "students": "students",
         "students/new": "studentsNew",
-        "students/:id": "studentsEdit",
-        "student/view": "studentInfo",
+        "students/:id/edit": "studentsEdit",
+
 
         //Touch questions Routing
         "questionsTouch": "questionsTouch",
@@ -55,11 +61,16 @@ var Router = Backbone.Router.extend({
         "resolutions": "resolutions",
         //Tests Routing
         "questions": "questions",
-        "questionsText/new": "textTestNew",
+
+        "questionsText/new": "questionsTextNew",
+        "questionsText/:id": "questionsTextEdit",
+
         "multimediaTest/new": "multimediaTestNew",
         "listTest/new": "listTestNew",
-        "interpretationTest/new": "interpretationTestNew"
+        "interpretationTest/new": "interpretationTestNew",
 
+        "tests": "tests",
+        "tests/new": "testsNew"
     },
 
 
@@ -99,21 +110,6 @@ var Router = Backbone.Router.extend({
     },
 
     //Home Template
-    dashboard: function () {
-        var self = this;
-
-        this.navbar();
-
-        //Load Template
-        templateLoader.load(["Dashboard"],
-            function () {
-                var v = new Dashboard({});
-                self.showView(v, $('#content'));
-            }
-        );
-
-    },
-    //Home Template
     resolutions: function () {
         var self = this;
 
@@ -136,8 +132,13 @@ var Router = Backbone.Router.extend({
 
         templateLoader.load(["TeachersView"],
             function () {
-                var v = new TeachersView({});
-                self.showView(v, $('#content'));
+                var ss = new Teachers();
+                ss.fetch(function () {
+                    var v = new TeachersView({
+                        collection: ss
+                    });
+                    self.showView(v, $('#content'));
+                })
             }
         );
     },
@@ -159,13 +160,21 @@ var Router = Backbone.Router.extend({
         var self = this;
 
         self.navbar();
-
         templateLoader.load(["TeachersEditView"],
             function () {
-                var v = new TeachersEditView({id: id});
-                self.showView(v, $('#content'));
+                var ss = new Teacher({
+                    id: id
+                });
+                ss.fetch(function () {
+                    var v = new TeachersEditView({
+                        model: ss
+                    });
+                    self.showView(v, $('#content'));
+                })
+
             }
         );
+
     },
 
     user: function () {
@@ -174,8 +183,14 @@ var Router = Backbone.Router.extend({
 
         templateLoader.load(["UserView"],
             function () {
-                var v = new UserView({});
-                self.showView(v, $('#content'));
+                var ss = new Me({});
+                ss.fetch(function () {
+                    var v = new UserView({
+                        model: ss
+                    });
+                    self.showView(v, $('#content'));
+                })
+
             }
         );
     },
@@ -185,13 +200,18 @@ var Router = Backbone.Router.extend({
         var self = this;
 
         self.navbar();
-
         templateLoader.load(["StudentsView"],
             function () {
-                var v = new StudentsView({});
-                self.showView(v, $('#content'));
+                var ss = new Students();
+                ss.fetch(function () {
+                    var v = new StudentsView({
+                        collection: ss
+                    });
+                    self.showView(v, $('#content'));
+                })
             }
         );
+
     },
 
     studentsNew: function () {
@@ -211,24 +231,22 @@ var Router = Backbone.Router.extend({
         var self = this;
 
         this.navbar();
-
         templateLoader.load(["StudentsEdit"],
             function () {
-                var v = new StudentsEdit({id: id});
-                self.showView(v, $('#content'));
+                var ss = new Student({
+                    id: id
+                });
+                ss.fetch(function () {
+                    var v = new StudentsEdit({
+                        model: ss
+                    });
+                    self.showView(v, $('#content'));
+                })
+
             }
         );
     },
 
-    studentInfo: function () {
-        var self = this;
-        templateLoader.load(["StudentInfo"],
-            function () {
-                var v = new StudentInfo({});
-                self.showView(v, $('#content'));
-            }
-        );
-    },
 
     //School Templates
     schools: function () {
@@ -238,14 +256,22 @@ var Router = Backbone.Router.extend({
 
         templateLoader.load(["SchoolsView"],
             function () {
-                var v = new SchoolsView({});
-                self.showView(v, $('#content'));
+                var ss = new Schools();
+                ss.fetch(function () {
+                    var v = new SchoolsView({
+                        collection: ss
+                    });
+                    self.showView(v, $('#content'));
+                })
             }
         );
     },
 
     schoolsNew: function () {
         var self = this;
+
+        self.navbar();
+
         templateLoader.load(["SchoolsNew"],
             function () {
                 var v = new SchoolsNew({});
@@ -258,26 +284,23 @@ var Router = Backbone.Router.extend({
         var self = this;
 
         this.navbar();
+
         templateLoader.load(["SchoolsEdit"],
             function () {
-                var v = new SchoolsEdit({id: id});
-                self.showView(v, $('#content'));
+                var ss = new School({
+                    id: id
+                });
+                ss.fetch(function () {
+                    var v = new SchoolsEdit({
+                        model: ss
+                    });
+                    self.showView(v, $('#content'));
+                })
+
             }
         );
     },
 
-    schoolsInfo: function (id) {
-        var self = this;
-
-        self.navbar();
-
-        templateLoader.load(["SchoolsInfo"],
-            function () {
-                var v = new SchoolsInfo({id: id});
-                self.showView(v, $('#content'));
-            }
-        );
-    },
 
     //Questions template
     questionsTouch: function () {
@@ -318,16 +341,20 @@ var Router = Backbone.Router.extend({
         var self = this;
 
         self.navbar();
-
         templateLoader.load(["QuestionsView"],
             function () {
-                var v = new QuestionsView({});
-                self.showView(v, $('#content'));
+                var ss = new Questions();
+                ss.fetch(function () {
+                    var v = new QuestionsView({
+                        model: ss
+                    });
+                    self.showView(v, $('#content'));
+                })
             }
         );
     },
 
-    textTestNew: function () {
+    questionsTextNew: function () {
         var self = this;
 
         self.navbar();
@@ -336,6 +363,27 @@ var Router = Backbone.Router.extend({
             function () {
                 var v = new QuestionsTextNew({});
                 self.showView(v, $('#content'));
+            }
+        );
+    },
+
+    questionsTextEdit: function (id) {
+        var self = this;
+
+        self.navbar();
+
+        templateLoader.load(["QuestionsTextEdit"],
+            function () {
+                var ss = new Question({
+                    id: id
+                });
+                ss.fetch(function () {
+                    var v = new QuestionsTextEdit({
+                        model: ss
+                    });
+                    self.showView(v, $('#content'));
+                })
+
             }
         );
     },
@@ -377,7 +425,44 @@ var Router = Backbone.Router.extend({
                 self.showView(v, $('#content'));
             }
         );
-    }
+    },
+
+
+    tests: function () {
+        var self = this;
+
+        self.navbar();
+
+        templateLoader.load(["TestsView"],
+            function () {
+                var ss = new Tests();
+                ss.fetch(function () {
+                    var v = new TestsView({
+                        collection: ss
+                    });
+                    self.showView(v, $('#content'));
+                })
+            }
+        );
+    },
+
+    testsNew: function () {
+        var self = this;
+
+        self.navbar();
+
+        templateLoader.load(["TestsNewView"],
+            function () {
+                var ss = new Questions();
+                ss.fetch(function () {
+                    var v = new TestsNewView({
+                        collection: ss
+                    });
+                    self.showView(v, $('#content'));
+                })
+            }
+        );
+    },
 
 });
 

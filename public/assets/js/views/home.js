@@ -2,7 +2,6 @@ window.Home = Backbone.View.extend({
 
     events: {
         "click #showlogin": "showlogin",
-        "click #loginbtn": "login",
         "click #showDownload": "showDownload",
         "click .btn-info": "appDownload",
     },
@@ -21,8 +20,9 @@ window.Home = Backbone.View.extend({
 
                 //Response Handler
                 function (json) {
-                    //If Session Already Present, Go to Main Menu
-                    app.navigate('/dashboard', {
+                    console.log(json)
+                    //If Session Already Present, Go to user main
+                    app.navigate("/user", {
                         trigger: true
                     });
                 },
@@ -36,9 +36,7 @@ window.Home = Backbone.View.extend({
 
         }
         else {
-            //Show Login Modal
-            self.item = "site";
-            $("#mLogin").modal("show");
+            showLoginModal($("#content"));
         }
     },
 
@@ -57,9 +55,7 @@ window.Home = Backbone.View.extend({
             function (json) {
                 console.log(json);
                 $("#mLogin").modal("hide");
-                app.navigate('/dashboard', {
-                    trigger: true
-                });
+                //Show menus
             },
 
             //Error Handling

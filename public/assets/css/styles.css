@@ -10,8 +10,7 @@ html {
 
 body {
     font-family: arial, helvetica;
-    padding-bottom: 90px;
-    padding-top: 50px;
+
     min-width: 350px;
 
     /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#fac7da+0,f5efe3+15,ffffff+50,e6f1f2+85,92cabc+100 */
@@ -23,7 +22,79 @@ body {
 
 }
 
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-menu {
+
+    min-width: 100%;
+
+}
+
+.dropdown-submenu > .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -6px;
+    margin-left: -1px;
+    -webkit-border-radius: 0 6px 6px 6px;
+    -moz-border-radius: 0 6px 6px;
+    border-radius: 0 6px 6px 6px;
+}
+
+.dropdown-submenu:hover > .dropdown-menu {
+    display: block;
+}
+
+.dropdown-submenu > a:after {
+    display: block;
+    content: " ";
+    float: left;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    border-left-color: #ccc;
+    margin-top: 5px;
+    margin-right: -10px;
+}
+
+.dropdown-menu > li:hover > a {
+    cursor: pointer;
+    color: #D2B7EA;
+}
+
+.dropdown-submenu:hover > a:after {
+    border-left-color: #fff;
+}
+
+.dropdown-submenu.pull-left {
+    float: left;
+}
+
+.dropdown-submenu.pull-left > .dropdown-menu {
+
+    -webkit-border-radius: 6px 0 6px 6px;
+    -moz-border-radius: 6px 0 6px 6px;
+    border-radius: 6px 0 6px 6px;
+    left: auto;
+    right: 100%;
+    margin-left: 0;
+    margin-right: -1px;
+}
+
 #page {
+    padding-bottom: 90px;
+    padding-top: 50px;
+}
+
+#homeBar img {
+    height: 50px;
+}
+
+#homeBar li {
+    margin-left: 15px;
 }
 
 audio {
@@ -295,6 +366,7 @@ a {
 
 #section0 {
     background: url("../../img/study-with-books.jpg");
+    padding: 20px;
 }
 
 #slide1 {
@@ -313,23 +385,11 @@ a {
 }
 
 .smallImgPreView {
-    position: absolute;
-    height: 30px;
-    width: 30px;
-    border: 1px solid #cccccc;
-    border-radius: 3px;
+    max-height: 25px;
+    border-radius: 5px;
     right: 15px;
     transition: all 1.5s ease-in-out;
     z-index: 1000;
-}
-
-.smallImgPreView:hover {
-    transform: scale(5.5);
-    overflow: hidden;
-    position: absolute;
-    border-radius: 2px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-    border: 1px solid #4DB8B8;
 }
 
 #teachersPreview, #testsPreview {
@@ -351,6 +411,21 @@ a {
     position: absolute;
     right: 0;
     padding: 8px 27px;
+}
+
+.btn-Add {
+    font-size: 14px;
+
+    -ms-touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background-color: #B3DB86;
+    float: right;
 }
 
 input::-webkit-outer-spin-button,
@@ -428,7 +503,7 @@ label {
 }
 
 .listButton > img {
-    height: 35px;
+    height: 30px;
     border-radius: 5px;
 }
 
@@ -442,14 +517,51 @@ label {
 .listButton > a {
     float: right;
     margin: 5px;
+    margin-bottom: 5px;
 }
 
 .lblDataDetails {
     font-weight: bold;
 }
 
+.carousel-indicators {
+    top: -10px;
+}
+
+.carousel-control .glyphicon-chevron-left, .carousel-control .icon-prev {
+    margin-left: -50px;
+}
+
+.carousel-control .glyphicon-chevron-right, .carousel-control .icon-next {
+    margin-right: -50px;
+}
+
+.carousel-indicators li {
+    background-color: #F9CFDC;
+}
+
+.carousel-indicators .active {
+    background-color: #96CCBF;
+}
+
+.carousel-control.left, .carousel-control.right {
+    background-image: none
+}
+
 .fa-remove, .fa-trash-o {
     color: #B22222;
+}
+
+.fa-remove:hover, .fa-trash-o:hover {
+    color: #C97979;
+}
+
+.fa-plus {
+    color: #B3DB86;
+}
+
+.fa-plus:hover {
+    color: #608A32;
 }
 
 .dataTitle {
@@ -470,7 +582,7 @@ label {
     border-radius: 5px;
     -webkit-border-radius: 5px;
     padding: 10px;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
     text-align: left;
     border-color: transparent;
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.275);
@@ -478,8 +590,6 @@ label {
 
 .dataImage {
     max-width: 100%;
-    padding-top: 11px;
-    padding-bottom: 11px;
     border-radius: 5px;
 }
 
@@ -630,12 +740,12 @@ label {
 }
 
 .titleImage {
-    height: 50px;
+    height: 20px;
     vertical-align: middle;
 }
 
 .titleText {
-    font-size: 30px;
+    font-size: 20px;
     vertical-align: middle;
 }
 
@@ -827,7 +937,8 @@ div.upload input {
 
 .editDeleteOp {
     position: absolute;
-    top: 10px;
+    top: 15px;
+    height: initial;
     right: 10px;
 }
 
@@ -903,10 +1014,6 @@ div.upload input {
     padding: 0px 5px;
 }
 
-.input-group-addon > button:hover {
-    transform: scale(1.2);
-}
-
 option:hover {
     background-color: red;
 }
@@ -914,20 +1021,20 @@ option:hover {
 .input-group-addon.addon-button {
 
     height: 100%;
-    border: 1px solid #51a70f;
+    border: 1px solid #D5A4B1;
     font-size: 12px;
     font-family: arial, helvetica, sans-serif;
     text-decoration: none;
     text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.3);
     font-weight: bold;
-    color: #FFFFFF;
-    background-color: #69B67B;
+    color: #6A5158;
+    background-color: #F8D5DD;
 
 }
 
 .input-group-addon.addon-button:hover {
 
-    background-color: #449D44;
+    background-color: #EFD4DB;
 
 }
 
@@ -944,6 +1051,14 @@ option:hover {
 
 .panel-info > .panel-heading {
     background-color: #C2DEF3;
+}
+
+.panel-edit {
+    border-color: #F8D4DD;
+}
+
+.panel-edit > .panel-heading {
+    background-color: #F8D4DD;
 }
 
 .btn-success {
@@ -964,7 +1079,7 @@ option:hover {
     box-shadow: 0 0 3px gray;
     font-size: 12px;
     font-weight: bold;
-    padding: 0;
+    padding: 4px;
 }
 
 .round-button:hover {

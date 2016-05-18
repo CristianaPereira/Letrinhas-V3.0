@@ -1,188 +1,68 @@
 require('colors');
 
 var nano = require('nano')(process.env.COUCHDB);
-var db = nano.use('dev_testes');
-var dbp = nano.use('dev_perguntas');
+var db = nano.use('let_tests');
+var dbp = nano.use('let_questions');
 
 exports.upDate = function (req, res) {
-    var id = req.params.id;
-    console.log('tests upDate, '.cyan + "id teste: " + id);
-    switch (req.body.ordem) {
-        case "desabilita":
-            desabilitaTeste(id);
-            break;
-        default:
-            console.log("Nada a executar!");
-    }
-    res.redirect('/#tests');
+
 };
 
-exports.newOld = function (req, res) {
-    console.log('Tests new,'.green);
-    var dati = new Date();
-    var idTeste = 'T' + dati.getTime();
+exports.new = function (req, res) {
+    console.log(req.body)
 
-    var perguntas = new Array();
+    //Verify Fields
+    if (JSON.stringify(req.body).indexOf('""') == -1) {
+        var dati = new Date();
+        //Creates a tes obj
+        var test = {
+            "_id": 'T' + dati.getTime(),
+            "title": req.body.title,
+            "description": req.body.title,
+            "subject": req.body.subject + ":" + req.body.content + ":" + req.body.specification,
+            "schoolYear": parseInt(req.body.schoolYear),
+            "questions": req.body.questions,
+            "description": req.body.description,
+            "profID": req.params.userID
+        };
 
-    for (var i = 0; i < req.body.nPrg; i++) {
-        perguntas[i] = req.body['p' + i];
+        db.insert(test, (req.body.title).replace(/\s+/g, '') + new Date().getTime(), function (err) {
+            if (err)
+                return res.status(err.statusCode).json({});
+            else {
+                console.log('New test was inserted'.green);
+                res.status(200).json({});
+            }
+        })
     }
-
-    console.log("Perguntas: " + perguntas);
-    var teste = {
-        "titulo": req.body.titulo,
-        "descricao": req.body.descricao,
-        "disciplina": req.body.disciplina,
-        "anoEscolar": req.body.ano_escolar,
-        "perguntas": perguntas,
-        "data": dati,
-        "estado": true,
-        "professorId": req.body.profID,
-        "tipo": req.body.tipo,
-        "nRepeticoes": req.body.nRepeticoes,
-    };
-
-    console.log(teste);
-
-    db.insert(teste, idTeste, function (err, body) {
-        if (err) {
-            console.log('test new, an error ocourred'.red);
-            return res.status(500).json({
-                'result': 'nok',
-                'message': err
-            });
-        }
-        console.log('New test added'.green);
-        res.redirect('/#tests');
-
-    });
-
+    else {
+        console.log("Fields Missing");
+        res.send(401, {result: "Todos os campos sao de preenchimento obrigatório"});
+    }
 };
 
 
 exports.get = function (req, res) {
-    var id = req.params.id;
-    console.log('tests get: '.green + id);
-    db.get(id, function (err, body) {
-        if (err) {
-            return res.status(500).json({
-                'result': 'nok',
-                'message': err
-            });
-        }
-        console.log(body);
-        res.json(body);
-    });
+
+
 };
 
-function desabilitaTeste(id) {
-    console.log("a desabilitar teste".yellow);
-    db.get(id, function (err, body) {
-        if (err) {
-            console.log("Não foi possivel aceder a " + id + '\n'
-                + "erro: " + err);
-        }
-        db.update = function (obj, key, callback) {
-            db.get(key, function (error, existing) {
-                if (!error) obj._rev = existing._rev;
-                db.insert(obj, key, callback);
-            });
-        };
-
-        body.estado = false;
-
-        db.update(body, body._id, function (err1, res) {
-            if (err1) return console.log(id + " wasn't disabled!".red + '\n' + err1);
-            console.log("O teste com id = " + id + ' foi apagado!'.yellow);
-
-        });
-
-
-    });
-};
-
-
-//Revamp
 exports.getAll = function (req, res) {
 
-    var user = req.params.id;
+    console.log('Getting all tests'.blueBG + ' : ' + req.params.userID.blue);
 
-    console.log('Fetching All Tests'.green);
-
-    db.list({'include_docs': true, 'limit': undefined, 'descending': true}, function (err, body) {
-
+    db.list({
+        'include_docs': true, 'attachments': true,
+        'limit': undefined, 'descending': false
+    }, function (err, body) {
         if (err) {
-            res.send(err.statusCode, {error: "Erro a procurar escolas"});
-        }
-        else {
-
-            for (var i in body.rows) {
-
-                if (body.rows[i].doc.profID && body.rows[i].doc.profID == user)
-                    body.rows[i].doc.isMine = true;
-
-            }
-
-            var response = {};
-            response.tests = body.rows;
-
-            dbp.list({'include_docs': true, 'limit': undefined, 'descending': true}, function (err, body) {
-
-                if (err) {
-                    res.send(err.statusCode, {error: "Erro a procurar escolas"});
-                }
-                else {
-                    response.questions = body.rows;
-                    res.json(response);
-                }
-
-            });
-
-
-        }
-
-    });
-};
-
-exports.new = function (req, res) {
-    console.log('Tests new,'.green);
-    console.log(req.body)
-    var dati = new Date();
-    var idTeste = 'T' + dati.getTime();
-
-    var perguntas = new Array();
-
-    for (var i = 0; i < req.body.nPrg; i++) {
-        perguntas[i] = req.body['p' + i];
-    }
-
-    console.log("Perguntas: " + perguntas);
-    var teste = {
-        "titulo": req.body.titulo,
-        "descricao": req.body.descricao,
-        "disciplina": req.body.disciplina,
-        "anoEscolar": req.body.ano_escolar,
-        "perguntas": perguntas,
-        "data": dati,
-        "estado": true,
-        "professorId": req.body.profID,
-        "tipo": req.body.tipo,
-        "nRepeticoes": req.body.nRepeticoes,
-    };
-
-    console.log(teste);
-
-    db.insert(teste, idTeste, function (err, body) {
-        if (err) {
-            console.log('test new, an error ocourred'.red);
             return res.status(500).json({
                 'result': 'nok',
                 'message': err
             });
         }
-        console.log('New test added'.green);
-        res.redirect('/#tests');
-
+        res.json(body.rows);
     });
 
 };
+

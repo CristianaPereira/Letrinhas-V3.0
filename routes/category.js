@@ -2,7 +2,7 @@ require('colors');
 
 //DB Info
 var nano = require('nano')(process.env.COUCHDB);
-var db = nano.use('dev_categorias');
+var db = nano.use('let_categories');
 
 //Get category by ID
 exports.get = function (req, res) {

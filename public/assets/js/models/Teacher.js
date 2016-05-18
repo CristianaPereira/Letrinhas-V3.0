@@ -1,24 +1,62 @@
 var Teacher = Backbone.Model.extend({
-  initialize: function (options) {
-    this.id = options.id;
-  },
-  fetch: function (after_fetch) {
-    var self = this;
-    modem('GET', 'teachers/' + this.id,
-      function (json) {
-        self.set("nome", json.nome);
-        self.set("telefone", json.telefone);
-        self.set("password", json.password);
-        self.set("pin", json.pin);
-        self.set("estado",json.true);
-          console.log("models/teacher");
-        after_fetch();
-      },
-      //Precisamos enviar para a Tabela escolas o id do professor.
-      function (xhr, ajaxOptions, thrownError) {
-        var json = JSON.parse(xhr.responseText);
-        error_launch(json.message);
-      }
-    );
-  }
+    urlRoot: 'teachers',
+    defaults: {},
+    initialize: function (options) {
+
+    },
+    fetch: function (after_fetch) {
+        var self = this;
+        modem('GET', 'teachers/' + this.id,
+            function (teacherData) {
+                var classLength = 0;
+                //If teacher exists
+                if (teacherData) {
+                    //Adiciona os dados ao model
+                    self.attributes = (teacherData);
+                    self.attributes.classes.sort(sortJsonByCol('id'));
+
+                    //Conta o numero de turmas associadas
+                    $.each(self.attributes.classes, function (i, classe) {
+                        $.each(classe.class, function (ic, cl) {
+                            classLength++;
+                        })
+                    })
+                    self.set({classLength: classLength})
+                } else {
+                    self.set({id: null})
+                }
+
+
+                after_fetch();
+            }, function (xhr, ajaxOptions, thrownError) {
+                //If an error occurs, set id to null
+                console.log(JSON.parse(xhr.responseText).result);
+            });
+    }
+});
+
+var Teachers = Backbone.Collection.extend({
+    model: Teacher,
+    fetch: function (after_fetch) {
+        var self = this;
+        modem('GET', 'teachers',
+            function (json) {
+                for (i = 0; i < json.length; i++) {
+                    self.models.push(new Teacher(json[i].doc));
+                }
+                after_fetch();
+            },
+            function () {
+            }
+        );
+    },
+    //Gets specific item from collection
+    getByID: function (id) {
+        var self = this;
+        return (
+            self.models.find(function (model) {
+                return model.get('_id') === id;
+            }).attributes
+        )
+    }
 });

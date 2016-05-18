@@ -27,6 +27,22 @@
 
 
  */
+$.fn.serializeObject = function () {
+    var o = {};
+    var a = this.serializeArray();
+    $.each(a, function () {
+        if (o[this.name] !== undefined) {
+            if (!o[this.name].push) {
+                o[this.name] = [o[this.name]];
+            }
+            o[this.name].push(this.value || '');
+        } else {
+            o[this.name] = this.value || '';
+        }
+    });
+    return o;
+};
+
 
 //Faz shuffle das posicoes dos elementos Dom
 //https://css-tricks.com/snippets/jquery/shuffle-dom-elements/
@@ -75,130 +91,84 @@ window.orderContentList = function (mylist, e) {
     });
 };
 //Populates schools and classes dropdowns ( for edit and new teacher)
-window.populateDDSchools = function () {
-    //Get Schools If User Has Required Permissions
-    modem('GET', 'schools',
-        //Response Handler (populates dropdowns)
-        function (json) {
-            var schoolsList = '<select class="form-control  mandatory" id="dbEscolas">';
-            schoolsList += '<option disabled selected>Escola</option>';
-            var classList = '<span class="input-group-addon btn-white"><i class="fa fa-book">' +
-                '</i></span><select class="form-control mandatory" id="dbTurmas">';
-            classList += '<option disabled selected>Turma</option>';
-            //Lista as escolas
-            for (i = 0; i < json.length; i++) {
-                schoolsList += '<option id="' + json[i].doc._id + '">' + json[i].doc.nome + '</option>';
-            }
-            schoolsList += "</select>";
-            classList += "</select>";
-            $("#selectEscolas").append(schoolsList);
-            $("#selectTurmas").html(classList);
+window.populateDDSchools = function (school, classe) {
 
-            var myEl = document.getElementById('dbEscolas');
-            myEl.addEventListener('change', function () {
-                var i = this.selectedIndex;
-                var selectedSchool = $(this).children(":selected").attr("id");
-                for (i = 0; i < json.length; i++) {
-                    if (json[i].doc._id === selectedSchool) {
-                        classList = '<span class="input-group-addon btn-white"><i class="fa fa-users"></i></span><select class="form-control" id="dbTurmas">';
-                        classList += '<option disabled selected>Turma</option>';
-                        for (j = 0; j < json[i].doc.turmas.length; j++) {
-                            classList += '<option id="' + json[i].doc.turmas[j]._id + '">' + json[i].doc.turmas[j].ano + 'º' + json[i].doc.turmas[j].nome + '</option>';
+    var ss = new Schools();
+    ss.fetch(function () {
+        $("#dbSchools").append('<option disabled selected>Escola</option>');
+
+        $("#dbClasses").append('<option disabled selected>Turma</option>');
+        //Lista as escolas
+        for (i = 0; i < ss.models.length; i++) {
+            var obj = ss.models[i].attributes;
+            $("#dbSchools").append('<option value="' + obj._id + '">' + obj.name + '</option>');
+        }
+        $("#dbSchools").append("</select>");
+        $("#dbClasses").append("</select>");
+
+        //Ao alterar a dd das escolas, altera a dd das turmas
+        $('#dbSchools').change(
+            function () {
+                var selectedSchool = $("#dbSchools").val();
+                $("#dbClasses").empty();
+                for (i = 0; i < ss.models.length; i++) {
+                    var obj = ss.models[i].attributes;
+                    if (obj._id === selectedSchool) {
+                        $("#dbClasses").append('<option disabled selected>Turma</option>');
+                        for (j = 0; j < obj.classes.length; j++) {
+                            $("#dbClasses").append('<option value="' + obj.classes[j]._id + '">' + obj.classes[j].year + 'º' + obj.classes[j].name + '</option>');
                         }
                     }
                 }
-                classList += "</select>";
-                $("#selectTurmas").html(classList);
-            }, false);
-        },
+                $("#dbClasses").append("</select>");
+            }
+        );
 
-        //Error Handling
-        function (xhr, ajaxOptions, thrownError) {
-            //Error Handling
-            failMsg($("#newteacherform"), "Ocorreu um erro. \n (" + JSON.parse(xhr.responseText).result + ").");
-            setTimeout(function () {
-                app.navigate('/teachers', {
-                    trigger: true
-                });
-            }, 2000);
+        //Selecciona a escola passada por parametro
+        if (school) {
+            $("#dbSchools").val(school)
+            $("#dbSchools").change();
+            $("#dbClasses").val(classe)
         }
-    );
+
+    });
 };
 
 window.assocClass = function () {
-    var escola = $("#dbEscolas").children(":selected").attr("id");
-    var turma = $("#dbTurmas").children(":selected").attr("id");
+    var escola = $("#dbSchools option:selected").val();
+    var turma = $("#dbClasses option:selected").val();
     if (escola != undefined && turma != undefined) {
         var obj = jQuery.parseJSON($("#teacherClasses").val());
         //Se a escola já estiver listada, e a turma não, adiciona a turma
         if (obj[escola]) {
-            if (obj[escola].turmas.indexOf(turma) == -1) {
-                obj[escola].turmas.push(turma);
+            if (obj[escola].classes.indexOf(turma) == -1) {
+                obj[escola].classes.push(turma);
             } else {
                 return false;
             }
         } else {
             obj[escola] = {};
             obj[escola]['id'] = escola;
-            obj[escola].turmas = [];
-            obj[escola].turmas.push(turma);
+            obj[escola].classes = [];
+            obj[escola].classes.push(turma);
         }
         $("#teacherClasses").val(JSON.stringify(obj));
-        $("#assocTurma").append('<span><b>' + $("#dbTurmas").children(":selected").text() + '</b>, '
-            + $("#dbEscolas").children(":selected").text() + '; <i id="' + escola + ':' + turma + '" class="fa fa-trash" onclick="desassocClass(this)"></i><br></span>');
+        $("#assocTurma").append(
+            $('<div>', {class: "row"}).append(
+                $('<p>', {
+                    class: "col-md-10 col-sm-10",
+                    html: $("#dbSchools option[value=" + $("#dbSchools").val() + "]").text() + ',  <b>' + $("#dbClasses option[value=" + $("#dbClasses").val() + "]").text() + '</b>'
+                }),
+                $('<div>', {class: "col-md-2 col-sm-2"}).append(
+                    $('<button>', {
+                        class: "deleteClass round-button fa fa-trash",
+                        id: escola + ':' + turma
+                    })
+                )
+            )
+        )
+        $("#schoolsNewBadge").html(parseInt($("#schoolsNewBadge").html()) + 1)
     }
-};
-
-//Gets a list of schools and classes associated to some teacher
-window.getAssocClasses = function (idProf, nomeProf, editable) {
-    var nTurmas = 0;
-
-
-    $("#prfSchool").empty();
-    //Objecto Json com o nome das escolas e turmas
-    var obj = jQuery.parseJSON("{}");
-    //Obtem os nomes das escolas e respectivas turmas associadas ao professor idProf
-    modem('GET', 'schools', function (schoolsList) {
-            //Verifica a lista de escolas
-            $.each(schoolsList, function (key, school) {
-                //Verifica a lista de turmas
-                $.each(school.doc.turmas, function (kTurma, turma) {
-                    var trm = turma.ano + "º " + turma.nome;
-                    //Verifica a lista de turmas
-                    $.each(turma.professores, function (kProf, prof) {
-                        if (prof._id == idProf) {
-                            var $class = '<li >' + trm + '</li>';
-                            if (editable) {
-                                $class = '<li >' + trm + ' <i id="' + school.doc._id + ':' + turma._id + '" class="fa fa-remove"  onclick = "removeClass(this)" ></i></li>';
-                            }
-                            //Se a escola já estiver listada, e a turma não, adiciona a turma
-                            if (!$('div#' + school.doc._id).length) {
-                                var $row = $("<div>", {
-                                    class: "row",
-                                    id: school.doc._id
-                                }).append($("<div>", {
-                                    class: "col-md-8 col-sm-8"
-                                }).append('<i class="fa fa-university"></i>' +
-                                    '<label style="margin-left: 7px;">' + school.doc.nome + '</label>').append('<ul>' + $class + '</ul>'));
-                                $("#prfSchool").append($row);
-
-                            } else {
-                                $('div#' + school.doc._id + "  ul").append($class);
-                            }
-                            nTurmas++;
-                        }
-                    });
-                });
-            });
-            $("#prfSchool").prepend('<label id="assocClasses">' + nomeProf + ', tem ' + nTurmas + ' turma(s) associada(s).</label>');
-
-        },
-        function (error) {
-            console.log('Error getting schools list!');
-        }
-    );
-
-
 };
 
 window.removeClass = function (elem) {
@@ -206,10 +176,7 @@ window.removeClass = function (elem) {
     modem('POST', 'teachers/rmvClass',
         //Response Handler
         function (json) {
-
             getAssocClasses($("#inputEmail").val(), $("#InputNome").val(), true);
-
-
         },
         //Error Handling
         function (xhr, ajaxOptions, thrownError) {
@@ -223,15 +190,14 @@ window.removeClass = function (elem) {
 window.desassocClass = function (elem) {
     var obj = jQuery.parseJSON($("#teacherClasses").val());
     var data = elem.id.split(":");
-    var index = obj[data[0]]['turmas'].indexOf(data[1]);
     //Remove a turma da lista
     $.each(obj, function (iSchool, school) {
         if (school.id == data[0]) {
-            $.each(school.turmas, function (iTurma, turma) {
+            $.each(school.classes, function (iTurma, turma) {
                 if (turma == data[1]) {
-                    obj[iSchool].turmas.splice(iTurma, 1);
-                    console.log(school.turmas.length);
-                    if (school.turmas.length == 0) {
+                    obj[iSchool].classes.splice(iTurma, 1);
+                    console.log(school.classes.length);
+                    if (school.classes.length == 0) {
                         delete obj[iSchool];
                     }
                 }
@@ -239,20 +205,21 @@ window.desassocClass = function (elem) {
         }
     });
 //Remove a entrada
-    $(elem).parent().remove();
+    $(elem).parent().parent().remove();
     $("#teacherClasses").val(JSON.stringify(obj));
+    $("#schoolsNewBadge").html(parseInt($("#schoolsNewBadge").html()) - 1)
 };
 
 //Return a String identifier of a level
 window.getUserRole = function (permissionLevel) {
     switch (permissionLevel) {
-        case '1' :
+        case 1 :
             return "Auxiliar";
             break;
-        case '2' :
+        case 2 :
             return "Professor";
             break;
-        case '3' :
+        case 3 :
             return "Administrador de Sistema";
             break;
         default:
@@ -263,18 +230,86 @@ window.getUserRole = function (permissionLevel) {
 window.getCategories = function () {
     //Gets all registed categories
     modem('GET', 'category',
-
         //Response Handler
         function (json) {
-
             $.each(json, function (i, key) {
-                console.log(key.doc);
-                $("#selectSubject").append($("<option>", {html: key.doc.subject, id: key.doc._id, value: key.doc._id}));
+                $("#selectSubject").append($("<option>", {html: key.doc.subject, value: key.doc._id}));
+            });
 
+            //Populates dd with the contents of selects subject
+            $('#selectSubject').change(
+                function () {
+                    console.log("chang")
+                    $.each(json, function (i, key) {
+                        var selectedSubject = $("#selectSubject").val();
+                        if (key.doc._id === selectedSubject) {
+                            //Limpa a dd
+                            $("#selectContent").html("");
+                            $("#selectContent").append('<option value="" disabled selected>Conteúdo</option>');
+                            $.each(key.doc.content, function (id, content) {
+                                $("#selectContent").append($("<option>", {
+                                    html: content.name,
+                                    id: content._id,
+                                    value: content._id
+                                }));
+                            });
+                        }
+                    });
+                }
+            )//Populates dd with the contents of selects subject
+             //Populates dd with the contents of selects subject
+            $('#selectContent').change(
+                function () {
+                    console.log("chang")
+                    $.each(json, function (i, key) {
+                        var selectedSubject = $("#selectSubject").val();
+                        var selectedContent = $("#selectContent").val();
+                        if (key.doc._id === selectedSubject) {
+                            //Limpa a dd
+                            $("#selectSpecification").html("");
+                            $("#selectSpecification").append('<option disabled value="" selected>Especificação</option>');
+
+                            $.each(key.doc.content, function (id, content) {
+                                if (content._id === selectedContent) {
+                                    $.each(content.specification, function (ids, specif) {
+                                        $("#selectSpecification").append($("<option>", {
+                                            html: specif.name,
+                                            id: specif._id,
+                                            value: specif._id
+                                        }));
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            )
+
+
+        },
+
+        //Error Handling
+        function (xhr, ajaxOptions, thrownError) {
+        }
+    );
+};
+
+window.getSetCategories = function (cate) {
+    var res = cate.split(":");
+    //Gets all registed categories
+    modem('GET', 'category',
+        //Response Handler
+        function (json) {
+            $.each(json, function (i, key) {
+                $("#selectSubject").append(
+                    $("<option>", {html: key.doc.subject, id: key.doc._id, value: key.doc._id})
+                );
                 //Populates dd with the contents of selects subject
                 var myEl = document.getElementById('selectSubject');
 
+                console.log("change")
                 myEl.addEventListener('change', function () {
+
                     var selectedSubject = $(this).children(":selected").attr("id");
                     if (key.doc._id === selectedSubject) {
                         //Limpa a dd
@@ -288,9 +323,11 @@ window.getCategories = function () {
                         });
                     }
                 }, false);
-
+                $("#selectSubject").val(res[0]).change();
+                $(myEl).trigger("change");
                 //Populates dd with the contents of selects subject
                 var myEll = document.getElementById('selectContent');
+                console.log("change")
                 myEll.addEventListener('change', function () {
                     var selectedSubject = $("#selectSubject").children(":selected").attr("id");
                     var selectedContent = $(this).children(":selected").attr("id");
@@ -310,8 +347,11 @@ window.getCategories = function () {
                         });
                     }
                 }, false);
-
             });
+            console.log(res[0])
+
+
+            $("#" + res[1]).attr("selected", true)
         },
 
         //Error Handling
@@ -345,7 +385,7 @@ window.isFormValid = function (elementsList) {
             }
             //Se o elemento for um select
             if ($(elem).is("select")) {
-                $(elem).parent().addClass("emptyField");
+                // $(elem).parent().addClass("emptyField");
                 $(elem).addClass("emptyField");
                 return;
             }
@@ -469,6 +509,7 @@ window.showLoginModal = function (form) {
         ;
     $(form).append($loginModal);
 
+    $("#mLogin").modal({backdrop: 'static', keyboard: true});
     $("#mLogin").modal("show");
 };
 
@@ -559,7 +600,6 @@ function updatePreview(c) {
     }
 }
 
-
 //Tenta efectuar login
 window.attemptLogin = function () {
     //Create Credentials
@@ -574,7 +614,9 @@ window.attemptLogin = function () {
             //Hides Login Modal
             $("#mLogin").modal("hide");
             //Reloads actual view
-            document.location.reload(true);
+            app.navigate("user", {
+                trigger: true
+            });
         },
         //Error Handling
         function (xhr, ajaxOptions, thrownError) {
@@ -600,7 +642,6 @@ window.sortJsonByCol = function (property) {
     'use strict';
     return function (a, b) {
         var sortStatus = 0;
-
         if (a[property] < b[property]) {
             sortStatus = -1;
         } else if (a[property] > b[property]) {

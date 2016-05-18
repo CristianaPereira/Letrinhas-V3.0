@@ -15,15 +15,13 @@ window.SchoolsEdit = Backbone.View.extend({
 
     //Initializes popover content
     pop: function () {
-
         setPopOver("Nome, Morada e Fotografia");
-
     },
 
     //Solicita confirmação para apagar a turma
     confirmDelete: function (e) {
         var modal = delModal("Apagar professor",
-            "Tem a certeza que quer apagar a turma " + $(e.target).val() + "?",
+            "Tem a certeza que quer apagar a turma " + $(e.target).attr("value") + "?",
             "btnDelClass", e.target.id);
 
         $('.form').append(modal);
@@ -34,7 +32,7 @@ window.SchoolsEdit = Backbone.View.extend({
     deleteClass: function (e) {
         e.preventDefault();
         $('#modalConfirmDel').modal("hide");
-        modem('POST', 'schools/' + this.school.id + '/removeclass',
+        modem('POST', 'schools/' + this.data._id + '/removeclass',
             //Response Handler
             function () {
                 document.location.reload(true);
@@ -44,7 +42,9 @@ window.SchoolsEdit = Backbone.View.extend({
             function (xhr, ajaxOptions, thrownError) {
                 failMsg($("#classes"), "Não foi possível remover a turma. \n (" + JSON.parse(xhr.responseText).error + ").");
             },
-            {_id: $(e.target).val()}
+            new FormData($('<form>', {}).append(
+                $('<input>', {name: "_id", value: $(e.target).attr("value")})
+            )[0])
         );
 
 
@@ -78,10 +78,11 @@ window.SchoolsEdit = Backbone.View.extend({
         $(".cropBG").remove();
     },
 
-//Verifies if an input is empty
+    //Verifies if an input is empty
     isEmpty: function (e) {
         isElemValid($(e.currentTarget));
     },
+
     //Before Submit
     beforeSend: function (e) {
         e.preventDefault();
@@ -93,25 +94,18 @@ window.SchoolsEdit = Backbone.View.extend({
         var isValid = isFormValid(allListElements);
         //If they are
         if (isValid) {
-            modem('POST', 'schools/' + self.school.id,
-
-                //Response Handler
-                function () {
-
-                    sucssesMsg($("#schooleditform"), "Escola editada com sucesso", 500);
-                    setTimeout(function () {
-                        document.location.reload(true);
-                    }, 500);
-
+            var school = new School({id: self.data._id})
+            //Recolhe os dados da view
+            var schoolDetails = $('#schooleditform').serializeObject();
+            school.save(schoolDetails, {
+                success: function (user) {
+                    sucssesMsg($(".form"), "Escola alterada com sucesso!");
+                    document.location.reload(true);
                 },
-
-                //Error Handling
-                function (xhr, ajaxOptions, thrownError) {
-                    failMsg($("#schooleditform"), "Não foi possível editar a escola. \n (" + JSON.parse(xhr.responseText).error + ").");
-                },
-
-                new FormData($("#schooleditform")[0])
-            );
+                error: function () {
+                    failMsg($(".form"), "Lamentamos mas não foi possível inserir a escola!", 1000);
+                }
+            });
         }
     },
 
@@ -125,81 +119,40 @@ window.SchoolsEdit = Backbone.View.extend({
         e.preventDefault();
 
         var self = this;
+        console.log(self.model)
         //Se algum dos campos estiver vazio
         var allListElements = $("#newclassform .mandatory");
         //Verifies if all inputs are OK
         var isValid = isFormValid(allListElements);
         //If they are
         if (isValid) {
-            var self = this;
-
-            var newClass = $("#newclassform").serializeArray();
-            newClass.push({name: "school", value: self.school.id});
-
             //Send Info To Server
-            modem('POST', 'schools/' + self.school.id + '/newclass',
+            modem('POST', 'schools/' + self.data._id + '/newclass',
                 //Response Handler
                 function () {
-                    self.render();
+                    //Response Handler
+                    document.location.reload(true);
                 },
                 //Error Handling
                 function (xhr, ajaxOptions, thrownError) {
                     failMsg($("#classes"), "Não foi possível adicionar a tuurma. \n (" + JSON.parse(xhr.responseText).error + ").");
                 },
-                newClass
+                new FormData($("#newclassform")[0])
             );
         }
     },
 
     //Class Initializer
-    initialize: function (id) {
+    initialize: function () {
         var self = this;
-        self.school = id;
+        self.data = this.model.toJSON();
     },
 
     //Class Renderer
     render: function () {
         var self = this;
 
-        $(this.el).html(this.template());
-
-        modem('GET', 'schools/' + self.school.id,
-
-            //Response Handler
-            function (json) {
-                $("#schoolName").val(json.nome);
-                $("#schoolAddress").val(json.morada);
-                $("#iFoto").attr("src", json.b64);
-                $("#base64textarea").val(json.b64);
-                json.turmas.sort(sortJsonByCol('ano'));
-                $.each(json.turmas, function () {
-
-                    $("#classesList").append(
-                        $('<div>', {
-                            class: "row"
-                        }).append(
-                            $('<p>', {
-                                html: this.ano + "º " + this.nome + " ",
-                                class: "col-md-4 col-sm-4"
-                            }),
-                            $("<div>", {
-                                class: "col-md-8 col-sm-8",
-                            }).append($("<button>", {
-                                id: this._id,
-                                value: this.ano + "º " + this.nome,
-                                class: "deleteClass round-button fa fa-trash"
-                            }))
-                        )
-                    );
-
-                });
-            },
-
-            //Error Handling
-            function (xhr, ajaxOptions, thrownError) {
-
-            }
-        );
+        $(this.el).html(this.template(self.data));
 
         return this;
     }

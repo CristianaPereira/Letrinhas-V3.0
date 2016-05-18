@@ -7,9 +7,14 @@ window.QuestionsInterpNew = Backbone.View.extend({
         "click #writeText": "writeText",
         "click .selectable": "selectWord",
         "click #backbtn": "goBack",
+        "blur .emptyField": "isEmpty",
+        "mouseover #subTxt": "pop",
         "submit": "beforeSend"
     },
-
+    //Initializes popover content
+    pop: function () {
+        setPopOver("Ano, Disciplina, Conteúdo, Especificação, Título, Pergunta, Texto");
+    },
     //Check Auth
     auth: function () {
         if (!window.sessionStorage.getItem("keyo")) {
@@ -17,6 +22,13 @@ window.QuestionsInterpNew = Backbone.View.extend({
             return false;
         }
         return true;
+    },
+
+    //Verifies if an input is empty
+    isEmpty: function (e) {
+        if ($(e.currentTarget).val().length != 0) {
+            $(e.currentTarget).removeClass("emptyField");
+        }
     },
 
     //Go back to the last visited page
@@ -28,26 +40,34 @@ window.QuestionsInterpNew = Backbone.View.extend({
     //Before Sending Request To Server
     beforeSend: function (e) {
         e.preventDefault();
+        //Se algum dos campos estiver vazio
+        var allListElements = $(".mandatory");
+        //Verifies if all inputs are OK
+        var isValid = isFormValid(allListElements);
+        //If they are
+        if (isValid) {
+            //Generate Form Data
+            var fd = new FormData($("#newInterpretationTestForm")[0]);
 
-        //Generate Form Data
-        var fd = new FormData($("#newInterpretationTestForm")[0]);
+            //Generate Answers Locations
+            var $sid = [];
+            $("#inputPanel").find(".badge").each(function () {
+                $sid.push((this.id).substring(3));
+            });
 
-        //Generate Answers Locations
-        var $sid = [];
-        $("#inputPanel").find(".badge").each(function () {
-            $sid.push((this.id).substring(3));
-        });
+            fd.append("sid", $sid);
 
-        fd.append("sid", $sid);
+            modem('POST', 'questions',
+                function (json) {
+                },
+                //Error Handling
+                function (xhr, ajaxOptions, thrownError) {
+                },
+                fd
+            );
 
-        modem('POST', 'questions',
-            function (json) {
-            },
-            //Error Handling
-            function (xhr, ajaxOptions, thrownError) {
-            },
-            fd
-        );
+        }
+
 
     },
 
@@ -83,6 +103,7 @@ window.QuestionsInterpNew = Backbone.View.extend({
         var files = $("#uploadSoundFile").prop('files');
         $("#soundPath")
             .attr("placeholder", files[0].name)
+            .attr("value", files[0].name)
             .css('border', 'solid 1px #cccccc');
     },
 
@@ -104,24 +125,20 @@ window.QuestionsInterpNew = Backbone.View.extend({
 
         var self = this;
 
-        alert("Atenção: \nMarcar o texto deve ser um processo final. \nCaso altere o texto ou pretenda remarcar o mesmo, todas as marcações anteriores serão removidas!");
+        alertMsg($(".form"), "Marcar o texto deve ser um processo final. \nCaso altere o texto ou pretenda remarcar o mesmo, todas as marcações anteriores serão removidas!")
 
         var $words = $("#inputTextArea").val()
-            .replace(/(\r\n|\n|\r)/gm, "<br>")  //Replaces all 3 types of line breaks with a space
+            .replace(/(\r\n|\n|\r)/gm, " <br> ")  //Replaces all 3 types of line breaks with a space
             .replace(/\s+/g, " ")            //Replace all double white spaces with single spaces
             .split(" ");
-
+        console.log($words)
         var $result = [];
 
-        //Replace String With Selectable Span
+        //Replace String With Selectable Span (Não esquecer os PARAGRAFOS)
         for (var i in $words) {
-            if ($words[i] == "<br>")
-                $result.push("<br>");
-            else
-                $result.push("<span id='sid" + i + "' class='selectable'>" + $words[i] + "</span>");
+            $result.push("<span id='sid" + i + "' class='selectable'>" + $words[i] + "</span>");
         }
-
-        $("#inputPanel").append($result.join(' '));
+        $("#inputPanel").empty().append($result.join(' '));
 
         $("#inputTextArea").hide();
         $("#markText").hide();
@@ -134,6 +151,7 @@ window.QuestionsInterpNew = Backbone.View.extend({
     //Mark Word
     selectWord: function (e) {
         $(e.target).toggleClass("badge");
+        console.log($(e.target).attr("id"))
     },
 
     //Make Unique String Array
