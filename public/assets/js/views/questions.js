@@ -89,29 +89,34 @@ window.QuestionsView = Backbone.View.extend({
         $(".listButton").show();
         //Esconde os testes cujas checkboxes não estão seleccionadas
         $.each($("input:checkbox:not(:checked)"), function (i, k) {
+            console.log($(k).attr("value"))
             $(".listButton[type=" + $(k).attr("value") + "]").hide();
         });
+
+        //Dos teste que estao visiveis
+        $.each($(".listButton:visible"), function (i, k) {
+            //Se nao pertencerem à categoria escolhida, esconde-os
+            if ($(k).attr("value").indexOf($("#selectSubject").attr("filter")) == -1) {
+                $(k).hide();
+            }
+        });
+
+        $("#questionsBadge").text($(".listButton:visible").length + "/" + this.data.length)
+
     },
 
     //Applys filters
     filterBycontent: function (e) {
 
         var self = this;
-        $(".listButton").show();
+        $("#selectSubject").attr("filter", $(e.target).attr("value"));
         self.filterBy();
-        //Dos teste que estao visiveis
-        $.each($(".listButton:visible"), function (i, k) {
-            //Se nao pertencerem à categoria escolhida, esconde-os
-            if ($(k).attr("value").indexOf($(e.target).attr("value")) == -1) {
-                $(k).hide();
-            }
-        });
+
     },
 
     //Text Preview
     enchePreview: function (e) {
-        //gets model info
-        question = this.model.getByID($(e.currentTarget).attr("id"));
+        question = this.collection.getByID($(e.currentTarget).attr("id"));
         var self = this;
         //Clear Preview
         $("#questionsPreview").empty();
@@ -284,6 +289,7 @@ window.QuestionsView = Backbone.View.extend({
         var self = this;
         self.bd2 = 'let_questions';
         self.site = 'http://127.0.0.1:5984';//process.env.COUCHDB;
+        self.data = self.collection.toJSON();
     },
 
     //Class Renderer
@@ -292,142 +298,12 @@ window.QuestionsView = Backbone.View.extend({
 
         //Check Local Auth
         if (!self.auth()) {
-            return false;
+            showLoginModal($("body"));
         }
-        self.data = self.model.toJSON();
+        getFilters();
+
         self.data.sort(sortJsonByCol('title'));
         $(this.el).html(this.template({collection: self.data}));
-
-        //Gets all registed categories
-        modem('GET', 'category',
-
-            //Response Handler
-            function (json) {
-
-                $.each(json, function (i, key) {
-                    var $content = $("<ul >", {class: "dropdown-menu pull-left"});
-
-                    $("#selectSubject").append(
-                        $("<li>", {class: "dropdown-submenu pull-left"}).append(
-                            $("<a>", {
-                                class: "dropdown-toggle contentFilter",
-                                "data-toggle": "dropdown",
-                                html: key.doc.subject,
-                                value: key.doc._id
-                            }).append(
-                                $("<b >", {class: "caret"})
-                            ),
-                            $content
-                        )
-                    );
-
-                    $.each(key.doc.content, function (idc, content) {
-                        var $description = $("<ul >", {class: "dropdown-menu pull-left"});
-                        $content.append(
-                            $("<li>", {class: "dropdown-submenu pull-left"}).append(
-                                $("<a>", {
-                                    class: "dropdown-toggle contentFilter",
-
-                                    html: content.name,
-                                    value: content._id
-                                }).append(
-                                    $("<b >", {class: "caret"})
-                                ),
-                                $description
-                            )
-                        );
-                        $.each(content.specification, function (ids, specif) {
-
-                            $description.append(
-                                $("<li>", {class: "dropdown-submenu pull-left"}).append(
-                                    $("<a>", {
-                                        class: "dropdown-toggle contentFilter",
-                                        "data-toggle": "dropdown",
-                                        html: specif.name,
-                                        value: specif._id
-                                    })
-                                )
-                            );
-
-                        });
-                    });
-
-                });
-            },
-
-            //Error Handling
-            function (xhr, ajaxOptions, thrownError) {
-            }
-        );
-        /*
-
-         //Return Questions
-         modem('GET', 'questions',
-
-         //Response Handler
-         function (json) {
-         $('#questionsBadge').text(json.length);
-
-         //Append Question Buttons To Template
-         $.each(json, function (i, quest) {
-
-         //     console.log(quest.doc)
-         //Select Question Type Image
-         // console.log(quest);
-         var $imgT = "../img/" + (quest.doc.type).toLowerCase() + ".png";
-
-
-         //Select quest Class Image
-         var subject = (quest.doc.subject).split(":");
-         //         console.log(subject[0])
-         var $imgC = "../img/" + subject[0] + ".png";
-
-
-         //Select BG Color
-         var background = "none";
-         if (window.sessionStorage.getItem("username") == quest.doc.profID)
-         background = "#FBF6B4";
-
-         var $edit = $("<a>", {
-         href: "#questionsText/" + this.doc._id,
-         val: this.doc._id,
-         title: "Editar pergunta",
-         }).append('<i id="btnEdit" class="fa fa-edit"></i>')
-         ;
-
-         //Botao de eliminar
-         var $delete = $("<a>", {
-
-         val: quest.doc._id,
-         title: "Apagar pergunta",
-         }).append('<i class="fa fa-trash-o"></i>')
-         .click(function () {
-         self.confirmDelete(quest.doc._id, quest.doc.title, quest.doc.profID);
-         });
-         //Separa o nome para recolher apenas o primeiro e o utimo
-         var $div = $("<div>", {
-         class: "listButton divWidget",
-         style: "background-color:" + background,
-         type: quest.doc.type,
-         value: quest.doc.subject
-         }).append("<img src=" + $imgT + "><img  src='" + $imgC + "'><span>" + quest.doc.title + "</span>")
-         //  .append($edit)
-         .append($("<div>", {class: "editDeleteOp"}).append($edit, $delete))
-         .click(function () {
-         self.enchePreview(quest.doc);
-         });
-
-         $("#questionsContent").append($div);
-         })
-         ;
-         self.enchePreview(json[0].doc);
-         },
-
-         //Error Handling
-         function (xhr, ajaxOptions, thrownError) {
-         failMsg($("#questionsContent"), "Não foi possível listar as perguntas. \n (" + JSON.parse(xhr.responseText).error + ").");
-         }
-         );*/
 
         return this;
     }

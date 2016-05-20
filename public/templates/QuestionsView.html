@@ -1,10 +1,9 @@
 <div id="questionsDiv" class="mainDiv">
-
     <div class="col-md-12">
         <section class="panel subMenu">
 
             <ul class="nav navbar-nav">
-                <li><a>Total: <label id="questionsBadge" class=""></label>
+                <li><a>Total: <label id="questionsBadge" class=""><%=collection.length%></label>
                 </a></li>
                 <li>
                     <div class="input-group" style="width: 350px;padding-top: 11px;">
@@ -104,7 +103,7 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-filter"></i> Disciplina
                         <b class="caret"></b></a>
-                    <ul class="dropdown-menu" id="selectSubject">
+                    <ul class="dropdown-menu" id="selectSubject" filter="">
                         <li class="dropdown-submenu pull-left">
                             <a class=" contentFilter"
                                data-toggle="dropdown"
@@ -119,11 +118,11 @@
         <!-- END REGIONAL STATS PORTLET-->
     </div>
 
-    <div class=" panel-body col-md-5" align="center">
+    <div class="panel-scroll col-md-5" align="center">
         <div id="questionsContent" class=" panel-body col-md-12" align="center">
             <% _.each(collection,function(question){ %>
             <div class="listButton divWidget row" value=" <%= question.subject %>"
-                 id='<%= question._id %>'
+                 id='<%= question._id %>' type="<%= question.type %>"
             <% if ( question.profID == window.sessionStorage.getItem('username') ){ %>
             style="background-color:#FBF6B4"
             <% } %>
@@ -142,7 +141,7 @@
     </div>
 
 </div>
-<div class="col-md-7" style="padding: 30px; " align="center">
+<div class="col-md-7" style="padding: 15px 30px; " align="center">
     <div id="questionsPreview" class="col-md-12 divWidget" align="center">
 
     </div>

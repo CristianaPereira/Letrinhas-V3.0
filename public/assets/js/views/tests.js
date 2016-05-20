@@ -20,7 +20,7 @@ window.TestsView = Backbone.View.extend({
         //Recolhe a info de cada uma das perguntas do teste
         $(".carousel-indicators").empty();
         $("#myCarousel .carousel-inner").empty();
-        $.each(test.questions, function (testKey, test) {
+        $.each(test.questions, function (testKey, quest) {
             //Adiciona o botao
             $(".carousel-indicators").append($('<li>', {
                 'data-target': '#myCarousel',
@@ -28,21 +28,23 @@ window.TestsView = Backbone.View.extend({
             }));
 
 
-            var test = new Question({id: test});
-            test.fetch(function () {
+            var question = new Question({id: quest});
+            question.fetch(function () {
+                //Adiciona o titulo
+                $("#previewModalTitle").text(test.title)
                 //Adiciona a div onde será apresentado o conteúdo
                 $("#myCarousel .carousel-inner").append($('<div>', {
-                    class: 'item', html: test.attributes.title, id: 'questionsPreview' + testKey
+                    class: 'item', html: quest.title, id: 'questionsPreview' + testKey
                 }));
                 //Exibe os dados do teste
-                self.enchePreview(test.attributes, testKey);
+                self.enchePreview(question.attributes, testKey);
                 //Exibe a primeira pergunta do teste
                 $('#myCarousel .carousel-indicators li:first').addClass('active');
                 $('#myCarousel .carousel-inner > div:first').addClass('active');
             })
 
         });
-
+        $("#previewModal").modal().show();
     },
 
 
@@ -61,14 +63,7 @@ window.TestsView = Backbone.View.extend({
                 }).append("<hr>"),
                 $('<div>', {
                     class: "form-group"
-                }).append(
-                    $('<label>', {
-                        class: "col-md-3 lblDataDetails", text: "Descrição:"
-                    }),
-                    $('<label>', {
-                        class: "col-md-9 ", text: question.description
-                    })
-                ),
+                }),
                 $('<div>', {
                     class: "form-group"
                 }).append(
@@ -169,9 +164,14 @@ window.TestsView = Backbone.View.extend({
         var wordsList = question.content.text.split(" ");
 
         $.each(wordsList, function (i, word) {
-            var $span = $('<span>', {text: word});
-            if (question.content.sid.indexOf(i + "") != -1) {
-                $span.addClass("markedWord")
+            if (word == '<br>') {
+                var $span = $('<br>', {});
+            } else {
+                var $span = $('<span>', {text: word});
+                if (question.content.sid.indexOf(i + "") != -1) {
+                    $span.addClass("markedWord")
+                }
+
             }
             $text.append($span, " ");
         });
@@ -245,7 +245,7 @@ window.TestsView = Backbone.View.extend({
             return false;
         }
 
-
+        getFilters();
         $(this.el).html(this.template({collection: self.data}));
 
         return this;

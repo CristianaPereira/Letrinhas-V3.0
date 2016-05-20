@@ -1,27 +1,27 @@
 <div class="form">
     <div id="myPreview" class="row divWidget" align="center">
         <div class="col-md-4"><img
-                src="<%= imgb64 %>"
+                src="<%= b64 %>"
                 class="dataImage">
         </div>
         <div class="col-md-8">
-            <label class="dataTitle col-md-12"><%= nome %></label><br>
+            <label class="dataTitle col-md-12"><%= name %></label><br>
             <label class="col-md-12 dataSubTitle"><%= permissionLevel %></label><br>
             <label class="col-md-4 lblDataDetails">E-mail:</label>
             <label class="col-md-8"><%= _id %></label><br>
             <label class="col-md-4 lblDataDetails">Telefone:</label>
-            <label class="col-md-8"><%= telefone %></label><br>
+            <label class="col-md-8"><%= phoneNumber %></label><br>
             <div class="col-md-12">
                 <hr class="dataHr">
             </div>
             <div id="classesList" class="col-md-12" align="left">
                 <div id="prfSchool" align="left">
-                    <label id="assocClasses"><%= nome %>, tem <%= schools.length%> turma(s) associada(s).</label>
+                    <label id="assocClasses"><%= classes.length%> turma(s) associada(s).</label>
 
                     <!--Por cada escola correspondente-->
-                    <% _.each(schools,function(school){ %>
+                    <% _.each(classes,function(school){ %>
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-12">
                             <i class="fa fa-university"></i>
                             <label><%= school.id %></label>
                         </div>
@@ -30,9 +30,6 @@
                             <% _.each(school.class,function(classes){ %>
                             <button class="classBtn" id="<%= classes.id %>"><%= classes.name %></button>
                             <% }); %>
-                        </div>
-                        <div class="col-md-12">
-
                         </div>
                     </div>
                     <% }); %>

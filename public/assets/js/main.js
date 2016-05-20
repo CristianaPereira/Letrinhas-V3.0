@@ -346,7 +346,7 @@ var Router = Backbone.Router.extend({
                 var ss = new Questions();
                 ss.fetch(function () {
                     var v = new QuestionsView({
-                        model: ss
+                        collection: ss
                     });
                     self.showView(v, $('#content'));
                 })

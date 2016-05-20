@@ -360,6 +360,65 @@ window.getSetCategories = function (cate) {
     );
 };
 
+//Gets categories filters to questions and tests
+window.getFilters = function () {
+    var categories = new Categories();
+    categories.fetch(
+        //Response Handler
+        function () {
+            categories.each(function (item) {
+                var $content = $("<ul >", {class: "dropdown-menu pull-left"});
+
+                $("#selectSubject").append(
+                    $("<li>", {class: "dropdown-submenu pull-left"}).append(
+                        $("<a>", {
+                            class: "dropdown-toggle contentFilter",
+                            "data-toggle": "dropdown",
+                            html: item.get("subject"),
+                            value: item.get("_id")
+                        }).append(
+                            $("<b >", {class: "caret"})
+                        ),
+                        $content
+                    )
+                );
+                $.each(item.get("content"), function (idc, content) {
+                    var $description = $("<ul >", {class: "dropdown-menu pull-left"});
+                    $content.append(
+                        $("<li>", {class: "dropdown-submenu pull-left"}).append(
+                            $("<a>", {
+                                class: "dropdown-toggle contentFilter",
+
+                                html: content.name,
+                                value: content._id
+                            }).append(
+                                $("<b >", {class: "caret"})
+                            ),
+                            $description
+                        )
+                    );
+                    $.each(content.specification, function (ids, specif) {
+
+                        $description.append(
+                            $("<li>", {class: "dropdown-submenu pull-left"}).append(
+                                $("<a>", {
+                                    class: "dropdown-toggle contentFilter",
+                                    "data-toggle": "dropdown",
+                                    html: specif.name,
+                                    value: specif._id
+                                })
+                            )
+                        );
+
+                    });
+                });
+
+            });
+        }
+    );
+};
+
+
 window.setPopOver = function (campos) {
     $('#infoPop').popover({
         placement: 'left',
@@ -610,9 +669,12 @@ window.attemptLogin = function () {
     modem('GET', 'me',
 
         //Response Handler
-        function (json) {
+        function (user) {
             //Hides Login Modal
             $("#mLogin").modal("hide");
+            window.sessionStorage.setItem("username", user._id)
+            window.sessionStorage.setItem("name", user.name)
+            window.sessionStorage.setItem("b64", user.b64)
             //Reloads actual view
             app.navigate("user", {
                 trigger: true

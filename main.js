@@ -179,7 +179,7 @@ app.use('/', router);
 
 
 //-----------------------------------------------------CATEGORIES
-app.route('/category')
+app.route('/categories')
     .get(auth, perms(2), category.getAll);
 
 //-----------------------------------------------------QUESTIONS

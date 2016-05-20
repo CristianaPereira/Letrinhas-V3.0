@@ -2,17 +2,17 @@
  * --------------------------------------- */
 
 html {
-    /* height: 100%;
-     position: fixed;*/
+    position: fixed;
     min-width: 100%;
     min-height: 100%;
 }
 
 body {
     font-family: arial, helvetica;
-
+    position: absolute;
+    height: 100%;
+    width: 100%;
     min-width: 350px;
-
     /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#fac7da+0,f5efe3+15,ffffff+50,e6f1f2+85,92cabc+100 */
     background: rgb(250, 199, 218); /* Old browsers */
     background: -moz-linear-gradient(-45deg, rgba(250, 199, 218, 1) 0%, rgba(245, 239, 227, 1) 15%, rgba(255, 255, 255, 1) 50%, rgba(230, 241, 242, 1) 85%, rgba(146, 202, 188, 1) 100%); /* FF3.6-15 */
@@ -20,6 +20,26 @@ body {
     background: linear-gradient(135deg, rgba(250, 199, 218, 1) 0%, rgba(245, 239, 227, 1) 15%, rgba(255, 255, 255, 1) 50%, rgba(230, 241, 242, 1) 85%, rgba(146, 202, 188, 1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fac7da', endColorstr='#92cabc', GradientType=1); /* IE6-9 fallback on horizontal gradient */
 
+}
+
+#myFoto {
+    border: 1px solid #eeeeee;
+    height: 40px
+}
+
+#myFoto:hover {
+    border: none;
+}
+
+#page, #content {
+    position: relative;
+    height: 100%;
+}
+
+.panel-scroll {
+    overflow: auto;
+    height: inherit;
+    padding-bottom: 50px;
 }
 
 .dropdown-submenu {
@@ -85,8 +105,8 @@ body {
 }
 
 #page {
-    padding-bottom: 90px;
     padding-top: 50px;
+    overflow: auto;
 }
 
 #homeBar img {
@@ -545,7 +565,9 @@ label {
 }
 
 .carousel-control.left, .carousel-control.right {
-    background-image: none
+    background-image: none;
+    margin-right: -50px;
+    margin-left: -50px;
 }
 
 .fa-remove, .fa-trash-o {
@@ -690,9 +712,11 @@ label {
 }
 
 .mainDiv {
-    max-width: 90%;
-    margin: auto;
-    margin-top: 20px;
+    /* max-width: 90%; */
+    padding: 20px;
+    position: absolute;
+    height: 100%;
+    width: 100%;
 }
 
 .subMenu-Item {
@@ -937,7 +961,7 @@ div.upload input {
 
 .editDeleteOp {
     position: absolute;
-    top: 15px;
+    top: 5px;
     height: initial;
     right: 10px;
 }
