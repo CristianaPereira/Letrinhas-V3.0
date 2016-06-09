@@ -43,6 +43,7 @@ var Schools = Backbone.Collection.extend({
     //Gets specific item from collection
     getByID: function (id) {
         var self = this;
+        console.log(self.models);
         return (
             self.models.find(function (model) {
                 return model.get('_id') === id;

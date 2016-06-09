@@ -120,7 +120,38 @@
     </div>
     <div class=" panel-body">
         <div id="resolutionsContent" class=" panel-body col-md-12" align=center>
+            <% _.each(collection,function(resolution){ %>
+            <div class="row">
+                <div class="listButton divWidget"
+                     id='<%= resolution._id %>'>
 
+                    <img src="<%= resolution.studentFoto %>">
+                    <img src="../img/<%= resolution.type %>.png">
+                    <img src='../img/<%= resolution.subject.split(":")[0] %>.png'>
+                    <span><%= resolution.studentName %> (<%= resolution.resolutionDate %>)</span>
+
+                    <div class="editDeleteOp">
+                        <div class="dropdown">
+                            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                                <i class="fa fa-gear "></i> <span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li><a href="#resolutions/<%= resolution._id %>/<%= resolution.type %>"
+                                       title="Corrigir">
+
+                                    <i id="btnEdit" class="fa fa-check-square-o fa-2x"></i>
+                                </a>
+                                </li>
+                                <li><a href="#students" class="delete" title="Apagar aluno">
+                                    <i class="fa fa-trash-o fa-2x"></i>
+                                </a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <% }); %>
         </div>
     </div>
 </div>

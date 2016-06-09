@@ -1,6 +1,7 @@
 window.TestsView = Backbone.View.extend({
     events: {
         'click .listButton': "fillPreview",
+        "click #orderBy": "orderTests"
     },
 
     //Check Auth
@@ -10,7 +11,11 @@ window.TestsView = Backbone.View.extend({
         }
         return true;
     },
+    orderTests: function (e) {
+        var mylist = $('#testsContent');
 
+        orderContentList(mylist, e);
+    },
 
     fillPreview: function (e) {
         var self = this;
@@ -233,7 +238,7 @@ window.TestsView = Backbone.View.extend({
     initialize: function () {
         this.data = this.collection.toJSON();
         this.bd2 = 'let_questions';
-        this.site = 'http://127.0.0.1:5984';//process.env.COUCHDB;
+        this.site = 'http://letrinhas.pt:5984';//process.env.COUCHDB;
     },
 
     //Class Renderer

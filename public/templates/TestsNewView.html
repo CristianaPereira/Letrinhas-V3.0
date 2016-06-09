@@ -46,17 +46,17 @@
                     </div>
                     <div class="col-sm-3 row">
                         <select class="form-control mandatory" id="selectSubject" name="subject">
-                            <option value="" disabled selected>Disciplina</option>
+                            <option disabled selected>Disciplina</option>
                         </select>
                     </div>
                     <div class="col-sm-3 row">
                         <select class="form-control mandatory" id="selectContent" name="content">
-                            <option value="" disabled selected>Conteúdo</option>
+                            <option disabled selected>Conteúdo</option>
                         </select>
                     </div>
                     <div class="col-sm-4 row">
                         <select class="form-control mandatory" id="selectSpecification" name="specification">
-                            <option value="" disabled selected>Especificação</option>
+                            <option disabled selected>Especificação</option>
                         </select>
                     </div>
                     <div class="row col-sm-12">
@@ -68,7 +68,7 @@
                         <span class="glyphicon"><i class="fa fa-comment-o"></i></span>
                     </div>
                     <!-- BOTOES -->
-                    <legend>Perguntas <label id="questionsBadge" class="badge">
+                    <legend>Perguntas <label id="questionsTestBadge" class="badge">
                         0
                     </label>
                         <button type="button" class="btn-Add" data-toggle="modal" data-target="#myModal">
@@ -149,33 +149,104 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Modal Header</h4>
+                <h4 class="modal-title">Lista de perguntas</h4>
             </div>
-            <div class="modal-body" id="allQuestions">
-                <% _.each(questions, function(question) { %>
+            <div class="modal-body">
+                <section class="panel subMenu">
 
-                <div class="listButton divWidget row" value=" <%= question.subject %>"
-                     id='<%= question._id %>'
-                <% if ( question.profID == window.sessionStorage.getItem('username') ){ %>
-                style="background-color:#FBF6B4"
-                <% } %>
-                >
+                    <ul class="nav navbar-nav">
+                        <li><a>Total: <label id="questionsBadge" class=""><%=questions.length%></label>
+                        </a></li>
 
-                <img src="../img/<%= question.type %>.png" class="smallImgPreView">
-                <img src='../img/<%= question.subject.split(":")[0] %>.png'>
-                <span><%= question.title %></span>
-                <div class="editDeleteOp">
-                    <span class="btn-white"><i value="<%=question._id%>"
-                                               class="fa fa-plus addQuestion"></i></span>
+                        <li><a id="orderBy" class="order"><i class="fa fa-sort-alpha-asc"></i> </a></li>
+
+                        <!-- Filter by -->
+                        <li class="dropdown">
+                            <a href="#" data-toggle="dropdown" class="dropdown-toggle"><i class="fa fa-filter"></i>
+                                Tipo </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="filter">
+                                    <input type="checkbox" value="text" checked>
+                                    <img src="../../img/text.png" style="height:20px">
+                                    <span> Texto </span></a></li>
+                                <li><a class="filter">
+                                    <input type="checkbox" value="multimedia" checked>
+                                    <img src="../../img/multimedia.png" style="height:20px">
+                                    <span> Multimédia </span></a>
+                                </li>
+                                <li><a class="filter">
+                                    <input type="checkbox" value="list" checked>
+                                    <img src="../../img/list.png" style="height:20px">
+                                    <span> Lista </span></a>
+                                </li>
+                                <li><a class="filter">
+                                    <input type="checkbox" value="interpretation" checked>
+                                    <img src="../../img/interpretation.png" style="height:20px">
+                                    <span> Interpretação </span></a>
+                                </li>
+
+                                <li class="divider"></li>
+                                <li><a class="filter">
+                                    <input type="checkbox" value="whitespaces" checked>
+                                    <img src="../../img/whitespaces.png" style="height:20px">
+                                    <span> Espaços </span></a></li>
+                                <li><a class="filter">
+                                    <input type="checkbox" value="connections" checked>
+                                    <img src="../../img/connections.png" style="height:20px">
+                                    <span> Ligações </span></a>
+                                </li>
+                                <li><a class="filter">
+                                    <input type="checkbox" value="regions" checked>
+                                    <img src="../../img/regions.png" style="height:20px">
+                                    <span> Regiões </span></a>
+                                </li>
+                                <li><a class="filter">
+                                    <input type="checkbox" value="boxes" checked>
+                                    <img src="../../img/boxes.png" style="height:20px">
+                                    <span> Caixas </span></a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-filter"></i>
+                                Disciplina
+                                <b class="caret"></b></a>
+                            <ul class="dropdown-menu" id="filterSubject" filter="">
+                                <li class="dropdown-submenu pull-left">
+                                    <a class=" contentFilter"
+                                       data-toggle="dropdown"
+                                       value=""
+                                       aria-expanded="false">Ver todas</a>
+                                </li>
+
+                            </ul>
+                        </li>
+                    </ul>
+                </section>
+                <div id="allQuestions" style="margin: 20px">
+                    <% _.each(questions, function(question) { %>
+
+                    <div class="listButton divWidget row" value=" <%= question.subject %>"
+                         id='<%= question._id %>' type="<%= question.type %>"
+                    <% if ( question.profID == window.sessionStorage.getItem('username') ){ %>
+                    style="background-color:#FBF6B4"
+                    <% } %>>
+
+                    <img src="../img/<%= question.type %>.png" class="smallImgPreView">
+                    <img src='../img/<%= question.subject.split(":")[0] %>.png'>
+                    <span><%= question.title %></span>
+                    <div class="editDeleteOp">
+                            <span class="btn-white">
+                                <i value="<%=question._id%>" class="fa fa-plus addQuestion"></i>
+                            </span>
+                    </div>
                 </div>
-
+                <% }); %>
             </div>
-            <% }); %>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
     </div>
+    <div class="modal-footer">
+    </div>
+</div>
+</div>
 
-</div>
-</div>

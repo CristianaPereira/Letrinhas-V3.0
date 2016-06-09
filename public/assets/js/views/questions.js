@@ -2,9 +2,11 @@ window.QuestionsView = Backbone.View.extend({
     events: {
         "click #deletebtn": "deleteQuestion",
         'click [type="checkbox"]': "filterBy",
+        'click dropdown-submenu': "filterBy",
         'click .contentFilter': "filterBycontent",
+        "keyup #txtSearch": "filterBy",
         'click .listButton': "enchePreview",
-        "keyup #txtSearch": "searchTests",
+
         "click #orderBy": "orderQuestions"
     },
 
@@ -14,20 +16,6 @@ window.QuestionsView = Backbone.View.extend({
             return false;
         }
         return true;
-    },
-
-    //Search School
-    searchTests: function (e) {
-        $(".listButton").hide();
-        $(".listButton:containsi(" + $(e.currentTarget).val() + ")").show();
-
-
-        //Esconde os testes cujas checkboxes não estão seleccionadas
-        $.each($(".listButton"), function (i, k) {
-            if ($(k).attr("value").indexOf($(e.currentTarget).val()) != -1) {
-                $(k).show();
-            }
-        });
     },
 
     //Solicita confirmação para apagar o professor
@@ -41,8 +29,8 @@ window.QuestionsView = Backbone.View.extend({
             function (json) {
 
                 if (json._id == prof) {
-                    var modal = delModal("Apagar escola",
-                        "Tem a certeza que pretende eliminar o questione <label>" + nome + " </label> ?",
+                    var modal = delModal("Apagar pergunta",
+                        "Tem a certeza que pretende eliminar a pergunta <label>" + nome + " </label> ?",
                         "deletebtn", id);
 
                     $('#questionsDiv').append(modal);
@@ -64,7 +52,7 @@ window.QuestionsView = Backbone.View.extend({
         modem('POST', 'questions/' + e.target.value + '/remove',
             //Response Handler
             function () {
-                sucssesMsg($("#schoolsDiv"), "Escola apagada com sucesso!");
+                sucssesMsg($("#schoolsDiv"), "Pergunta apagada com sucesso!");
                 setTimeout(function () {
                     document.location.reload(true);
                 }, 2000);
@@ -76,7 +64,6 @@ window.QuestionsView = Backbone.View.extend({
         );
     },
 
-
     orderQuestions: function (e) {
         var mylist = $('#questionsContent');
 
@@ -85,33 +72,35 @@ window.QuestionsView = Backbone.View.extend({
 
     //Applys filters
     filterBy: function () {
-        //Mostra todos os testes
-        $(".listButton").show();
+        var typedText = $("#txtSearch").val();
+
+        //Esconde todos os testes
+        $(".listButton").hide();
+        //Mostra apenas os que contém a string escrita
+        $(".listButton:containsi(" + typedText + ")").show();
+
         //Esconde os testes cujas checkboxes não estão seleccionadas
         $.each($("input:checkbox:not(:checked)"), function (i, k) {
             console.log($(k).attr("value"))
             $(".listButton[type=" + $(k).attr("value") + "]").hide();
         });
 
-        //Dos teste que estao visiveis
+        //Esconde os que ao correspondem conteudos seleccionados
         $.each($(".listButton:visible"), function (i, k) {
             //Se nao pertencerem à categoria escolhida, esconde-os
-            if ($(k).attr("value").indexOf($("#selectSubject").attr("filter")) == -1) {
+            if ($(k).attr("value").indexOf($("#filterSubject").attr("filter")) == -1) {
                 $(k).hide();
             }
         });
-
         $("#questionsBadge").text($(".listButton:visible").length + "/" + this.data.length)
 
     },
 
     //Applys filters
     filterBycontent: function (e) {
-
         var self = this;
-        $("#selectSubject").attr("filter", $(e.target).attr("value"));
+        $("#filterSubject").attr("filter", $(e.target).attr("value"));
         self.filterBy();
-
     },
 
     //Text Preview
@@ -178,7 +167,7 @@ window.QuestionsView = Backbone.View.extend({
     textPreview: function (question) {
         var self = this;
         self.addVioice(self.site + "/" + self.bd2 + "/" + question._id + "/voice.mp3");
-        $("#questionBox").append($('<label>', {class: 'questBox', text: question.content.text}));
+        $("#questionBox").append($('<textarea>', {class: 'questBox', rows: 10, text: question.content.text}));
 
     },
 
@@ -303,6 +292,7 @@ window.QuestionsView = Backbone.View.extend({
         getFilters();
 
         self.data.sort(sortJsonByCol('title'));
+
         $(this.el).html(this.template({collection: self.data}));
 
         return this;

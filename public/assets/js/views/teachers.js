@@ -128,7 +128,7 @@ window.TeachersView = Backbone.View.extend({
 
     //Class Initializer
     initialize: function () {
-        this.data = this.collection.toJSON();
+
     },
 
     render: function () {

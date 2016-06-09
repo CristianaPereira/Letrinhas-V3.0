@@ -125,13 +125,13 @@ var auth = function (req, res, next) {
                 else {
                     //Report Error (Rong Password)
                     console.log("Login Attempt Failed - Wrong info");
-                    res.status(401).json({});
+                    return res.status(401).json({text: 'Dados incorrectos.'});
                 }
             }
             else {
                 //Report Error (Rong Username)
                 console.log("Login Attempt Failed" + err);
-                res.status(401).json({});
+                return res.status(401).json({text: 'Utilizador não encontrado.'});
             }
 
         });
@@ -139,9 +139,7 @@ var auth = function (req, res, next) {
     else {
         //Report Error (No Auth Credentials)
         console.log("Login Attempt Failed - Missing user");
-        return res.status(401).json({
-            'result': 'Não está Loggado'
-        });
+        return res.status(401).json({text: 'Não está Loggado'});
     }
 
 };
@@ -182,6 +180,9 @@ app.use('/', router);
 app.route('/categories')
     .get(auth, perms(2), category.getAll);
 
+app.route('/categories/specification')
+    .post(auth, perms(2), category.addSpecif);
+
 //-----------------------------------------------------QUESTIONS
 
 app.route('/questions')
@@ -195,6 +196,9 @@ app.route('/questions/:id')
 //-----------------------------------------------------RESOLUTIONS
 
 app.route('/resolutions')
+    .get(auth, tself, perms(2), resolutions.getAll);
+
+app.route('/resolutions/:id')
     .get(auth, tself, perms(2), resolutions.get);
 
 //-----------------------------------------------------SCHOOLS
@@ -227,7 +231,8 @@ app.route('/students/:id')
     .get(auth, perms(2), students.get)
     .delete(auth, perms(3), students.removeStudent);
 
-
+app.route('/students/exist')
+    .post(auth, tself, perms(2), students.exist);
 //-----------------------------------------------------TEACHERS
 
 app.route('/me')//GETS ACTUAL USER DATA

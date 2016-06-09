@@ -1,0 +1,96 @@
+<div class="form">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div align="center" class="titleBox">
+                <img class="titleImage">
+        <span class="titleText">
+           <img src="../img/list.png" style="height:40px;">
+       Correcção de pergunta de Texto
+        </span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <img class="smallImgPreView" src="<%=model.student.b64 %>">
+                <span><%= model.student.name %> (<%= model.resolutionDate %>)</span>
+                <i id="infoPop" class="fa fa-info-circle" style="float: right;"></i>
+            </div>
+            <div class="panel-body">
+                <form id="newListTestForm" role="form" method="POST" action="/questions" enctype="multipart/form-data">
+
+                    <!-- TUTULO-DISCIPLINA-ANOESCOLAR -->
+
+                    <div class="col-sm-6 row">
+                        <div class="input-group">
+                            <span class="input-group-addon btn-white"><i class="fa fa-tag"></i></span>
+                            <input type="text" class="form-control"
+                                   placeholder=" <%=model.question.title%>" disabled>
+                        </div>
+
+                    </div>
+                    <!-- PERGUNTA-DESCRIÇÃO -->
+                    <div class="col-sm-6 row">
+                        <div class="input-group">
+                            <span class="input-group-addon btn-white"><i class="fa fa-question"></i></span>
+                            <input type="text" class="form-control" placeholder=" <%=model.question.question%>"
+                                   disabled>
+                        </div>
+
+                    </div>
+                    <div class="col-md-12">
+                        <div class="questBox">
+                            <!-- Lista de palavras -->
+                            <% _.each(model.question.content.text.split(' '),function(word){ %>
+
+                            <span id=""><%=word%></span>
+
+                            <% }); %>
+                        </div>
+                    </div>
+
+                    <!-- Audio -->
+                    <div class="col-sm-12">
+                        <h4>Áudio</h4>
+                        <hr style="background-color: #b0aac2;">
+                        <br>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="col-md-12">Professor:</label>
+                        <audio class="col-md-12" controls="controls">
+                            <source src="<%=model.audioProf%>"
+                                    type=" audio/mp3">
+                        </audio>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="col-md-12">Aluno:</label>
+                        <audio class="col-md-12" controls="controls">
+                            <source src="<%=model.audioStudent%>"
+                                    type="audio/mpeg">
+                        </audio>
+                    </div>
+
+
+                    <div class="col-sm-12">
+                        <br>
+                        <div class="col-sm-5 col-md-offset-7">
+                            <div class="col-sm-6">
+                                <button id="backbtn" type="reset" class="btn btn-default btn-block btn-cancel">
+                                    Cancelar
+                                </button>
+                            </div>
+                            <div class="col-sm-6">
+                                <button id="subTxt" type="submit" class="btn btn-success btn-block btn-created"
+                                        title="Todos os campos são de preenchimento obrigatório.">
+                                    Submeter
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

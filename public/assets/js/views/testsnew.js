@@ -2,28 +2,64 @@ window.TestsNewView = Backbone.View.extend({
     events: {
         "click .addQuestion": "addQuestion",
         "click .removeQuestion": "removeQuestion",
+        'click [type="checkbox"]': "filterBy",
+        'click .contentFilter': "filterBycontent",
+        "click #orderBy": "orderQuestions",
         "click #newtestbtn": "beforeSend",
+    },
+
+    orderQuestions: function (e) {
+        var mylist = $('#allQuestions');
+        orderContentList(mylist, e);
+    },
+    //Applys filters
+    filterBy: function () {
+        //Esconde todos os testes
+        $("#allQuestions .listButton").show();
+        //Esconde os testes cujas checkboxes não estão seleccionadas
+        $.each($("input:checkbox:not(:checked)"), function (i, k) {
+            console.log($(k).attr("value"))
+            $("#allQuestions .listButton[type=" + $(k).attr("value") + "]").hide();
+        });
+
+        //Esconde os que ao correspondem conteudos seleccionados
+        $.each($("#allQuestions .listButton:visible"), function (i, k) {
+            //Se nao pertencerem à categoria escolhida, esconde-os
+            if ($(k).attr("value").indexOf($("#filterSubject").attr("filter")) == -1) {
+                $(k).hide();
+            }
+        });
+        $("#questionsBadge").text($("#allQuestions .listButton:visible").length + "/" + $("#allQuestions .listButton").length)
+
+    },
+
+    //Applys filters
+    filterBycontent: function (e) {
+        var self = this;
+        $("#filterSubject").attr("filter", $(e.target).attr("value"));
+        self.filterBy();
     },
 
     //Move element to test list
     addQuestion: function (e) {
 
-        //Incrementa o nr de perguntas
-        $("#questionsBadge").text(parseInt($("#questionsBadge").text()) + 1)
         //Move o elemento
         $("#" + $(e.currentTarget).attr("value"))
             .appendTo("#questionsList");
         //Altera o icon
         $(e.currentTarget).removeClass("fa-plus addQuestion").addClass(
             "fa-remove removeQuestion"
-        )
+        );
+
+        //Incrementa o nr de perguntas
+        $("#questionsTestBadge").text($("#questionsList .listButton").length);
+        $("#questionsBadge").text($("#allQuestions .listButton:visible").length + "/" + $("#allQuestions .listButton").length)
+
     },
 
     //Move element to questions list
     removeQuestion: function (e) {
 
-        //Incrementa o nr de perguntas
-        $("#questionsBadge").text(parseInt($("#questionsBadge").text()) - 1)
         //Move o elemento
         $("#" + $(e.currentTarget).attr("value"))
             .appendTo("#allQuestions");
@@ -31,6 +67,11 @@ window.TestsNewView = Backbone.View.extend({
         $(e.currentTarget).removeClass("fa-remove removeQuestion").addClass(
             "fa-plus addQuestion"
         )
+
+        //Incrementa o nr de perguntas
+        $("#questionsTestBadge").text($("#questionsList .listButton").length)
+        $("#questionsBadge").text($("#allQuestions .listButton:visible").length + "/" + $("#allQuestions .listButton").length)
+
     },
 
     //Before Sending Request To Server
@@ -54,18 +95,18 @@ window.TestsNewView = Backbone.View.extend({
             //Adiciona os seus id's ao array de perguntas
             $.each(questions, function (iQ, question) {
                 test.attributes.questions.push($(question).attr("id"))
-                console.log($(question).attr("id"))
             })
 
+            console.log(questions)
             console.log(test.attributes)
             test.save(null, {
                 success: function (user) {
                     sucssesMsg($(".form"), "Teste inserido com sucesso!");
-                    //setTimeout(function () {
-                    //    app.navigate("schools", {
-                    //        trigger: true
-                    //    });
-                    //}, 1500);
+                    setTimeout(function () {
+                        app.navigate("tests", {
+                            trigger: true
+                        });
+                    }, 2000);
                 },
                 error: function (model, response) {
                     console.log()
@@ -88,6 +129,8 @@ window.TestsNewView = Backbone.View.extend({
         self.data.sort(sortJsonByCol('title'));
 
         getCategories();
+
+        getFilters();
 
         //Renders view with questions collection
         this.$el.html(this.template({questions: self.data}));

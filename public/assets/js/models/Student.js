@@ -18,6 +18,27 @@ var Student = Backbone.Model.extend({
                 error_launch(json.message);
             }
         );
+    },
+    exist: function (username, after_fetch) {
+        var self = this;
+        //Generate Form Data
+        var fd = new FormData();
+        //puts username fields
+        fd.append("username", username);
+        //sends id
+        modem('POST', 'students/exist',
+            function (response) {
+                after_fetch(response);
+            },
+            //Precisamos enviar para a Tabela escolas o id do professor.
+            function (xhr, ajaxOptions, thrownError) {
+                var json = JSON.parse(xhr.responseText);
+                console.log(xhr)
+                console.log(ajaxOptions)
+                console.log(thrownError)
+            },
+            fd
+        );
     }
 });
 
@@ -27,6 +48,7 @@ var Students = Backbone.Collection.extend({
         var self = this;
         modem('GET', 'students',
             function (json) {
+                console.log(json)
                 for (i = 0; i < json.length; i++) {
                     self.models.push(new Student(json[i].doc));
                 }

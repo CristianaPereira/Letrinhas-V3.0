@@ -1,0 +1,55 @@
+<div class="form">
+    <div class="panel-group" id="accordion">
+        <!--Por cada categoria-->
+        <% _.each(collection,function(category){ %>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#<%=category._id%>">
+                        <%=category.subject%></a>
+                    <span class="badge">das</span>
+                </h4>
+            </div>
+            <div id="<%=category._id%>" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <!--Por cada conteudo-->
+                    <% _.each(category.content,function(content){ %>
+                    <ul class="list-group">
+                        <li class="list-group-item list-group-item-warning">
+                            <span class="badge"><%=content.specification.length%></span>
+                            <div class="options">
+                                <button class="fa fa-trash"><%=content.id%></button>
+                                <button class="fa fa-pencil"><%=content.id%></button>
+                            </div>
+                            <%=content.name%>
+                        </li>
+                        <!--Por cada especificacao-->
+                        <% _.each(content.specification,function(specification){ %>
+                        <li class="list-group-item">
+                            <label id="<%=specification._id%>"> <%=specification.name%></label>
+                            <!--
+                            <div class="options">
+                                <button class="fa fa-trash deleteSpecification" value="<%=specification._id%>"></button>
+                                <button class="fa fa-pencil editSpecification" value="<%=specification._id%>"></button>
+                            </div>
+                            -->
+                        </li>
+                        <% }); %>
+                        <li class="list-group-item">
+                            <form class="input-group row" category="<%=category._id%>" content="<%=content._id%>">
+                                <input class="form-control" type="text" id="classDesig" placeholder="Especificação"
+                                       name="specification">
+                                <span class="input-group-addon addon-button">
+                                    <button class="addSpecification"
+                                            style="border: none;background-color: transparent;">Adicionar
+                                </span>
+                            </form>
+                        </li>
+                    </ul>
+                    <% }); %>
+                </div>
+            </div>
+        </div>
+        <% }); %>
+    </div>
+</div>

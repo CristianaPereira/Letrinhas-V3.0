@@ -20,7 +20,7 @@ window.sucssesMsg = function (form, txt) {
     $('#infoModal').modal("show");
     setTimeout(function () {
         $('#infoModal').modal("hide");
-    }, txt.length * 30);
+    }, txt.length * 40);
 
 };
 window.alertMsg = function (form, txt) {
@@ -41,7 +41,7 @@ window.alertMsg = function (form, txt) {
     $('#infoModal').modal("show");
     setTimeout(function () {
         $('#infoModal').modal("hide");
-    }, txt.length * 30);
+    }, txt.length * 40);
 
 };
 
@@ -63,7 +63,7 @@ window.failMsg = function (form, txt) {
     $('#infoModal').modal("show");
     setTimeout(function () {
         $('#infoModal').modal("hide").delay(3000);
-    }, txt.length * 30);
+    }, txt.length * 50);
 };
 /**
  *

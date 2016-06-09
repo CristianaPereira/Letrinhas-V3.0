@@ -45,20 +45,25 @@
                                         class="fa fa-graduation-cap"></i></span>
                             </div>
                             <div class="row">
-                                <div class="col-sm-7">
-                                    <div class="input-group m-bot15">
-                                        <select class="form-control " id="dbSchools" name="school">
-                                        </select>
+
+                                <div class="col-md-12">
+                                    <input type="text" class="form-control mandatory" id="InputUsername"
+                                           placeholder="Nome de utilizador" value="<%=username%>" disabled>
+                                <span class="glyphicon "><i
+                                        class="fa fa-user"></i></span>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="input-group">
                                         <span class="input-group-addon btn-white"><i
                                                 class="fa fa-university"></i></span>
-                                    </div>
-                                </div>
-                                <div class="col-sm-5">
-                                    <div class="input-group m-bot15">
-                                        <select class="form-control" id="dbClasses" name="class">
-
+                                        <select class="form-control mandatory" id="dbSchools" name="school">
                                         </select>
                                         <span class="input-group-addon btn-white"><i class="fa fa-book"></i></span>
+                                        <select class="form-control mandatory" id="dbClasses" name="class">
+                                        </select>
                                     </div>
                                 </div>
                             </div>

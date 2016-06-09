@@ -41,7 +41,6 @@ window.StudentsEdit = Backbone.View.extend({
         var dataUrl = canvas.toDataURL('image/jpeg');
         $("#base64textarea").val(dataUrl);
         $("#iFoto").attr('src', dataUrl);
-        console.log(dataUrl);
         $(".cropBG").remove();
     },
 
@@ -62,8 +61,10 @@ window.StudentsEdit = Backbone.View.extend({
         //If they are
         if (isValid) {
             //Send Student Changes to Server
-            var student = new Student({id: this.data._id});
+            var student = new Student({_id: this.data._id});
             var studentDetails = $('#editstudentform').serializeObject();
+            console.log(student)
+            console.log(studentDetails)
             student.save(studentDetails, {
                 success: function () {
                     sucssesMsg($(".form"), "Aluno inserido com sucesso!");

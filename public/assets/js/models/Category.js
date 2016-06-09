@@ -20,7 +20,26 @@ var Category = Backbone.Model.extend({
                 error_launch(json.message);
             }
         );
+    },
+    insertSpecif: function (form) {
+        var self = this;
 
+        modem('POST', 'categories/specification',
+            //Response Handler
+            function (json) {
+                sucssesMsg($("body"), json.text);
+                setTimeout(function () {
+                    document.location.reload(true);
+                }, json.text.length * 45);
+            },
+
+            //Error Handling
+            function (xhr, ajaxOptions, thrownError) {
+                console.log(xhr)
+                console.log(ajaxOptions)
+                console.log(thrownError)
+            }, form
+        );
     }
 });
 

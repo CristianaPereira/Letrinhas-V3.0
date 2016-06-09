@@ -41,7 +41,7 @@ window.SchoolsView = Backbone.View.extend({
         var self = this;
         //gets model info
         schoolData = self.collection.getByID($(e.currentTarget).attr("id"));
-
+        console.log(schoolData)
         $('#schoolsPreview').empty();
 
         var $hr = '<div class="col-md-12" ><hr class="dataHr"></div>';

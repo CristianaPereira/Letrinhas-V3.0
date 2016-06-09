@@ -3,7 +3,7 @@ var Question = Backbone.Model.extend({
     defaults: {},
     initialize: function (options) {
         this.id = options.id;
-        this.site = "http://127.0.0.1:5984";
+        this.site = " http://127.0.0.1:5984";
         this.bd = "let_questions";
     },
 
