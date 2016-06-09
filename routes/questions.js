@@ -190,7 +190,7 @@ exports.test = function (req, res) {
 
             case "interpretation":
                 //Content Text (Não esquecer os PARAGRAFOS)
-                $question.content["text"] = req.body.text.replace(/(\r\n)/gm, " <br> ").replace(/(\n|\r)/gm, " <br> ");
+                $question.content["text"] = req.body.text.replace(/(\r\n)/gm, "\n").replace(/(\n|\r)/gm, "\n");
 
                 //Iterate SID's
                 $question.content["sid"] = [];

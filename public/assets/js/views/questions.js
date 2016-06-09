@@ -167,7 +167,17 @@ window.QuestionsView = Backbone.View.extend({
     textPreview: function (question) {
         var self = this;
         self.addVioice(self.site + "/" + self.bd2 + "/" + question._id + "/voice.mp3");
-        $("#questionBox").append($('<textarea>', {class: 'questBox', rows: 10, text: question.content.text}));
+
+        //Separa o texto em paragrafos
+        var $paragraph = question.content.text.split(/\n/);
+        console.log($paragraph)
+        var text = $();
+        var nWords = 0;
+        //por cada paragrafo adiciona a palavra a lista, e a new line
+
+        $("#questionBox").append($('<div>', {class: 'questBox'}).append(
+            question.content.text
+        ));
 
     },
 
@@ -202,28 +212,40 @@ window.QuestionsView = Backbone.View.extend({
     interpretationPreview: function (question) {
         // console.log(question)
         var self = this;
-
+        var words = $();
         self.addVioice(self.site + "/" + self.bd2 + "/" + question._id + "/voice.mp3");
         $("#questionBox").append($('<div>', {class: 'questBox'}));
         var $text = $("#questionBox > div");
 
-        //Separa o texto e marca as palavras (Não esquecer os PARAGRAFOS)
-        var wordsList = question.content.text.split(" ");
-        console.log(wordsList)
-        $.each(wordsList, function (i, word) {
-            if (word == '<br>') {
-                var $span = $('<br>', {});
-            } else {
-                var $span = $('<span>', {text: word});
-                if (question.content.sid.indexOf(i + "") != -1) {
-                    $span.addClass("markedWord")
+
+        //Separa o texto em paragrafos
+        var $paragraph = question.content.text.split(/\n/);
+        console.log($paragraph)
+        var words = $();
+        var nWords = 0;
+        //por cada paragrafo adiciona a palavra a lista, e a new line
+        $.each($paragraph, function (iLine, line) {
+            var $wordsList = line.split(" ");
+            $.each($wordsList, function (i, word) {
+                //Replace String With Selectable Span (Não esquecer os PARAGRAFOS)
+
+                if (question.content.sid.indexOf(nWords + "") != -1) {
+                    words = words.add($('<span>', {
+                        text: word + " ",
+                        class: "markedWord"
+                    }))
+                } else {
+                    words = words.add($('<span>', {
+                        text: word + " "
+                    }))
                 }
+                //incrementa o nr de palavras (nao conta os breaks
+                nWords++;
+            });
+            words = words.add('<br />')
 
-            }
-            $text.append($span, " ");
         });
-
-
+        $text.append(words);
     },
 
     multimediaPreview: function (question) {

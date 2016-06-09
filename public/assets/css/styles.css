@@ -1336,6 +1336,7 @@ option:hover {
 }
 
 .questBox {
+    white-space: pre-wrap;
     padding: 15px;
     border-radius: 5px;
     margin-top: 10px;
