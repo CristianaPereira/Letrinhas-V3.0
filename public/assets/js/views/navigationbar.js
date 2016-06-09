@@ -3,7 +3,13 @@ window.NavigationBarView = Backbone.View.extend({
     events: {
         "click #menuSair": "logout",
     },
-
+    //Check Auth
+    auth: function () {
+        if (!window.sessionStorage.getItem("keyo")) {
+            return false;
+        }
+        return true;
+    },
 
     logout: function (e) {
         e.preventDefault();
@@ -15,22 +21,21 @@ window.NavigationBarView = Backbone.View.extend({
     },
 
     //Class Initializer
-    initialize: function (id) {
+    initialize: function (name) {
     },
 
     //Class Renderer
     render: function () {
-        $(this.el).html(this.template());
-        modem('GET', 'me', function (user) {
-            console.log(user)
-            $("#userName").empty();
-            $("#userName").append(user.name + ' <i class="fa fa-gear"></i>');
-            console.log("getImg")
-            window.sessionStorage.setItem("username", user._id);
-        }, function (error) {
+        $(this.el).html(this.template({
+            name: window.sessionStorage.getItem("name"), b64: window.sessionStorage.getItem("b64")
+        }))
+        ;
+        var self = this;
+        //Check Local Auth
+        if (!self.auth()) {
             showLoginModal($("body"));
-            console.log('Error getting user ' + window.localStorage.getItem("ProfID"));
-        });
+        }
+
         return this;
     }
 

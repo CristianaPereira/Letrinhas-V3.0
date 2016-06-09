@@ -1,26 +1,36 @@
-<div id="questionsDiv" class="mainDiv">
-
-    <div class="col-md-12">
-        <section class="panel subMenu">
-
+<nav class="navbar navbar-default sidebar" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#bs-sidebar-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li><a>Total: <label id="questionsBadge" class=""></label>
+                <li><a>Total: <label id="questionsBadge" class=""><%=collection.length%></label>
+                     <span style="font-size:16px;"
+                           class="pull-right hidden-xs showopacity fa fa-question"></span>
                 </a></li>
                 <li>
-                    <div class="input-group" style="width: 350px;padding-top: 11px;">
-                        <input id="txtSearch" type="text" class="form-control" placeholder="Pesquisar"
-                               aria-describedby="basic-addon2">
-                        <span class="input-group-addon"> <i class="fa fa-search"></i></span>
-                    </div>
+                    <input id="txtSearch" type="text" class="form-control" placeholder="Pesquisar"
+                           aria-describedby="basic-addon2">
                 </li>
-                <li><a id="orderBy" class="order"><i class="fa fa-sort-alpha-asc"></i> </a></li>
-
-
-                <!-- New question -->
+                <li class="active">
+                    <a id="orderBy" class="order">Ordenar
+                        <span style="font-size:16px;"
+                              class="pull-right hidden-xs showopacity fa fa-sort-alpha-asc"></span>
+                    </a>
+                </li>
                 <li class="dropdown">
-                    <a href="#" data-toggle="dropdown" class="dropdown-toggle"><i class="fa fa-file-text"><span
-                            class="badge-over">  <i class="fa fa-plus-circle"></i></span></i> </a>
-                    <ul class="dropdown-menu">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Inserir <span
+                            class="caret"></span><span
+                            style="font-size:16px;"
+                            class="pull-right hidden-xs showopacity fa fa-plus-circle"></span></a>
+                    <ul class="dropdown-menu forAnimate" role="menu">
                         <li><a href="#questionsText/new" id="textTestbtn" class="order">
                             <img src="../../img/text.png" style="height:20px">
                             <span> Texto </span></a></li>
@@ -55,10 +65,12 @@
                         </li>
                     </ul>
                 </li>
-                <!-- Filter by -->
                 <li class="dropdown">
-                    <a href="#" data-toggle="dropdown" class="dropdown-toggle"><i class="fa fa-filter"></i> Tipo </a>
-                    <ul class="dropdown-menu">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Filtrar por tipo <span
+                            class="caret"></span><span
+                            style="font-size:16px;"
+                            class="pull-right hidden-xs showopacity fa fa-filter"></span></a>
+                    <ul class="dropdown-menu forAnimate" role="menu">
                         <li><a class="filter">
                             <input type="checkbox" value="text" checked>
                             <img src="../../img/text.png" style="height:20px">
@@ -101,10 +113,19 @@
                         </li>
                     </ul>
                 </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div id="questionsDiv" class="mainDiv">
+    <div class="col-md-12">
+        <section class="panel subMenu">
+
+            <ul class="nav navbar-nav">
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-filter"></i> Disciplina
                         <b class="caret"></b></a>
-                    <ul class="dropdown-menu" id="selectSubject">
+                    <ul class="dropdown-menu" id="filterSubject" filter="">
                         <li class="dropdown-submenu pull-left">
                             <a class=" contentFilter"
                                data-toggle="dropdown"
@@ -119,11 +140,11 @@
         <!-- END REGIONAL STATS PORTLET-->
     </div>
 
-    <div class=" panel-body col-md-5" align="center">
+    <div class="panel-scroll col-md-5" align="center">
         <div id="questionsContent" class=" panel-body col-md-12" align="center">
             <% _.each(collection,function(question){ %>
             <div class="listButton divWidget row" value=" <%= question.subject %>"
-                 id='<%= question._id %>'
+                 id='<%= question._id %>' type="<%= question.type %>"
             <% if ( question.profID == window.sessionStorage.getItem('username') ){ %>
             style="background-color:#FBF6B4"
             <% } %>
@@ -142,7 +163,7 @@
     </div>
 
 </div>
-<div class="col-md-7" style="padding: 30px; " align="center">
+<div class="col-md-7" style="padding: 15px 30px; " align="center">
     <div id="questionsPreview" class="col-md-12 divWidget" align="center">
 
     </div>

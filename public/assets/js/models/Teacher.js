@@ -42,6 +42,7 @@ var Teachers = Backbone.Collection.extend({
         modem('GET', 'teachers',
             function (json) {
                 for (i = 0; i < json.length; i++) {
+                    console.log(JSON.stringify(json[i].doc))
                     self.models.push(new Teacher(json[i].doc));
                 }
                 after_fetch();
@@ -53,6 +54,7 @@ var Teachers = Backbone.Collection.extend({
     //Gets specific item from collection
     getByID: function (id) {
         var self = this;
+        console.log(self.models);
         return (
             self.models.find(function (model) {
                 return model.get('_id') === id;

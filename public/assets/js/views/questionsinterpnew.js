@@ -127,25 +127,32 @@ window.QuestionsInterpNew = Backbone.View.extend({
 
         alertMsg($(".form"), "Marcar o texto deve ser um processo final. \nCaso altere o texto ou pretenda remarcar o mesmo, todas as marcações anteriores serão removidas!")
 
-        var $words = $("#inputTextArea").val()
-            .replace(/(\r\n|\n|\r)/gm, " <br> ")  //Replaces all 3 types of line breaks with a space
-            .replace(/\s+/g, " ")            //Replace all double white spaces with single spaces
-            .split(" ");
-        console.log($words)
-        var $result = [];
-
-        //Replace String With Selectable Span (Não esquecer os PARAGRAFOS)
-        for (var i in $words) {
-            $result.push("<span id='sid" + i + "' class='selectable'>" + $words[i] + "</span>");
-        }
-        $("#inputPanel").empty().append($result.join(' '));
+        //Separa o texto em paragrafos
+        var $paragraph = $("#inputTextArea").val().split(/\r|\n/);
+        var words = $();
+        var nWords = 0;
+        //por cada paragrafo adiciona a palavra a lista, e a new line
+        $.each($paragraph, function (iLine, line) {
+            var $wordsList = line.split(" ");
+            $.each($wordsList, function (i, word) {
+                //Replace String With Selectable Span (Não esquecer os PARAGRAFOS)
+                words = words.add($('<span>', {
+                    text: word + " ",
+                    id: 'sid' + nWords,
+                    class: "selectable"
+                }))
+                //incrementa o nr de palavras (nao conta os breaks
+                nWords++;
+            });
+            words = words.add('<br />')
+        })
+        $("#inputPanel").empty().append(words);
 
         $("#inputTextArea").hide();
         $("#markText").hide();
 
         $("#inputPanel").show();
         $("#writeText").show();
-
     },
 
     //Mark Word

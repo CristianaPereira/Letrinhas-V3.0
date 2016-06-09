@@ -36,6 +36,7 @@ var Router = Backbone.Router.extend({
         //Default Page
         "": "index",
 
+        "categories": "categories",
         //Teachers Routing
         "teachers": "teachers",
         "teachers/new": "teachersNew",
@@ -59,6 +60,8 @@ var Router = Backbone.Router.extend({
         "questionsTouch/edit": "questionsTouchEdit",
 
         "resolutions": "resolutions",
+        "resolutions/:id/list": "resolutionsList",
+        "resolutions/:id/text": "resolutionsText",
         //Tests Routing
         "questions": "questions",
 
@@ -109,21 +112,81 @@ var Router = Backbone.Router.extend({
         );
     },
 
+    //Teacher Templates
+    categories: function () {
+        var self = this;
+
+        self.navbar();
+
+        templateLoader.load(["CategoriesView"],
+            function () {
+                var ss = new Categories();
+                ss.fetch(function () {
+                    var v = new CategoriesView({
+                        collection: ss
+                    });
+                    self.showView(v, $('#content'));
+                })
+            }
+        );
+    },
+
+
     //Home Template
     resolutions: function () {
         var self = this;
 
         this.navbar();
 
-        //Load Template
         templateLoader.load(["ResolutionsView"],
             function () {
-                var v = new ResolutionsView({});
-                self.showView(v, $('#content'));
+                var ss = new Resolutions();
+                ss.fetch(function () {
+                    var v = new ResolutionsView({
+                        collection: ss
+                    });
+                    self.showView(v, $('#content'));
+                })
             }
         );
-
     },
+
+    resolutionsList: function (id) {
+        var self = this;
+
+        this.navbar();
+
+        templateLoader.load(["ResolutionsListView"],
+            function () {
+                var ss = new Resolution({id: id});
+                ss.fetch(function () {
+                    var v = new ResolutionsListView({
+                        model: ss
+                    });
+                    self.showView(v, $('#content'));
+                })
+            }
+        );
+    },
+
+    resolutionsText: function (id) {
+        var self = this;
+
+        this.navbar();
+
+        templateLoader.load(["ResolutionsTextView"],
+            function () {
+                var ss = new Resolution({id: id});
+                ss.fetch(function () {
+                    var v = new ResolutionsTextView({
+                        model: ss
+                    });
+                    self.showView(v, $('#content'));
+                })
+            }
+        );
+    },
+
     //Teacher Templates
     teachers: function () {
         var self = this;
@@ -346,7 +409,7 @@ var Router = Backbone.Router.extend({
                 var ss = new Questions();
                 ss.fetch(function () {
                     var v = new QuestionsView({
-                        model: ss
+                        collection: ss
                     });
                     self.showView(v, $('#content'));
                 })

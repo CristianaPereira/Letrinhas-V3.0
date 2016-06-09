@@ -10,31 +10,47 @@ exports.new = function (req, res) {
     console.log(req.body)
     //Verify Fields
     if (JSON.stringify(req.body).indexOf('""') == -1) {
+        //verifica se o username nao esta a ser utilizado
+        exists(req.body.username, function (exists) {
+            if (!exists) {
+                //!TEMPORARY! - Separating Class From School
+                var newStudent = {
+                    "school": req.body.school,
+                    "name": req.body.name,
+                    "b64": req.body.b64,
+                    "number": req.body.number,
+                    "password": req.body.password,
+                    "username": req.body.username,
+                    "class": req.body.class
+                };
 
-        //!TEMPORARY! - Separating Class From School
-        var newStudent = {
-            "school": req.body.school,
-            "name": req.body.name,
-            "b64": req.body.b64,
-            "number": req.body.number,
-            "class": req.body.class
-        };
-
-        db.insert(newStudent, (req.body.name).replace(/\s+/g, '') + new Date().getTime(), function (err) {
-            if (err)
-                return res.status(err.statusCode).json({});
-            else {
-                console.log('New student was inserted'.green);
-                res.status(200).json({});
+                db.insert(newStudent, (req.body.name).replace(/\s+/g, '') + new Date().getTime(), function (err) {
+                    if (err)
+                        return res.status(err.statusCode).json({});
+                    else {
+                        console.log('New student was inserted'.green);
+                        res.send(200, {text: "Aluno inserido com sucesso!"});
+                    }
+                })
+            } else {
+                res.send(401, {text: "O nome de utilizador escolhido ja esta a ser utilizado"});
             }
-        })
+        });
+
     }
     else {
         console.log("Fields Missing");
-        res.send(401, {error: "Todos os campos sao de preenchimento obrigatório"});
+        res.send(401, {text: "Todos os campos sao de preenchimento obrigatório"});
     }
 
 };
+//Verifica se o nome de utilizador ja esta a ser utilizado
+exports.exist = function (req, res) {
+    exists(req.body.username, function (exists) {
+        res.json(exists);
+    })
+};
+
 
 exports.get = function (req, res) {
     var id = req.params.id;
@@ -119,15 +135,10 @@ exports.getAll = function (req, res) {
                             "details": body.rows[i].doc.name + ", " + body.rows[i].doc.classes[j].year + "º " + body.rows[i].doc.classes[j].name
                         })
                     //classes.push({"_id": body.rows[i].doc.classes[j]._id});
-
                 }
-
             }
-
         }
-
         console.log(escolas);
-
         //Fetch Students From Classes
         db.list({
             'include_docs': true,
@@ -145,9 +156,10 @@ exports.getAll = function (req, res) {
 
             var myStudents = [];
             for (var i = 0; i < students.length; i++) {
+                //Remove a password dos campos enviados para a view
+                delete students[i].doc.password;
                 //Adiciona o campo com o nome da escola e aturma por extenso
                 for (var esc in escolas) {
-
                     if (escolas[esc]._id == students[i].doc.class) {
                         students[i].doc.schoolDetails = escolas[esc].details;
                         myStudents.push(students[i])
@@ -195,6 +207,31 @@ exports.removeStudent = function (req, res) {
 
 
 };
+
+function exists(username, callback) {
+    //Fetch Students From Classes
+    db.list({
+        'include_docs': true,
+        'attachments': false,
+        'limit': undefined,
+        'descending': true
+    }, function (err, data) {
+        if (err) {
+            return res.status(err.statusCode).json({});
+        }
+        var students = data.rows;
+        console.log(username)
+        for (var i = 0; i < students.length; i++) {
+            console.log(students[i].doc.username)
+
+            if (students[i].doc.username == username) {
+                callback(true);
+            }
+        }
+        callback(false);
+    });
+};
+
 
 function getEscola(turma) {
     var escola = '';

@@ -27,7 +27,7 @@ window.UserView = Backbone.View.extend({
         var self = this;
 
         var data = self.model.toJSON();
-
+        console.log(data)
         $(self.el).html(self.template(data));
 
         return this;

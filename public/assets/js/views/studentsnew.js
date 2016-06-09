@@ -2,6 +2,7 @@ window.StudentsNewView = Backbone.View.extend({
     events: {
         "click #backbtn": "back",
         "blur .emptyField": "isEmpty",
+        "blur #InputUsername": "isUernameValid",
         "submit": "beforeSend",
         "change #filePicker": "convertPhoto",
         "click #btnCrop": "getFoto",
@@ -19,6 +20,24 @@ window.StudentsNewView = Backbone.View.extend({
             $(e.currentTarget).removeClass("emptyField");
         }
     },
+
+    isUernameValid: function (e) {
+        var student = new Student({});
+        //Se o username ja estiver a ser utilizado
+        student.exist($(e.currentTarget).val(), function (response) {
+            if (response) {
+                console.log("trouble")
+                $(e.currentTarget).addClass("emptyField");
+                failMsg($(".form"), "O nome de utilizador " + $(e.currentTarget).val() + " já está a ser utilizado!", 1000);
+            } else {
+                console.log("ok")
+                $(e.currentTarget).removeClass("emptyField");
+            }
+        })
+
+
+    },
+
 
     //Check Auth
     auth: function (e) {
@@ -75,25 +94,25 @@ window.StudentsNewView = Backbone.View.extend({
         //If they are
         if (isValid) {
             var studentDetails = $('#newstudentform').serializeObject();
-            console.log(studentDetails)
             //Cria um novo model
             var student = new Student(studentDetails);
-
+            //Converte a password para md5
+            student.set({password: md5(student.attributes.password)})
             student.save(null, {
-                success: function () {
-                    sucssesMsg($(".form"), "Aluno inserido com sucesso!");
+                success: function (user, response) {
+                    sucssesMsg($(".form"), response.text);
                     setTimeout(function () {
                         app.navigate("students", {
                             trigger: true
                         });
                     }, 1500);
                 },
-                error: function () {
-                    failMsg($(".form"), "Lamentamos mas não foi possível inserir o aluno!", 1000);
+                error: function (xhr, ajaxOptions, thrownError) {
+                    var json = JSON.parse(ajaxOptions.responseText);
+                    failMsg($("body"), json.text);
                 }
             });
         }
-
     },
 
     //Class Initializer

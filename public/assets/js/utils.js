@@ -78,13 +78,13 @@ window.orderContentList = function (mylist, e) {
         return $(a).children('span').text().toUpperCase().localeCompare($(b).children('span').text().toUpperCase());
     });
     //ordenar de forma descendente/ascendente
-    if (!$(e.currentTarget).children('i').hasClass("fa-sort-alpha-asc")) {
+    if (!$(e.currentTarget).children('span').hasClass("fa-sort-alpha-asc")) {
         listitems = listitems.reverse();
-        $(e.currentTarget).children('i').addClass("fa-sort-alpha-asc")
-        $(e.currentTarget).children('i').removeClass("fa-sort-alpha-desc")
+        $(e.currentTarget).children('span').addClass("fa-sort-alpha-asc")
+        $(e.currentTarget).children('span').removeClass("fa-sort-alpha-desc")
     } else {
-        $(e.currentTarget).children('i').removeClass("fa-sort-alpha-asc")
-        $(e.currentTarget).children('i').addClass("fa-sort-alpha-desc")
+        $(e.currentTarget).children('span').removeClass("fa-sort-alpha-asc")
+        $(e.currentTarget).children('span').addClass("fa-sort-alpha-desc")
     }
     $.each(listitems, function (index, item) {
         mylist.append(item);
@@ -229,7 +229,7 @@ window.getUserRole = function (permissionLevel) {
 
 window.getCategories = function () {
     //Gets all registed categories
-    modem('GET', 'category',
+    modem('GET', 'categories',
         //Response Handler
         function (json) {
             $.each(json, function (i, key) {
@@ -246,6 +246,7 @@ window.getCategories = function () {
                             //Limpa a dd
                             $("#selectContent").html("");
                             $("#selectContent").append('<option value="" disabled selected>Conteúdo</option>');
+                            $("#selectSpecification").append('<option value="" disabled selected>Especificação</option>');
                             $.each(key.doc.content, function (id, content) {
                                 $("#selectContent").append($("<option>", {
                                     html: content.name,
@@ -360,6 +361,67 @@ window.getSetCategories = function (cate) {
     );
 };
 
+//Gets categories filters to questions and tests
+window.getFilters = function () {
+    var categories = new Categories();
+    categories.fetch(
+        //Response Handler
+        function () {
+            categories.each(function (item) {
+                var $content = $("<ul >", {class: "dropdown-menu pull-left"});
+
+                $("#filterSubject").append(
+                    $("<li>", {class: "dropdown-submenu pull-left"}).append(
+                        $("<a>", {
+                            class: "dropdown-toggle contentFilter",
+                            "data-toggle": "dropdown",
+                            html: item.get("subject"),
+                            style: "color: #1fb5ad;",
+                            value: item.get("_id")
+                        }).append(
+                            $("<b >", {class: "caret"})
+                        ),
+                        $content
+                    )
+                );
+                $.each(item.get("content"), function (idc, content) {
+                    var $description = $("<ul >", {class: "dropdown-menu pull-left"});
+                    $content.append(
+                        $("<li>", {class: "dropdown-submenu pull-left"}).append(
+                            $("<a>", {
+                                class: "dropdown-toggle contentFilter",
+                                style: "color: #fac7da;",
+                                html: content.name,
+                                value: content._id
+                            }).append(
+                                $("<b >", {class: "caret"})
+                            ),
+                            $description
+                        )
+                    );
+                    $.each(content.specification, function (ids, specif) {
+
+                        $description.append(
+                            $("<li>", {class: "dropdown-submenu pull-left"}).append(
+                                $("<a>", {
+                                    class: "contentFilter",
+                                    "data-toggle": "dropdown",
+                                    style: "color: #8BC34A;",
+                                    html: specif.name,
+                                    value: specif._id
+                                })
+                            )
+                        );
+
+                    });
+                });
+
+            });
+        }
+    );
+};
+
+
 window.setPopOver = function (campos) {
     $('#infoPop').popover({
         placement: 'left',
@@ -396,6 +458,7 @@ window.isFormValid = function (elementsList) {
             setTimeout(function () {
                 $('#infoPop').popover("hide");
             }, 1500);
+            isValid = false;
         }
     });
     return isValid;
@@ -610,9 +673,12 @@ window.attemptLogin = function () {
     modem('GET', 'me',
 
         //Response Handler
-        function (json) {
+        function (user) {
             //Hides Login Modal
             $("#mLogin").modal("hide");
+            window.sessionStorage.setItem("username", user._id)
+            window.sessionStorage.setItem("name", user.name)
+            window.sessionStorage.setItem("b64", user.b64)
             //Reloads actual view
             app.navigate("user", {
                 trigger: true
@@ -621,17 +687,9 @@ window.attemptLogin = function () {
         //Error Handling
         function (xhr, ajaxOptions, thrownError) {
             var json = JSON.parse(xhr.responseText);
-
-            //Remove Session Key if login atempt failed
-            window.sessionStorage.removeItem("keyo");
-
-            //Checks Error Type
-            if (json.message.statusCode == 404) {
-                console.log("Auth Error");
-            }
-            else {
-                console.log("Database Connetcion Error");
-            }
+            console.log(xhr)
+            console.log(ajaxOptions)
+            console.log(thrownError)
 
         }
     );

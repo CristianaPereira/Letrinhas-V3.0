@@ -45,30 +45,39 @@
                                         class="fa fa-graduation-cap"></i></span>
                             </div>
                             <div class="row">
-                                <div class="col-sm-7">
-                                    <div class="input-group m-bot15">
-                                        <select class="form-control mandatory" id="dbSchools" name="school">
-                                        </select>
+
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control mandatory" id="InputUsername"
+                                           placeholder="Nome de utilizador" name="username">
+                                <span class="glyphicon "><i
+                                        class="fa fa-user"></i></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control mandatory" id="InputPassword"
+                                           placeholder="Palavra-passe" name="password">
+                                <span class="glyphicon"><i
+                                        class="fa fa-lock"></i></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="input-group">
                                         <span class="input-group-addon btn-white"><i
                                                 class="fa fa-university"></i></span>
-                                    </div>
-                                </div>
-                                <div class="col-sm-5">
-                                    <div class="input-group m-bot15">
-                                        <select class="form-control mandatory" id="dbClasses" name="class">
-
+                                        <select class="form-control mandatory" id="dbSchools" name="school">
                                         </select>
                                         <span class="input-group-addon btn-white"><i class="fa fa-book"></i></span>
+                                        <select class="form-control mandatory" id="dbClasses" name="class">
+                                        </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="col-md-12">
-                        <div class="btn-group" role="group" aria-label="...">
-                            <button id="backbtn" type="reset" class="btn btn-default">Cancelar</button>
-                            <button id="newstudentbtn" type="submit" class="btn btn-success">Inserir</button>
+                        <div class="col-md-12">
+                            <div class="btn-group" role="group" aria-label="...">
+                                <button id="backbtn" type="reset" class="btn btn-default">Cancelar</button>
+                                <button id="newstudentbtn" type="submit" class="btn btn-success">Inserir</button>
+                            </div>
                         </div>
                     </div>
                 </form>
