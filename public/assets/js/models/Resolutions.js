@@ -11,7 +11,7 @@ var Resolution = Backbone.Model.extend({
                     console.log(json)
                     self.attributes = (json);
                     self.attributes.resolutionDate = self.attributes.resolutionDate.substring(0, 10);
-                    self.attributes.audioStudent = self.site + "/let_resolutions/" + json._id + "/record.mpeg";
+                    self.attributes.audioStudent = self.site + "/let_resolutions/" + json._id + "/record.m4a";
                     self.attributes.audioProf = self.site + "/let_questions/" + json.questionID + "/voice.mp3";
 
                     after_fetch();

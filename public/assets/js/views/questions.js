@@ -154,7 +154,8 @@ window.QuestionsView = Backbone.View.extend({
         $("#questionsPreview")
             .append($('<audio>', {
                 class: "col-md-12",
-                "controls": "controls"
+                "controls": "controls",
+                id: "teacherVoice"
             })
                 .append(
                     $('<source>', {
@@ -165,20 +166,67 @@ window.QuestionsView = Backbone.View.extend({
     },
 
     textPreview: function (question) {
+        console.log(question)
         var self = this;
         self.addVioice(self.site + "/" + self.bd2 + "/" + question._id + "/voice.mp3");
 
         //Separa o texto em paragrafos
         var $paragraph = question.content.text.split(/\n/);
-        console.log($paragraph)
-        var text = $();
+        var words = $();
         var nWords = 0;
         //por cada paragrafo adiciona a palavra a lista, e a new line
+        $.each($paragraph, function (iLine, line) {
+            var $wordsList = line.split(" ");
+            $.each($wordsList, function (i, word) {
+                //Replace String With Selectable Span (Não esquecer os PARAGRAFOS)
+                var wordTime = getObjects(question.content.wordTimes, 'pos', nWords)[0];
+                //If word as associated time
+                if (wordTime) {
+                    words = words.add($('<span>', {
+                        text: word + " ",
+                        id: "wd" + nWords,
+                        class: "word",
+                        'data-start': wordTime.start
+                    }))
+                } else {
+                    words = words.add($('<span>', {
+                        text: word + " ",
+                        id: "wd" + nWords
+
+                    }))
+                }
+                //incrementa o nr de palavras (nao conta os breaks
+                nWords++;
+            });
+            words = words.add('<br />')
+        });
 
         $("#questionBox").append($('<div>', {class: 'questBox'}).append(
-            question.content.text
+            words
         ));
+        var pop = Popcorn("audio");
 
+        $.each(question.content.wordTimes, function (id, time) {
+            console.log(time)
+            pop.footnote({
+                start: time.start,
+                end: time.end,
+                text: '',
+                target: 'wd' + time.pos,
+                effect: "applyclass",
+                applyclass: "selected"
+            });
+        });
+
+        pop.play();
+
+        //var mySnd = document.getElementById("teacherVoice");
+        //mySnd.playbackRate = 0.5;
+        $('.word').click(function () {
+            var audio = $('audio');
+            audio[0].currentTime = parseFloat($(this).data('start'), 10);
+            audio[0].play();
+        });
     },
 
     listPreview: function (question) {

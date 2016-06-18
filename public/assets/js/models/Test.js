@@ -1,18 +1,9 @@
 // Teste:
 
 var Test = Backbone.Model.extend({
-    defaults: {
-        title: 'Some title',
-        description: 'Some title',
-        year: 0,
-        questions: [],
-        subject: "",
-        content: "",
-        specification: "",
-    },
+    defaults: {},
     urlRoot: 'tests',
-    initialize: function (options) {
-        this.id = options.id;
+    initialize: function () {
     },
     fetch: function (after_fetch) {
         var self = this;
@@ -24,9 +15,32 @@ var Test = Backbone.Model.extend({
             },
             function (xhr, ajaxOptions, thrownError) {
                 var json = JSON.parse(xhr.responseText);
-                error_launch(json.message);
+                failMsg($("body"), json.text);
+                setTimeout(function () {
+                    app.navigate('/home', {
+                        trigger: true
+                    });
+                }, json.text.length * 45);
             }
         );
+    },
+    assocTest: function (genericTest) {
+        //Atribui ao teste nao-generico, os dados do teste generico(pai)
+        this.urlRoot = "assocTest";
+        this.set("questions", genericTest.questions)
+        this.set("schoolYear", genericTest.schoolYear)
+        this.set("subject", genericTest.subject)
+        this.set("title", genericTest.title)
+        this.save(null, {
+            success: function (test, response) {
+                $("#attrTest").modal("hide");
+                sucssesMsg($("body"), response.result);
+            },
+            error: function (test, ajaxOptions, thrownError) {
+                var json = JSON.parse(ajaxOptions.responseText);
+                failMsg($("body"), json.result);
+            },
+        })
     }
 });
 
@@ -37,7 +51,7 @@ var Tests = Backbone.Collection.extend({
         modem('GET', 'tests',
             function (json) {
                 for (i = 0; i < json.length; i++) {
-                    self.models.push(new Test(json[i].doc));
+                    self.models.push(new Test(json[i]));
                 }
                 after_fetch();
             },

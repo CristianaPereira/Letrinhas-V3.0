@@ -59,10 +59,47 @@
                             <option disabled selected>Especificação</option>
                         </select>
                     </div>
-                    <div class="row col-md-12">
+                    <div class="row col-md-8">
                         <input type="text" class="form-control mandatory" placeholder="Título" name="title">
                         <span class="glyphicon"><i class="fa fa-tag"></i></span>
                     </div>
+                    <div class="row col-md-4">
+                        <select class="form-control mandatory" id="selectType" name="type">
+                            <option disabled selected>Tipo de teste</option>
+                        </select>
+                    </div>
+                    <div class="row col-sm-12">
+                        <input type="text" class="form-control mandatory" placeholder="Descrição" name="description">
+                        <span class="glyphicon"><i class="fa fa-comment-o"></i></span>
+                    </div>
+                    <div class="col-md-6">
+                        <select class="form-control mandatory" id="studentsDD" name="studentID">
+                            <option disabled selected>Aluno</option>
+                        </select>
+                    </div>
+                    <div class="row col-md-3">
+                        <div class='input-group date'>
+                            <span class="input-group-addon">De</span>
+                            <input type='text' class="form-control" name="beginDate" placeholder="Data de Inicio"/>
+                        </div>
+                    </div>
+                    <div class="row col-md-3">
+                        <div class='input-group date'>
+                            <span class="input-group-addon">
+                                Até
+                            </span>
+                            <input type='text' class="form-control" name="endDate" placeholder="Data de Fim"/>
+
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+                        $(function () {
+                            $('.date').datetimepicker({
+                                viewMode: 'days',
+                                format: 'DD/MM/YYYY'
+                            });
+                        });
+                    </script>
 
 
                     <!-- BOTOES -->

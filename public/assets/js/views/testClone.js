@@ -111,6 +111,7 @@ window.TestsNewView = Backbone.View.extend({
                     dif: $("#" + $(question).attr("id") + " select").val()
                 });
                 //Converte para inteiro
+                test.attributes.type = parseInt(test.attributes.type);
                 test.attributes.schoolYear = parseInt(test.attributes.schoolYear);
             })
 
@@ -137,7 +138,8 @@ window.TestsNewView = Backbone.View.extend({
     //Class Initializer
     initialize: function () {
         this.data = this.collection.toJSON();
-          },
+        getStudents();
+    },
 
     //Class Renderer
     render: function () {
@@ -149,6 +151,7 @@ window.TestsNewView = Backbone.View.extend({
 
         getFilters();
 
+        getTypes();
 
         //Renders view with questions collection
         this.$el.html(this.template({questions: self.data}));

@@ -56,7 +56,7 @@ exports.getAll = function (req, res) {
         }
         //Filtra as resolucoes por apenas as que pertencem ao professor e nao estao corrigidas
         var output = jsonQuery('rows[doc][*profID=' + user + ' & note=-1]', {data: resolutions}).value
-
+        console.log(output)
         //Adiciona as resolucoes a foto do aluno em questao
         getStudentsData(output, function () {
             res.json(output);
@@ -78,6 +78,7 @@ function getStudentsData(output, callback) {
         for (var out = 0; out < output.length; out++) {
             //Obtem o campo b64
             var student = jsonQuery('rows[id=' + output[out].studentID + '].doc', {data: students}).value;
+            // console.log(student)
             output[out].studentFoto = student.b64;
             output[out].studentName = student.name;
         }

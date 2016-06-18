@@ -95,12 +95,28 @@ window.QuestionsTextNew = Backbone.View.extend({
     },
 
     //Upload Sound File
-    uploadSoundFile: function () {
+    uploadSoundFile: function (obj) {
         var files = $("#uploadSoundFile").prop('files');
+        var reader = new FileReader();
+        var sound = document.getElementById('teacherVoice');
+        reader.onload = (function (audio) {
+            return function (e) {
+                audio.src = e.target.result;
+            };
+        })(sound);
+        reader.readAsDataURL(files[0]);
+
         $("#soundPath")
             .attr("placeholder", files[0].name)
             .attr("value", files[0].name)
             .css('border', 'solid 1px #cccccc');
+        $("#teacherVoice source").attr("src", files[0].name);
+        var mySnd = document.getElementById("teacherVoice");
+        //mySnd.playbackRate = 0.5;
+        console.log(mySnd.playbackRate)
+        $('#ex1').slider({
+            max: 100
+        });
     },
 
     //Class Initializer

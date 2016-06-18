@@ -98,7 +98,6 @@ window.StudentsView = Backbone.View.extend({
             return false;
         }
 
-        self.data.sort(sortJsonByCol('name'));
         //Render Template
         $(this.el).html(this.template({collection: self.data}));
 

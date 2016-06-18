@@ -4,7 +4,7 @@ var nano = require('nano')(process.env.COUCHDB);
 
 var db = nano.use('let_students');
 var dbe = nano.use('let_schools');
-
+var jsonQuery = require('json-query');
 exports.new = function (req, res) {
 
     console.log(req.body)
@@ -138,7 +138,6 @@ exports.getAll = function (req, res) {
                 }
             }
         }
-        console.log(escolas);
         //Fetch Students From Classes
         db.list({
             'include_docs': true,
@@ -166,8 +165,9 @@ exports.getAll = function (req, res) {
                     }
                 }
             }
-
-            res.json(myStudents);
+            //console.log(myStudents)
+            // console.log(jsonQuery('doc', {data: myStudents}).value)
+            res.json(jsonQuery('doc', {data: myStudents}).value);
         });
     });
 };
