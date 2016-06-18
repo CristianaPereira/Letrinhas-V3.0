@@ -2,31 +2,30 @@ require('colors');
 
 var nano = require('nano')(process.env.COUCHDB);
 var db = nano.use('let_tests');
-var dbp = nano.use('let_questions');
+var jsonQuery = require('json-query');
 
 exports.upDate = function (req, res) {
 
 };
 
-exports.new = function (req, res) {
+exports.newGeneric = function (req, res) {
     console.log(req.body)
 
     //Verify Fields
     if (JSON.stringify(req.body).indexOf('""') == -1) {
         var dati = new Date();
+        var id = 'T' + dati.getTime();
         //Creates a tes obj
         var test = {
-            "_id": 'T' + dati.getTime(),
             "title": req.body.title,
-            "description": req.body.title,
-            "subject": req.body.subject + ":" + req.body.content + ":" + req.body.specification,
+            "generic": true,
+            "subject": [req.body.subject, req.body.content, req.body.specification].join(':'),
             "schoolYear": parseInt(req.body.schoolYear),
             "questions": req.body.questions,
-            "description": req.body.description,
             "profID": req.params.userID
         };
 
-        db.insert(test, (req.body.title).replace(/\s+/g, '') + new Date().getTime(), function (err) {
+        db.insert(test, function (err) {
             if (err)
                 return res.status(err.statusCode).json({});
             else {
@@ -40,7 +39,34 @@ exports.new = function (req, res) {
         res.send(401, {result: "Todos os campos sao de preenchimento obrigatório"});
     }
 };
+exports.new = function (req, res) {
+    console.log(req.body)
+    var user = req.params.userID;
+    //Verify Fields
+    if (JSON.stringify(req.body).indexOf('""') == -1) {
 
+        //Creates a tes obj
+        var test = req.body;
+        test.profID = user;
+        test.generic = false;
+        //Separa o d-m-a, inverte-o para a-m-d e transforma-o em timestamp
+        test.beginDate = new Date(test.beginDate.split("-").reverse().join("-")).getTime();
+        test.endDate = new Date(test.endDate.split("-").reverse().join("-")).getTime();
+        db.insert(test, function (err) {
+            if (err)
+                return res.status(err.statusCode).json({});
+            else {
+                console.log('New test was associated'.green);
+                res.send(200, {result: "Teste associado com sucesso!"});
+            }
+        })
+    }
+    else {
+        console.log("Fields Missing");
+        res.send(401, {result: "Todos os campos sao de preenchimento obrigatório"});
+    }
+
+};
 
 exports.get = function (req, res) {
 
@@ -61,7 +87,8 @@ exports.getAll = function (req, res) {
                 'message': err
             });
         }
-        res.json(body.rows);
+        console.log()
+        res.json(jsonQuery('[doc][*generic=true]', {data: body.rows}).value);
     });
 
 };

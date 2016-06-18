@@ -48,9 +48,9 @@ var Students = Backbone.Collection.extend({
         var self = this;
         modem('GET', 'students',
             function (json) {
-                console.log(json)
+                json.sort(sortJsonByCol('name'));
                 for (i = 0; i < json.length; i++) {
-                    self.models.push(new Student(json[i].doc));
+                    self.models.push(new Student(json[i]));
                 }
                 after_fetch();
             },

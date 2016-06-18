@@ -24,7 +24,8 @@ var category = require('./routes/category'),
     schools = require('./routes/schools'),
     students = require('./routes/students'),
     teachers = require('./routes/teachers'),
-    tests = require('./routes/tests');
+    tests = require('./routes/tests'),
+    testTypes = require('./routes/testtypes');
 
 //Express Variable
 var app = express();
@@ -261,10 +262,14 @@ app.route('/teachers/rmvClass')
 //-----------------------------------------------------TESTS
 
 app.route('/tests')
-    .post(auth, tself, perms(2), tests.new)
+    .post(auth, tself, perms(2), tests.newGeneric)
     .get(auth, tself, perms(2), tests.getAll);
 
+app.route('/testTypes')
+    .get(auth, tself, perms(2), testTypes.getAll);
 
+app.route('/assocTest')
+    .post(auth, tself, perms(2), tests.new)
 //-----------------------------------------------------file handler
 app.route("/file/:db/:id/:filename")
     .get(fileHandler.fileDownload)

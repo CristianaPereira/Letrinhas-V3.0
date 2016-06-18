@@ -97,35 +97,42 @@
                     </div>
 
                     <!-- Audio -->
-                    <div class="col-sm-12">
+                    <div class="col-md-12">
                         <h4>Detalhes do Audio</h4>
                         <hr class="formBar">
                         </br>
                     </div>
-                    <div class="form-group">
 
-                        <div class="col-sm-3" style="padding-right: 0px;">
+                    <div class="col-md-3" style="padding-right: 0px;">
                         <span class="file-input btn btn-block btn-primary btn-file">
                         Carregar ficheiro de som…
                           <input id="uploadSoundFile" accept="audio/mp3"
                                  style="position: absolute;opacity: 0;top: 0px;left: 5%;width: 90%;height: 100%;"
                                  type="file" accept="audio/mp3" name="file">
                         </span>
-                        </div>
-                        <div class="col-sm-3" style="padding-left: 0px;">
-                            <input type="text" class="form-control mandatory" id="soundPath"
-                                   placeholder="Nenhum ficheiro seleccionado"
-                            >
-                        </div>
-                        <div class="col-sm-1" style="vertical-align:bottom">
-                            <label style="margin-top: 10px;">OU</label>
-                        </div>
-                        <div class="col-sm-3" style="vertical-align:bottom">
-                            <button id="showEqualizer" class="btn btn-default">
-                                <span class="glyphicon glyphicon-record" style="color:#ff0000"></span>
-                                Gravar ficheiro de som
-                            </button>
-                        </div>
+                    </div>
+                    <div class="col-md-3" style="padding-left: 0px;">
+                        <input type="text" class="form-control mandatory" id="soundPath"
+                               placeholder="Nenhum ficheiro seleccionado"
+                        >
+                    </div>
+                    <div class="col-md-1" style="vertical-align:bottom">
+                        <label style="margin-top: 10px;">OU</label>
+                    </div>
+                    <div class="col-md-3" style="vertical-align:bottom">
+                        <button id="showEqualizer" class="btn btn-default">
+                            <span class="glyphicon glyphicon-record" style="color:#ff0000"></span>
+                            Gravar ficheiro de som
+                        </button>
+                    </div>
+                    <div class="col-md-12">
+                        <audio controls id="teacherVoice">
+                            <source src="" type="audio/mpeg">
+                        </audio>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default">Devagar</button>
+                        <button type="button" class="btn btn-primary">Normal</button>
                     </div>
 
                     </br>

@@ -302,6 +302,24 @@ section {
     margin-right: -1px;
 }
 
+/*Corrections DROPDOWN*/
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -1px;
+}
+
+#correctionDD {
+    /*  position: absolute;
+      width: 150px;
+      top: 50px;*/
+    display: inline-flex;
+}
+
 #page {
     padding-top: 50px;
     overflow: auto;
@@ -646,6 +664,20 @@ a {
     float: right;
 }
 
+.btn-Rmv {
+    font-size: 14px;
+    -ms-touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background-color: #dc7a71;
+    float: right;
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     /* display: none; <- Crashes Chrome on hover */
@@ -765,8 +797,7 @@ label {
 
 .carousel-control.left, .carousel-control.right {
     background-image: none;
-    margin-right: -50px;
-    margin-left: -50px;
+    width: inherit;
 }
 
 .fa-remove, .fa-trash-o {
@@ -1336,7 +1367,7 @@ option:hover {
 }
 
 .questBox {
-    white-space: pre-wrap;
+    /*white-space: pre-wrap;*/
     padding: 15px;
     border-radius: 5px;
     margin-top: 10px;
@@ -1391,4 +1422,14 @@ option:hover {
 .list-group-item > input {
     max-width: 50%;
     display: inline;
+}
+
+/*********TEXT SYNC ******/
+.word {
+    color: red;
+}
+
+.word:hover, .word.selected {
+    color: blue;
+    cursor: pointer;
 }

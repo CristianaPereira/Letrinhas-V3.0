@@ -39,14 +39,13 @@
                         </div>
 
                     </div>
-                    <div class="col-md-12">
+                    <!--Coloca as palavras na div divididas por span com o id=index da palavra-->
+                    <div class="col-md-12" id="questionBox">
                         <div class="questBox">
-                            <!-- Lista de palavras -->
-                            <% _.each(model.question.content.text.split(' '),function(word){ %>
-
-                            <span id=""><%=word%></span>
-
-                            <% }); %>
+                            <% var num=0 %>
+                            <% _.each(model.question.content.text.split('\n'),function(paragraph){ %>
+                            <% _.each(paragraph.split(' '),function(word, iword){ %>
+                            <span id="wd<%=num%>"><%=word%></span> <% num++ %><% }); %><br><% }); %>
                         </div>
                     </div>
 
@@ -54,7 +53,6 @@
                     <div class="col-sm-12">
                         <h4>Áudio</h4>
                         <hr style="background-color: #b0aac2;">
-                        <br>
                     </div>
                     <div class="col-md-6">
                         <label class="col-md-12">Professor:</label>
@@ -67,11 +65,53 @@
                         <label class="col-md-12">Aluno:</label>
                         <audio class="col-md-12" controls="controls">
                             <source src="<%=model.audioStudent%>"
-                                    type="audio/mpeg">
+                                    type="audio/mp4">
                         </audio>
                     </div>
-
-
+                    <!-- Correction -->
+                    <div class="col-sm-12">
+                        <h4>Correcção</h4>
+                        <hr style="background-color: #b0aac2;">
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-addon btn-white"><i class="fa fa-exclamation"></i></span>
+                            <select class="form-control" name="ponctuation">
+                                <option disabled selected>Pontuação</option>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-addon btn-white"><i class="fa fa-comment-o"></i></span>
+                            <select class="form-control" name="inflection">
+                                <option disabled selected>Entoação</option>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-addon btn-white"><i class="fa fa-bars"></i></span>
+                            <select class="form-control" name="inflection">
+                                <option disabled selected>Texto</option>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="col-sm-12">
                         <br>
                         <div class="col-sm-5 col-md-offset-7">
@@ -81,9 +121,9 @@
                                 </button>
                             </div>
                             <div class="col-sm-6">
-                                <button id="subTxt" type="submit" class="btn btn-success btn-block btn-created"
-                                        title="Todos os campos são de preenchimento obrigatório.">
-                                    Submeter
+                                <button id="confCorrection" type="submit" class="btn btn-success btn-block btn-created"
+                                        title="Concluir correcção">
+                                    Concluir
                                 </button>
                             </div>
 

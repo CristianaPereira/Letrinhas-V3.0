@@ -421,6 +421,84 @@ window.getFilters = function () {
     );
 };
 
+//Gets test types
+window.getTypes = function () {
+    modem('GET', 'testTypes',
+        function (json) {
+            //ordena por value
+            json.sort(sortJsonByCol('value'));
+            $.each(json, function (id, type) {
+                $("#selectType").append($("<option>", {
+                    html: "(" + type.value + ") " + type.description,
+                    id: type._id,
+                    value: type.value,
+                }));
+            });
+        },
+        function () {
+            console.log("ups test types")
+        }
+    );
+};
+//Gets list of students to dd
+window.getStudents = function () {
+
+    var ss = new Students();
+    ss.fetch(function () {
+        $.each(ss.models, function (i, student) {
+            $("#studentsDD").append($("<option>", {
+                html: student.attributes.name,
+                value: student.attributes._id,
+            }));
+        });
+
+    })
+
+};
+//dovolve uma dd com a importancia da question
+window.getImportanceDD = function () {
+    var $imp = $('<select>', {
+        id: 'selectImportance', class: "form-control",
+        style: "width: 200px;display:inline-table;"
+    });
+    var importances = [];
+    importances.push({value: 1, description: "Trivial"});
+    importances.push({value: 2, description: "Fácil"});
+    importances.push({value: 3, description: "Médio"});
+    importances.push({value: 4, description: "Difícil"});
+    importances.push({value: 5, description: "Muito difícil"});
+    $imp.append($("<option>", {
+        html: "Dificuldade"
+    }));
+    console.log(importances)
+    $.each(importances, function (iImportance, importance) {
+        console.log(importance)
+
+        $imp.append($("<option>", {
+            html: "(" + importance.value + ") " + importance.description,
+            value: importance.value,
+        }));
+    });
+    $imp.val(3)
+    return $imp;
+}
+;
+
+
+//Devolve os tipos de perguntas existentes
+window.questionTypes = function () {
+    var questionTypes = [];
+    questionTypes.push({type: "text", description: "Texto"});
+    questionTypes.push({type: "multimedia", description: "Multimédia"});
+    questionTypes.push({type: "list", description: "Lista"});
+    questionTypes.push({type: "interpretation", description: "Interpretação"});
+    questionTypes.push({type: "whitespaces", description: "Espaços"});
+    questionTypes.push({type: "connections", description: "Ligações"});
+    questionTypes.push({type: "regions", description: "Regiões"});
+    questionTypes.push({type: "boxes", description: "Caixas"});
+    return questionTypes;
+};
+
 
 window.setPopOver = function (campos) {
     $('#infoPop').popover({
@@ -459,6 +537,8 @@ window.isFormValid = function (elementsList) {
                 $('#infoPop').popover("hide");
             }, 1500);
             isValid = false;
+        } else {
+            $(elem).removeClass("emptyField");
         }
     });
     return isValid;
@@ -549,7 +629,10 @@ window.showLoginModal = function (form) {
                                 class: " col-sm-12",
                             }).append(
                                 $("<input>", {
-                                    id: "psswrd", class: "form-control", placeholder: "Palavra-passe", name: "password",
+                                    id: "psswrd",
+                                    class: "form-control",
+                                    placeholder: "Palavra-passe",
+                                    name: "password",
                                     type: "password"
                                 })
                             ).append($("<span>", {
@@ -709,3 +792,90 @@ window.sortJsonByCol = function (property) {
     };
 
 };
+//Gets object by  value
+window.getObjects = function (obj, key, val) {
+    var objects = [];
+    for (var i in obj) {
+        if (!obj.hasOwnProperty(i)) continue;
+        if (typeof obj[i] == 'object') {
+            objects = objects.concat(getObjects(obj[i], key, val));
+        } else if (i == key && obj[key] == val) {
+            objects.push(obj);
+        }
+    }
+    return objects;
+}
+
+
+window.showCorrectionDD = function (word, id) {
+    //substitui a dd exixtente novamento pelo span
+    $("#correctionDD").replaceWith($('<span>', {
+        html: $("#correctionDD").attr('word'),
+        id: $("#correctionDD").attr('wordId')
+    }));
+    //Monta a dd
+    var $correctionDD = $("<div>", {class: "dropdown", id: "correctionDD", word: word, wordId: id}).append(
+        $("<button>", {
+            class: "btn btn-default dropdown-toggle",
+            type: "button",
+            'data-toggle': "dropdown",
+            html: word,
+            style: 'padding:0px'
+        }).append(
+            $("<span>", {class: "caret"})
+        ),
+        $("<ul>", {class: "dropdown-menu"}).append(
+            $("<li>", {class: "dropdown-submenu"}).append(
+                $("<a>", {class: "test", tabindex: "-1", html: 'Exactidão'}).append(
+                    $("<span>", {class: "caret"})
+                ),
+                $("<ul>", {class: "dropdown-menu"}).append(
+                    $("<li>").append(
+                        $("<a>", {tabindex: "-1", html: 'Substituição de letras'})
+                    ),
+                    $("<li>").append(
+                        $("<a>", {tabindex: "-1", html: 'Substituição de palavras'})
+                    ),
+                    $("<li>").append(
+                        $("<a>", {tabindex: "-1", html: 'Adições'})
+                    ),
+                    $("<li>").append(
+                        $("<a>", {tabindex: "-1", html: 'Omissões de letras'})
+                    ),
+                    $("<li>").append(
+                        $("<a>", {tabindex: "-1", html: 'Omissões de sílabas'})
+                    ),
+                    $("<li>").append(
+                        $("<a>", {tabindex: "-1", html: 'Omissões de palavras'})
+                    ),
+                    $("<li>").append(
+                        $("<a>", {tabindex: "-1", html: 'Inversões'})
+                    )
+                )
+            ),
+            $("<li>", {class: "dropdown-submenu"}).append(
+                $("<a>", {class: "test", tabindex: "-1", html: 'Fluidez'}).append(
+                    $("<span>", {class: "caret"})
+                ),
+                $("<ul>", {class: "dropdown-menu"}).append(
+                    $("<li>").append(
+                        $("<a>", {tabindex: "-1", html: 'Vacilação'})
+                    ),
+                    $("<li>").append(
+                        $("<a>", {tabindex: "-1", html: 'Repetições'})
+                    ),
+                    $("<li>").append(
+                        $("<a>", {tabindex: "-1", html: 'Soletração'})
+                    ),
+                    $("<li>").append(
+                        $("<a>", {tabindex: "-1", html: 'Fragmentação de palavras'})
+                    ),
+                    $("<li>").append(
+                        $("<a>", {tabindex: "-1", html: 'Retificação espontânea'})
+                    )
+                )
+            )
+        )
+    );
+    return $correctionDD;
+}
