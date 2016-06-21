@@ -126,16 +126,15 @@
                      id='<%= resolution._id %>'>
 
                     <img src="<%= resolution.studentFoto %>">
-                    <img src="../img/<%= resolution.type %>.png">
                     <img src='../img/<%= resolution.subject.split(":")[0] %>.png'>
-                    <span><%= resolution.studentName %> (<%= resolution.resolutionDate %>)</span>
+                    <span><%= resolution.studentName %> (<%= resolution.title %> - <%= resolution.resolutionDate %>)</span>
 
                     <div class="editDeleteOp">
                         <div class="dropdown">
                             <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
                                 <i class="fa fa-gear "></i> <span class="caret"></span></button>
                             <ul class="dropdown-menu">
-                                <li><a href="#resolutions/<%= resolution._id %>/<%= resolution.type %>"
+                                <li><a href="#resolutions/<%= resolution._id %>"
                                        title="Corrigir">
 
                                     <i id="btnEdit" class="fa fa-check-square-o fa-2x"></i>

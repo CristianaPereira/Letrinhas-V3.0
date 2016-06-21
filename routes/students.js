@@ -4,6 +4,9 @@ var nano = require('nano')(process.env.COUCHDB);
 
 var db = nano.use('let_students');
 var dbe = nano.use('let_schools');
+var dbTests = nano.use('let_tests');
+var dbResolutions = nano.use('let_resolutions');
+
 var jsonQuery = require('json-query');
 exports.new = function (req, res) {
 
@@ -24,7 +27,7 @@ exports.new = function (req, res) {
                     "class": req.body.class
                 };
 
-                db.insert(newStudent, (req.body.name).replace(/\s+/g, '') + new Date().getTime(), function (err) {
+                db.insert(newStudent, function (err) {
                     if (err)
                         return res.status(err.statusCode).json({});
                     else {
@@ -64,7 +67,51 @@ exports.get = function (req, res) {
         res.json(body);
     });
 };
+exports.getInfo = function (req, res) {
+    var id = req.params.id;
+    console.log('student get: '.green + id);
 
+    db.get(id, function (err, studentData) {
+        if (err) {
+            return res.status(err.statusCode).json({});
+        }
+        dbTests.list({
+            'include_docs': true, 'attachments': true,
+            'limit': undefined, 'descending': false
+        }, function (err, testsData) {
+            if (err) {
+                return res.status(500).json({
+                    'result': 'nok',
+                    'message': err
+                });
+            }
+            //Recolhe os testes do aluno
+            var studentTests = jsonQuery('[doc][*studentID=' + id + ']', {data: testsData.rows}).value;
+            console.log(studentTests)
+            //Adiciona-os ao json da view o nr de testes por resolver
+            console.log(jsonQuery('[*solved=false]', {data: studentTests}).value)
+            studentData.unsolvedTests = jsonQuery('[*solved=false]', {data: studentTests}).value || [];
+            studentData.solvedTests = jsonQuery('[*solved=true]', {data: studentTests}).value || [];
+            dbResolutions.list({
+                'include_docs': true, 'attachments': true,
+                'limit': undefined, 'descending': false
+            }, function (err, resolData) {
+                if (err) {
+                    return res.status(500).json({
+                        'result': 'nok',
+                        'message': err
+                    });
+                }
+                //Recolhe os testes do aluno
+                var resolutions = jsonQuery('[doc][*studentID=' + id + ']', {data: resolData.rows}).value;
+                //Adiciona-os ao json da view
+                studentData.resolutions = resolutions || [];
+                res.json(studentData);
+            });
+        });
+
+    });
+};
 //NEW
 exports.editStudent = function (req, res) {
 
@@ -118,9 +165,11 @@ exports.getAll = function (req, res) {
         'descending': true
     }, function (err, body) {
         if (err) {
+            console.log(err)
             return res.status(err.statusCode, {error: "Erro a procurar alunos"});
         }
-
+        console.log("schools")
+        console.log(body)
         //Fetch Classes
 
         for (var i in body.rows) {

@@ -2,6 +2,9 @@ require('colors');
 
 var nano = require('nano')(process.env.COUCHDB);
 var dbQuest = nano.use('let_questions');
+var dbTests = nano.use('let_tests');
+var jsonQuery = require('json-query');
+
 
 var fs = require('fs-extra'),       //File System - for file manipulation
     mime = require('mime');
@@ -251,7 +254,93 @@ exports.test = function (req, res) {
 
 };
 
+exports.removeQuestion = function (req, res) {
+    //verifica se a pergunta nao esta a ser utilizado em nenhum teste
+    var user = req.params.userID;
+    console.log(user)
+    dbTests.list({
+        'include_docs': true, 'attachments': true,
+        'limit': undefined, 'descending': false
+    }, function (err, tests) {
+        if (err) {
+            return res.status(500).json({
+                'result': 'nok',
+                'message': err
+            });
+        }
+        //Conta o nr de testes onde a pergunta e usada
+        var nTestes = jsonQuery('[doc][questions][*_id=' + req.params.id + ']', {data: tests.rows}).value.length;
+        //Se a pergunta estiver a ser usada
+        if (nTestes) {
+            res.send(401, {result: "Não é possível remover a pergunta porque está a ser utilizada em " + nTestes + " testes."});
+        } else {
+            //Search question Info
+            dbQuest.get(req.params.id, function (err, qustionData) {
+                if (err) {
+                    //Report Error (Student Doenst Exists)
+                    console.log("Error Removing question");
+                    console.log(err.statusCode);
+                    res.send(401, {result: "Não foi possível remover a pergunta."});
+                }
+                else {
+                    console.log(qustionData);
+                    //Se a pergunta é da minha autoria
+                    if (qustionData.profID == user) {
+                        dbQuest.destroy(qustionData._id, qustionData._rev, function (err) {
 
+                            if (err) {
+                                //Report Error (Student Doenst Exists)
+                                console.log("Error Removing Student");
+                                return res.status(err.statusCode).json({});
+                            }
+                            else {
+                                console.log("question Removed");
+                                res.send(200, {result: "Pergunta eliminada com sucesso."});
+
+                            }
+
+                        });
+                    } else {
+                        res.send(401, {result: "Apenas o autor desta pergunta (" + qustionData.profID + ") a pode eliminar."});
+
+                    }
+
+
+                }
+
+            })
+        }
+
+    });
+    /*
+     //Search School Info
+     dbQuest.get(req.params.id, function (err, qustionData) {
+
+     if (err) {
+     //Report Error (Student Doenst Exists)
+     console.log("Error Removing question");
+     return res.status(err.statusCode).json({});
+     }
+     else {
+     console.log(qustionData)
+     db.destroy(body._id, body._rev, function (err) {
+
+     if (err) {
+     //Report Error (Student Doenst Exists)
+     console.log("Error Removing Student");
+     return res.status(err.statusCode).json({});
+     }
+     else {
+     console.log("Student Removed");
+     return res.status(200).json({});
+     }
+
+     });
+
+     }
+
+     });*/
+};
 function wordPrefix($col) {
     var $col = ($col)
         .replace(/(\r\n|\n|\r)/gm, " ")  //Replaces all 3 types of line breaks with a space

@@ -804,7 +804,7 @@ window.getObjects = function (obj, key, val) {
         }
     }
     return objects;
-}
+};
 
 
 window.showCorrectionDD = function (word, id) {
@@ -831,25 +831,48 @@ window.showCorrectionDD = function (word, id) {
                 ),
                 $("<ul>", {class: "dropdown-menu"}).append(
                     $("<li>").append(
-                        $("<a>", {tabindex: "-1", html: 'Substituição de letras'})
+                        $("<a>", {
+                            tabindex: "-1",
+                            class: "subError", err: 'accuracy:lettersubstitution', html: 'Substituição de letras'
+                        })
                     ),
                     $("<li>").append(
-                        $("<a>", {tabindex: "-1", html: 'Substituição de palavras'})
+                        $("<a>", {
+                            tabindex: "-1",
+                            class: "subError",
+                            err: 'accuracy:wordssubstitution',
+                            html: 'Substituição de palavras'
+                        })
                     ),
                     $("<li>").append(
-                        $("<a>", {tabindex: "-1", html: 'Adições'})
+                        $("<a>", {tabindex: "-1", class: "subError", err: 'accuracy:addition', html: 'Adições'})
                     ),
                     $("<li>").append(
-                        $("<a>", {tabindex: "-1", html: 'Omissões de letras'})
+                        $("<a>", {
+                            tabindex: "-1",
+                            class: "subError",
+                            err: 'accuracy:wordsomission',
+                            html: 'Omissões de letras'
+                        })
                     ),
                     $("<li>").append(
-                        $("<a>", {tabindex: "-1", html: 'Omissões de sílabas'})
+                        $("<a>", {
+                            tabindex: "-1",
+                            class: "subError",
+                            err: 'accuracy:syllablesomission',
+                            html: 'Omissão de sílabas'
+                        })
                     ),
                     $("<li>").append(
-                        $("<a>", {tabindex: "-1", html: 'Omissões de palavras'})
+                        $("<a>", {
+                            tabindex: "-1",
+                            class: "subError",
+                            err: 'accuracy:wordomission',
+                            html: 'Omissão de palavras'
+                        })
                     ),
                     $("<li>").append(
-                        $("<a>", {tabindex: "-1", html: 'Inversões'})
+                        $("<a>", {tabindex: "-1", class: "subError", err: 'accuracy:inversions', html: 'Inversões'})
                     )
                 )
             ),
@@ -859,23 +882,258 @@ window.showCorrectionDD = function (word, id) {
                 ),
                 $("<ul>", {class: "dropdown-menu"}).append(
                     $("<li>").append(
-                        $("<a>", {tabindex: "-1", html: 'Vacilação'})
+                        $("<a>", {
+                            tabindex: "-1", class: "subError",
+                            err: 'fluidity:vacillation', html: 'Vacilação'
+                        })
                     ),
                     $("<li>").append(
-                        $("<a>", {tabindex: "-1", html: 'Repetições'})
+                        $("<a>", {
+                            tabindex: "-1", class: "subError",
+                            err: 'fluidity:repetitions', html: 'Repetições'
+                        })
                     ),
                     $("<li>").append(
-                        $("<a>", {tabindex: "-1", html: 'Soletração'})
+                        $("<a>", {
+                            tabindex: "-1", class: "subError",
+                            err: 'fluidity:spelling', html: 'Soletração'
+                        })
                     ),
                     $("<li>").append(
-                        $("<a>", {tabindex: "-1", html: 'Fragmentação de palavras'})
+                        $("<a>", {
+                            tabindex: "-1", class: "subError",
+                            err: 'fluidity:wordsfragmentation',
+                            html: 'Fragmentação de palavras'
+                        })
                     ),
                     $("<li>").append(
-                        $("<a>", {tabindex: "-1", html: 'Retificação espontânea'})
+                        $("<a>", {
+                            tabindex: "-1", class: "subError",
+                            err: 'fluidity:spontaneousrectification', html: 'Retificação espontânea'
+                        })
                     )
                 )
             )
         )
     );
     return $correctionDD;
+};
+
+//Preenche a div desejada com o som da pergunta
+
+window.getQuestionVoice = function (questionID) {
+    var self = this;
+    self.bd2 = 'let_questions';
+    self.site = 'http://127.0.0.1:5984';//process.env.COUCHDB;
+    var $soundDiv = $('<div>');
+    $($soundDiv)
+        .append($('<audio>', {
+                class: "col-md-12",
+                "controls": "controls",
+                id: "teacherVoice"
+            })
+            .append(
+                $('<source>', {
+                    src: self.site + "/" + self.bd2 + "/" + questionID + "/voice.mp3",
+                    type: "audio/mpeg"
+                })
+            )
+        );
+    return $soundDiv;
+};
+
+//Preenche a div desejada com a preview da pergunta
+window.getTextPreview = function (question) {
+    var $contentDiv = $('<div>', {class: 'col-md-12'});
+    var $soundDiv = getQuestionVoice(question._id);
+    //Separa o texto em paragrafos
+    var $paragraph = question.content.text.split(/\n/);
+    var words = $();
+    var nWords = 0;
+    //por cada paragrafo adiciona a palavra a lista, e a new line
+    $.each($paragraph, function (iLine, line) {
+        var $wordsList = line.split(" ");
+        $.each($wordsList, function (i, word) {
+            //Replace String With Selectable Span (Não esquecer os PARAGRAFOS)
+            var wordTime = getObjects(question.content.wordTimes, 'pos', nWords)[0];
+            //If word as associated time
+            if (wordTime) {
+                words = words.add($('<span>', {
+                    text: word + " ",
+                    id: "wd" + nWords,
+                    class: "word",
+                    'data-start': wordTime.start
+                }))
+            } else {
+                words = words.add($('<span>', {
+                    text: word + " ",
+                    id: "wd" + nWords
+
+                }))
+            }
+            //incrementa o nr de palavras (nao conta os breaks
+            nWords++;
+        });
+        words = words.add('<br />')
+    });
+
+    $contentDiv.append($('<div>', {class: 'questBox', question: question._id}).append(
+        words
+    ));
+    /*
+     var pop = Popcorn("audio");
+
+     $.each(question.content.wordTimes, function (id, time) {
+     console.log(time)
+     pop.footnote({
+     start: time.start,
+     end: time.end,
+     text: '',
+     target: 'wd' + time.pos,
+     effect: "applyclass",
+     applyclass: "selected"
+     });
+     });
+
+     //pop.play();
+
+     //var mySnd = document.getElementById("teacherVoice");
+     //mySnd.playbackRate = 0.5;
+     $('.word').click(function () {
+     var audio = $('audio');
+     audio[0].currentTime = parseFloat($(this).data('start'), 10);
+     audio[0].play();
+     });*/
+    return [$contentDiv.wrap('<p/>').parent().html() + $soundDiv.wrap('<p/>').parent().html()]
+};
+
+//Preenche a div desejada com a preview da pergunta
+window.setListPreview = function (question) {
+    // console.log(question)
+    var $contentDiv = $('<div>', {class: 'col-md-12'});
+    var $soundDiv = getQuestionVoice(question._id);
+    var nWords = 0;
+    //Coloca as palavras nas coluna
+    $.each(question.content.columns, function (i, column) {
+        var words = $();
+
+        $.each(column.words, function (iw, word) {
+            words = words.add($('<span>', {
+                    text: word,
+                    id: "wd" + nWords
+                }).add('<br>')
+            );
+            nWords++;
+        });
+
+        $contentDiv.append(
+            $('<div>', {
+                class: "col-md-" + (12 / question.content.columns.length)
+            }).append(
+                $('<div>', {
+                        class: "questBox centered"
+                    }
+                ).append(words))
+        );
+    });
+    return [$contentDiv.wrap('<p/>').parent().html(), $soundDiv.wrap('<p/>').parent().html()]
+};
+
+//Preenche a div desejada com a preview da pergunta
+window.setInterpretationPreview = function (question) {
+    //Carrega o som,
+    var $contentDiv = $('<div>', {class: 'col-md-12'});
+    var $soundDiv = getQuestionVoice(question._id);
+    var words = $();
+    var $text = $('<div>', {class: 'questBox'});
+    $contentDiv.append($text);
+
+
+    //Separa o texto em paragrafos
+    var $paragraph = question.content.text.split(/\n/);
+    var words = $();
+    var nWords = 0;
+    //por cada paragrafo adiciona a palavra a lista, e a new line
+    $.each($paragraph, function (iLine, line) {
+        var $wordsList = line.split(" ");
+        $.each($wordsList, function (i, word) {
+            //Replace String With Selectable Span (Não esquecer os PARAGRAFOS)
+
+            if (question.content.sid.indexOf(nWords + "") != -1) {
+                words = words.add($('<span>', {
+                    text: word + " ",
+                    class: "markedWord"
+                }))
+            } else {
+                words = words.add($('<span>', {
+                    text: word + " "
+                }))
+            }
+            //incrementa o nr de palavras (nao conta os breaks
+            nWords++;
+        });
+        words = words.add('<br />')
+    });
+    $text.append(words);
+    return [$contentDiv.wrap('<p/>').parent().html(), $soundDiv.wrap('<p/>').parent().html()]
+};
+
+//Preenche a div desejada com a preview da pergunta
+window.setMultimediaPreview = function (question, div) {
+    var $contentDiv = $('<div>', {class: 'col-md-12'});
+    var $answersDiv = $('<div>');
+    //Se o questione for do tipo audio
+    switch (question.content.questionType) {
+        case "audio":
+            //Adiciona o som
+            $contentDiv.append(getQuestionVoice(question._id));
+            break;
+        case "image":
+            //Adiciona a imagem
+            $contentDiv.append($('<div>', {class: 'questBox centered'}).append(
+                $('<img>', {src: question.content.question})
+            ));
+            break;
+        case "text":
+            //Adiciona o texto
+            $contentDiv.append($('<label>', {class: 'col-md-12 questBox centered', text: question.content.question}));
+
+            break;
+    }
+    //Mostra as opções de resposta
+    var nWrongAnswers = question.content.answers.length;
+
+    $.each(question.content.answers, function (i, key) {
+            switch (question.content.answerType) {
+                case "text":
+                    $answersDiv
+                        .append($('<div>', {class: 'col-md-' + 12 / nWrongAnswers}).append(
+                            ($('<button>', {
+                                value: i,
+                                class: 'asnwerBox ' + (i == 0 ? "rightAnswer" : ""),
+                                html: key.content
+                            })))
+                        )
+                    break;
+                case "image":
+                    $answersDiv
+                        .append($('<div>', {class: 'col-md-' + 12 / nWrongAnswers}).append(
+                            ($('<img>', {
+                                value: i,
+                                class: 'asnwerBox ' + (i == 0 ? "rightAnswer" : ""),
+                                src: key.content
+                            })))
+                        )
+                    break;
+
+            }
+        }
+    );
+    //Efectua um shuffle ás respostas, para mudarem dinamicamente de posicoes
+    $answersDiv.find(".asnwerBox").shuffle();
+    return [$contentDiv.wrap('<p/>').parent().html(), $answersDiv.wrap('<p/>').parent().html()];
+};
+
+window.hello = function () {
+    alert("hello")
 }

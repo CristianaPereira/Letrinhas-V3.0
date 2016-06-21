@@ -48,6 +48,8 @@ exports.new = function (req, res) {
         //Creates a tes obj
         var test = req.body;
         test.profID = user;
+        test.note = -1;
+        test.solved = false;
         test.generic = false;
         //Separa o d-m-a, inverte-o para a-m-d e transforma-o em timestamp
         test.beginDate = new Date(test.beginDate.split("-").reverse().join("-")).getTime();

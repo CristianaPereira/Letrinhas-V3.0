@@ -155,7 +155,10 @@
                     <ul class="nav navbar-nav">
                         <li><a>Total: <label id="questionsBadge" class=""><%=questions.length%></label>
                         </a></li>
-
+                        <li>
+                            <input id="txtSearch" type="text" class="form-control" placeholder="Pesquisar"
+                                   aria-describedby="basic-addon2">
+                        </li>
                         <li><a id="orderBy" class="order"><i class="fa fa-sort-alpha-asc"></i> </a></li>
 
                         <!-- Filter by -->
@@ -224,8 +227,10 @@
                 <div style="margin: 20px">
                     <div class="panel-group" id="allQuestions">
                         <% _.each(questions, function(question, iQuest) { %>
-                        <div class="panel panel-default" id="<%= question._id %>">
-                            <div class="panel-heading"
+
+                        <div class="panel panel-default" value=" <%= question.subject %>"
+                             id='<%= question._id %>' type="<%= question.type %>">
+                            <div class="panel-heading" value=" <%= question.subject %>"
                             <% if ( question.profID == window.sessionStorage.getItem('username') ){ %>
                             style="background-color:#FBF6B4"
                             <% } %>>
@@ -243,20 +248,26 @@
                             <div class="panel-body">
                                 <label class="col-md-3 lblDataDetails">Pergunta:</label>
                                 <label class="col-md-9 "><%= question.question %></label>
-                                <div class="col-md-12">
-                                    <!--Se a pergunta for de texto-->
-                                    <% if ( question.type == 'text'){ %>
-                                    <div class="questBox">
-                                        <% var num=0 %>
-                                        <% _.each(question.content.text.split('\n'),function(paragraph){ %>
-                                        <% _.each(paragraph.split(' '),function(word, iword){ %>
-                                        <span id="wd<%=num%>"><%=word%></span> <% num++ %><% }); %><br><% }); %>
-                                    </div>
-                                    <% } %>
 
-                                </div>
+                                <!--Se a pergunta for de texto obtem o html da preview-->
+                                <% if ( question.type == 'text'){ %>
+                                <%print(getTextPreview(question)) %>
+                                <% } %>
+                                <!--Se a pergunta for de Lista obtem o html da preview-->
+                                <% if ( question.type == 'list'){ %>
+                                <%print(setListPreview(question)) %>
+                                <% } %>
+                                <!--Se a pergunta for de Multimedia obtem o html da preview-->
+                                <% if ( question.type == 'multimedia'){ %>
+                                <%print(setMultimediaPreview(question)) %>
+                                <% } %>
+                                <!--Se a pergunta for de Interpretacao obtem o html da preview-->
+                                <% if ( question.type == 'interpretation'){ %>
+                                <%print(setInterpretationPreview(question)) %>
+                                <% } %>
                             </div>
                         </div>
+
                     </div>
                     <% }); %>
                 </div>

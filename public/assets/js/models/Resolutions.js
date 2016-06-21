@@ -10,9 +10,10 @@ var Resolution = Backbone.Model.extend({
                 function (json) {
                     console.log(json)
                     self.attributes = (json);
-                    self.attributes.resolutionDate = self.attributes.resolutionDate.substring(0, 10);
-                    self.attributes.audioStudent = self.site + "/let_resolutions/" + json._id + "/record.m4a";
-                    self.attributes.audioProf = self.site + "/let_questions/" + json.questionID + "/voice.mp3";
+                    //  self.attributes.resolutionDate = self.attributes.resolutionDate.substring(0, 10);
+                    //self.attributes.audioStudent = self.site + "/let_resolutions/" + json._id + "/record.m4a";
+                    // self.attributes.audioProf = self.site + "/let_questions/" + json.questionID + "/voice.mp3";
+
 
                     after_fetch();
                 },
@@ -32,8 +33,10 @@ var Resolutions = Backbone.Collection.extend({
         var self = this;
         modem('GET', 'resolutions',
             function (json) {
+                console.log(json)
                 for (i = 0; i < json.length; i++) {
-                    json[i].resolutionDate = json[i].resolutionDate.substring(0, 10);
+                    var date = new Date(json[i].resolutionDate);
+                    json[i].resolutionDate = date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear();
                     self.models.push(new Resolution(json[i]));
                 }
                 after_fetch();
