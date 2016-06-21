@@ -2,6 +2,7 @@ window.ResolutionsTextView = Backbone.View.extend({
     events: {
 
         'click [type="checkbox"]': "filterBy",
+        'click .subError': 'saveError',
         'click .questBox > span': "resolWord",
         'click #confCorrection': "confCorrection",
         'mouseleave .listButton': "closeDD"
@@ -96,6 +97,12 @@ window.ResolutionsTextView = Backbone.View.extend({
         $("#mLogin").modal("show");
     },
 
+    saveError: function (e) {
+        console.log(this.model.attributes)
+        console.log($("#correctionDD").attr("wordId"))
+        console.log($(e.currentTarget).html())
+    },
+
     resolWord: function (e) {
         var $target = $(e.currentTarget);
         //TRoca o span pela dd dos erros
@@ -127,7 +134,8 @@ window.ResolutionsTextView = Backbone.View.extend({
         if (!self.auth()) {
             return false;
         }
-
+        //conta o numero de palavras
+        //self.model.attributes.answer.wordsTotal = self.model.attributes.question.content.text.split(" ").length;
         self.data = self.model.toJSON();
         console.log(self.data)
         $(this.el).html(this.template({model: self.data}));

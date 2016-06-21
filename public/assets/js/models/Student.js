@@ -19,6 +19,21 @@ var Student = Backbone.Model.extend({
             }
         );
     },
+    fetchDetails: function (after_fetch) {
+        var self = this;
+        modem('GET', 'students/' + this.id + '/info',
+            function (json) {
+                self.attributes = (json);
+                console.log(self)
+                after_fetch();
+            },
+            //Precisamos enviar para a Tabela escolas o id do professor.
+            function (xhr, ajaxOptions, thrownError) {
+                var json = JSON.parse(xhr.responseText);
+                error_launch(json.message);
+            }
+        );
+    },
     exist: function (username, after_fetch) {
         var self = this;
         //Generate Form Data

@@ -25,8 +25,14 @@ var Router = Backbone.Router.extend({
             this.currentView.delegateEvents();
 
         }
+        console.log("vai render")
         var rendered = view.render();
+        console.log("rendeu")
         elem.html(rendered.el);
+
+    },
+    afterRender: function (view, elem, sub) {
+        view.afterRender();
     },
     routes: {
 
@@ -52,7 +58,9 @@ var Router = Backbone.Router.extend({
         "students": "students",
         "students/new": "studentsNew",
         "students/:id/edit": "studentsEdit",
+        "students/:id/info": "studentsInfo",
 
+        "statistics": "statistics",
 
         //Touch questions Routing
         "questionsTouch": "questionsTouch",
@@ -61,6 +69,7 @@ var Router = Backbone.Router.extend({
 
         "resolutions": "resolutions",
         "resolutions/:id/list": "resolutionsList",
+        "resolutions/:id": "resolutionsNew",
         "resolutions/:id/text": "resolutionsText",
         //Tests Routing
         "questions": "questions",
@@ -186,7 +195,24 @@ var Router = Backbone.Router.extend({
             }
         );
     },
+    resolutionsNew: function (id) {
+        var self = this;
 
+        this.navbar();
+
+        templateLoader.load(["ResolutionsNewView"],
+            function () {
+                var ss = new Resolution({id: id});
+                ss.fetch(function () {
+                    var v = new ResolutionsNewView({
+                        model: ss
+                    });
+                    self.showView(v, $('#content'));
+                    self.afterRender(v, $('#content'))
+                });
+            }
+        );
+    },
     //Teacher Templates
     teachers: function () {
         var self = this;
@@ -309,7 +335,25 @@ var Router = Backbone.Router.extend({
             }
         );
     },
+    studentsInfo: function (id) {
+        var self = this;
 
+        this.navbar();
+        templateLoader.load(["StudentsInfo"],
+            function () {
+                var ss = new Student({
+                    id: id
+                });
+                ss.fetchDetails(function () {
+                    var v = new StudentsInfo({
+                        model: ss
+                    });
+                    self.showView(v, $('#content'));
+                })
+
+            }
+        );
+    },
 
     //School Templates
     schools: function () {
@@ -364,6 +408,23 @@ var Router = Backbone.Router.extend({
         );
     },
 
+    statistics: function () {
+        var self = this;
+
+        self.navbar();
+
+        templateLoader.load(["StatisticsView"],
+            function () {
+                var ss = new Statistics();
+                ss.fetch(function () {
+                    var v = new StatisticsView({
+                        collection: ss
+                    });
+                    self.showView(v, $('#content'));
+                })
+            }
+        );
+    },
 
     //Questions template
     questionsTouch: function () {

@@ -23,6 +23,7 @@ var category = require('./routes/category'),
     resolutions = require('./routes/resolutions'),
     schools = require('./routes/schools'),
     students = require('./routes/students'),
+    statistics = require('./routes/statistics'),
     teachers = require('./routes/teachers'),
     tests = require('./routes/tests'),
     testTypes = require('./routes/testtypes');
@@ -192,12 +193,14 @@ app.route('/questions')
 
 app.route('/questions/:id')
     .put(auth, tself, questions.upDate)
+    .delete(auth, tself, perms(3), questions.removeQuestion)
     .get(auth, perms(2), questions.get);
 
 //-----------------------------------------------------RESOLUTIONS
 
 app.route('/resolutions')
-    .get(auth, tself, perms(2), resolutions.getAll);
+    .get(auth, tself, perms(2), resolutions.getAll)
+    .post(auth, tself, perms(2), resolutions.new);
 
 app.route('/resolutions/:id')
     .get(auth, tself, perms(2), resolutions.get);
@@ -232,8 +235,18 @@ app.route('/students/:id')
     .get(auth, perms(2), students.get)
     .delete(auth, perms(3), students.removeStudent);
 
+app.route('/students/:id/info')
+    .get(auth, perms(2), students.getInfo)
+
+
 app.route('/students/exist')
     .post(auth, tself, perms(2), students.exist);
+
+//-----------------------------------------------------STATISTICS
+
+//Only Return Teacher Related Students
+app.route('/statistics')
+    .get(auth, tself, perms(2), statistics.getAll);
 //-----------------------------------------------------TEACHERS
 
 app.route('/me')//GETS ACTUAL USER DATA

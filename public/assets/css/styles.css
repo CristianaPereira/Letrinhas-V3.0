@@ -140,23 +140,24 @@ nav.sidebar, .main {
     }
 }
 
+/*
 @media (min-width: 1330px) {
 
-    .main {
-        width: calc(100% - 200px);
-        margin-left: 200px;
-    }
+   .main {
+       width: calc(100% - 200px);
+       margin-left: 200px;
+   }
 
-    nav.sidebar {
-        margin-left: 0px;
-        float: left;
-    }
+  /* nsidebar {
+       margin-left: 0px;
+       float: left;
+   }
 
-    nav.sidebar .forAnimate {
-        opacity: 1;
-    }
+   nav.sidebar .forAnimate {
+       opacity: 1;
+   }
 }
-
+*/
 nav.sidebar .navbar-nav .open .dropdown-menu > li > a:hover, nav.sidebar .navbar-nav .open .dropdown-menu > li > a:focus {
     color: #CCC;
     background-color: transparent;
@@ -247,7 +248,7 @@ section {
 
 .dropdown-menu {
 
-    min-width: 100%;
+    /* min-width: 100%;*/
 
 }
 
@@ -760,7 +761,7 @@ label {
 
 .listButton > span {
     font-family: 'Open Sans', sans-serif;
-    font-size: 17px;
+    font-size: 15px;
     color: #32323a;
     padding-left: 15px;
 }
@@ -771,12 +772,25 @@ label {
     margin-bottom: 5px;
 }
 
+.listButton > .fa-eye {
+    display: none;
+}
+
+.listButton:hover > .fa-eye {
+    display: block;
+    float: right;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+}
+
 .lblDataDetails {
     font-weight: bold;
 }
 
 .carousel-indicators {
     top: -10px;
+    position: relative;
 }
 
 .carousel-control .glyphicon-chevron-left, .carousel-control .icon-prev {
@@ -820,7 +834,7 @@ label {
     text-align: left;
     color: #1fb5ad;
     font-weight: bold;
-    font-size: 25px;
+    font-size: 20px;
     margin-bottom: 0px;
 }
 
@@ -1432,4 +1446,17 @@ option:hover {
 .word:hover, .word.selected {
     color: blue;
     cursor: pointer;
+}
+
+.rightAnswer {
+    background-color: #caff8c;
+}
+
+/*CORRECTIONS*/
+[class*="fluidity"] {
+    color: #FF9800;
+}
+
+[class*="accuracy"] {
+    color: #b19f00;
 }

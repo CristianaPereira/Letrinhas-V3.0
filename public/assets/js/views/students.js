@@ -69,12 +69,49 @@ window.StudentsView = Backbone.View.extend({
             .append('<label class="col-md-4 lblDataDetails">Número:</label> <label class="col-md-8">' + studentData.number + '</label><br>')
 
         $('#studentsPreview').append(
-            $('<label>', {
-                class: "dataTitle col-md-12", text: studentData.name
-            }), $hr,
-            $divFoto, $divDados)
-            .append('<div class="col-md-12" ><hr class="dataHr"></div>')
-        ;
+            $('<div>', {
+                class: "dropdown"
+            }).append(
+                $('<button>', {
+                    class: "btn btn-default dropdown-toggle", type: "button",
+                    'data-toggle': "dropdown"
+                }).append(
+                    $('<label>', {
+                        class: "dataTitle col-md-12", text: studentData.name + "  "
+                    }).append(
+                        $('<i>', {
+                            class: "fa fa-gear"
+                        })
+                    )
+                ),
+                $('<ul>', {
+                    class: "dropdown-menu"
+                }).append(
+                    $('<li>').append(
+                        $('<a>', {
+                            href: "#students/" + studentData._id + "/info", html: '  Estatísticas do aluno'
+                        }).prepend(
+                            '<i class="fa fa-pie-chart"></i>'
+                        )
+                    ),
+                    $('<li>').append(
+                        $('<a>', {
+                            href: "#students/" + studentData._id + "/edit", html: '  Editar dados do aluno'
+                        }).prepend(
+                            '<i class="fa fa-edit"></i>'
+                        )
+                    ),
+                    $('<li>').append(
+                        $('<a>', {
+                            href: "#", html: '  Eminar aluno'
+                        }).prepend(
+                            '<i class="fa fa-trash"></i>'
+                        )
+                    )
+                )
+            ), $hr,
+            $divFoto, $divDados, '<div class="col-md-12" ><hr class="dataHr"></div>'
+        );
     },
 
 

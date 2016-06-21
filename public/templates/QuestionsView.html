@@ -118,30 +118,33 @@
     </div>
 </nav>
 <div id="questionsDiv" class="mainDiv">
-    <div class="col-md-12">
-        <section class="panel subMenu">
 
-            <ul class="nav navbar-nav">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-filter"></i> Disciplina
-                        <b class="caret"></b></a>
-                    <ul class="dropdown-menu" id="filterSubject" filter="">
-                        <li class="dropdown-submenu pull-left">
-                            <a class=" contentFilter"
-                               data-toggle="dropdown"
-                               value=""
-                               aria-expanded="false">Ver todas</a>
-                        </li>
-
-                    </ul>
-                </li>
-            </ul>
-        </section>
-        <!-- END REGIONAL STATS PORTLET-->
-    </div>
 
     <div class="panel-scroll col-md-5" align="center">
+        <div class="col-md-12">
+            <section class="panel subMenu">
+
+                <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-filter"></i>
+                            Disciplina
+                            <b class="caret"></b></a>
+                        <ul class="dropdown-menu" id="filterSubject" filter="">
+                            <li class="dropdown-submenu pull-left">
+                                <a class=" contentFilter"
+                                   data-toggle="dropdown"
+                                   value=""
+                                   aria-expanded="false">Ver todas</a>
+                            </li>
+
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+            <!-- END REGIONAL STATS PORTLET-->
+        </div>
         <div id="questionsContent" class=" panel-body col-md-12" align="center">
+
             <% _.each(collection,function(question){ %>
             <div class="listButton divWidget row" value=" <%= question.subject %>"
                  id='<%= question._id %>' type="<%= question.type %>"
@@ -153,11 +156,7 @@
             <img src="../img/<%= question.type %>.png">
             <img src='../img/<%= question.subject.split(":")[0] %>.png'>
             <span><%= question.title %></span>
-            <div class="editDeleteOp">
-                <a href="#questionsText/Q1463132090184" title="Editar pergunta"><i
-                        id="btnEdit" value="<%= question._id %>" class="fa fa-edit"></i></a>
-                <a title="Apagar pergunta"><i class="fa fa-trash-o"></i></a>
-            </div>
+            <i class="fa fa-eye"></i>
         </div>
         <% }); %>
     </div>
@@ -165,7 +164,28 @@
 </div>
 <div class="col-md-7" style="padding: 15px 30px; " align="center">
     <div id="questionsPreview" class="col-md-12 divWidget" align="center">
-
+        <label class="dataTitle col-md-12 row"><%= collection[0].title %>
+            <hr class="dataHr">
+        </label>
+        <div class="form-group">
+            <label class="col-md-3 lblDataDetails">Pergunta:</label>
+            <label class="col-md-9 "><%= collection[0].question %></label></div>
+        <!--Se a pergunta for de texto obtem o html da preview-->
+        <% if ( collection[0].type == 'text'){ %>
+        <%print(getTextPreview(collection[0])) %>
+        <% } %>
+        <!--Se a pergunta for de Lista obtem o html da preview-->
+        <% if ( collection[0].type == 'list'){ %>
+        <%print(setListPreview(collection[0])) %>
+        <% } %>
+        <!--Se a pergunta for de Multimedia obtem o html da preview-->
+        <% if ( collection[0].type == 'multimedia'){ %>
+        <%print(setMultimediaPreview(collection[0])) %>
+        <% } %>
+        <!--Se a pergunta for de Interpretacao obtem o html da preview-->
+        <% if ( collection[0].type == 'interpretation'){ %>
+        <%print(setInterpretationPreview(collection[0])) %>
+        <% } %>
     </div>
 </div>
 </div>

@@ -119,151 +119,21 @@ window.TestsView = Backbone.View.extend({
 
         switch (question.type) {
             case 'text':
-                self.textPreview(question, i);
+                $("#questionsPreview" + i).append(getTextPreview(question))
                 break;
             case 'list':
-                self.listPreview(question, i);
+                $("#questionsPreview" + i).append(setListPreview(question))
                 break;
             case 'interpretation':
-                self.interpretationPreview(question, i);
+                $("#questionsPreview" + i).append(setInterpretationPreview(question))
                 break;
             case 'multimedia':
-                self.multimediaPreview(question, i);
+                $("#questionsPreview" + i).append(setMultimediaPreview(question))
                 break;
         }
         ;
     },
 
-    //Adds professor voice to view
-    addVioice: function (source, i) {
-        $("#questionsPreview" + i)
-            .append($('<audio>', {
-                class: "col-md-12",
-                "controls": "controls"
-            })
-                .append(
-                    $('<source>', {
-                        src: source,
-                        type: "audio/mpeg"
-                    })
-                ))
-    },
-
-    textPreview: function (question, iQ) {
-        var self = this;
-        self.addVioice(self.site + "/" + self.bd2 + "/" + question._id + "/voice.mp3", iQ);
-        $("#questionsPreview" + iQ + " #questionBox" + iQ).append($('<label>', {
-            class: 'questBox',
-            text: question.content.text
-        }));
-
-    },
-
-    listPreview: function (question, iQ) {
-        // console.log(question)
-        var self = this;
-        //Carrega o so,
-        self.addVioice(self.site + "/" + self.bd2 + "/" + question._id + "/voice.mp3", iQ);
-
-        //Coloca as palavras nas coluna
-        $.each(question.content.columns, function (i, column) {
-            var words = $();
-            $.each(column.words, function (iw, word) {
-                words = words.add($('<label>', {
-                        text: word
-                    }).add('<br>')
-                )
-            });
-
-            $("#questionsPreview" + iQ).append(
-                $('<div>', {
-                    class: "col-md-" + (12 / question.content.columns.length)
-                }).append(
-                    $('<div>', {
-                            class: "questBox centered",
-                            id: "questBox" + iQ
-                        }
-                    ).append(words))
-            );
-        });
-    },
-
-    interpretationPreview: function (question, iQ) {
-        // console.log(question)
-        var self = this;
-
-        self.addVioice(self.site + "/" + self.bd2 + "/" + question._id + "/voice.mp3", iQ);
-        $("#questionsPreview" + iQ + " #questionBox" + iQ).append($('<div>', {class: 'questBox'}));
-        var $text = $("#questionsPreview" + iQ + " #questionBox" + iQ + " > div");
-
-        //Separa o texto e marca as palavras
-        var wordsList = question.content.text.split(" ");
-
-        $.each(wordsList, function (i, word) {
-            if (word == '<br>') {
-                var $span = $('<br>', {});
-            } else {
-                var $span = $('<span>', {text: word});
-                if (question.content.sid.indexOf(i + "") != -1) {
-                    $span.addClass("markedWord")
-                }
-
-            }
-            $text.append($span, " ");
-        });
-
-
-    },
-
-    multimediaPreview: function (question, iQ) {
-        var self = this;
-
-
-        //Se o questione for do tipo audio
-        switch (question.content.questionType) {
-            case "audio":
-                //Adiciona o som
-                self.addVioice(self.site + "/" + self.bd2 + "/" + question._id + "/voice.mp3", iQ);
-                break;
-            case "image":
-                //Adiciona a imagem
-                $("#questionBox" + iQ).append($('<div>', {class: 'questBox centered'}).append(
-                    $('<img>', {src: question.content.question})
-                ));
-                break;
-            case "text":
-                //Adiciona o texto
-                $("#questionBox" + iQ).append($('<label>', {
-                    class: 'questBox centered',
-                    text: question.content.question
-                }));
-
-                break;
-        }
-        //Mostra as opções de resposta
-        var nWrongAnswers = question.content.answers.length;
-
-        $.each(question.content.answers, function (i, key) {
-                switch (question.content.answerType) {
-                    case "text":
-                        $("#questionsPreview" + iQ)
-                            .append($('<div>', {class: 'col-md-' + 12 / nWrongAnswers}).append(
-                                ($('<button>', {class: 'asnwerBox', html: key.content})))
-                            )
-                        break;
-                    case "image":
-                        $("#questionsPreview" + iQ)
-                            .append($('<div>', {class: 'col-md-' + 12 / nWrongAnswers}).append(
-                                ($('<img>', {class: 'asnwerBox', src: key.content})))
-                            )
-                        break;
-                }
-
-            }
-        );
-        //Efectua um shuffle ás respostas, para mudarem dinamicamente de posicoes
-        $(".asnwerBox").shuffle();
-    },
 
     //Class Initializer
     initialize: function () {

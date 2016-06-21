@@ -4,6 +4,7 @@ window.TestsNewView = Backbone.View.extend({
         "click .removeQuestion": "removeQuestion",
         'click [type="checkbox"]': "filterBy",
         'click .contentFilter': "filterBycontent",
+        "keyup #txtSearch": "filterBy",
         "click #orderBy": "orderQuestions",
         "blur .emptyField": "isEmpty",
         "click #newtestbtn": "beforeSend",
@@ -25,22 +26,28 @@ window.TestsNewView = Backbone.View.extend({
     //Applys filters
     filterBy: function () {
         //Esconde todos os testes
-        $("#allQuestions .listButton").show();
+        var typedText = $("#txtSearch").val();
+
+        //Esconde todos os testes
+        $("#allQuestions  .panel-default").hide();
+        //Mostra apenas os que contém a string escrita
+        $("#allQuestions  .panel-default:containsi(" + typedText + ")").show();
+
         //Esconde os testes cujas checkboxes não estão seleccionadas
         $.each($("input:checkbox:not(:checked)"), function (i, k) {
             console.log($(k).attr("value"))
-            $("#allQuestions .listButton[type=" + $(k).attr("value") + "]").hide();
+            $(".panel-default[type=" + $(k).attr("value") + "]").hide();
         });
 
         //Esconde os que ao correspondem conteudos seleccionados
-        $.each($("#allQuestions .listButton:visible"), function (i, k) {
+        $.each($("#allQuestions  .panel-default:visible"), function (i, k) {
+            console.log($(k).attr("value"))
             //Se nao pertencerem à categoria escolhida, esconde-os
             if ($(k).attr("value").indexOf($("#filterSubject").attr("filter")) == -1) {
                 $(k).hide();
             }
         });
-        $("#questionsBadge").text($("#allQuestions .listButton:visible").length + "/" + $("#allQuestions .listButton").length)
-
+        $("#questionsBadge").text($("#allQuestions  .panel-default:visible").length + "/" + this.data.length)
     },
 
     //Applys filters
@@ -137,7 +144,7 @@ window.TestsNewView = Backbone.View.extend({
     //Class Initializer
     initialize: function () {
         this.data = this.collection.toJSON();
-          },
+    },
 
     //Class Renderer
     render: function () {

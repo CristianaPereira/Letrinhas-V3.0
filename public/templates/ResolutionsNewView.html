@@ -1,0 +1,429 @@
+<div class="form">
+    <div id="testsPreview" class="row divWidget">
+        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+
+            <ol class="carousel-indicators">
+                <!--Por cada pergunta--> <!--Coloca o primeiro indicator activo-->
+                <% _.each(model.questions,function(question,iQuestion){ %>
+                <li data-target="#myCarousel" data-slide-to="<%=iQuestion%>"
+                <% if ( iQuestion == 0 ){ %>class="active"<% } %>></li>
+                <% }); %>
+            </ol>
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner" role="listbox">
+                <!--Por cada pergunta--> <!--Coloca o primeiro indicator activo-->
+                <% _.each(model.questions,function(question,iQuestion){ %>
+                <% console.log(question) %>
+                <% if ( iQuestion == 0 ){ %>
+                <div class="item active ">
+                    <% }else{ %>
+                    <div class="item ">
+                        <% } %>
+                        <form id="<%=question._id%>" type="<%=question.info.type%>">
+                            <input type="hidden" name="resolID" value="<%=question.resol._id%>">
+                            <div class="col-md-7">
+                                <label class="dataTitle col-md-12 row"><%=question.info.title%>
+                                    <hr>
+                                </label>
+                                <div class="form-group"></div>
+                                <div class="form-group"><label class="col-md-3 lblDataDetails">Pergunta:</label><label
+                                        class="col-md-9 "><%=question.info.question%></label></div>
+                                <!--Se a pergunta for de texto obtem o html da preview-->
+                                <% if ( question.info.type == 'text'){ %>
+                                <%print(getTextPreview(question.info)) %>
+                                <audio class="col-md-12" controls="controls" id="studentsVoice">
+                                    <source src="http://letrinhas.pt:5984/let_resolutions/<%=question.resol._id%>/record.m4a"
+                                            type="audio/mp4">
+                                </audio>
+                                <% } %>
+                                <!--Se a pergunta for de Lista obtem o html da preview-->
+                                <% if ( question.info.type == 'list'){ %>
+                                <%print(setListPreview(question.info)) %>
+                                <% } %>
+                                <!--Se a pergunta for de Multimedia obtem o html da preview-->
+                                <% if ( question.info.type == 'multimedia'){ %>
+                                <%print(setMultimediaPreview(question.info)) %>
+                                <% } %>
+                                <!--Se a pergunta for de Interpretacao obtem o html da preview-->
+                                <% if ( question.info.type == 'interpretation'){ %>
+                                <%print(setInterpretationPreview(question.info)) %>
+                                <% } %>
+                            </div>
+                            <div class="col-md-5" style="border-left: 1px solid #f9cfdc;">
+                                <label class="dataTitle col-md-12 row">Correção
+                                    <hr>
+                                </label>
+
+                                <!--Se a pergunta for de texto apresenta os respectivos parametros-->
+
+                                <% if ( question.info.type == 'text'){ %>
+                                <label class="col-md-8 row">
+                                    Total de palavras: </label>
+                                <label class="col-md-4 row"
+                                       id="wordsCount"><%=question.info.content.text.split(" ").length%></label>
+                                <label class="col-md-8 row">
+                                    Total de erros: </label>
+                                <label class="col-md-4 row" id="errorCount">
+                                    0
+                                </label>
+                                <div class="col-md-12">
+                                    <div class="input-group">
+                                        <span class="input-group-addon btn-white"><i
+                                                class="fa fa-comments"></i></span>
+                                        <input readonly class="form-control mandatory" questionID="<%=question._id%>"
+                                               value="0" id="fluidity">
+                                        <span class="input-group-addon btn-white"><i
+                                                class="fa fa-warning"></i></span>
+                                        <select class="form-control" id="fluidityDif">
+                                            <option disabled selected>Dificuldade</option>
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                            <option>5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="input-group">
+                                        <span class="input-group-addon btn-white"><i
+                                                class="fa fa-comments-o"></i></span>
+                                        <input readonly class="form-control mandatory" questionID="<%=question._id%>"
+                                               value="0" id="accuracy">
+                                        <span class="input-group-addon btn-white"><i
+                                                class="fa fa-warning"></i></span>
+                                        <select class="form-control" id="accuracyDif">
+                                            <option disabled selected>Dificuldade</option>
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                            <option>5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="input-group">
+                                        <span class="input-group-addon btn-white"><i
+                                                class="fa fa-exclamation"></i></span>
+                                        <select class="form-control" id="ponctuation" name="ponctuation">
+                                            <option disabled selected>Pontuação</option>
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                            <option>5</option>
+                                        </select>
+                                        <span class="input-group-addon btn-white"><i
+                                                class="fa fa-warning"></i></span>
+                                        <select class="form-control" id="ponctuationDif">
+                                            <option disabled selected>Dificuldade</option>
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                            <option>5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="input-group">
+                                        <span class="input-group-addon btn-white"><i class="fa fa-comment-o"></i></span>
+                                        <select class="form-control" id="inflection" name="inflection">
+                                            <option disabled selected>Entoação</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                        </select>
+                                        <span class="input-group-addon btn-white"><i
+                                                class="fa fa-warning"></i></span>
+                                        <select class="form-control" id="inflectionDif">
+                                            <option disabled selected>Dificuldade</option>
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                            <option>5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="input-group">
+                                        <span class="input-group-addon btn-white"><i class="fa fa-bars"></i></span>
+                                        <select class="form-control" id="text" name="text">
+                                            <option disabled selected>Texto</option>
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                            <option>5</option>
+                                        </select>
+                                        <span class="input-group-addon btn-white"><i
+                                                class="fa fa-warning"></i></span>
+                                        <select class="form-control" id="textDif">
+                                            <option disabled selected>Dificuldade</option>
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                            <option>5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="input-group">
+                                        <span class="input-group-addon btn-white"><i class="fa fa-clock-o"></i></span>
+                                        <select class="form-control" name="time" id="time">
+                                            <option disabled selected>Tempo</option>
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                            <option>5</option>
+                                        </select>
+                                        <span class="input-group-addon btn-white"><i
+                                                class="fa fa-warning"></i></span>
+                                        <select class="form-control" id="timeDif">
+                                            <option disabled selected>Dificuldade</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 row">
+                                    <input type="number" class="form-control mandatory" questionID="<%=question._id%>"
+                                           placeholder="Nota" name="note" dif="<%=question.dif%>"
+                                           value="0">
+                                    <span class="glyphicon "><i class="fa fa-percent"></i></span>
+                                </div>
+                                <% } %>
+
+                                <!--Se a pergunta for de Lista apresenta os respectivos parametros-->
+
+                                <% if ( question.info.type == 'list'){ %>
+                                <label class="col-md-8 row">
+                                    Total de palavras: </label>
+                                <!--Conta o nr de palavras-->
+                                <label class="col-md-4 row" id="wordsCount">
+                                    <% var nWords=0; %>
+                                    <% _.each(question.info.content.columns,function(column){ %>
+                                    <% _.each(column.words,function(word){ nWords++; }); }); %>
+                                    <%=nWords%>
+                                </label>
+                                <label class="col-md-8 row">
+                                    Total de erros: </label>
+                                <label class="col-md-4 row" id="errorCount">
+                                    0
+                                </label>
+                                <div class="col-md-12">
+                                    <div class="input-group">
+                                        <span class="input-group-addon btn-white"><i
+                                                class="fa fa-comments"></i></span>
+                                        <input readonly class="form-control mandatory" questionID="<%=question._id%>"
+                                               value="0" id="fluidity">
+                                        <span class="input-group-addon btn-white"><i
+                                                class="fa fa-warning"></i></span>
+                                        <select class="form-control" id="fluidityDif">
+                                            <option disabled selected>Dificuldade</option>
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                            <option>5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="input-group">
+                                        <span class="input-group-addon btn-white"><i
+                                                class="fa fa-comments-o"></i></span>
+                                        <input readonly class="form-control mandatory" questionID="<%=question._id%>"
+                                               value="0" id="accuracy">
+                                        <span class="input-group-addon btn-white"><i
+                                                class="fa fa-warning"></i></span>
+                                        <select class="form-control" id="accuracyDif">
+                                            <option disabled selected>Dificuldade</option>
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                            <option>5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="input-group">
+                                        <span class="input-group-addon btn-white"><i class="fa fa-clock-o"></i></span>
+                                        <select class="form-control" id="time" name="time">
+                                            <option disabled selected>Tempo</option>
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                            <option>5</option>
+                                        </select>
+                                        <span class="input-group-addon btn-white"><i
+                                                class="fa fa-warning"></i></span>
+                                        <select class="form-control" id="timeDif">
+                                            <option disabled selected>Dificuldade</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 row">
+                                    <input type="number" class="form-control mandatory" questionID="<%=question._id%>"
+                                           placeholder="Nota" name="note" dif="<%=question.dif%>"
+                                           value="0">
+                                    <span class="glyphicon "><i class="fa fa-percent"></i></span>
+                                </div>
+
+                                <% } %>
+
+                                <!--Se a pergunta for de Multimedia apresenta os respectivos parametros-->
+
+                                <% if ( question.info.type == 'multimedia'){ %>
+                                <label class="col-md-8 row">
+                                    Resposta do aluno: </label>
+                                <label class="col-md-4 row">
+                                    <!--Se a resposta do aluno for correcta-->
+                                    <%if(question.resol.answer.solution == 0){%>
+                                    <%="Correcta"%>
+                                    <%}else{%>
+                                    <%="Errada"%>
+                                    <%}%>
+                                </label>
+                                <label class="col-md-12 row">
+                                    Nota: </label>
+                                <div class="col-md-12 row">
+                                    <input type="number" class="form-control mandatory" questionID="<%=question._id%>"
+                                           placeholder="Nota" name="note" dif="<%=question.dif%>"
+                                           value="<%if(question.resol.answer.solution == 0){print('100')}else{print('0')}%>">
+                                    <span class="glyphicon "><i class="fa fa-percent"></i></span>
+                                </div>
+                                <% } %>
+                                <!--Se a pergunta for de Interpretacao apresenta os respectivos parametros-->
+                                <% if ( question.info.type == 'interpretation'){ %>
+                                <label class="col-md-8 row">
+                                    Total de palavras: </label>
+                                <!--Conta o nr de palavras-->
+                                <label class="col-md-4 row" id="wordsCount">
+                                    <%=question.info.content.sid.length%>
+                                </label>
+
+                                <!--verifica as certas-->
+                                <% var correct=0, wrong=0;missed=0;total=0%>
+                                <!--cotacao de cada perg-->
+                                <% var value=100/question.info.content.sid.length;%>
+
+                                <% _.each(question.resol.answer.solution,function(sol){%>
+                                <% if(_.contains(question.info.content.sid, sol)){correct++;}else{wrong++}%>
+
+
+                                <% }); %>
+                                <% missed= question.info.content.sid.length-correct;%>
+                                <% total= (correct*value)-(wrong*value)-(missed*value);%>
+
+                                <label class="col-md-10 row">
+                                    Palavras correctas: </label>
+                                <!--Conta o nr de palavras-->
+                                <label class="col-md-2 row">
+                                    <%=correct%>
+                                </label>
+                                <label class="col-md-10 row">
+                                    Palavras erradas: </label>
+                                <!--Conta o nr de palavras-->
+                                <label class="col-md-2 row">
+                                    <%=wrong%>
+                                </label>
+                                <label class="col-md-10 row">
+                                    Palavras não encontradas: </label>
+                                <!--Conta o nr de palavras-->
+                                <label class="col-md-2 row">
+                                    <%=missed%>
+                                </label>
+
+                                <div class="col-md-12 row">
+                                    <input type="number" class="form-control mandatory" questionID="<%=question._id%>"
+                                           placeholder="Nota" name="note" dif="<%=question.dif%>"
+                                           value="<%if(total>0){print(total)}else{print(0)} %>">
+                                    <span class="glyphicon "><i class="fa fa-percent"></i></span>
+                                </div>
+                                <% }; %>
+                            </div>
+                        </form>
+                    </div>
+                    <% }); %>
+
+                </div>
+
+                <!-- Left and right controls -->
+                <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev" style="
+    color: #F9D0DC;">
+                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next" style="
+    color: #F9D0DC;">
+                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+        <div class="row divWidget">
+            <form id="testForm" class="col-md-12" type="test">
+                <input type="hidden" name="testID" value="<%=model._id%>">
+                <label class="dataTitle col-md-6 row">Nota final do teste</label>
+                <div class="col-md-6 row">
+                    <input type="number" class="form-control mandatory"
+                           id="testNote" name="testNote">
+                    <span class="glyphicon "><i class="fa fa-percent"></i></span>
+                </div>
+                <div class="col-md-12">
+                    <hr class="dataHr">
+                </div>
+                <div class="col-md 12">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td class="lblDataDetails">Tipo</td>
+                            <td class="lblDataDetails">Título</td>
+                            <td class="lblDataDetails">Dificuldade</td>
+                            <td class="lblDataDetails">Nota</td>
+                        </tr>
+
+                        <!--Por cada pergunta--> <!--Apresenta a nota e o peso-->
+                        <% _.each(model.questions,function(question,iQuestion){ %>
+                        <tr>
+                            <td><img src="../img/<%=question.info.type%>.png" class="smallImgPreView"></td>
+                            <td><%=question.info.title%></td>
+                            <td name="dificulty"><%=question.dif%></td>
+                            <td id="finalNote<%=question._id%>"></td>
+                        </tr>
+                        <% }); %>
+                    </table>
+                </div>
+
+            </form>
+            <div class="col-md-12">
+                <div class="btn-group" role="group" aria-label="...">
+                    <button id="backbtn" type="reset" class="btn btn-default">Cancelar</button>
+                    <button id="subCorrection" type="submit" class="btn btn-success">Submter correção</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>$(document).ready(function () {
+    $('.carousel').carousel('pause');
+    console.log()
+});</script>
