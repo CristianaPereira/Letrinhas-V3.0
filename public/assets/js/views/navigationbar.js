@@ -1,7 +1,6 @@
 window.NavigationBarView = Backbone.View.extend({
 
     events: {
-        "click #menuSair": "logout",
     },
     //Check Auth
     auth: function () {
@@ -11,14 +10,6 @@ window.NavigationBarView = Backbone.View.extend({
         return true;
     },
 
-    logout: function (e) {
-        e.preventDefault();
-        console.log("out");
-        window.sessionStorage.removeItem("keyo");
-        app.redirect('/#', {
-            trigger: true
-        });
-    },
 
     //Class Initializer
     initialize: function (name) {

@@ -75,7 +75,7 @@ window.orderContentList = function (mylist, e) {
     var listitems = mylist.children('div').get();
 
     listitems.sort(function (a, b) {
-        return $(a).children('span').text().toUpperCase().localeCompare($(b).children('span').text().toUpperCase());
+        return $(a).find('span').text().toUpperCase().localeCompare($(b).find('span').text().toUpperCase());
     });
     //ordenar de forma descendente/ascendente
     if (!$(e.currentTarget).children('span').hasClass("fa-sort-alpha-asc")) {
@@ -481,8 +481,7 @@ window.getImportanceDD = function () {
     });
     $imp.val(3)
     return $imp;
-}
-;
+};
 
 
 //Devolve os tipos de perguntas existentes
@@ -658,7 +657,49 @@ window.showLoginModal = function (form) {
     $("#mLogin").modal({backdrop: 'static', keyboard: true});
     $("#mLogin").modal("show");
 };
+//Tenta efectuar login
+window.attemptLogin = function () {
+    //Create Credentials
+    var cre = $('#userEmail').val() + ':' + md5($("#psswrd").val());   //Credentials = Username:Password
+    window.sessionStorage.setItem("keyo", btoa(cre));                  //Store Credentials Base64
 
+    //Check User Authenticity
+    modem('GET', 'me',
+
+        //Response Handler
+        function (user) {
+            //Hides Login Modal
+            $("#mLogin").modal("hide");
+            window.sessionStorage.setItem("username", user._id)
+            window.sessionStorage.setItem("name", user.name)
+            window.sessionStorage.setItem("b64", user.b64)
+            //Reloads actual view
+
+            document.location.reload(true);
+
+        },
+        //Error Handling
+        function (xhr, ajaxOptions, thrownError) {
+            var json = JSON.parse(xhr.responseText);
+            console.log(xhr)
+            console.log(ajaxOptions)
+            console.log(thrownError)
+
+        }
+    );
+};
+
+//efectua logout
+window.logout = function () {
+    console.log("out");
+    window.sessionStorage.removeItem("keyo");
+    window.sessionStorage.removeItem("b64");
+    window.sessionStorage.removeItem("name");
+    window.sessionStorage.removeItem("username");
+    app.navigate("/home", {
+        trigger: true
+    });
+}
 //Mostra o formulário de login no form indicado
 //showCropper("nomeFormulario/div", maxWidth da tela, Width do resultado, height do resultado , ratio (1=quadrado) (16/9=rectangulo);
 window.showCropper = function (form, base_image, resWidth, aspectRatio, result) {
@@ -746,37 +787,6 @@ function updatePreview(c) {
     }
 }
 
-//Tenta efectuar login
-window.attemptLogin = function () {
-    //Create Credentials
-    var cre = $('#userEmail').val() + ':' + md5($("#psswrd").val());   //Credentials = Username:Password
-    window.sessionStorage.setItem("keyo", btoa(cre));                  //Store Credentials Base64
-
-    //Check User Authenticity
-    modem('GET', 'me',
-
-        //Response Handler
-        function (user) {
-            //Hides Login Modal
-            $("#mLogin").modal("hide");
-            window.sessionStorage.setItem("username", user._id)
-            window.sessionStorage.setItem("name", user.name)
-            window.sessionStorage.setItem("b64", user.b64)
-            //Reloads actual view
-            app.navigate("user", {
-                trigger: true
-            });
-        },
-        //Error Handling
-        function (xhr, ajaxOptions, thrownError) {
-            var json = JSON.parse(xhr.responseText);
-            console.log(xhr)
-            console.log(ajaxOptions)
-            console.log(thrownError)
-
-        }
-    );
-};
 
 window.sortJsonByCol = function (property) {
 
@@ -927,8 +937,8 @@ window.getQuestionVoice = function (questionID) {
     self.site = 'http://letrinhas.pt:5984';//process.env.COUCHDB;
     var $soundDiv = $('<div>');
     $($soundDiv)
-        .append($('<audio>', {
-                class: "col-md-12",
+        .append(' <label class="col-md-2 audioLbl"> Professor </label>', $('<audio>', {
+                class: "col-md-10",
                 "controls": "controls",
                 id: "teacherVoice"
             })

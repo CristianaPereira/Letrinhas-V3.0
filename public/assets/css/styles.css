@@ -381,7 +381,7 @@ input[type=checkbox] {
 }
 
 .form {
-    width: 80%;
+    width: 85%;
     margin: 20px auto;
 }
 
@@ -1463,4 +1463,20 @@ option:hover {
 
 [class*="accuracy"] {
     color: #b19f00;
+}
+
+#timeDif, #textDif, #inflectionDif, #ponctuationDif, #accuracyDif, #fluidityDif {
+    width: 80px;
+}
+
+#accuracy, #fluidity {
+    width: 80px;
+}
+
+#time, #text, #inflection, #ponctuation {
+    width: 140px;
+}
+
+.audioLbl {
+    margin: 20px 0px;
 }

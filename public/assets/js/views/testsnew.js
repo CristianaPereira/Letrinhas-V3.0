@@ -86,7 +86,8 @@ window.TestsNewView = Backbone.View.extend({
         $(e.currentTarget).html("+").removeClass("removeQuestion btn-Rmv").addClass(
             "btn-Add addQuestion"
         )
-
+        //Remove a dd da importancia
+        $(e.currentTarget).parent().find("select").remove()
         //Incrementa o nr de perguntas
         $("#questionsTestBadge").text($("#questionsList .panel").length)
         $("#questionsBadge").text($("#allQuestions .panel:visible").length + "/" + $("#allQuestions .panel").length)
@@ -126,11 +127,11 @@ window.TestsNewView = Backbone.View.extend({
             test.save(null, {
                 success: function (user) {
                     sucssesMsg($(".form"), "Teste inserido com sucesso!");
-                    /*  setTimeout(function () {
-                     app.navigate("tests", {
-                     trigger: true
-                     });
-                     }, 2000);*/
+                    setTimeout(function () {
+                        app.navigate("tests", {
+                            trigger: true
+                        });
+                    }, 2000);
                 },
                 error: function (model, response) {
                     console.log()

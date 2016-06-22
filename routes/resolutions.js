@@ -144,7 +144,8 @@ exports.get = function (req, res) {
 exports.getAll = function (req, res) {
 
     var user = req.params.userID;
-    console.log('Fetching All resolutios'.green);
+
+    console.log(user.blue + ' is fetching All resolutios'.green);
     dbTests.list({'include_docs': true, 'limit': undefined, 'descending': true}, function (err, solvedTests) {
         if (err) {
             return res.status(500).json({
@@ -152,9 +153,10 @@ exports.getAll = function (req, res) {
                 'message': err
             });
         }
+        console.log(solvedTests)
         //Filtra as resolucoes por apenas as que pertencem ao professor e nao estao corrigidas
-        var output = jsonQuery('rows[doc][*profID=' + user + ' & note=-1 & solved=true]', {data: solvedTests}).value
-        //console.log(output)
+        var output = jsonQuery('[doc][*profID=' + user + ' & note=-1 & solved=true]', {data: solvedTests.rows}).value
+        console.log(output)
         //Adiciona as resolucoes a foto do aluno em questao
         getStudentsData(output, function () {
             res.json(output);

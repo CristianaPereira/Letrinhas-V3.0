@@ -89,7 +89,7 @@ exports.getAll = function (req, res) {
                 'message': err
             });
         }
-        console.log()
+        console.log(body.rows)
         res.json(jsonQuery('[doc][*generic=true]', {data: body.rows}).value);
     });
 

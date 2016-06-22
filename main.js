@@ -26,7 +26,7 @@ var category = require('./routes/category'),
     statistics = require('./routes/statistics'),
     teachers = require('./routes/teachers'),
     tests = require('./routes/tests'),
-    testTypes = require('./routes/testtypes');
+    testTypes = require('./routes/testTypes');
 
 //Express Variable
 var app = express();

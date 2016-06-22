@@ -58,13 +58,23 @@ window.QuestionsInterpNew = Backbone.View.extend({
             fd.append("sid", $sid);
 
             modem('POST', 'questions',
-                function (json) {
+                function () {
+                    sucssesMsg($("body"), "Pergunta inserida com sucesso!");
+                    setTimeout(function () {
+                        app.navigate("questions", {
+                            trigger: true
+                        });
+                    }, 1500);
                 },
                 //Error Handling
                 function (xhr, ajaxOptions, thrownError) {
+                    var json = JSON.parse(xhr.responseText);
+                    failMsg($("body"), "Não foi possível inserir a pergunta!");
+
                 },
                 fd
-            );
+            )
+            ;
 
         }
 
@@ -75,6 +85,11 @@ window.QuestionsInterpNew = Backbone.View.extend({
     showEqualizer: function (e) {
         e.preventDefault();
         $("#myModalRecord").modal("show");
+        //Limpa a div
+        $("#rTexto").empty();
+        //Clona o texto
+        $("#inputTextArea").clone().appendTo("#rTexto");
+
         initAudio();
     },
 

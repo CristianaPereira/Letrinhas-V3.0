@@ -60,7 +60,7 @@ window.QuestionsListNew = Backbone.View.extend({
 
             modem('POST', 'questions',
                 function () {
-                    sucssesMsg($(".form"), "Pergunta inserida com sucesso!");
+                    sucssesMsg($("body"), "Pergunta inserida com sucesso!");
                     setTimeout(function () {
                         app.navigate("questions", {
                             trigger: true
@@ -69,6 +69,7 @@ window.QuestionsListNew = Backbone.View.extend({
                 },
                 //Error Handling
                 function (xhr, ajaxOptions, thrownError) {
+                    failMsg($("body"), "Não foi possível inserir a nova pergunta.");
                 },
                 new FormData($("#newListTestForm")[0])
             );
@@ -80,6 +81,11 @@ window.QuestionsListNew = Backbone.View.extend({
     showEqualizer: function (e) {
         e.preventDefault();
         $("#myModalRecord").modal("show");
+        //Limpa a div
+        $("#rTexto").empty();
+        //Clona o texto
+        $("#lists").clone().appendTo("#rTexto");
+
         initAudio();
     },
 

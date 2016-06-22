@@ -49,7 +49,7 @@ window.QuestionsTextNew = Backbone.View.extend({
 
             modem('POST', 'questions',
                 function () {
-                    sucssesMsg($(".form"), "Pergunta inserida com sucesso!");
+                    sucssesMsg($("body"), "Pergunta inserida com sucesso!");
                     setTimeout(function () {
                         app.navigate("questions", {
                             trigger: true
@@ -58,7 +58,7 @@ window.QuestionsTextNew = Backbone.View.extend({
                 },
                 //Error Handling
                 function (xhr, ajaxOptions, thrownError) {
-                    failMsg($(".form"), "Não foi possível inserir a nova pergunta. \n (" + JSON.parse(xhr.responseText).result + ").");
+                    failMsg($("body"), "Não foi possível inserir a nova pergunta.");
                 },
                 new FormData($("#newTextTestForm")[0])
             );
@@ -70,7 +70,13 @@ window.QuestionsTextNew = Backbone.View.extend({
     //Show Voice Recorder Equalizer
     showEqualizer: function (e) {
         e.preventDefault();
+        console.log("somm")
         $("#myModalRecord").modal("show");
+        //Limpa a div
+        $("#rTexto").empty();
+        //Clona o texto
+        $("#InputTexto").clone().appendTo("#rTexto");
+
         initAudio();
     },
 

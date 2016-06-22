@@ -50,6 +50,7 @@ var Tests = Backbone.Collection.extend({
         var self = this;
         modem('GET', 'tests',
             function (json) {
+                console.log(json)
                 for (i = 0; i < json.length; i++) {
                     self.models.push(new Test(json[i]));
                 }

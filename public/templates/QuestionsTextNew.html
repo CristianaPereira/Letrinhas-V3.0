@@ -130,11 +130,12 @@
                             <source src="" type="audio/mpeg">
                         </audio>
                     </div>
+                    <!--
                     <div class="btn-group">
                         <button type="button" class="btn btn-default">Devagar</button>
                         <button type="button" class="btn btn-primary">Normal</button>
                     </div>
-
+-->
                     </br>
                     <!-- BOTOES -->
                     <div class="form-group">
@@ -170,9 +171,10 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"
-                                                                                                  class="glyphicon glyphicon-remove-sign"
-                                                                                                  style="color:#ee3030"></span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"
+                          class="glyphicon glyphicon-remove-sign"
+                          style="color:#ee3030"></span>
                 </button>
                 <h3 class="modal-title" id="myModalLabel">
                     <img src="../img/letrinhas2.png" style="height:40px">
@@ -180,15 +182,15 @@
                     Estudio de som:
                 </h3>
             </div>
-            <div class="modal-body" style="height:550px; background-color:#ddeeff">
+            <div class="modal-body row" style="background-color:#ddeeff">
                 <div class="col-md-12" align=center>
                     <div id="viz">
-                        <canvas id="analyser" width="525" height="100" style="display: inline-block;
+                        <canvas id="analyser" width="525" height="50" style="display: inline-block;
                                                                      background: #202020;
                                                                      box-shadow: 0px 0px 10px blue;">
                         </canvas>
 
-                        <canvas id="wavedisplay" width="525" height="100" style="display: inline-block;
+                        <canvas id="wavedisplay" width="525" height="50" style="display: inline-block;
            		                                                       background: #202020;
            		                                                       box-shadow: 0px 0px 10px blue;">
                         </canvas>
@@ -208,7 +210,8 @@
                     </div>
                 </div>
 
-                <div class="col-sm-12" id="rTexto" style="height:270px; overflow:auto; background-color:#ecdcbc">
+                <div class="col-sm-12" id="rTexto">
+
                 </div>
             </div>
 

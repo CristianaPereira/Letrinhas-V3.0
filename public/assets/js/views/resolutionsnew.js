@@ -9,6 +9,8 @@ window.ResolutionsNewView = Backbone.View.extend({
         'click #subCorrection': "subCorrection",
         'mouseleave .listButton': "closeDD"
     },
+
+
     subCorrection: function (e) {
         e.preventDefault();
         var resolution = new Resolution();
@@ -45,20 +47,37 @@ window.ResolutionsNewView = Backbone.View.extend({
 
         });
         console.log(resolution.attributes)
-        resolution.save(null, {
-            success: function (user, response) {
-                sucssesMsg($(".form"), response.text);
-                setTimeout(function () {
-                    app.navigate("resolutions", {
-                        trigger: true
-                    });
-                }, 1500);
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                var json = JSON.parse(ajaxOptions.responseText);
-                failMsg($("body"), json.text);
+        //Verifica se todos os testes estao corrigidos
+        var corrected = true;
+        $.each(resolution.attributes.questions, function (iRes, res) {
+
+            console.log(res)
+            if (res.type == 'text' || res.type == 'list') {
+                if (res.note == '0') {
+                    corrected = false;
+                }
             }
-        })
+        });
+        //se todas estiverem corrigidas
+        if (corrected) {
+            resolution.save(null, {
+                success: function (user, response) {
+                    sucssesMsg($(".form"), response.text);
+                    setTimeout(function () {
+                        app.navigate("resolutions", {
+                            trigger: true
+                        });
+                    }, 1500);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    var json = JSON.parse(ajaxOptions.responseText);
+                    failMsg($("body"), json.text);
+                }
+            })
+        } else {
+            failMsg($("body"), "Existem perguntas por corrigir. Verifique para continuar.");
+        }
+
     },
     //Calcula a nota do teste de texto/lista segundo os parametros seleccionados
     recalcTestNote: function (e) {
@@ -84,7 +103,7 @@ window.ResolutionsNewView = Backbone.View.extend({
             difTotal += parseInt($("#" + formName + " #accuracyDif").val());
             finalNote += accuracyNote;
         }
-        console.log("accuracyError " + accuracyError + " : " + accuracyNote)
+        //console.log("accuracyError " + accuracyError + " : " + accuracyNote)
 
 
         //Calcula o subtotal da fluidez
@@ -95,7 +114,7 @@ window.ResolutionsNewView = Backbone.View.extend({
             finalNote += fluidityNote;
         }
 
-        console.log("fluidityError " + accuracyError + " : " + fluidityNote)
+        //console.log("fluidityError " + accuracyError + " : " + fluidityNote)
 
         //Calcula o subtotal da pontuacao
         var ponctuationNote = (parseInt($("#" + formName + " #ponctuation").val()) * parseInt($("#" + formName + " #ponctuationDif").val()));
@@ -103,7 +122,7 @@ window.ResolutionsNewView = Backbone.View.extend({
             difTotal += parseInt($("#" + formName + " #ponctuationDif").val());
             finalNote += ponctuationNote;
         }
-        console.log("ponctuationNote " + ponctuationNote + " : " + difTotal)
+        // console.log("ponctuationNote " + ponctuationNote + " : " + difTotal)
 
         //Calcula o subtotal da entoacao
         var inflectionNote = (parseInt($("#" + formName + " #inflection").val()) * parseInt($("#" + formName + " #inflectionDif").val()));
@@ -111,7 +130,7 @@ window.ResolutionsNewView = Backbone.View.extend({
             difTotal += parseInt($("#" + formName + " #inflectionDif").val());
             finalNote += inflectionNote;
         }
-        console.log("inflectionNote " + inflectionNote + " : " + difTotal)
+        //console.log("inflectionNote " + inflectionNote + " : " + difTotal)
 
         //Calcula o subtotal do texto
         var textNote = (parseInt($("#" + formName + " #text").val()) * parseInt($("#" + formName + " #textDif").val()));
@@ -119,15 +138,15 @@ window.ResolutionsNewView = Backbone.View.extend({
             difTotal += parseInt($("#" + formName + " #textDif").val());
             finalNote += textNote;
         }
-        console.log("textNote " + ponctuationNote + " : " + difTotal)
+        //console.log("textNote " + ponctuationNote + " : " + difTotal)
         //Calcula o subtotal do tempo
         var timeNote = (parseInt($("#" + formName + " #time").val()) * parseInt($("#" + formName + " #timeDif").val()));
         if ($.isNumeric(timeNote)) {
             difTotal += parseInt($("#" + formName + " #timeDif").val());
             finalNote += timeNote;
         }
-        console.log("timeNote " + timeNote + " : " + difTotal)
-        console.log("finalNote " + finalNote + " : " + difTotal)
+        //console.log("timeNote " + timeNote + " : " + difTotal)
+        //console.log("finalNote " + finalNote + " : " + difTotal)
         //Passa para percentagem
         finalNote = ((finalNote / difTotal) * 100 / 5) || 0;
 
@@ -137,7 +156,10 @@ window.ResolutionsNewView = Backbone.View.extend({
     },
     //Regista os erros das palavras
     saveError: function (e) {
-        console.log(document.getElementById("teacherVoice").duration)
+
+        // var minutes = Math.floor(studentDuration / 60);
+
+
         var self = this;
         //obtem o erro erro:suberro
         var err = $(e.currentTarget).attr("err");
@@ -145,6 +167,12 @@ window.ResolutionsNewView = Backbone.View.extend({
         //obtem o respectivo form
         var formName = $(e.currentTarget).closest('form').attr("id");
 
+
+        //Obtem as palavras/min do aluno
+        var studentDuration = $("#" + formName + " #studentsVoice")[0].duration;
+        //Numero total de palavras
+        var nWords = parseInt($("#" + formName + " #wordsCount").html());
+        $("#" + formName + " #wordsMin").html(parseInt(nWords / (studentDuration / 60)));
         //incrementa o total de erros
 
         $("#correctionDD").addClass(err)
@@ -169,13 +197,21 @@ window.ResolutionsNewView = Backbone.View.extend({
             id: $("#correctionDD").attr('wordId'),
             class: err,
         }));
+        //Volta o som 3 seg atras e continua a reproducao
 
-
+        var audio = $("#" + formName + " #studentsVoice")
+        audio.get(0).currentTime -= 3;
+        audio.get(0).play();
     },
 
     resolWord: function (e) {
+
+        //pausa o audio
+        $("audio").trigger('pause');
+
         var $target = $(e.currentTarget);
-//TRoca o span pela dd dos erros
+
+        //TRoca o span pela dd dos erros
         $(e.currentTarget).replaceWith(showCorrectionDD($target.html(), $target.attr('id')))
 
 
