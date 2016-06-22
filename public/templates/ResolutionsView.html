@@ -129,23 +129,11 @@
                     <img src='../img/<%= resolution.subject.split(":")[0] %>.png'>
                     <span><%= resolution.studentName %> (<%= resolution.title %> - <%= resolution.resolutionDate %>)</span>
 
-                    <div class="editDeleteOp">
-                        <div class="dropdown">
-                            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-                                <i class="fa fa-gear "></i> <span class="caret"></span></button>
-                            <ul class="dropdown-menu">
-                                <li><a href="#resolutions/<%= resolution._id %>"
-                                       title="Corrigir">
+                    <a href="#resolutions/<%= resolution._id %>"
+                       title="Corrigir">
 
-                                    <i id="btnEdit" class="fa fa-check-square-o fa-2x"></i>
-                                </a>
-                                </li>
-                                <li><a href="#students" class="delete" title="Apagar aluno">
-                                    <i class="fa fa-trash-o fa-2x"></i>
-                                </a></li>
-                            </ul>
-                        </div>
-                    </div>
+                        <i id="btnEdit" class="fa fa-check-square-o fa-2x"></i>
+                    </a>
 
                 </div>
 

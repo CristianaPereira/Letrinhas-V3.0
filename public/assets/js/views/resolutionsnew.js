@@ -48,11 +48,11 @@ window.ResolutionsNewView = Backbone.View.extend({
         resolution.save(null, {
             success: function (user, response) {
                 sucssesMsg($(".form"), response.text);
-                 setTimeout(function () {
-                 app.navigate("students", {
-                 trigger: true
-                 });
-                 }, 1500);
+                setTimeout(function () {
+                    app.navigate("resolutions", {
+                        trigger: true
+                    });
+                }, 1500);
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 var json = JSON.parse(ajaxOptions.responseText);
@@ -137,6 +137,7 @@ window.ResolutionsNewView = Backbone.View.extend({
     },
     //Regista os erros das palavras
     saveError: function (e) {
+        console.log(document.getElementById("teacherVoice").duration)
         var self = this;
         //obtem o erro erro:suberro
         var err = $(e.currentTarget).attr("err");
@@ -214,7 +215,7 @@ window.ResolutionsNewView = Backbone.View.extend({
         });
         //Calcula a nota final do teste
         $("#testNote").val(totalNote / totalDif)
-
+        console.log($("#teacherVoice").attr("src"))
     },
 //Class Renderer
     render: function () {

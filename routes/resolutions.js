@@ -124,6 +124,8 @@ exports.get = function (req, res) {
                     }
                     //Obtem as resolucoes das perguntas
                     var testResolutions = jsonQuery('rows[doc][*testID=' + id + ']', {data: resolutions}).value;
+                    console.log("testResolutions");
+                    console.log(testResolutions);
                     //Adiciona os dados ao json
                     for (var q = 0; q < resolution.questions.length; q++) {
                         resolution.questions[q].info = (jsonQuery('rows[doc][_id=' + resolution.questions[q]._id + ']', {data: questions}).value)

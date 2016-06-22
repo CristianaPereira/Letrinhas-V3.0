@@ -24,16 +24,17 @@
             <label class="col-md-4 lblDataDetails">Testes corrigidos :</label>
             <% var noNuts = _(solvedTests).filter(function (x) { return x.note != -1;})%>
             <label class="col-md-8"><%=noNuts.length%></label>
-            <%="!"+ resolutions.length %>
-            <% _.each(resolutions,function(resol){ %>
-            <% console.log(resol) %>
+            <% var p =_.groupBy(resolutions, 'subject') %>
+            <% console.log(p) %>
+
+            <% _.each(p,function(sub,i){ %>
+            <img src="../img/<%= i %>.png" class="smallImgPreView">
+
+            <% _.each(sub,function(resol){ %>
+            <%=(resol.note) %>
+            <% }); %>
             <% }); %>
 
-            <% resolutions= _.groupBy(resolutions, 'testID') %>
-            <%="!"+ resolutions.length %>
-            <% _.each(resolutions,function(resol){ %>
-            <% console.log(resol) %>
-            <% }); %>
         </div>
     </div>
 </div>

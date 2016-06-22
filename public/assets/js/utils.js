@@ -368,7 +368,7 @@ window.getFilters = function () {
         //Response Handler
         function () {
             categories.each(function (item) {
-                var $content = $("<ul >", {class: "dropdown-menu pull-left"});
+                var $content = $("<ul >", {class: "dropdown-menu pull-right"});
 
                 $("#filterSubject").append(
                     $("<li>", {class: "dropdown-submenu pull-left"}).append(
@@ -385,7 +385,7 @@ window.getFilters = function () {
                     )
                 );
                 $.each(item.get("content"), function (idc, content) {
-                    var $description = $("<ul >", {class: "dropdown-menu pull-left"});
+                    var $description = $("<ul >", {class: "dropdown-menu pull-right"});
                     $content.append(
                         $("<li>", {class: "dropdown-submenu pull-left"}).append(
                             $("<a>", {
@@ -924,7 +924,7 @@ window.showCorrectionDD = function (word, id) {
 window.getQuestionVoice = function (questionID) {
     var self = this;
     self.bd2 = 'let_questions';
-    self.site = 'http://127.0.0.1:5984';//process.env.COUCHDB;
+    self.site = 'http://letrinhas.pt:5984';//process.env.COUCHDB;
     var $soundDiv = $('<div>');
     $($soundDiv)
         .append($('<audio>', {

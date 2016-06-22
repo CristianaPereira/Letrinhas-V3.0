@@ -197,7 +197,7 @@
                                 </div>
                                 <div class="col-md-12 row">
                                     <input type="number" class="form-control mandatory" questionID="<%=question._id%>"
-                                           placeholder="Nota" name="note" dif="<%=question.dif%>"
+                                           placeholder="Nota" name="note" readonly="readonly" dif="<%=question.dif%>"
                                            value="0">
                                     <span class="glyphicon "><i class="fa fa-percent"></i></span>
                                 </div>
@@ -281,7 +281,7 @@
                                 </div>
                                 <div class="col-md-12 row">
                                     <input type="number" class="form-control mandatory" questionID="<%=question._id%>"
-                                           placeholder="Nota" name="note" dif="<%=question.dif%>"
+                                           placeholder="Nota" name="note" readonly="readonly" dif="<%=question.dif%>"
                                            value="0">
                                     <span class="glyphicon "><i class="fa fa-percent"></i></span>
                                 </div>
@@ -305,7 +305,7 @@
                                     Nota: </label>
                                 <div class="col-md-12 row">
                                     <input type="number" class="form-control mandatory" questionID="<%=question._id%>"
-                                           placeholder="Nota" name="note" dif="<%=question.dif%>"
+                                           placeholder="Nota" name="note" readonly="readonly" dif="<%=question.dif%>"
                                            value="<%if(question.resol.answer.solution == 0){print('100')}else{print('0')}%>">
                                     <span class="glyphicon "><i class="fa fa-percent"></i></span>
                                 </div>
@@ -353,7 +353,7 @@
 
                                 <div class="col-md-12 row">
                                     <input type="number" class="form-control mandatory" questionID="<%=question._id%>"
-                                           placeholder="Nota" name="note" dif="<%=question.dif%>"
+                                           placeholder="Nota" name="note" readonly="readonly" dif="<%=question.dif%>"
                                            value="<%if(total>0){print(total)}else{print(0)} %>">
                                     <span class="glyphicon "><i class="fa fa-percent"></i></span>
                                 </div>
@@ -384,7 +384,7 @@
                 <label class="dataTitle col-md-6 row">Nota final do teste</label>
                 <div class="col-md-6 row">
                     <input type="number" class="form-control mandatory"
-                           id="testNote" name="testNote">
+                           id="testNote" name="testNote" readonly="readonly">
                     <span class="glyphicon "><i class="fa fa-percent"></i></span>
                 </div>
                 <div class="col-md-12">

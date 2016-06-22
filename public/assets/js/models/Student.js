@@ -12,10 +12,14 @@ var Student = Backbone.Model.extend({
                 console.log(self)
                 after_fetch();
             },
-            //Precisamos enviar para a Tabela escolas o id do professor.
             function (xhr, ajaxOptions, thrownError) {
                 var json = JSON.parse(xhr.responseText);
-                error_launch(json.message);
+                failMsg($("body"), json.text);
+                setTimeout(function () {
+                    app.navigate('/home', {
+                        trigger: true
+                    });
+                }, json.text.length * 50);
             }
         );
     },
@@ -23,14 +27,23 @@ var Student = Backbone.Model.extend({
         var self = this;
         modem('GET', 'students/' + this.id + '/info',
             function (json) {
-                self.attributes = (json);
+
+                $.each(json.resolutions, function (iResol, resol) {
+                    //Obtem apenas a disciplina
+                    resol.subject = resol.subject.split(":")[0];
+                });
                 console.log(self)
+                self.attributes = (json);
                 after_fetch();
             },
-            //Precisamos enviar para a Tabela escolas o id do professor.
             function (xhr, ajaxOptions, thrownError) {
                 var json = JSON.parse(xhr.responseText);
-                error_launch(json.message);
+                failMsg($("body"), json.text);
+                setTimeout(function () {
+                    app.navigate('/user', {
+                        trigger: true
+                    });
+                }, json.text.length * 50);
             }
         );
     },
@@ -48,9 +61,12 @@ var Student = Backbone.Model.extend({
             //Precisamos enviar para a Tabela escolas o id do professor.
             function (xhr, ajaxOptions, thrownError) {
                 var json = JSON.parse(xhr.responseText);
-                console.log(xhr)
-                console.log(ajaxOptions)
-                console.log(thrownError)
+                failMsg($("body"), json.text);
+                setTimeout(function () {
+                    app.navigate('/user', {
+                        trigger: true
+                    });
+                }, json.text.length * 50);
             },
             fd
         );
@@ -69,7 +85,14 @@ var Students = Backbone.Collection.extend({
                 }
                 after_fetch();
             },
-            function () {
+            function (xhr, ajaxOptions, thrownError) {
+                var json = JSON.parse(xhr.responseText);
+                failMsg($("body"), json.text);
+                setTimeout(function () {
+                    app.navigate('/user', {
+                        trigger: true
+                    });
+                }, json.text.length * 50);
             }
         );
     },

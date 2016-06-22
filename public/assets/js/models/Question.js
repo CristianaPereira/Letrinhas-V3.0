@@ -3,7 +3,7 @@ var Question = Backbone.Model.extend({
     defaults: {},
     initialize: function (options) {
         this.id = options.id;
-        this.site = " http://127.0.0.1:5984";
+        this.site = " http://letrinhas.pt:5984";
         this.bd = "let_questions";
     },
 
@@ -21,7 +21,12 @@ var Question = Backbone.Model.extend({
             //Error Handling
             function (xhr, ajaxOptions, thrownError) {
                 var json = JSON.parse(xhr.responseText);
-                error_launch(json.message);
+                failMsg($("body"), json.text);
+                setTimeout(function () {
+                    app.navigate('/user', {
+                        trigger: true
+                    });
+                }, json.text.length * 50);
             }
         );
 
@@ -41,7 +46,14 @@ var Questions = Backbone.Collection.extend({
                 }
                 after_fetch();
             },
-            function () {
+            function (xhr, ajaxOptions, thrownError) {
+                var json = JSON.parse(xhr.responseText);
+                failMsg($("body"), json.text);
+                setTimeout(function () {
+                    app.navigate('/user', {
+                        trigger: true
+                    });
+                }, json.text.length * 50);
             }
         );
 

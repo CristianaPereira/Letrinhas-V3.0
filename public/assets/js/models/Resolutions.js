@@ -10,17 +10,17 @@ var Resolution = Backbone.Model.extend({
                 function (json) {
                     console.log(json)
                     self.attributes = (json);
-                    //  self.attributes.resolutionDate = self.attributes.resolutionDate.substring(0, 10);
-                    //self.attributes.audioStudent = self.site + "/let_resolutions/" + json._id + "/record.m4a";
-                    // self.attributes.audioProf = self.site + "/let_questions/" + json.questionID + "/voice.mp3";
-
-
                     after_fetch();
                 },
                 //Precisamos enviar para a Tabela escolas o id do professor.
                 function (xhr, ajaxOptions, thrownError) {
                     var json = JSON.parse(xhr.responseText);
-                    error_launch(json.message);
+                    failMsg($("body"), json.text);
+                    setTimeout(function () {
+                        app.navigate('/user', {
+                            trigger: true
+                        });
+                    }, json.text.length * 50);
                 }
             );
         }
@@ -41,7 +41,14 @@ var Resolutions = Backbone.Collection.extend({
                 }
                 after_fetch();
             },
-            function () {
+            function (xhr, ajaxOptions, thrownError) {
+                var json = JSON.parse(xhr.responseText);
+                failMsg($("body"), json.text);
+                setTimeout(function () {
+                    app.navigate('/user', {
+                        trigger: true
+                    });
+                }, json.text.length * 50);
             }
         );
     },

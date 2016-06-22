@@ -11,7 +11,7 @@
         </div>
         <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li><a>Total: <label id="questionsBadge" class=""><%=collection.length%></label>
+                <li class="active"><a>Total: <label id="questionsBadge" class=""><%=collection.length%></label>
                      <span style="font-size:16px;"
                            class="pull-right hidden-xs showopacity fa fa-question"></span>
                 </a></li>
@@ -19,10 +19,10 @@
                     <input id="txtSearch" type="text" class="form-control" placeholder="Pesquisar"
                            aria-describedby="basic-addon2">
                 </li>
-                <li class="active">
+                <li>
                     <a id="orderBy" class="order">Ordenar
                         <span style="font-size:16px;"
-                              class="pull-right hidden-xs showopacity fa fa-sort-alpha-asc"></span>
+                              class="pull-right hidden-xs showopacity fa fa-sort-alpha-desc"></span>
                     </a>
                 </li>
                 <li class="dropdown">

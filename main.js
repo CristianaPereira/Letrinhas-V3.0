@@ -163,7 +163,7 @@ var perms = function (level) {
         }
         else {
             console.log("Permission Error");
-            res.status(401).json(["Permission Error"]);
+            res.status(401).json({text: "Não possui permissões para executar esta tarefa."});
         }
     }
 };

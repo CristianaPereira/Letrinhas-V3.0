@@ -29,8 +29,13 @@ var Teacher = Backbone.Model.extend({
 
                 after_fetch();
             }, function (xhr, ajaxOptions, thrownError) {
-                //If an error occurs, set id to null
-                console.log(JSON.parse(xhr.responseText).result);
+                var json = JSON.parse(xhr.responseText);
+                failMsg($("body"), json.text);
+                setTimeout(function () {
+                    app.navigate('/user', {
+                        trigger: true
+                    });
+                }, json.text.length * 50);
             });
     }
 });
@@ -47,7 +52,14 @@ var Teachers = Backbone.Collection.extend({
                 }
                 after_fetch();
             },
-            function () {
+            function (xhr, ajaxOptions, thrownError) {
+                var json = JSON.parse(xhr.responseText);
+                failMsg($("body"), json.text);
+                setTimeout(function () {
+                    app.navigate('/user', {
+                        trigger: true
+                    });
+                }, json.text.length * 50);
             }
         );
     },

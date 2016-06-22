@@ -87,7 +87,7 @@ exports.getInfo = function (req, res) {
             }
             //Recolhe os testes do aluno
             var studentTests = jsonQuery('[doc][*studentID=' + id + ']', {data: testsData.rows}).value;
-            console.log(studentTests)
+            //console.log(studentTests)
             //Adiciona-os ao json da view o nr de testes por resolver
             console.log(jsonQuery('[*solved=false]', {data: studentTests}).value)
             studentData.unsolvedTests = jsonQuery('[*solved=false]', {data: studentTests}).value || [];
@@ -103,7 +103,7 @@ exports.getInfo = function (req, res) {
                     });
                 }
                 //Recolhe os testes do aluno
-                var resolutions = jsonQuery('[doc][*studentID=' + id + ']', {data: resolData.rows}).value;
+                var resolutions = jsonQuery('[doc][*studentID=' + id + '& note != -1]', {data: resolData.rows}).value;
                 //Adiciona-os ao json da view
                 studentData.resolutions = resolutions || [];
                 res.json(studentData);
