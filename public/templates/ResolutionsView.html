@@ -127,13 +127,23 @@
 
                     <img src="<%= resolution.studentFoto %>">
                     <img src='../img/<%= resolution.subject.split(":")[0] %>.png'>
-                    <span><%= resolution.studentName %> (<%= resolution.title %> - <%= resolution.resolutionDate %>)</span>
+                    <span><%= resolution.studentName %> - <%= resolution.title %></span>
 
+                    <% if ( resolution.solved){ %>
+                    <span>(<%= resolution.resolutionDate %>)</span>
                     <a href="#resolutions/<%= resolution._id %>"
                        title="Corrigir">
-
-                        <i id="btnEdit" class="fa fa-check-square-o fa-2x"></i>
+                        <i class="fa fa-check-square-o fa-2x"></i>
                     </a>
+
+                    <%}else{%>
+                    <a href="#test/<%= resolution._id %>/edit"
+                       title="Editar">
+                        <i id="btnEdit" class="fa fa-edit fa-2x"></i>
+                    </a>
+
+                    <%}%>
+
 
                 </div>
 

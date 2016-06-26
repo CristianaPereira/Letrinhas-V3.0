@@ -15,14 +15,6 @@ window.QuestionsInterpNew = Backbone.View.extend({
     pop: function () {
         setPopOver("Ano, Disciplina, Conteúdo, Especificação, Título, Pergunta, Texto");
     },
-    //Check Auth
-    auth: function () {
-        if (!window.sessionStorage.getItem("keyo")) {
-            app.navigate("/#", true);
-            return false;
-        }
-        return true;
-    },
 
     //Verifies if an input is empty
     isEmpty: function (e) {
@@ -194,10 +186,7 @@ window.QuestionsInterpNew = Backbone.View.extend({
     render: function () {
         var self = this;
 
-        //Check Local Auth
-        if (!self.auth()) {
-            return false;
-        }
+
 
         getCategories();
         $(this.el).html(this.template());

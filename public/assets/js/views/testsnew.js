@@ -102,6 +102,15 @@ window.TestsNewView = Backbone.View.extend({
         var allListElements = $(".mandatory");
         //Verifies if all inputs are OK
         var isValid = isFormValid(allListElements);
+
+        //Recolhe os paineis das peguntas
+        var questions = $("#newTestForm .panel");
+
+        //Se o teste nao possuir nenhuma pergunta
+        if (questions.length == 0) {
+            isValid = false;
+            alertMsg($("body"), "O teste deverá conter no mínimo uma pergunta.")
+        }
         //If they are
         if (isValid) {
             //Recolhe os dados da view
@@ -110,8 +119,7 @@ window.TestsNewView = Backbone.View.extend({
             var test = new Test(testDetails);
             test.attributes.questions = [];
 
-            //Recolhe os paineis das peguntas
-            var questions = $("#newTestForm .panel");
+
             //Adiciona os seus id's e a sua dificuldade ao array de perguntas
             $.each(questions, function (iQ, question) {
                 test.attributes.questions.push({

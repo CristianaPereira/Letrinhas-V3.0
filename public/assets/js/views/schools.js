@@ -117,24 +117,11 @@ window.SchoolsView = Backbone.View.extend({
 
     },
 
-    //Check Auth
-    auth: function (e) {
-        if (!window.sessionStorage.getItem("keyo")) {
-            app.navigate("/#", true);
-            return false;
-        }
-        return true;
-    },
-
     //Class Renderer
     render: function () {
 
         var self = this;
 
-        //Check Local Auth
-        if (!self.auth()) {
-            return false;
-        }
 
         var data = self.collection.toJSON();
         $(this.el).html(this.template({collection: data}));

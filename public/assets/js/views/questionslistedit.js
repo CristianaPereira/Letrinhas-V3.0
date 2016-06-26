@@ -1,22 +1,18 @@
-window.QuestionsTextEdit = Backbone.View.extend({
+window.QuestionsListEdit = Backbone.View.extend({
     events: {
-        'load #selectSubject': 'create',
         "click #showEqualizer": "showEqualizer",
         "click #record": "initRecord",
-        "click #backbtn": "goBack",
         "change #uploadSoundFile": "uploadSoundFile",
-        "change #selectSubject": "alert",
+        "click #backbtn": "goBack",
         "blur .emptyField": "isEmpty",
-        "submit": "beforeSend",
-        "mouseover #subTxt": "pop"
-    },
-
-    alert: function () {
-        //alert("asdfas");
+        "mouseover #subTxt": "pop",
+        "submit": "beforeSend"
     },
     //Initializes popover content
     pop: function () {
-        setPopOver("Titulo, Discuplina, Ano escolar, Pergunta, Descrição, Texto e Audio");
+
+        setPopOver("Ano, Disciplina, Conteúdo, Especificação, Título, Pergunta, Coluna");
+
     },
 
     //Go back to the last visited page
@@ -35,24 +31,52 @@ window.QuestionsTextEdit = Backbone.View.extend({
     //Before Sending Request To Server
     beforeSend: function (e) {
         e.preventDefault();
-        modem('PUT', 'questions/' + this.data._id,
-            function (json) {
-                success($("body"), "OK");
+        //Se algum dos campos estiver vazio
+        var allListElements = $(".mandatory");
+        //Verifies if all inputs are OK
+        var isValid = isFormValid(allListElements);
+        //If they are
+        if (isValid) {
+            //Recolhe as listas
+            var wordsLists = $(".list");
+            var lists = [];
+            //Adiciona as listas que estivrem preenchidas
+            $.each(wordsLists, function (i, list) {
+                //Se a coluna não estiver vazia, separa as palavras para um array
+                if ($(list).val()) {
+                    lists.push({words: $(list).val().replace(/\n/g, " ").split(" ")});
+                }
+            });
+            $("#columns").val(JSON.stringify(lists));
 
-            },
-            //Error Handling
-            function (xhr, ajaxOptions, thrownError) {
-                failMsg($("body"), "Não foi possível inserir a nova pergunta. \n (" + JSON.parse(xhr.responseText).result + ").");
-            },
-            new FormData($("#newTextTestForm")[0])
-        )
-        ;
+            modem('POST', 'questions',
+                function () {
+                    sucssesMsg($("body"), "Pergunta inserida com sucesso!");
+                    setTimeout(function () {
+                        app.navigate("questions", {
+                            trigger: true
+                        });
+                    }, 1500);
+                },
+                //Error Handling
+                function (xhr, ajaxOptions, thrownError) {
+                    failMsg($("body"), "Não foi possível inserir a nova pergunta.");
+                },
+                new FormData($("#newListTestForm")[0])
+            );
+
+        }
     },
 
     //Show Voice Recorder Equalizer
     showEqualizer: function (e) {
         e.preventDefault();
         $("#myModalRecord").modal("show");
+        //Limpa a div
+        $("#rTexto").empty();
+        //Clona o texto
+        $("#lists").clone().appendTo("#rTexto");
+
         initAudio();
     },
 
@@ -85,15 +109,11 @@ window.QuestionsTextEdit = Backbone.View.extend({
             .css('border', 'solid 1px #cccccc');
     },
 
+
     //Class Initializer
     initialize: function () {
-        var self = this;
-
     },
 
-    create: function () {
-        console.log("sd")
-    },
     afterRender: function () {
         var self = this;
         var res = self.data.subject.split(":");

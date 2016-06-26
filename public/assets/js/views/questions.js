@@ -11,14 +11,6 @@ window.QuestionsView = Backbone.View.extend({
         "click #orderBy": "orderQuestions"
     },
 
-    //Check Auth
-    auth: function () {
-        if (!window.sessionStorage.getItem("keyo")) {
-            return false;
-        }
-        return true;
-    },
-
     //Solicita confirmação para apagar o professor
     confirmDelete: function (e) {
 
@@ -118,26 +110,26 @@ window.QuestionsView = Backbone.View.extend({
                     $('<ul>', {
                         class: "dropdown-menu"
                     }).append(
-                        /*
-                         $('<li>').append(
-                         $('<a>', {
-                         href: "#questions/" + question._id + "/info", html: '  Clonar pergunta'
-                         }).prepend(
-                         '<i class="fa fa-clone"></i>'
-                         )
-                         ),*/
-                        /*
-                         //Se o user for o autor da pergunta
-                         (question.profID == window.sessionStorage.getItem('username') ?
-                         $('<li>').append(
-                         $('<a>', {
-                         href: "#questions/" + question._id + "/edit", html: '  Editar pergunta'
-                         }).prepend(
-                         '<i class="fa fa-edit"></i>'
-                         )
-                         ) : '')
-                         ,
-                         */
+                        $('<li>').append(
+                            $('<a>', {
+                                href: "#questions/" + question._id + "/info", html: '  Clonar pergunta'
+                            }).prepend(
+                                '<i class="fa fa-clone"></i>'
+                            )
+                        ),
+
+                        //Se o user for o autor da pergunta
+                        (question.profID == window.sessionStorage.getItem('username') ?
+                            $('<li>').append(
+                                $('<a>', {
+                                    href: "#questions" + question.type + "/" + question._id + "/edit",
+                                    html: '  Editar pergunta'
+                                }).prepend(
+                                    '<i class="fa fa-edit"></i>'
+                                )
+                            ) : '')
+                        ,
+
                         //Se o user for o autor da pergunta
                         (question.profID == window.sessionStorage.getItem('username') ?
                             $('<li>').append(
@@ -196,10 +188,6 @@ window.QuestionsView = Backbone.View.extend({
     render: function () {
         var self = this;
 
-        //Check Local Auth
-        if (!self.auth()) {
-            showLoginModal($("body"));
-        }
         getFilters();
 
         self.data.sort(sortJsonByCol('title'));

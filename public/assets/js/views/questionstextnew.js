@@ -15,15 +15,6 @@ window.QuestionsTextNew = Backbone.View.extend({
 
     },
 
-    //Check Auth
-    auth: function () {
-        if (!window.sessionStorage.getItem("keyo")) {
-            return false;
-        }
-        return true;
-    },
-
-
     //Go back to the last visited page
     goBack: function (e) {
         e.preventDefault();
@@ -136,11 +127,6 @@ window.QuestionsTextNew = Backbone.View.extend({
     //Class Renderer
     render: function () {
         var self = this;
-
-        //Check Local Auth
-        if (!self.auth()) {
-            return false;
-        }
 
         getCategories();
 

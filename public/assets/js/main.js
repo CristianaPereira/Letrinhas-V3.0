@@ -6,9 +6,9 @@ Backbone.View.prototype.close = function () {
 
 Backbone.ajax = function () {
     var args = Array.prototype.slice.call(arguments, 0);
-
+    console.log(window.sessionStorage.getItem("keyo") || window.localStorage.getItem("keyo"))
     args[0].beforeSend = function (xhr) {
-        xhr.setRequestHeader('Authorization', 'Basic ' + window.sessionStorage.getItem("keyo"));
+        xhr.setRequestHeader('Authorization', 'Basic ' + (window.sessionStorage.getItem("keyo") || (window.localStorage.getItem("keyo") )));
     };
 
     return Backbone.$.ajax.apply(Backbone.$, args);
@@ -68,14 +68,16 @@ var Router = Backbone.Router.extend({
         "questionsTouch/edit": "questionsTouchEdit",
 
         "resolutions": "resolutions",
-        "resolutions/:id/list": "resolutionsList",
         "resolutions/:id": "resolutionsNew",
-        "resolutions/:id/text": "resolutionsText",
+
         //Tests Routing
         "questions": "questions",
 
         "questionsText/new": "questionsTextNew",
-        "questionsText/:id": "questionsTextEdit",
+        "questionstext/:id/edit": "questionsTextEdit",
+        "questionslist/:id/edit": "questionsListEdit",
+        "questionsmultimedia/:id/edit": "questionsMultimediaEdit",
+        "questionsinterpretation/:id/edit": "questionsInterpretationsEdit",
 
         "multimediaTest/new": "multimediaTestNew",
         "listTest/new": "listTestNew",
@@ -89,6 +91,8 @@ var Router = Backbone.Router.extend({
     //Load NavigationBar
     navbar: function () {
         var self = this;
+        isLogged();
+
         //Load NavigationBar
         templateLoader.load(["NavigationBarView"],
             function () {
@@ -160,41 +164,6 @@ var Router = Backbone.Router.extend({
         );
     },
 
-    resolutionsList: function (id) {
-        var self = this;
-
-        this.navbar();
-
-        templateLoader.load(["ResolutionsListView"],
-            function () {
-                var ss = new Resolution({id: id});
-                ss.fetch(function () {
-                    var v = new ResolutionsListView({
-                        model: ss
-                    });
-                    self.showView(v, $('#content'));
-                })
-            }
-        );
-    },
-
-    resolutionsText: function (id) {
-        var self = this;
-
-        this.navbar();
-
-        templateLoader.load(["ResolutionsTextView"],
-            function () {
-                var ss = new Resolution({id: id});
-                ss.fetch(function () {
-                    var v = new ResolutionsTextView({
-                        model: ss
-                    });
-                    self.showView(v, $('#content'));
-                })
-            }
-        );
-    },
     resolutionsNew: function (id) {
         var self = this;
 
@@ -506,6 +475,7 @@ var Router = Backbone.Router.extend({
                         model: ss
                     });
                     self.showView(v, $('#content'));
+                    self.afterRender(v, $('#content'))
                 })
 
             }
@@ -537,7 +507,48 @@ var Router = Backbone.Router.extend({
             }
         );
     },
+    questionsListEdit: function (id) {
+        var self = this;
 
+        self.navbar();
+
+        templateLoader.load(["QuestionsListEdit"],
+            function () {
+                var ss = new Question({
+                    id: id
+                });
+                ss.fetch(function () {
+                    var v = new QuestionsListEdit({
+                        model: ss
+                    });
+                    self.showView(v, $('#content'));
+                    // self.afterRender(v, $('#content'))
+                })
+
+            }
+        );
+    },
+    questionsMultimediaEdit: function (id) {
+        var self = this;
+
+        self.navbar();
+
+        templateLoader.load(["QuestionsMultimediaEdit"],
+            function () {
+                var ss = new Question({
+                    id: id
+                });
+                ss.fetch(function () {
+                    var v = new QuestionsMultimediaEdit({
+                        model: ss
+                    });
+                    self.showView(v, $('#content'));
+                    // self.afterRender(v, $('#content'))
+                })
+
+            }
+        );
+    },
     interpretationTestNew: function () {
         var self = this;
 

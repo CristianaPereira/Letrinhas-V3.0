@@ -74,7 +74,12 @@
             <div class="editDeleteOp">
                 <a title="Atribuir teste"><i
                         testID="<%= test._id %>" testName="<%= test.title %>" class="fa fa-calendar"></i></a>
-                <a title="Apagar teste"><i class="fa fa-trash-o"></i></a>
+                <% if ( test.profID == window.sessionStorage.getItem('username') ){ %>
+                <a title="Apagar teste">
+                    <i class="fa fa-trash-o deleteTest" testID="<%= test._id %>"
+                       testName="<%= test.title %>"></i></a>
+                <% } %>
+
 
             </div>
         </div>
@@ -141,7 +146,8 @@
                     <div class="row col-md-6">
                         <div class='input-group date'>
                             <span class="input-group-addon">De</span>
-                            <input type='text' class="form-control" name="beginDate" placeholder="Data de Inicio"/>
+                            <input type='text' class="form-control mandatory" name="beginDate"
+                                   placeholder="Data de Inicio"/>
                         </div>
                     </div>
                     <div class="row col-md-6">
@@ -149,7 +155,7 @@
                             <span class="input-group-addon">
                                 Até
                             </span>
-                            <input type='text' class="form-control" name="endDate" placeholder="Data de Fim"/>
+                            <input type='text' class="form-control mandatory" name="endDate" placeholder="Data de Fim"/>
 
                         </div>
                     </div>

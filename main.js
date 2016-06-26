@@ -278,6 +278,9 @@ app.route('/tests')
     .post(auth, tself, perms(2), tests.newGeneric)
     .get(auth, tself, perms(2), tests.getAll);
 
+app.route('/tests/:id')
+    .delete(auth, tself, perms(2), tests.delete)
+
 app.route('/testTypes')
     .get(auth, tself, perms(2), testTypes.getAll);
 

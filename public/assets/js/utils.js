@@ -227,7 +227,8 @@ window.getUserRole = function (permissionLevel) {
     }
 };
 
-window.getCategories = function () {
+window.getCategories = function (cat) {
+
     //Gets all registed categories
     modem('GET', 'categories',
         //Response Handler
@@ -285,7 +286,15 @@ window.getCategories = function () {
                     });
                 }
             )
-
+            //Selecciona a categoria passada por parametro
+            if (cat) {
+                cat = cat.split(":");
+                $("#selectSubject").val(cat[0])
+                $("#selectSubject").change();
+                $("#selectContent").val(cat[1])
+                $("#selectContent").change();
+                $("#selectSpecification").val(cat[2])
+            }
 
         },
 
@@ -293,73 +302,9 @@ window.getCategories = function () {
         function (xhr, ajaxOptions, thrownError) {
         }
     );
+
 };
 
-window.getSetCategories = function (cate) {
-    var res = cate.split(":");
-    //Gets all registed categories
-    modem('GET', 'category',
-        //Response Handler
-        function (json) {
-            $.each(json, function (i, key) {
-                $("#selectSubject").append(
-                    $("<option>", {html: key.doc.subject, id: key.doc._id, value: key.doc._id})
-                );
-                //Populates dd with the contents of selects subject
-                var myEl = document.getElementById('selectSubject');
-
-                console.log("change")
-                myEl.addEventListener('change', function () {
-
-                    var selectedSubject = $(this).children(":selected").attr("id");
-                    if (key.doc._id === selectedSubject) {
-                        //Limpa a dd
-                        $("#selectContent").html("");
-                        $.each(key.doc.content, function (id, content) {
-                            $("#selectContent").append($("<option>", {
-                                html: content.name,
-                                id: content._id,
-                                value: content._id
-                            }));
-                        });
-                    }
-                }, false);
-                $("#selectSubject").val(res[0]).change();
-                $(myEl).trigger("change");
-                //Populates dd with the contents of selects subject
-                var myEll = document.getElementById('selectContent');
-                console.log("change")
-                myEll.addEventListener('change', function () {
-                    var selectedSubject = $("#selectSubject").children(":selected").attr("id");
-                    var selectedContent = $(this).children(":selected").attr("id");
-                    if (key.doc._id === selectedSubject) {
-                        //Limpa a dd
-                        $("#selectSpecification").html("");
-                        $.each(key.doc.content, function (id, content) {
-                            if (content._id === selectedContent) {
-                                $.each(content.specification, function (ids, specif) {
-                                    $("#selectSpecification").append($("<option>", {
-                                        html: specif.name,
-                                        id: specif._id,
-                                        value: specif._id
-                                    }));
-                                });
-                            }
-                        });
-                    }
-                }, false);
-            });
-            console.log(res[0])
-
-
-            $("#" + res[1]).attr("selected", true)
-        },
-
-        //Error Handling
-        function (xhr, ajaxOptions, thrownError) {
-        }
-    );
-};
 
 //Gets categories filters to questions and tests
 window.getFilters = function () {
@@ -520,13 +465,12 @@ window.isFormValid = function (elementsList) {
             //Se for o b64, muda a border do pai
             if ($(elem).is("[type=hidden]")) {
                 $(elem).parent().addClass("emptyField");
-                return;
             }
             //Se o elemento for um select
             if ($(elem).is("select")) {
                 // $(elem).parent().addClass("emptyField");
                 $(elem).addClass("emptyField");
-                return;
+
             }
             $(elem).addClass("emptyField");
             isValid = false;
@@ -581,6 +525,15 @@ window.matchingPswds = function (password, confPassword) {
     }
 };
 
+
+/********************************************************************************LOGIN***************/
+
+window.isLogged = function () {
+    if (!window.sessionStorage.getItem("keyo") && !window.localStorage.getItem("keyo")) {
+        showLoginModal($("body"))
+        return false;
+    }
+};
 //Mostra o formulário de login no form indicado
 window.showLoginModal = function (form) {
 
@@ -618,27 +571,39 @@ window.showLoginModal = function (form) {
                         ).append($("<span>", {
                             id: "imgMail", class: "glyphicon glyphicon-envelope"
                         }))
-                    )
-                    )
-                    .append(
+                    ),
+                    $("<div>", {
+                        class: "row form-group",
+                    }).append(
                         $("<div>", {
-                            class: "row form-group",
+                            class: " col-sm-12",
                         }).append(
-                            $("<div>", {
-                                class: " col-sm-12",
-                            }).append(
-                                $("<input>", {
-                                    id: "psswrd",
-                                    class: "form-control",
-                                    placeholder: "Palavra-passe",
-                                    name: "password",
-                                    type: "password"
-                                })
-                            ).append($("<span>", {
-                                id: "pwdIcon", class: "glyphicon glyphicon-lock"
-                            }))
-                        )
+                            $("<input>", {
+                                id: "psswrd",
+                                class: "form-control",
+                                placeholder: "Palavra-passe",
+                                name: "password",
+                                type: "password"
+                            })
+                        ).append($("<span>", {
+                            id: "pwdIcon", class: "glyphicon glyphicon-lock"
+                        }))
+                    ),
+                    $("<div>", {
+                        class: "row form-group",
+                    }).append(
+                        $("<div>", {
+                            class: " col-sm-12 checkbox",
+                        }).append(
+                            $("<label>", {
+                                html: "Manter sessão iniciada"
+                            }).append($("<input>", {
+                                type: "checkbox",
+                                value: '',
+                                id: 'keepsession'
+                            })))
                     )
+                )
             ).append(
                 $("<div>", {
                     class: "modal-footer",
@@ -657,11 +622,16 @@ window.showLoginModal = function (form) {
     $("#mLogin").modal({backdrop: 'static', keyboard: true});
     $("#mLogin").modal("show");
 };
+
 //Tenta efectuar login
 window.attemptLogin = function () {
     //Create Credentials
     var cre = $('#userEmail').val() + ':' + md5($("#psswrd").val());   //Credentials = Username:Password
-    window.sessionStorage.setItem("keyo", btoa(cre));                  //Store Credentials Base64
+    if ($("#keepsession").prop("checked")) {
+        window.localStorage.setItem("keyo", btoa(cre));                  //Store Credentials Base64
+    } else {
+        window.sessionStorage.setItem("keyo", btoa(cre));                  //Store Credentials Base64
+    }
 
     //Check User Authenticity
     modem('GET', 'me',
@@ -670,12 +640,23 @@ window.attemptLogin = function () {
         function (user) {
             //Hides Login Modal
             $("#mLogin").modal("hide");
-            window.sessionStorage.setItem("username", user._id)
-            window.sessionStorage.setItem("name", user.name)
-            window.sessionStorage.setItem("b64", user.b64)
+
+            //Se a opçao manter sessao iniciada estiver 'ligada'
+            if ($("#keepsession").prop("checked")) {
+                window.localStorage.setItem("username", user._id)
+                window.localStorage.setItem("name", user.name)
+                window.localStorage.setItem("b64", user.b64)
+            } else {
+                window.sessionStorage.setItem("username", user._id)
+                window.sessionStorage.setItem("name", user.name)
+                window.sessionStorage.setItem("b64", user.b64)
+            }
+
             //Reloads actual view
 
-            document.location.reload(true);
+            app.navigate("/user", {
+                trigger: true
+            });
 
         },
         //Error Handling
@@ -691,16 +672,14 @@ window.attemptLogin = function () {
 
 //efectua logout
 window.logout = function () {
-    console.log("out");
-    window.sessionStorage.removeItem("keyo");
-    window.sessionStorage.removeItem("b64");
-    window.sessionStorage.removeItem("name");
-    window.sessionStorage.removeItem("username");
+    window.sessionStorage.clear();
+    window.localStorage.clear();
     app.navigate("/home", {
         trigger: true
     });
-}
-//Mostra o formulário de login no form indicado
+};
+
+/********************************************************************************CROPPER***************/
 //showCropper("nomeFormulario/div", maxWidth da tela, Width do resultado, height do resultado , ratio (1=quadrado) (16/9=rectangulo);
 window.showCropper = function (form, base_image, resWidth, aspectRatio, result) {
     //Se a imagem for verticalmente maior

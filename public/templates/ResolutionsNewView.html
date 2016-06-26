@@ -91,7 +91,7 @@
                                             <option>2</option>
                                             <option>3</option>
                                             <option>4</option>
-                                            <option>5</option>
+                                            <option selected>5</option>
                                         </select>
                                     </div>
                                 </div>
@@ -109,77 +109,7 @@
                                             <option>2</option>
                                             <option>3</option>
                                             <option>4</option>
-                                            <option>5</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="input-group">
-                                        <span class="input-group-addon btn-white"><i
-                                                class="fa fa-exclamation"></i></span>
-                                        <select class="form-control" id="ponctuation" name="ponctuation">
-                                            <option disabled selected>Pontuação</option>
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5</option>
-                                        </select>
-                                        <span class="input-group-addon btn-white"><i
-                                                class="fa fa-warning"></i></span>
-                                        <select class="form-control" id="ponctuationDif">
-                                            <option disabled selected>Peso</option>
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="input-group">
-                                        <span class="input-group-addon btn-white"><i class="fa fa-comment-o"></i></span>
-                                        <select class="form-control" id="inflection" name="inflection">
-                                            <option disabled selected>Entoação</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
-                                        </select>
-                                        <span class="input-group-addon btn-white"><i
-                                                class="fa fa-warning"></i></span>
-                                        <select class="form-control" id="inflectionDif">
-                                            <option disabled selected>Peso</option>
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="input-group">
-                                        <span class="input-group-addon btn-white"><i class="fa fa-bars"></i></span>
-                                        <select class="form-control" id="text" name="text">
-                                            <option disabled selected>Texto</option>
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5</option>
-                                        </select>
-                                        <span class="input-group-addon btn-white"><i
-                                                class="fa fa-warning"></i></span>
-                                        <select class="form-control" id="textDif">
-                                            <option disabled selected>Peso</option>
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5</option>
+                                            <option selected>5</option>
                                         </select>
                                     </div>
                                 </div>
@@ -206,6 +136,31 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="col-md-12">
+                                    <div class="input-group">
+                                        <span class="input-group-addon btn-white"
+                                              style="width: 100px;"> Expressividade </span>
+                                        <select class="form-control" id="expression" name="expression">
+                                            <option disabled selected>Expressividade</option>
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                            <option>5</option>
+                                        </select>
+                                        <span class="input-group-addon btn-white"><i
+                                                class="fa fa-warning"></i></span>
+                                        <select class="form-control" id="expressionDif">
+                                            <option disabled selected>Peso</option>
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option selected>4</option>
+                                            <option>5</option>
+                                        </select>
+                                    </div>
+                                </div>
+
                                 <div class="col-md-12 row">
                                     <input type="number" class="form-control mandatory" questionID="<%=question._id%>"
                                            placeholder="Nota" name="note" readonly="readonly" dif="<%=question.dif%>"

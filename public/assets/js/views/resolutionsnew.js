@@ -103,7 +103,7 @@ window.ResolutionsNewView = Backbone.View.extend({
             difTotal += parseInt($("#" + formName + " #accuracyDif").val());
             finalNote += accuracyNote;
         }
-        //console.log("accuracyError " + accuracyError + " : " + accuracyNote)
+        console.log("accuracyError " + accuracyError + " : " + accuracyNote)
 
 
         //Calcula o subtotal da fluidez
@@ -114,38 +114,23 @@ window.ResolutionsNewView = Backbone.View.extend({
             finalNote += fluidityNote;
         }
 
-        //console.log("fluidityError " + accuracyError + " : " + fluidityNote)
+        console.log("fluidityError " + accuracyError + " : " + fluidityNote)
 
         //Calcula o subtotal da pontuacao
-        var ponctuationNote = (parseInt($("#" + formName + " #ponctuation").val()) * parseInt($("#" + formName + " #ponctuationDif").val()));
-        if ($.isNumeric(ponctuationNote)) {
-            difTotal += parseInt($("#" + formName + " #ponctuationDif").val());
-            finalNote += ponctuationNote;
+        var expressionNote = (parseInt($("#" + formName + " #expression").val()) * parseInt($("#" + formName + " #expressionDif").val()));
+        if ($.isNumeric(expressionNote)) {
+            difTotal += parseInt($("#" + formName + " #expressionDif").val());
+            finalNote += expressionNote;
         }
-        // console.log("ponctuationNote " + ponctuationNote + " : " + difTotal)
+        console.log("expressionNote " + expressionNote + " : " + difTotal)
 
-        //Calcula o subtotal da entoacao
-        var inflectionNote = (parseInt($("#" + formName + " #inflection").val()) * parseInt($("#" + formName + " #inflectionDif").val()));
-        if ($.isNumeric(inflectionNote)) {
-            difTotal += parseInt($("#" + formName + " #inflectionDif").val());
-            finalNote += inflectionNote;
-        }
-        //console.log("inflectionNote " + inflectionNote + " : " + difTotal)
-
-        //Calcula o subtotal do texto
-        var textNote = (parseInt($("#" + formName + " #text").val()) * parseInt($("#" + formName + " #textDif").val()));
-        if ($.isNumeric(textNote)) {
-            difTotal += parseInt($("#" + formName + " #textDif").val());
-            finalNote += textNote;
-        }
-        //console.log("textNote " + ponctuationNote + " : " + difTotal)
-        //Calcula o subtotal do tempo
+        //Calcula o subtotal do tempo (tempo do prof/tempo do aluno)
         var timeNote = (parseInt($("#" + formName + " #time").val()) * parseInt($("#" + formName + " #timeDif").val()));
         if ($.isNumeric(timeNote)) {
             difTotal += parseInt($("#" + formName + " #timeDif").val());
             finalNote += timeNote;
         }
-        //console.log("timeNote " + timeNote + " : " + difTotal)
+        console.log("timeNote " + timeNote + " : " + difTotal)
         //console.log("finalNote " + finalNote + " : " + difTotal)
         //Passa para percentagem
         finalNote = ((finalNote / difTotal) * 100 / 5) || 0;
@@ -223,14 +208,6 @@ window.ResolutionsNewView = Backbone.View.extend({
 
     }
     ,
-//Check Auth
-    auth: function (e) {
-        if (!window.sessionStorage.getItem("keyo")) {
-            app.navigate("/#", true);
-            return false;
-        }
-        return true;
-    },
 
     afterRender: function () {
         var self = this;
@@ -251,17 +228,12 @@ window.ResolutionsNewView = Backbone.View.extend({
         });
         //Calcula a nota final do teste
         $("#testNote").val(totalNote / totalDif)
-        console.log($("#teacherVoice").attr("src"))
     },
 //Class Renderer
     render: function () {
 
         var self = this;
 
-//Check Local Auth
-        if (!self.auth()) {
-            return false;
-        }
 //conta o numero de palavras
 //self.model.attributes.answer.wordsTotal = self.model.attributes.question.content.text.split(" ").length;
         self.data = self.model.toJSON();

@@ -1,4 +1,4 @@
-window.QuestionsMultimediaNew = Backbone.View.extend({
+window.QuestionsMultimediaEdit = Backbone.View.extend({
     events: {
         "change #selectContentType": "getContentType",
         "change #selectAnswerType": "getAnswerType",
@@ -312,15 +312,24 @@ window.QuestionsMultimediaNew = Backbone.View.extend({
     initialize: function () {
     }
     ,
+    afterRender: function () {
+        var self = this;
+        var res = self.data.subject.split(":");
 
-//Class Renderer
+
+    },
+    //Class Renderer
     render: function () {
         var self = this;
 
-        getCategories();
-        $(this.el).html(this.template());
-        return this;
-    }
+        self.data = this.model.toJSON();
+        console.log(self.data)
 
-})
-;
+        $(self.el).html(self.template(self.data));
+        getCategories(self.data.subject);
+
+        return self;
+
+    },
+
+});

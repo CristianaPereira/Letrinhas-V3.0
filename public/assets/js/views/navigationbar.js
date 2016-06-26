@@ -1,14 +1,6 @@
 window.NavigationBarView = Backbone.View.extend({
 
-    events: {
-    },
-    //Check Auth
-    auth: function () {
-        if (!window.sessionStorage.getItem("keyo")) {
-            return false;
-        }
-        return true;
-    },
+    events: {},
 
 
     //Class Initializer
@@ -17,15 +9,13 @@ window.NavigationBarView = Backbone.View.extend({
 
     //Class Renderer
     render: function () {
+        var name = window.sessionStorage.getItem("name") || window.localStorage.getItem("name");
+        var b64 = window.sessionStorage.getItem("b64") || window.localStorage.getItem("b64");
+
         $(this.el).html(this.template({
-            name: window.sessionStorage.getItem("name"), b64: window.sessionStorage.getItem("b64")
+            name: name, b64: b64
         }))
         ;
-        var self = this;
-        //Check Local Auth
-        if (!self.auth()) {
-            showLoginModal($("body"));
-        }
 
         return this;
     }

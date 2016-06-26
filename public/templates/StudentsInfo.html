@@ -30,11 +30,34 @@
             <% _.each(p,function(sub,i){ %>
             <img src="../img/<%= i %>.png" class="smallImgPreView">
 
-            <% _.each(sub,function(resol){ %>
-            <%=(resol.note) %>
-            <% }); %>
+            <table class="highchart" data-graph-container-before="1" data-graph-type="line" style="display:none">
+                <thead>
+                <tr>
+                    <th>Tipo</th>
+                    <th>Nota</th>
+
+                </tr>
+                </thead>
+                <tbody>
+
+                <% _.each(sub,function(resol){ %>
+                <tr>
+                    <td><%=resol.resolutionDate%></td>
+                    <td><%=resol.note%></td>
+                    <%console.log(resol.note) %>
+                </tr>
+                <% }); %>
+
+
+                </tbody>
+            </table>
             <% }); %>
 
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function () {
+        $('table.highchart').highchartTable();
+    });
+</script>

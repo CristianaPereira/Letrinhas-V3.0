@@ -35,10 +35,15 @@ var Resolutions = Backbone.Collection.extend({
             function (json) {
                 console.log(json)
                 for (i = 0; i < json.length; i++) {
-                    var date = new Date(json[i].resolutionDate);
-                    json[i].resolutionDate = date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear();
+                    if(json[i].resolutionDate){
+                        var date = new Date(json[i].resolutionDate);
+                        json[i].resolutionDate = date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear();
+
+                    }
+
                     self.models.push(new Resolution(json[i]));
                 }
+                //Separa os resolvidos dos nao resolvidos
                 after_fetch();
             },
             function (xhr, ajaxOptions, thrownError) {

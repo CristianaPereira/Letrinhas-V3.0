@@ -22,31 +22,21 @@ window.ResolutionsView = Backbone.View.extend({
     initialize: function () {
         var self = this;
         self.bd2 = 'let_resolutions';
-
+        self.data = self.collection.toJSON();
     }
     ,
-    //Check Auth
-    auth: function (e) {
-        if (!window.sessionStorage.getItem("keyo")) {
-            app.navigate("/#", true);
-            return false;
-        }
-        return true;
-    },
+
 
     //Class Renderer
     render: function () {
 
         var self = this;
+        self.data.sort(sortJsonByCol('solved'));
 
-        //Check Local Auth
-        if (!self.auth()) {
-            return false;
-        }
 
-        var data = self.collection.toJSON();
-        console.log(data)
-        $(this.el).html(this.template({collection: data}));
+        console.log(self.data);
+
+        $(this.el).html(this.template({collection: self.data}));
 
         return this;
 

@@ -37,7 +37,7 @@ exports.upDate = function (req, res) {
 
             } else {
                 body.title = req.body.title;
-                body.subject = req.body.subject + ":" + req.body.content + ":" + req.body.specification;
+                body.subject = [req.body.subject, req.body.content, req.body.specification].join(':');
                 body.schoolYear = parseInt(req.body.schoolYear);
                 body.question = req.body.question;
                 body.content = {};
@@ -275,7 +275,7 @@ exports.removeQuestion = function (req, res) {
             res.send(401, {result: "Não é possível remover a pergunta porque está a ser utilizada em " + nTestes + " testes."});
         } else {
             //Search question Info
-            dbQuest.get(req.params.id, function (err, qustionData) {
+           dbQuest.get(req.params.id, function (err, qustionData) {
                 if (err) {
                     //Report Error (Student Doenst Exists)
                     console.log("Error Removing question");
@@ -290,7 +290,7 @@ exports.removeQuestion = function (req, res) {
 
                             if (err) {
                                 //Report Error (Student Doenst Exists)
-                                console.log("Error Removing Student");
+                                 console.log("Error Removing Student");
                                 return res.status(err.statusCode).json({});
                             }
                             else {
