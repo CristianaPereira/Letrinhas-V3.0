@@ -172,6 +172,12 @@ window.QuestionsView = Backbone.View.extend({
             case 'multimedia':
                 $("#questionsPreview").append(setMultimediaPreview(question));
                 break;
+            case 'boxes':
+                $("#questionsPreview").append(setBoxesPreview(question));
+                break;
+            case 'whitespaces':
+                $("#questionsPreview").append(setWhiteSpacesPreview(question));
+                break;
         }
         ;
     },
@@ -196,5 +202,5 @@ window.QuestionsView = Backbone.View.extend({
 
         return this;
     }
-
-});
+})
+;

@@ -113,6 +113,7 @@ window.TestsNewView = Backbone.View.extend({
         }
         //If they are
         if (isValid) {
+            $('#content').append(loadingSpinner());
             //Recolhe os dados da view
             var testDetails = $('#newTestForm').serializeObject();
             //Cria um novo model

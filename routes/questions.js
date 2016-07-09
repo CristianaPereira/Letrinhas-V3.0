@@ -50,7 +50,8 @@ exports.upDate = function (req, res) {
                         break;
 
                     case "list":
-                        body.content["column"] = JSON.parse(req.body.column);
+                        //Remmove as palavras vazias
+                        body.content["columns"] = JSON.parse(req.body.columns.replace(/,""/gi, ''));
                         break;
 
                     case "interpretation":
@@ -75,6 +76,21 @@ exports.upDate = function (req, res) {
                         }
                         body.content["answers"] = JSON.parse(req.body.answers);
                         break;
+                    case "boxes":
+                        body.content["boxes"] = JSON.parse(req.body.boxes.replace(/,""/gi, ''));
+                        break;
+                    case "whitespaces":
+                        /*  //Content Text
+                         body.content["text"] = req.body.text;
+
+                         //Iterate SID's
+                         body.content["sid"] = [];
+                         var $sid = req.body.sid.split(',');
+                         for (var i in $sid) {
+                         body.content.sid.push($sid[i]);
+                         }
+                         */
+                        break;
                     default:
                         break;
                 }
@@ -91,10 +107,11 @@ exports.upDate = function (req, res) {
                     }], body._id, function (err, body) {
                         if (err) {
                             console.log('questions new, an error ocourred'.green);
-                            res.send(500);
+                            return res.send(500, {text: "Não foi possível alterar a pergunta!"});
                         }
                         else {
-                            console.log('New Test Added'.red);
+                            console.log('Question edited (with sound)'.red);
+                            res.send(200, {text: "Pergunta alterada com sucesso!"});
                         }
                     });
                     //Inserts new document without attachment
@@ -102,15 +119,17 @@ exports.upDate = function (req, res) {
                     dbQuest.insert(body, body._id, function (err, body) {
                         if (err) {
                             console.log('questions edit, an error ocourred'.yellow);
-                            res.send(500);
+                            res.send(500, {text: "Não foi possível alterar a pergunta!"});
+
                         }
                         else {
-                            console.log('Questions successful edited'.red);
+                            console.log('Questions successful edited (no sound)'.green);
+                            res.send(200, {text: "Pergunta alterada com sucesso!"});
                         }
                     });
                 }
                 console.log("Edited Question");
-                res.send(200);
+
             }
 
         });
@@ -188,7 +207,7 @@ exports.test = function (req, res) {
                 break;
 
             case "list":
-                $question.content["columns"] = JSON.parse(req.body.columns);
+                body.content["columns"] = JSON.parse(req.body.columns.replace(/,""/gi, ''));
                 break;
 
             case "interpretation":
@@ -213,6 +232,18 @@ exports.test = function (req, res) {
                 }
                 $question.content["answers"] = JSON.parse(req.body.answers);
                 break;
+            case "boxes":
+                $question.content["boxes"] = JSON.parse(req.body.boxes.replace(/,""/gi, ''));
+                break;
+            case "whitespaces":
+                //Content Text
+                $question.content["text"] = req.body.text;
+
+                //Iterate SID's
+                $question.content["sid"] = JSON.parse(req.body.sid);
+
+
+                break;
             default:
                 break;
         }
@@ -229,10 +260,11 @@ exports.test = function (req, res) {
             }], $idQuest, function (err, body) {
                 if (err) {
                     console.log('questions new, an error ocourred'.green);
-                    res.status(500).json({});
+                    res.send(500, {text: "Não foi possível inserir a pergunta!"});
                 }
                 else {
-                    console.log('New Test Added'.red);
+                    console.log('New question Added (With sound)'.red);
+                    res.send(200, {text: "Pergunta inserida com sucesso!"});
                 }
             });
             //Inserts new document without attachment
@@ -240,16 +272,18 @@ exports.test = function (req, res) {
             dbQuest.insert($question, $idQuest, function (err, body) {
                 if (err) {
                     console.log('questions new, an error ocourred'.yellow);
-                    res.status(500).json({});
+                    res.send(500, {text: "Não foi possível inserir a pergunta!"});
+
                 }
                 else {
-                    console.log('New Test Added'.red);
+                    console.log('New question Added (No sound)'.red);
+                    res.send(200, {text: "Pergunta inserida com sucesso!"});
+
                 }
 
             });
         }
         console.log("New Question");
-        res.status(200).json({});
     }
 
 };
@@ -275,7 +309,7 @@ exports.removeQuestion = function (req, res) {
             res.send(401, {result: "Não é possível remover a pergunta porque está a ser utilizada em " + nTestes + " testes."});
         } else {
             //Search question Info
-           dbQuest.get(req.params.id, function (err, qustionData) {
+            dbQuest.get(req.params.id, function (err, qustionData) {
                 if (err) {
                     //Report Error (Student Doenst Exists)
                     console.log("Error Removing question");
@@ -290,7 +324,7 @@ exports.removeQuestion = function (req, res) {
 
                             if (err) {
                                 //Report Error (Student Doenst Exists)
-                                 console.log("Error Removing Student");
+                                console.log("Error Removing Student");
                                 return res.status(err.statusCode).json({});
                             }
                             else {
@@ -312,34 +346,6 @@ exports.removeQuestion = function (req, res) {
         }
 
     });
-    /*
-     //Search School Info
-     dbQuest.get(req.params.id, function (err, qustionData) {
-
-     if (err) {
-     //Report Error (Student Doenst Exists)
-     console.log("Error Removing question");
-     return res.status(err.statusCode).json({});
-     }
-     else {
-     console.log(qustionData)
-     db.destroy(body._id, body._rev, function (err) {
-
-     if (err) {
-     //Report Error (Student Doenst Exists)
-     console.log("Error Removing Student");
-     return res.status(err.statusCode).json({});
-     }
-     else {
-     console.log("Student Removed");
-     return res.status(200).json({});
-     }
-
-     });
-
-     }
-
-     });*/
 };
 function wordPrefix($col) {
     var $col = ($col)

@@ -75,13 +75,22 @@ var Router = Backbone.Router.extend({
 
         "questionsText/new": "questionsTextNew",
         "questionstext/:id/edit": "questionsTextEdit",
+
+        "questionslist/new": "questionslistNew",
         "questionslist/:id/edit": "questionsListEdit",
+
         "questionsmultimedia/:id/edit": "questionsMultimediaEdit",
         "questionsinterpretation/:id/edit": "questionsInterpretationsEdit",
 
         "multimediaTest/new": "multimediaTestNew",
-        "listTest/new": "listTestNew",
+
         "interpretationTest/new": "interpretationTestNew",
+
+        "whitespaces/new": "questionsWhiteSpacesNew",
+
+        "questionsBoxes/new": "questionsBoxesNew",
+
+        "questionsboxes/:id/edit": "questionsBoxesEdit",
 
         "tests": "tests",
         "tests/new": "testsNew"
@@ -91,6 +100,7 @@ var Router = Backbone.Router.extend({
     //Load NavigationBar
     navbar: function () {
         var self = this;
+        $('#content').html(loadingSpinner());
         isLogged();
 
         //Load NavigationBar
@@ -459,7 +469,6 @@ var Router = Backbone.Router.extend({
             }
         );
     },
-
     questionsTextEdit: function (id) {
         var self = this;
 
@@ -482,6 +491,7 @@ var Router = Backbone.Router.extend({
         );
     },
 
+
     multimediaTestNew: function () {
         var self = this;
 
@@ -494,8 +504,30 @@ var Router = Backbone.Router.extend({
             }
         );
     },
+    questionsMultimediaEdit: function (id) {
+        var self = this;
 
-    listTestNew: function () {
+        self.navbar();
+
+        templateLoader.load(["QuestionsMultimediaEdit"],
+            function () {
+                var ss = new Question({
+                    id: id
+                });
+                ss.fetch(function () {
+                    var v = new QuestionsMultimediaEdit({
+                        model: ss
+                    });
+                    self.showView(v, $('#content'));
+                    self.afterRender(v, $('#content'))
+                })
+
+            }
+        );
+    },
+
+
+    questionslistNew: function () {
         var self = this;
 
         self.navbar();
@@ -522,33 +554,14 @@ var Router = Backbone.Router.extend({
                         model: ss
                     });
                     self.showView(v, $('#content'));
-                    // self.afterRender(v, $('#content'))
+                    self.afterRender(v, $('#content'))
                 })
 
             }
         );
     },
-    questionsMultimediaEdit: function (id) {
-        var self = this;
 
-        self.navbar();
 
-        templateLoader.load(["QuestionsMultimediaEdit"],
-            function () {
-                var ss = new Question({
-                    id: id
-                });
-                ss.fetch(function () {
-                    var v = new QuestionsMultimediaEdit({
-                        model: ss
-                    });
-                    self.showView(v, $('#content'));
-                    // self.afterRender(v, $('#content'))
-                })
-
-            }
-        );
-    },
     interpretationTestNew: function () {
         var self = this;
 
@@ -561,8 +574,68 @@ var Router = Backbone.Router.extend({
             }
         );
     },
+    questionsInterpretationsEdit: function (id) {
+        var self = this;
+        self.navbar();
+        templateLoader.load(["QuestionsInterpEdit"],
+            function () {
+                var ss = new Question({
+                    id: id
+                });
+                ss.fetch(function () {
+                    var v = new QuestionsInterpEdit({
+                        model: ss
+                    });
+                    self.showView(v, $('#content'));
+                    self.afterRender(v, $('#content'))
+                })
+            }
+        );
+    },
 
+    questionsBoxesNew: function () {
+        var self = this;
 
+        self.navbar();
+
+        templateLoader.load(["QuestionsBoxesNew"],
+            function () {
+                var v = new QuestionsBoxesNew({});
+                self.showView(v, $('#content'));
+            }
+        );
+    },
+
+    questionsBoxesEdit: function (id) {
+        var self = this;
+        self.navbar();
+        templateLoader.load(["QuestionsBoxesEdit"],
+            function () {
+                var ss = new Question({
+                    id: id
+                });
+                ss.fetch(function () {
+                    var v = new QuestionsBoxesEdit({
+                        model: ss
+                    });
+                    self.showView(v, $('#content'));
+                    self.afterRender(v, $('#content'))
+                })
+            }
+        );
+    },
+    questionsWhiteSpacesNew: function () {
+        var self = this;
+
+        self.navbar();
+
+        templateLoader.load(["QuestionsWhiteSpacesNew"],
+            function () {
+                var v = new QuestionsWhiteSpacesNew({});
+                self.showView(v, $('#content'));
+            }
+        );
+    },
     tests: function () {
         var self = this;
 

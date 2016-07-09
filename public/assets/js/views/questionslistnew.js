@@ -37,6 +37,7 @@ window.QuestionsListNew = Backbone.View.extend({
         var isValid = isFormValid(allListElements);
         //If they are
         if (isValid) {
+            $('#content').append(loadingSpinner());
             //Recolhe as listas
             var wordsLists = $(".list");
             var lists = [];

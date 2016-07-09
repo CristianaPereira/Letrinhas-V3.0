@@ -5,19 +5,20 @@
             <div align="center" class="titleBox">
                 <img class="titleImage">
         <span class="titleText">
-           <img src="../img/text.png" style="height:30px;">
-       Nova pergunta de Texto
+           <img src="../img/boxes.png" style="height:40px;">
+       Nova pergunta de Caixas
         </span>
             </div>
         </div>
     </div>
     <div class="col-md-12">
         <div class="panel panel-info">
-            <div class="panel-heading"><i class="fa fa-gears"></i> Detalhes do teste
+            <div class="panel-heading"><i class="fa fa-gears"></i> Detalhes da pergunta
                 <i id="infoPop" class="fa fa-info-circle" style="float: right;"></i>
             </div>
             <div class="panel-body">
-                <form id="newTextTestForm" role="form" method="POST" action="/questions" enctype="multipart/form-data">
+                <form id="newBoxesTestForm" role="form" method="POST" action="/questions" enctype="multipart/form-data">
+
                     <!-- TUTULO-DISCIPLINA-ANOESCOLAR -->
                     <div class="col-sm-2 row">
                         <select class="form-control mandatory" id="selectAno" name="schoolYear">
@@ -77,93 +78,85 @@
                         </div>
 
                     </div>
-                    <!-- TEXTO -->
+
+                    <!-- Lista de palavras -->
+
+                    <div class="col-sm-12">
+                        <h4>Caixas</h4>
+                        <hr style="background-color: #b0aac2;">
+                        </br>
+                    </div>
                     <div class="form-group">
-                        <div class="col-sm-12">
-                            <label for="InputTexto">Texto</label>
-                    <textarea class="form-control mandatory" rows="7" id="InputTexto" name="text" style="resize: none;"
-                    ></textarea>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="input-group">
+                                        <span class="input-group-addon btn-white"><i class="fa fa-archive"></i></span>
+                                        <input type="text" class="form-control mandatory" id="boxTitle0"
+                                               placeholder="Especificação da caixa">
+                                    </div>
+                                </div>
+                        <textarea class="form-control list  mandatory" rows="10" id="box0"
+                                  style="resize: none;"></textarea>
+                            </div>
                         </div>
-                    </div>
-
-                    <div id="painelInvisivel" class="form-group  col-sm-8" style="display:none">
-                        <select class="form-control" id="selectEstado" name="state">
-                            <option>1</option>
-                        </select>
-                        <select class="form-control mandatory" id="selectTipo" name="type">
-                            <option>text</option>
-                        </select>
-                        </br>
-                    </div>
-
-                    <!-- Audio -->
-                    <div class="col-md-12">
-                        <h4>Detalhes do Audio</h4>
-                        <hr class="formBar">
-                        </br>
-                    </div>
-
-                    <div class="col-md-3" style="padding-right: 0px;">
-                        <span class="file-input btn btn-block btn-primary btn-file">
-                        Carregar ficheiro de som…
-                          <input id="uploadSoundFile" accept="audio/mp3"
-                                 style="position: absolute;opacity: 0;top: 0px;left: 5%;width: 90%;height: 100%;"
-                                 type="file" accept="audio/mp3" name="file">
-                        </span>
-                    </div>
-                    <div class="col-md-3" style="padding-left: 0px;">
-                        <input type="text" class="form-control mandatory" id="soundPath"
-                               placeholder="Nenhum ficheiro seleccionado"
-                        >
-                    </div>
-                    <div class="col-md-1" style="vertical-align:bottom">
-                        <label style="margin-top: 10px;">OU</label>
-                    </div>
-                    <div class="col-md-3" style="vertical-align:bottom">
-                        <button id="showEqualizer" class="btn btn-default">
-                            <span class="glyphicon glyphicon-record" style="color:#ff0000"></span>
-                            Gravar ficheiro de som
-                        </button>
-                    </div>
-                    <div class="col-md-12">
-                        <audio controls id="teacherVoice">
-                            <source src="" type="audio/mpeg">
-                        </audio>
-                    </div>
-                    <!--
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-default">Devagar</button>
-                        <button type="button" class="btn btn-primary">Normal</button>
-                    </div>
--->
-                    </br>
-                    <!-- BOTOES -->
-                    <div class="form-group">
-                        <div class="col-sm-12">
-                            </br>
-                            <div class="col-sm-5 col-md-offset-7">
-                                <div class="col-sm-6">
-                                    <button id="backbtn" type="reset"
-                                            class="btn btn-default btn-block btn-cancel">
-                                        Cancelar
-                                    </button>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="input-group">
+                                        <span class="input-group-addon btn-white"><i class="fa fa-archive"></i></span>
+                                        <input type="text" class="form-control mandatory" id="boxTitle1"
+                                               placeholder="Especificação da caixa">
+                                    </div>
                                 </div>
-                                <div class="col-sm-6">
-                                    <button id="subTxt" type="submit" class="btn btn-success btn-block btn-created"
-                                            title="Todos os campos são de preenchimento obrigatório.">
-                                        Editar
-                                    </button>
-                                </div>
-
+                                    <textarea class="form-control list" rows="10" id="box1"
+                                              style="resize: none;"></textarea>
                             </div>
                         </div>
                     </div>
+                    <input type="hidden" class="form-control" id="boxes"
+                           name="boxes">
+                    <div id="painelInvisivel" class="form-group  col-sm-4" style="display:none">
+                        <div class="col-sm-2">
+                            <select class="form-control" id="selectEstado" name="state">
+                                <option>1</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-2">
+                            <select class="form-control" id="selectTipo" name="type">
+                                <option>boxes</option>
+                            </select>
+
+                        </div>
+                    </div>
+                    </br>
+
+
+                    <div class="col-sm-12">
+                        </br>
+                        <div class="col-sm-5 col-md-offset-7">
+                            <div class="col-sm-6">
+                                <button id="backbtn" type="reset"
+                                        class="btn btn-default btn-block btn-cancel">
+                                    Cancelar
+                                </button>
+                            </div>
+                            <div class="col-sm-6">
+                                <button id="subTxt" type="submit" class="btn btn-success btn-block btn-created"
+                                        title="Todos os campos são de preenchimento obrigatório.">
+                                    Submeter
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+
                 </form>
             </div>
         </div>
     </div>
 </div>
-
 
 <!-- MODAL para apresentar o equalizador para gravar o som -->
 <div class="modal fade" id="myModalRecord" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"

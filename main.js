@@ -222,6 +222,10 @@ app.route('/schools/:id/newclass')
 app.route('/schools/:id/removeclass')
     .post(auth, perms(3), schools.removeClass);
 
+app.route('/classes/:school/:class')
+    .get(auth, perms(3), schools.getClass);
+
+
 //-----------------------------------------------------STUDENTS
 
 //Only Return Teacher Related Students

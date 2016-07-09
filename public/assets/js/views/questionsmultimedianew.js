@@ -273,7 +273,7 @@ window.QuestionsMultimediaNew = Backbone.View.extend({
         //If they are
         if (isValid) {
 
-
+            $('#content').append(loadingSpinner());
             //Obtem as respostas erradas
             var nWrongAnswers = $(".wrongAnswer");
             var answers = [];
@@ -285,23 +285,24 @@ window.QuestionsMultimediaNew = Backbone.View.extend({
             });
             $("#inputAnswers").val(JSON.stringify(answers));
             //Se algum dos campos estiver vazio
-
-            modem('POST', 'questions',
-                function () {
-                    sucssesMsg($("body"), "Pergunta inserida com sucesso!");
-                    setTimeout(function () {
-                        app.navigate("questions", {
-                            trigger: true
-                        });
-                    }, 1500);
-                },
-                //Error Handling
-                function (xhr, ajaxOptions, thrownError) {
-                    failMsg($("body"), "Não foi possível inserir a nova pergunta.");
-                },
-                new FormData($("#newMultimediaTestForm")[0])
-            );
-
+            console.log(answers)
+            /*
+             modem('POST', 'questions',
+             function () {
+             sucssesMsg($("body"), "Pergunta inserida com sucesso!");
+             setTimeout(function () {
+             app.navigate("questions", {
+             trigger: true
+             });
+             }, 1500);
+             },
+             //Error Handling
+             function (xhr, ajaxOptions, thrownError) {
+             failMsg($("body"), "Não foi possível inserir a nova pergunta.");
+             },
+             new FormData($("#newMultimediaTestForm")[0])
+             );
+             */
         }
 
     }

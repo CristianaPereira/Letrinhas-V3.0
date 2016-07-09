@@ -350,7 +350,7 @@ function getClasses(schools, idProf) {
                 //If professor belongs to that class
                 if (JSON.stringify(escola.classes[turma]).indexOf(idProf) != -1) {
                     classes["class"].push({
-                        id: escola.classes[turma]._id,
+                        _id: escola.classes[turma]._id,
                         name: escola.classes[turma].year + "º " + escola.classes[turma].name
                     })
                 }

@@ -125,6 +125,7 @@ window.TeachersNewView = Backbone.View.extend({
         }
         console.log(isValid)
         if (isValid) {
+            $('#content').append(loadingSpinner());
             //Recolhe os dados da view
             var teacherDetails = $('#newteacherform').serializeObject();
             //Cria um novo model

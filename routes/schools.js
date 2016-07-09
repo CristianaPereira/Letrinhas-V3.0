@@ -4,6 +4,7 @@ require('colors');
 var nano = require('nano')(process.env.COUCHDB);
 var db = nano.use('let_schools');
 var dbAlunos = nano.use('let_students');
+var jsonQuery = require('json-query');
 
 //Get School ID Info
 exports.get = function (req, res) {
@@ -24,7 +25,50 @@ exports.get = function (req, res) {
         res.status(200).json(body);
     });
 };
+//Get School ID Info
+exports.getClass = function (req, res) {
 
+    var idSchool = req.params.school;
+    var idClass = req.params.class;
+    console.log('school:'.green + idSchool + ', class:,'.green + idClass);
+
+    //Search School Parameters
+    db.get(idSchool, function (err, body) {
+        if (err) {
+            return res.status(err.statusCode).json({});
+        }
+
+        //delete body._id;
+        delete body._rev;
+        delete body._attachments;
+        //Obtem os dados da turma
+        body = jsonQuery('[classes][_id=' + idClass + ']', {data: body}).value;
+
+        //Obtem os alunos todos
+        dbAlunos.list({
+            'include_docs': true,
+            'attachments': false,
+            'limit': undefined,
+            'descending': true
+        }, function (err, students) {
+            if (err) {
+                return "";
+            }
+            //Obtem os alunos da turma escolhida
+            var students = jsonQuery('rows[doc][*class=' + idClass + ']', {data: students}).value;
+            for (var i = 0; i < students.length; i++) {
+                //Remove os campos desnecessarios
+                delete students[i]._rev;
+                delete students[i].school;
+                delete students[i].class;
+                delete students[i].password;
+            }
+            body.students = students;
+            res.status(200).json(body);
+        });
+
+    });
+};
 exports.new = function (req, res) {
 
     //Check For Required Fields, accpets no classes

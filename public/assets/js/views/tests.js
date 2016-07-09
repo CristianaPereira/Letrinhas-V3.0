@@ -171,6 +171,9 @@ window.TestsView = Backbone.View.extend({
             case 'multimedia':
                 $("#questionsPreview" + i).append(setMultimediaPreview(question))
                 break;
+            case 'boxes':
+                $("#questionsPreview" + i).append(setBoxesPreview(question))
+                break;
         }
         ;
     },

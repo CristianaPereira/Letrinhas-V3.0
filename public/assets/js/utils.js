@@ -654,9 +654,7 @@ window.attemptLogin = function () {
 
             //Reloads actual view
 
-            app.navigate("/user", {
-                trigger: true
-            });
+            document.location.reload(true);
 
         },
         //Error Handling
@@ -669,6 +667,7 @@ window.attemptLogin = function () {
         }
     );
 };
+
 
 //efectua logout
 window.logout = function () {
@@ -1123,6 +1122,160 @@ window.setMultimediaPreview = function (question, div) {
     return [$contentDiv.wrap('<p/>').parent().html(), $answersDiv.wrap('<p/>').parent().html()];
 };
 
-window.hello = function () {
-    alert("hello")
-}
+//Preenche a div desejada com a preview da pergunta
+window.setBoxesPreview = function (question) {
+    // console.log(question)
+    var $contentDiv = $('<div>', {class: 'col-md-12'});
+    var nWords = 0;
+    //Coloca as palavras nas coluna
+    $.each(question.content.boxes, function (i, box) {
+        var words = $();
+
+        $.each(box.words, function (iw, word) {
+            words = words.add($('<span>', {
+                    text: word,
+                    id: "wd" + nWords
+                }).add('<br>')
+            );
+            nWords++;
+        });
+
+        $contentDiv.append(
+            $('<div>', {
+                class: "col-md-" + (12 / question.content.boxes.length)
+            }).append(
+                $('<div>', {
+                        class: "questBox centered box" + i
+                    }
+                ).append($('<span>', {
+                        text: box.name,
+                        id: box._id,
+                        class: "boxTitle" + i
+
+                    }), $('<hr>', {}))
+                    .append(words))
+        );
+    });
+    return [$contentDiv.wrap('<p/>').parent().html()]
+};
+
+//Preenche a div desejada com a preview da pergunta
+window.setWhiteSpacesPreview = function (question) {
+
+    var Sids = [];
+    //Recolhe todos os spans marcados
+    $.each(question.content.sid, function (iList, list) {
+        Sids = Sids.concat(list.sids);
+    })
+    console.log(Sids)
+    console.log(Sids.indexOf(3 + ""))
+    console.log(Sids.indexOf(9 + ""))
+    console.log(Sids.indexOf(1 + ""))
+    //Carrega o som,
+    var $contentDiv = $('<div>', {class: 'col-md-12'});
+    var $soundDiv = getQuestionVoice(question._id);
+    var words = $();
+    var $text = $('<div>', {class: 'questBox'});
+    $contentDiv.append($text);
+
+
+    //Separa o texto em paragrafos
+    var $paragraph = question.content.text.split(/\n/);
+    var words = $();
+    var nWords = 0;
+    //por cada paragrafo adiciona a palavra a lista, e a new line
+    $.each($paragraph, function (iLine, line) {
+        var $wordsList = line.replace(/\,/gi, " ,").replace(/\-/gi, "- ").replace(/\:/gi, " :").replace(/\./gi, " .").replace(/\!/gi, " !").replace(/\?/gi, " ?").replace(/'.'/gi, " .").split(" ");
+        $.each($wordsList, function (i, word) {
+            //Replace String With Selectable Span (Não esquecer os PARAGRAFOS)
+            if (Sids.indexOf(nWords + "") != -1) {
+                words = words.add($('<span>', {
+                    text: word + " ",
+                    class: "whitespace"
+                }))
+            } else {
+                words = words.add($('<span>', {
+                    text: word + " "
+                }))
+            }
+            //incrementa o nr de palavras (nao conta os breaks
+            nWords++;
+        });
+        words = words.add('<br />')
+    });
+    $text.append(words);
+    return [$contentDiv.wrap('<p/>').parent().html(), $soundDiv.wrap('<p/>').parent().html()]
+};
+
+window.loadingSpinner = function () {
+    return $('<div>', {class: "cssload-container"}).append(
+        $('<div>', {class: "cssload-whirlpool"}),
+        $('<p>', {text: "A carregar..."})
+    )
+};
+
+//Shows some class info
+window.showClassInfo = function (idSchool, idClass) {
+
+    $("#mClass").remove();
+
+    //Recolhe os dados da turma
+    modem('GET', 'classes/' + idSchool + '/' + idClass,
+        //Response Handler
+        function (classData) {
+
+            var $modalBody = $('<div>', {class: 'row'});
+
+            $.each(classData.students, function (iS, student) {
+                //Separa o nome
+                var name = student.name.split(" ");
+                $modalBody.append(
+                    $('<div>', {class: 'col-md-3'}).append(
+                        $('<img>', {class: 'dataImage', src: student.b64}),
+                        $('<p>', {class: 'pictureLabel', html: name[0] + " " + name[name.length - 1]})
+                    )
+                )
+            })
+
+            var $classModal = $("<div>", {
+                    class: "modal fade", tabindex: "-1", id: "mClass", role: "dialog",
+                    "aria-labelledby": "myModalLabel", "aria-hidden": "true"
+                }).append(
+                $("<div>", {class: "modal-dialog modal-lg"}).append(
+                    $("<div>", {class: "modal-content"}
+                        // MODAl HEATHER
+                    ).append(
+                        $("<div>", {class: "modal-header"}).append(
+                            $("<button>", {
+                                type: "button", class: "close", "data-dismiss": "modal", "aria-label": "Close"
+                            }),
+                            $("<h3>", {
+                                class: "modal-title", text: classData.year + "º " + classData.name
+                            })
+                        )
+                        // MODAl HEATHER
+                    ).append(
+                        $("<div>", {
+                            class: "modal-body",
+                        }).append(
+                            $modalBody
+                        )
+                    )
+                ))
+                ;
+
+            $('body').append($classModal);
+            $("#mClass").modal("show");
+
+        },
+        //Error Handling
+        function (xhr, ajaxOptions, thrownError) {
+            var json = JSON.parse(xhr.responseText);
+            console.log(xhr)
+            console.log(ajaxOptions)
+            console.log(thrownError)
+
+        }
+    )
+
+};

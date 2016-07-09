@@ -37,7 +37,7 @@ window.QuestionsTextNew = Backbone.View.extend({
         var isValid = isFormValid(allListElements);
         //If they are
         if (isValid) {
-
+            $('#content').append(loadingSpinner());
             modem('POST', 'questions',
                 function () {
                     sucssesMsg($("body"), "Pergunta inserida com sucesso!");

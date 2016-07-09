@@ -48,8 +48,8 @@ window.QuestionsListEdit = Backbone.View.extend({
                 }
             });
             $("#columns").val(JSON.stringify(lists));
-
-            modem('POST', 'questions',
+            $('#content').append(loadingSpinner());
+            modem('PUT', 'questions/' + this.data._id,
                 function () {
                     sucssesMsg($("body"), "Pergunta inserida com sucesso!");
                     setTimeout(function () {
@@ -116,8 +116,8 @@ window.QuestionsListEdit = Backbone.View.extend({
 
     afterRender: function () {
         var self = this;
-        var res = self.data.subject.split(":");
-
+        //seleecciona o ano escolar
+        $("#selectAno").val(self.data.schoolYear)
 
     },
     //Class Renderer

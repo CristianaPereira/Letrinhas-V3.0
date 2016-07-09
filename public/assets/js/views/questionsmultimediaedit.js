@@ -161,7 +161,7 @@ window.QuestionsMultimediaEdit = Backbone.View.extend({
         )
     },
 
-//Changes content input type
+    //Changes content input type
     getQuestion: function (e) {
 
         if ($(e.currentTarget).attr("accept").indexOf("image") != -1) {
@@ -179,11 +179,9 @@ window.QuestionsMultimediaEdit = Backbone.View.extend({
             reader.readAsDataURL(file);
         }
         console.log($(e.currentTarget).val())
-    }
-    ,
+    },
 
-
-//Recorta a foto
+    //Recorta a foto
     getFoto: function (e) {
         e.preventDefault();
 
@@ -192,8 +190,7 @@ window.QuestionsMultimediaEdit = Backbone.View.extend({
         $("#" + $(e.currentTarget).attr('value')).val(dataUrl);
         $("#" + $(e.currentTarget).attr('value') + "Img").attr("src", dataUrl);
         $(".cropBG").remove();
-    }
-    ,
+    },
 
     addWrngAnswr: function (e) {
         e.preventDefault();
@@ -258,10 +255,9 @@ window.QuestionsMultimediaEdit = Backbone.View.extend({
         } else {
             failMsg($(".form"), "A pergunta só pode conter quatro (3) opções erradas.");
         }
-    }
-    ,
+    },
 
-//Before Sending Request To Server
+    //Before Sending Request To Server
     beforeSend: function (e) {
         e.preventDefault();
 
@@ -284,9 +280,10 @@ window.QuestionsMultimediaEdit = Backbone.View.extend({
                 answers.push({_id: i + 1, content: $(answer).val()});
             });
             $("#inputAnswers").val(JSON.stringify(answers));
+            console.log(answers)
             //Se algum dos campos estiver vazio
 
-            modem('POST', 'questions',
+            modem('PUT', 'questions/' + this.data._id,
                 function () {
                     sucssesMsg($("body"), "Pergunta inserida com sucesso!");
                     setTimeout(function () {
@@ -304,26 +301,25 @@ window.QuestionsMultimediaEdit = Backbone.View.extend({
 
         }
 
-    }
-    ,
+    },
 
-
-//Class Initializer
+    //Class Initializer
     initialize: function () {
-    }
-    ,
+    },
+
     afterRender: function () {
         var self = this;
-        var res = self.data.subject.split(":");
-
+        $("#selectAno").val(self.data.schoolYear)
 
     },
+
     //Class Renderer
     render: function () {
         var self = this;
 
         self.data = this.model.toJSON();
         console.log(self.data)
+
 
         $(self.el).html(self.template(self.data));
         getCategories(self.data.subject);

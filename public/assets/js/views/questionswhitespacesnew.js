@@ -1,4 +1,4 @@
-window.QuestionsInterpNew = Backbone.View.extend({
+window.QuestionsWhiteSpacesNew = Backbone.View.extend({
     events: {
         "click #showEqualizer": "showEqualizer",
         "click #record": "initRecord",
@@ -44,20 +44,30 @@ window.QuestionsInterpNew = Backbone.View.extend({
 
             //Generate Answers Locations
             var $sid = [];
-            $("#inputPanel").find(".badge").each(function () {
-                $sid.push((this.id).substring(3));
+            //Recolhe os elementos seleccionados
+            $.each($("#inputPanel").find(".whitespace"), function (iElem, elem) {
+                $sid.push({id: $(elem).attr("id").substring(3), text: $(elem).html().trim()});
             });
-            console.log($sid)
-            fd.append("sid", $sid);
+            //Agrupa-os por texto
+            $sid = _.chain($sid)
+                .groupBy('text')
+                .map(function (value, key) {
+                    return {
+                        text: key,
+                        sids: _.pluck(value, 'id')
+                    }
+                })
+                .value();
+            fd.append("sid", JSON.stringify($sid));
 
             modem('POST', 'questions',
                 function () {
                     sucssesMsg($("body"), "Pergunta inserida com sucesso!");
-                    setTimeout(function () {
-                        app.navigate("questions", {
-                            trigger: true
-                        });
-                    }, 1500);
+                    /*  setTimeout(function () {
+                     app.navigate("questions", {
+                     trigger: true
+                     });
+                     }, 1500);*/
                 },
                 //Error Handling
                 function (xhr, ajaxOptions, thrownError) {
@@ -132,7 +142,7 @@ window.QuestionsInterpNew = Backbone.View.extend({
         e.preventDefault();
         //Generate Answers Locations
         var $sid = [];
-        $("#inputPanel").find(".badge").each(function () {
+        $("#inputPanel").find(".whitespace").each(function () {
             $sid.push((this.id).substring(3));
         });
         var self = this;
@@ -141,21 +151,24 @@ window.QuestionsInterpNew = Backbone.View.extend({
         var $paragraph = $("#inputTextArea").val().split(/\r|\n/);
         var words = $();
         var nWords = 0;
+
         //por cada paragrafo adiciona a palavra a lista, e a new line
         $.each($paragraph, function (iLine, line) {
-            var $wordsList = line.split(" ");
+            //Separa a pontuação
+            var $wordsList = line.replace(/\,/gi, " ,").replace(/\-/gi, "- ").replace(/\:/gi, " :").replace(/\./gi, " .").replace(/\!/gi, " !").replace(/\?/gi, " ?").replace(/'.'/gi, " .").split(" ");
+            console.log($wordsList)
             $.each($wordsList, function (i, word) {
-                console.log(nWords)
-                console.log(jQuery.inArray(nWords, $sid) != -1)
-                //Replace String With Selectable Span (Não esquecer os PARAGRAFOS)
-                words = words.add($('<span>', {
-                    text: word + " ",
-                    id: 'sid' + nWords,
-                    //Verifica se a palavra ja foi previamente seleccionada
-                    class: "selectable " + (jQuery.inArray(nWords + "", $sid) != -1 ? 'badge' : '')
-                }))
-                //incrementa o nr de palavras (nao conta os breaks
-                nWords++;
+                if (word) {
+                    //Replace String With Selectable Span (Não esquecer os PARAGRAFOS)
+                    words = words.add($('<span>', {
+                        text: word + " ",
+                        id: 'sid' + nWords,
+                        //Verifica se a palavra ja foi previamente seleccionada
+                        class: "selectable " + (jQuery.inArray(nWords + "", $sid) != -1 ? 'badge' : '')
+                    }))
+                    //incrementa o nr de palavras (nao conta os breaks
+                    nWords++;
+                }
             });
             words = words.add('<br />')
         })
@@ -170,19 +183,9 @@ window.QuestionsInterpNew = Backbone.View.extend({
 
     //Mark Word
     selectWord: function (e) {
-        $(e.target).toggleClass("badge");
+        $(e.target).toggleClass("whitespace");
         console.log($(e.target).attr("id"))
     },
-
-    //Make Unique String Array
-    unique: function (list) {
-        var result = [];
-        $.each(list, function (i, e) {
-            if ($.inArray(e, result) == -1) result.push(e);
-        });
-        return result;
-    },
-
 
     //Class Initializer
     initialize: function () {

@@ -91,14 +91,17 @@
                                 <div class="input-group">
                                     <span class="input-group-addon btn-white"><i>Tipo de pergunta</i></span>
                                     <select class="form-control" id="selectContentType" name="questionType">
-                                        <option value="text">
-                                            Texto
+                                        <option
+                                        <%if(content.questionType=='text'){print('selected')}%> value="text">
+                                        Texto
                                         </option>
-                                        <option value="image">
-                                            Imagem
+                                        <option
+                                        <%if(content.questionType=='image'){print('selected')}%> value="image">
+                                        Imagem
                                         </option>
-                                        <option value="audio">
-                                            Áudio
+                                        <option
+                                        <%if(content.questionType=='audio'){print('selected')}%> value="audio">
+                                        Áudio
                                         </option>
                                     </select>
                                 </div>
@@ -106,13 +109,14 @@
                             <%if(content.questionType=='image'){%>
                             <div class="col-md-12" id="questionContent">
                                 <div class="input-group"><span class="input-group-addon btn-white"><i
-                                        class="fa fa-image" style="color:#4057BD"></i></span><input type="file"
-                                                                                                    class="form-control mandatory"
-                                                                                                    id="questionFile"
-                                                                                                    accept="image/*"
-                                                                                                    result="base64Question"><input
-                                        type="hidden" class="form-control mandatory" id="base64Question"
-                                        name="contentQuest" value="<%=content.question%>">
+                                        class="fa fa-image" style="color:#4057BD"></i></span>
+                                    <input type="file"
+                                           class="form-control"
+                                           id="questionFile"
+                                           accept="image/*"
+                                           result="base64Question"><input
+                                            type="hidden" class="form-control" id="base64Question"
+                                            name="contentQuest" value="<%=content.question%>">
                                     <img id="base64QuestionImg" src="<%=content.question%>">
                                 </div>
                             </div>
@@ -123,7 +127,7 @@
                                     <i class="fa fa-font"
                                        style="color:#4057BD"></i></span>
                                     <textarea
-                                            class="form-control mandatory"
+                                            class="form-control"
                                             placeholder="Ex: Qual o resultado de 16 - 7 ?"
                                             name="contentQuest" rows="4"
                                             style="resize: none;"><%=content.question%></textarea></div>
@@ -133,7 +137,7 @@
                                 <div class="input-group"><span class="input-group-addon btn-white"><i
                                         class="fa fa-file-audio-o" style="color:#4057BD"></i></span>
                                     <input type="file"
-                                           class="form-control mandatory"
+                                           class="form-control"
                                            id="questionFile"
                                            accept="audio/mp3"
                                            name="contentQuest">
@@ -160,11 +164,13 @@
                             <div class="input-group">
                                 <span class="input-group-addon btn-white"><i>Tipo de respostas</i></span>
                                 <select class="form-control" id="selectAnswerType" name="answerType">
-                                    <option value="text">
-                                        Texto
+                                    <option
+                                    <%if(content.answerType=='text'){print('selected')}%> value="text">
+                                    Texto
                                     </option>
-                                    <option value="image">
-                                        Imagem
+                                    <option
+                                    <%if(content.answerType=='image'){print('selected')}%> value="image">
+                                    Imagem
                                     </option>
                                 </select>
                              <span class="input-group-addon btn-white" title="Adicionar resposta errada">
@@ -175,24 +181,68 @@
 
                         <!-- RESPOSTAS -->
                         <div class="row" id="answerContent">
+                            <!-- Se for de texto -->
+                            <%if(content.answerType=='text'){%>
                             <div class="col-sm-12 row" id="rightAnswers">
                                 <div class="input-group">
                                 <span type="text" class="input-group-addon btn-white">
                                   <i class="fa fa-check" style="color:#A2BD40"></i>
                                 </span>
-                                    <input type="text" class="form-control mandatory"
-                                           id="rightAnswer" placeholder="Resposta correcta">
+                                    <input type="text" class="form-control mandatory" id="rightAnswer"
+                                           placeholder="Resposta correcta" value="<%=content.answers[0].content%>">
                                 </div>
                             </div>
+
                             <div class="col-sm-12 row" id="wrongAnswers">
+                                <% _.each(content.answers,function(answer, iAnswer){ %>
+                                <%if(iAnswer!=0){%>
                                 <div class="input-group">
                                 <span type="text" class="input-group-addon btn-white">
                                     <i class="fa fa-close" style="color:#BD404C"></i>
                                 </span>
                                     <input type="text" class="form-control mandatory wrongAnswer"
-                                           placeholder="Resposta incorrecta">
+                                           placeholder="Resposta incorrecta" value="<%=answer.content%>">
+                                </div>
+                                <%}%>
+                                <%})%>
+                            </div>
+                            <%}%>
+                            <!-- Se for de imagem -->
+                            <%if(content.answerType=='image'){%>
+                            <div class="col-sm-12 row" id="rightAnswers">
+                                <div class="input-group"><span class="input-group-addon btn-white"><i
+                                        class="fa fa-check" style="color:#A2BD40"></i></span>
+                                    <input type="file"
+                                           class="form-control"
+                                           accept="image/*"
+                                           result="rightAnswer"><input
+                                            type="hidden" class="form-control" id="rightAnswer"
+                                            accept="image/*"
+                                            value="<%=content.answers[0].content%>">
+                                    <img id="rightAnswerImg" src="<%=content.answers[0].content%>">
                                 </div>
                             </div>
+
+                            <div class="col-sm-12 row" id="wrongAnswers">
+                                <% _.each(content.answers,function(answer, iAnswer){ %>
+                                <%if(iAnswer!=0){%>
+                                <div class="input-group"><span class="input-group-addon btn-white"><i
+                                        class="fa fa-close" style="color:#BD404C"></i></span>
+                                    <input type="file"
+                                           class="form-control"
+                                           accept="image/*"
+                                           result="wrongAnswer<%=iAnswer-1%>">
+                                    <input
+                                            type="hidden" class="form-control mandatory wrongAnswer"
+                                            id="wrongAnswer<%=iAnswer-1%>"
+                                            accept="image/*"
+                                            value="<%=answer.content%>">
+                                    <img id="wrongAnswer<%=iAnswer-1%>Img" src="<%=answer.content%>">
+                                </div>
+                                <%}%>
+                                <%})%>
+                            </div>
+                            <%}%>
                             <div class="form-group">
                                 <input type="hidden" class="form-control" id="inputAnswers"
                                        name="answers">

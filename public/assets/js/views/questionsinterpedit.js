@@ -1,4 +1,4 @@
-window.QuestionsInterpNew = Backbone.View.extend({
+window.QuestionsInterpEdit = Backbone.View.extend({
     events: {
         "click #showEqualizer": "showEqualizer",
         "click #record": "initRecord",
@@ -38,7 +38,6 @@ window.QuestionsInterpNew = Backbone.View.extend({
         var isValid = isFormValid(allListElements);
         //If they are
         if (isValid) {
-            $('#content').append(loadingSpinner());
             //Generate Form Data
             var fd = new FormData($("#newInterpretationTestForm")[0]);
 
@@ -49,25 +48,30 @@ window.QuestionsInterpNew = Backbone.View.extend({
             });
             console.log($sid)
             fd.append("sid", $sid);
-
-            modem('POST', 'questions',
-                function () {
-                    sucssesMsg($("body"), "Pergunta inserida com sucesso!");
+            $('#content').append(loadingSpinner());
+            modem('PUT', 'questions/' + this.data._id,
+                function (json) {
+                    sucssesMsg($("body"), "Pergunta editada com sucesso!");
                     setTimeout(function () {
                         app.navigate("questions", {
                             trigger: true
                         });
                     }, 1500);
+
                 },
                 //Error Handling
                 function (xhr, ajaxOptions, thrownError) {
-                    var json = JSON.parse(xhr.responseText);
-                    failMsg($("body"), "Não foi possível inserir a pergunta!");
 
+                    var json = JSON.parse(xhr.responseText);
+                    failMsg($("body"), json.text);
+                    setTimeout(function () {
+                        app.navigate('/user', {
+                            trigger: true
+                        });
+                    }, json.text.length * 50);
                 },
                 fd
-            )
-            ;
+            );
 
         }
 
@@ -187,15 +191,56 @@ window.QuestionsInterpNew = Backbone.View.extend({
     //Class Initializer
     initialize: function () {
     },
+    afterRender: function () {
+        var self = this;
 
+        //seleecciona o ano escolar
+        $("#selectAno").val(self.data.schoolYear)
+
+        //Marca o texto
+
+        var $sid = self.data.content.sid;
+
+        //Separa o texto em paragrafos
+        var $paragraph = $("#inputTextArea").val().split(/\r|\n/);
+        var words = $();
+        var nWords = 0;
+        //por cada paragrafo adiciona a palavra a lista, e a new line
+        $.each($paragraph, function (iLine, line) {
+            var $wordsList = line.split(" ");
+            $.each($wordsList, function (i, word) {
+                //Replace String With Selectable Span (Não esquecer os PARAGRAFOS)
+                words = words.add($('<span>', {
+                    text: word + " ",
+                    id: 'sid' + nWords,
+                    //Verifica se a palavra ja foi previamente seleccionada
+                    class: "selectable " + (jQuery.inArray(nWords + "", $sid) != -1 ? 'badge' : '')
+                }))
+                //incrementa o nr de palavras (nao conta os breaks
+                nWords++;
+            });
+            words = words.add('<br />')
+        })
+        $("#inputPanel").empty().append(words);
+
+        $("#inputTextArea").hide();
+        $("#markText").hide();
+
+        $("#inputPanel").show();
+        $("#writeText").show();
+
+    },
     //Class Renderer
     render: function () {
         var self = this;
 
+        self.data = this.model.toJSON();
+        console.log(self.data)
 
-        getCategories();
-        $(this.el).html(this.template());
-        return this;
+        $(self.el).html(self.template(self.data));
+        getCategories(self.data.subject);
+
+        return self;
+
     },
-
 });

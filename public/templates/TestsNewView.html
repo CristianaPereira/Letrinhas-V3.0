@@ -267,6 +267,10 @@
                                 <% if ( question.type == 'interpretation'){ %>
                                 <%print(setInterpretationPreview(question)) %>
                                 <% } %>
+                                <!--Se a pergunta for de Interpretacao obtem o html da preview-->
+                                <% if ( question.type == 'boxes'){ %>
+                                <%print(setBoxesPreview(question)) %>
+                                <% } %>
                             </div>
                         </div>
 

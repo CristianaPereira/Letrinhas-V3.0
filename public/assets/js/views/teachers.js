@@ -97,7 +97,10 @@ window.TeachersView = Backbone.View.extend({
 
             $.each(school.class, function (iS, classe) {
                 console.log(classe)
-                var $class = $('<button>', {class: "classBtn", html: classe.name});
+                var $class = $('<button>', {class: "classBtn", html: classe.name}).click(function () {
+                        showClassInfo(school.id, classe._id)
+                    }
+                );
                 //Se a escola já estiver listada, e a turma não, adiciona a turma
                 if (!$('div#' + school.id).length) {
                     var $row = $("<div>", {

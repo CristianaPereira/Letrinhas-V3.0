@@ -35,18 +35,31 @@ window.QuestionsTextEdit = Backbone.View.extend({
     //Before Sending Request To Server
     beforeSend: function (e) {
         e.preventDefault();
+        console.log($("#newTextTestForm")[0]);
+        $('#content').append(loadingSpinner());
         modem('PUT', 'questions/' + this.data._id,
             function (json) {
-                success($("body"), "OK");
+                sucssesMsg($("body"), "Pergunta editada com sucesso!");
+                setTimeout(function () {
+                    app.navigate("questions", {
+                        trigger: true
+                    });
+                }, 1500);
 
             },
             //Error Handling
             function (xhr, ajaxOptions, thrownError) {
-                failMsg($("body"), "Não foi possível inserir a nova pergunta. \n (" + JSON.parse(xhr.responseText).result + ").");
+
+                var json = JSON.parse(xhr.responseText);
+                failMsg($("body"), json.text);
+                setTimeout(function () {
+                    app.navigate('/user', {
+                        trigger: true
+                    });
+                }, json.text.length * 50);
             },
             new FormData($("#newTextTestForm")[0])
-        )
-        ;
+        );
     },
 
     //Show Voice Recorder Equalizer
@@ -96,8 +109,8 @@ window.QuestionsTextEdit = Backbone.View.extend({
     },
     afterRender: function () {
         var self = this;
-        var res = self.data.subject.split(":");
-
+        //seleecciona o ano escolar
+        $("#selectAno").val(self.data.schoolYear)
 
     },
     //Class Renderer
