@@ -3,11 +3,13 @@ window.StudentsNewView = Backbone.View.extend({
         "click #backbtn": "back",
         "blur .emptyField": "isEmpty",
         "blur #InputUsername": "isUernameValid",
+        "keyup #InputUsername": "checkUsername",
         "submit": "beforeSend",
         "change #filePicker": "convertPhoto",
         "click #btnCrop": "getFoto",
         "mouseover #newstudentbtn": "pop"
     },
+
     //Initializes popover content
     pop: function () {
 
@@ -21,6 +23,10 @@ window.StudentsNewView = Backbone.View.extend({
         }
     },
 
+    //Garante que o username nao tem espacos em maiusculas
+    checkUsername: function (e) {
+        $(e.currentTarget).val($(e.currentTarget).val().trim().toLowerCase())
+    },
     isUernameValid: function (e) {
         var student = new Student({});
         //Se o username ja estiver a ser utilizado
@@ -34,18 +40,6 @@ window.StudentsNewView = Backbone.View.extend({
                 $(e.currentTarget).removeClass("emptyField");
             }
         })
-
-
-    },
-
-
-    //Check Auth
-    auth: function (e) {
-        if (!window.sessionStorage.getItem("keyo")) {
-            app.navigate("/#", true);
-            return false;
-        }
-        return true;
     },
 
     //crops a foto
@@ -124,11 +118,6 @@ window.StudentsNewView = Backbone.View.extend({
     //Class Renderer
     render: function () {
         var self = this;
-
-        //Check Local Auth
-        if (!self.auth()) {
-            return false;
-        }
 
         $(this.el).html(this.template());
 

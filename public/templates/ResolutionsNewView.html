@@ -31,7 +31,8 @@
                                 <!--Se a pergunta for de texto obtem o html da preview-->
                                 <% if ( question.info.type == 'text'){ %>
                                 <%print(getTextPreview(question.info)) %>
-                                <audio class="col-md-12" controls="controls" id="studentsVoice">
+                                <label class="col-md-2 audioLbl"> Aluno </label>
+                                <audio class="col-md-10" controls="controls" id="studentsVoice">
                                     <source src="http://letrinhas.pt:5984/let_resolutions/<%=question.resol._id%>/record.m4a"
                                             type="audio/mp4">
                                 </audio>
@@ -39,6 +40,11 @@
                                 <!--Se a pergunta for de Lista obtem o html da preview-->
                                 <% if ( question.info.type == 'list'){ %>
                                 <%print(setListPreview(question.info)) %>
+                                <label class="col-md-2 audioLbl"> Aluno </label>
+                                <audio class="col-md-10" controls="controls" id="studentsVoice">
+                                    <source src="http://letrinhas.pt:5984/let_resolutions/<%=question.resol._id%>/record.m4a"
+                                            type="audio/mp4">
+                                </audio>
                                 <% } %>
                                 <!--Se a pergunta for de Multimedia obtem o html da preview-->
                                 <% if ( question.info.type == 'multimedia'){ %>
@@ -49,7 +55,7 @@
                                 <%print(setInterpretationPreview(question.info)) %>
                                 <% } %>
                             </div>
-                            <div class="col-md-5" style="border-left: 1px solid #f9cfdc;">
+                            <div class="col-md-5" style="border-left: 1px solid #f9cfdc;max-width: 352px;">
                                 <label class="dataTitle col-md-12 row">Correção
                                     <hr>
                                 </label>
@@ -62,113 +68,48 @@
                                 <label class="col-md-4 row"
                                        id="wordsCount"><%=question.info.content.text.split(" ").length%></label>
                                 <label class="col-md-8 row">
+                                    Palavras por minuto: </label>
+                                <label class="col-md-4 row" id="wordsMin">
+                                    0
+                                </label>
+                                <label class="col-md-8 row">
                                     Total de erros: </label>
                                 <label class="col-md-4 row" id="errorCount">
                                     0
                                 </label>
                                 <div class="col-md-12">
                                     <div class="input-group">
-                                        <span class="input-group-addon btn-white"><i
-                                                class="fa fa-comments"></i></span>
+                                        <span class="input-group-addon btn-white"
+                                              style="width: 100px;"> Fluidez </span>
                                         <input readonly class="form-control mandatory" questionID="<%=question._id%>"
                                                value="0" id="fluidity">
                                         <span class="input-group-addon btn-white"><i
                                                 class="fa fa-warning"></i></span>
                                         <select class="form-control" id="fluidityDif">
-                                            <option disabled selected>Dificuldade</option>
+                                            <option disabled selected>Peso</option>
                                             <option>1</option>
                                             <option>2</option>
                                             <option>3</option>
                                             <option>4</option>
-                                            <option>5</option>
+                                            <option selected>5</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="input-group">
-                                        <span class="input-group-addon btn-white"><i
-                                                class="fa fa-comments-o"></i></span>
+                                        <span class="input-group-addon btn-white"
+                                              style="width: 100px;"> Exactião </span>
                                         <input readonly class="form-control mandatory" questionID="<%=question._id%>"
                                                value="0" id="accuracy">
                                         <span class="input-group-addon btn-white"><i
                                                 class="fa fa-warning"></i></span>
                                         <select class="form-control" id="accuracyDif">
-                                            <option disabled selected>Dificuldade</option>
+                                            <option disabled selected>Peso</option>
                                             <option>1</option>
                                             <option>2</option>
                                             <option>3</option>
                                             <option>4</option>
-                                            <option>5</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="input-group">
-                                        <span class="input-group-addon btn-white"><i
-                                                class="fa fa-exclamation"></i></span>
-                                        <select class="form-control" id="ponctuation" name="ponctuation">
-                                            <option disabled selected>Pontuação</option>
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5</option>
-                                        </select>
-                                        <span class="input-group-addon btn-white"><i
-                                                class="fa fa-warning"></i></span>
-                                        <select class="form-control" id="ponctuationDif">
-                                            <option disabled selected>Dificuldade</option>
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="input-group">
-                                        <span class="input-group-addon btn-white"><i class="fa fa-comment-o"></i></span>
-                                        <select class="form-control" id="inflection" name="inflection">
-                                            <option disabled selected>Entoação</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
-                                        </select>
-                                        <span class="input-group-addon btn-white"><i
-                                                class="fa fa-warning"></i></span>
-                                        <select class="form-control" id="inflectionDif">
-                                            <option disabled selected>Dificuldade</option>
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="input-group">
-                                        <span class="input-group-addon btn-white"><i class="fa fa-bars"></i></span>
-                                        <select class="form-control" id="text" name="text">
-                                            <option disabled selected>Texto</option>
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5</option>
-                                        </select>
-                                        <span class="input-group-addon btn-white"><i
-                                                class="fa fa-warning"></i></span>
-                                        <select class="form-control" id="textDif">
-                                            <option disabled selected>Dificuldade</option>
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5</option>
+                                            <option selected>5</option>
                                         </select>
                                     </div>
                                 </div>
@@ -186,7 +127,7 @@
                                         <span class="input-group-addon btn-white"><i
                                                 class="fa fa-warning"></i></span>
                                         <select class="form-control" id="timeDif">
-                                            <option disabled selected>Dificuldade</option>
+                                            <option disabled selected>Peso</option>
                                             <option value="1">1</option>
                                             <option value="2">2</option>
                                             <option value="3">3</option>
@@ -195,9 +136,34 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="col-md-12">
+                                    <div class="input-group">
+                                        <span class="input-group-addon btn-white"
+                                              style="width: 100px;"> Expressividade </span>
+                                        <select class="form-control" id="expression" name="expression">
+                                            <option disabled selected>Expressividade</option>
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                            <option>5</option>
+                                        </select>
+                                        <span class="input-group-addon btn-white"><i
+                                                class="fa fa-warning"></i></span>
+                                        <select class="form-control" id="expressionDif">
+                                            <option disabled selected>Peso</option>
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option selected>4</option>
+                                            <option>5</option>
+                                        </select>
+                                    </div>
+                                </div>
+
                                 <div class="col-md-12 row">
                                     <input type="number" class="form-control mandatory" questionID="<%=question._id%>"
-                                           placeholder="Nota" name="note" dif="<%=question.dif%>"
+                                           placeholder="Nota" name="note" readonly="readonly" dif="<%=question.dif%>"
                                            value="0">
                                     <span class="glyphicon "><i class="fa fa-percent"></i></span>
                                 </div>
@@ -216,20 +182,25 @@
                                     <%=nWords%>
                                 </label>
                                 <label class="col-md-8 row">
+                                    Palavras por minuto: </label>
+                                <label class="col-md-4 row" id="wordsMin">
+                                    0
+                                </label>
+                                <label class="col-md-8 row">
                                     Total de erros: </label>
                                 <label class="col-md-4 row" id="errorCount">
                                     0
                                 </label>
                                 <div class="col-md-12">
                                     <div class="input-group">
-                                        <span class="input-group-addon btn-white"><i
+                                        <span class="input-group-addon btn-white" style="width: 100px;"><i
                                                 class="fa fa-comments"></i></span>
                                         <input readonly class="form-control mandatory" questionID="<%=question._id%>"
                                                value="0" id="fluidity">
                                         <span class="input-group-addon btn-white"><i
                                                 class="fa fa-warning"></i></span>
                                         <select class="form-control" id="fluidityDif">
-                                            <option disabled selected>Dificuldade</option>
+                                            <option disabled selected>Peso</option>
                                             <option>1</option>
                                             <option>2</option>
                                             <option>3</option>
@@ -240,14 +211,14 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="input-group">
-                                        <span class="input-group-addon btn-white"><i
+                                        <span class="input-group-addon btn-white" style="width: 100px;"><i
                                                 class="fa fa-comments-o"></i></span>
                                         <input readonly class="form-control mandatory" questionID="<%=question._id%>"
                                                value="0" id="accuracy">
                                         <span class="input-group-addon btn-white"><i
                                                 class="fa fa-warning"></i></span>
                                         <select class="form-control" id="accuracyDif">
-                                            <option disabled selected>Dificuldade</option>
+                                            <option disabled selected>Peso</option>
                                             <option>1</option>
                                             <option>2</option>
                                             <option>3</option>
@@ -270,7 +241,7 @@
                                         <span class="input-group-addon btn-white"><i
                                                 class="fa fa-warning"></i></span>
                                         <select class="form-control" id="timeDif">
-                                            <option disabled selected>Dificuldade</option>
+                                            <option disabled selected>Peso</option>
                                             <option value="1">1</option>
                                             <option value="2">2</option>
                                             <option value="3">3</option>
@@ -281,7 +252,7 @@
                                 </div>
                                 <div class="col-md-12 row">
                                     <input type="number" class="form-control mandatory" questionID="<%=question._id%>"
-                                           placeholder="Nota" name="note" dif="<%=question.dif%>"
+                                           placeholder="Nota" name="note" readonly="readonly" dif="<%=question.dif%>"
                                            value="0">
                                     <span class="glyphicon "><i class="fa fa-percent"></i></span>
                                 </div>
@@ -305,7 +276,7 @@
                                     Nota: </label>
                                 <div class="col-md-12 row">
                                     <input type="number" class="form-control mandatory" questionID="<%=question._id%>"
-                                           placeholder="Nota" name="note" dif="<%=question.dif%>"
+                                           placeholder="Nota" name="note" readonly="readonly" dif="<%=question.dif%>"
                                            value="<%if(question.resol.answer.solution == 0){print('100')}else{print('0')}%>">
                                     <span class="glyphicon "><i class="fa fa-percent"></i></span>
                                 </div>
@@ -353,7 +324,7 @@
 
                                 <div class="col-md-12 row">
                                     <input type="number" class="form-control mandatory" questionID="<%=question._id%>"
-                                           placeholder="Nota" name="note" dif="<%=question.dif%>"
+                                           placeholder="Nota" name="note" readonly="readonly" dif="<%=question.dif%>"
                                            value="<%if(total>0){print(total)}else{print(0)} %>">
                                     <span class="glyphicon "><i class="fa fa-percent"></i></span>
                                 </div>
@@ -384,7 +355,7 @@
                 <label class="dataTitle col-md-6 row">Nota final do teste</label>
                 <div class="col-md-6 row">
                     <input type="number" class="form-control mandatory"
-                           id="testNote" name="testNote">
+                           id="testNote" name="testNote" readonly="readonly">
                     <span class="glyphicon "><i class="fa fa-percent"></i></span>
                 </div>
                 <div class="col-md-12">
@@ -395,7 +366,7 @@
                         <tr>
                             <td class="lblDataDetails">Tipo</td>
                             <td class="lblDataDetails">Título</td>
-                            <td class="lblDataDetails">Dificuldade</td>
+                            <td class="lblDataDetails">Peso</td>
                             <td class="lblDataDetails">Nota</td>
                         </tr>
 

@@ -49,6 +49,9 @@ window.QuestionsMultimediaNew = Backbone.View.extend({
                     type: "hidden", class: "form-control mandatory", id: "base64Question",
                     name: "contentQuest"
                 }));
+                elements = elements.add($("<img>", {
+                    id: "base64QuestionImg"
+                }));
 
                 break;
         }
@@ -110,6 +113,9 @@ window.QuestionsMultimediaNew = Backbone.View.extend({
                         accept: "image/*"
                     })
                 );
+                rightAnswer = rightAnswer.add($("<img>", {
+                    id: "rightAnswerImg"
+                }));
                 wrongAnswer = wrongAnswer.add(
                     $("<input>", {
                         type: "file", class: "form-control mandatory",
@@ -121,6 +127,9 @@ window.QuestionsMultimediaNew = Backbone.View.extend({
                         type: "hidden", class: "form-control mandatory wrongAnswer", id: "wrongAnswer0"
                     })
                 );
+                wrongAnswer = wrongAnswer.add($("<img>", {
+                    id: "wrongAnswer0Img"
+                }));
                 break;
         }
         $('#rightAnswers').append(
@@ -181,6 +190,7 @@ window.QuestionsMultimediaNew = Backbone.View.extend({
         var canvas = $("#preview")[0];
         var dataUrl = canvas.toDataURL('image/jpeg');
         $("#" + $(e.currentTarget).attr('value')).val(dataUrl);
+        $("#" + $(e.currentTarget).attr('value') + "Img").attr("src", dataUrl);
         $(".cropBG").remove();
     }
     ,
@@ -189,7 +199,7 @@ window.QuestionsMultimediaNew = Backbone.View.extend({
         e.preventDefault();
         //Conta o numero de respostas erradas listadas
         var nWrongAnswers = $(".wrongAnswer").length;
-        if (nWrongAnswers < 4) {
+        if (nWrongAnswers < 3) {
             switch ($('#selectAnswerType').val()) {
                 //Se for do tipo texto adiciona o campo para 1 resp certa e uma errada
                 case "text":
@@ -233,6 +243,9 @@ window.QuestionsMultimediaNew = Backbone.View.extend({
                                 type: "hidden",
                                 class: "form-control mandatory wrongAnswer",
                                 id: "wrongAnswer" + nWrongAnswers,
+                            }),
+                            $("<img>", {
+                                id: "wrongAnswer" + nWrongAnswers + "Img"
                             })
                         )
                     )
@@ -243,7 +256,7 @@ window.QuestionsMultimediaNew = Backbone.View.extend({
 
             $("#wrongAnswer" + nWrongAnswers).focus();
         } else {
-            failMsg($(".form"), "A pergunta só pode conter quatro (4) opções erradas.");
+            failMsg($(".form"), "A pergunta só pode conter quatro (3) opções erradas.");
         }
     }
     ,
@@ -260,7 +273,7 @@ window.QuestionsMultimediaNew = Backbone.View.extend({
         //If they are
         if (isValid) {
 
-
+            $('#content').append(loadingSpinner());
             //Obtem as respostas erradas
             var nWrongAnswers = $(".wrongAnswer");
             var answers = [];
@@ -272,29 +285,29 @@ window.QuestionsMultimediaNew = Backbone.View.extend({
             });
             $("#inputAnswers").val(JSON.stringify(answers));
             //Se algum dos campos estiver vazio
-
-            modem('POST', 'questions',
-                function (json) {
-                },
-                //Error Handling
-                function (xhr, ajaxOptions, thrownError) {
-                },
-                new FormData($("#newMultimediaTestForm")[0])
-            );
-
+            console.log(answers)
+            /*
+             modem('POST', 'questions',
+             function () {
+             sucssesMsg($("body"), "Pergunta inserida com sucesso!");
+             setTimeout(function () {
+             app.navigate("questions", {
+             trigger: true
+             });
+             }, 1500);
+             },
+             //Error Handling
+             function (xhr, ajaxOptions, thrownError) {
+             failMsg($("body"), "Não foi possível inserir a nova pergunta.");
+             },
+             new FormData($("#newMultimediaTestForm")[0])
+             );
+             */
         }
 
     }
     ,
 
-//Check Auth
-    auth: function () {
-        if (!window.sessionStorage.getItem("keyo")) {
-            return false;
-        }
-        return true;
-    }
-    ,
 
 //Class Initializer
     initialize: function () {
@@ -305,10 +318,6 @@ window.QuestionsMultimediaNew = Backbone.View.extend({
     render: function () {
         var self = this;
 
-        //Check Local Auth
-        if (!self.auth()) {
-            return false;
-        }
         getCategories();
         $(this.el).html(this.template());
         return this;

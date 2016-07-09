@@ -40,7 +40,7 @@ window.SchoolsView = Backbone.View.extend({
     enchePreview: function (e) {
         var self = this;
         //gets model info
-        schoolData = self.collection.getByID($(e.currentTarget).attr("id"));
+        var schoolData = self.collection.getByID($(e.currentTarget).attr("id"));
         console.log(schoolData)
         $('#schoolsPreview').empty();
 
@@ -66,12 +66,15 @@ window.SchoolsView = Backbone.View.extend({
         ;
         $('#classesList').append('<div id="prfSchool" class="col-md-12" align=left></div> </br>');
 
-        $.each(schoolData.classes, function () {
-
+        $.each(schoolData.classes, function (is, School) {
+            console.log(School)
             var $class = $('<button>', {
                 class: "classBtn",
-                html: this.year + "º " + this.name + " "
-            })
+                html: School.year + "º " + School.name + " "
+            }).click(function () {
+                    showClassInfo($(e.currentTarget).attr("id"), School._id)
+                }
+            )
 
 
             $("#classesList").append($class);
@@ -117,24 +120,11 @@ window.SchoolsView = Backbone.View.extend({
 
     },
 
-    //Check Auth
-    auth: function (e) {
-        if (!window.sessionStorage.getItem("keyo")) {
-            app.navigate("/#", true);
-            return false;
-        }
-        return true;
-    },
-
     //Class Renderer
     render: function () {
 
         var self = this;
 
-        //Check Local Auth
-        if (!self.auth()) {
-            return false;
-        }
 
         var data = self.collection.toJSON();
         $(this.el).html(this.template({collection: data}));

@@ -1,76 +1,50 @@
+<nav class="navbar navbar-default sidebar" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#bs-sidebar-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a>Total: <label id="questionsBadge" class=""><%=collection.length%></label>
+                     <span style="font-size:16px;"
+                           class="pull-right hidden-xs showopacity fa fa-question"></span>
+                </a></li>
+                <li>
+                    <input id="txtSearch" type="text" class="form-control" placeholder="Pesquisar"
+                           aria-describedby="basic-addon2">
+                </li>
+                <li class="active">
+                    <a id="orderBy" class="order">Ordenar
+                        <span style="font-size:16px;"
+                              class="pull-right hidden-xs showopacity fa fa-sort-alpha-desc"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#tests/new">Inserir
+                        <span style="font-size:16px;"
+                              class="pull-right hidden-xs showopacity glyphicon glyphicon-plus-sign"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
 <div id="testsDiv" class="mainDiv">
-
     <div class="col-md-12">
         <section class="panel subMenu">
 
             <ul class="nav navbar-nav">
-                <li><a>Total: <label id="testsBadge" class=""><%=collection.length%></label>
-                </a></li>
-                <li>
-                    <div class="input-group" style="width: 350px;padding-top: 11px;">
-                        <input id="txtSearch" type="text" class="form-control" placeholder="Pesquisar"
-                               aria-describedby="basic-addon2">
-                        <span class="input-group-addon"> <i class="fa fa-search"></i></span>
-                    </div>
-                </li>
-                <li><a id="orderBy" class="order"><i class="fa fa-sort-alpha-asc"></i> </a></li>
-
-
-                <li><a href="#tests/new" title="Adicionar teste">
-                    <i class="fa fa-file-text-o"></i><span class="badge-over">  <i
-                        class="fa fa-plus-circle"></i></span></i>
-
-                </a></li>
-                <!-- Filter by -->
                 <li class="dropdown">
-                    <a href="#" data-toggle="dropdown" class="dropdown-toggle"><i class="fa fa-filter"></i> Tipo </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="filter">
-                            <input type="checkbox" value="text" checked>
-                            <img src="../../img/text.png" style="height:20px">
-                            <span> Texto </span></a></li>
-                        <li><a class="filter">
-                            <input type="checkbox" value="multimedia" checked>
-                            <img src="../../img/multimedia.png" style="height:20px">
-                            <span> Multimédia </span></a>
-                        </li>
-                        <li><a class="filter">
-                            <input type="checkbox" value="list" checked>
-                            <img src="../../img/list.png" style="height:20px">
-                            <span> Lista </span></a>
-                        </li>
-                        <li><a class="filter">
-                            <input type="checkbox" value="interpretation" checked>
-                            <img src="../../img/interpretation.png" style="height:20px">
-                            <span> Interpretação </span></a>
-                        </li>
-
-                        <li class="divider"></li>
-                        <li><a class="filter">
-                            <input type="checkbox" value="whitespaces" checked>
-                            <img src="../../img/whitespaces.png" style="height:20px">
-                            <span> Espaços </span></a></li>
-                        <li><a class="filter">
-                            <input type="checkbox" value="connections" checked>
-                            <img src="../../img/connections.png" style="height:20px">
-                            <span> Ligações </span></a>
-                        </li>
-                        <li><a class="filter">
-                            <input type="checkbox" value="regions" checked>
-                            <img src="../../img/regions.png" style="height:20px">
-                            <span> Regiões </span></a>
-                        </li>
-                        <li><a class="filter">
-                            <input type="checkbox" value="boxes" checked>
-                            <img src="../../img/boxes.png" style="height:20px">
-                            <span> Caixas </span></a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-filter"></i> Disciplina
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-filter"></i>
+                        Disciplina
                         <b class="caret"></b></a>
-                    <ul class="dropdown-menu" id="selectSubject">
+                    <ul class="dropdown-menu" id="filterSubject" filter="">
                         <li class="dropdown-submenu pull-left">
                             <a class=" contentFilter"
                                data-toggle="dropdown"
@@ -84,25 +58,29 @@
         </section>
         <!-- END REGIONAL STATS PORTLET-->
     </div>
-
     <div class=" panel-body col-md-5" align="center">
+
         <div id="testsContent" class=" panel-body col-md-12" align="center">
             <% _.each(collection,function(test){ %>
-            <div class="row">
-                <div class="listButton divWidget" value=" <%= test.subject %>"
-                     id='<%= test._id %>'
+            <div class="listButton divWidget row" value=" <%= test.subject %>"
+                 id='<%= test._id %>'
+            <% if ( test.profID == window.sessionStorage.getItem('username') ){ %>
+            style="background-color:#FBF6B4"
+            <% } %>
+            >
+            <% console.log(test._id) %>
+            <img src='../img/<%= test.subject.split(":")[0] %>.png'>
+            <span><%= test.title %></span>
+            <div class="editDeleteOp">
+                <a title="Atribuir teste"><i
+                        testID="<%= test._id %>" testName="<%= test.title %>" class="fa fa-calendar"></i></a>
                 <% if ( test.profID == window.sessionStorage.getItem('username') ){ %>
-                style="background-color:#FBF6B4"
+                <a title="Apagar teste">
+                    <i class="fa fa-trash-o deleteTest" testID="<%= test._id %>"
+                       testName="<%= test.title %>"></i></a>
                 <% } %>
-                >
-                <img src='../img/<%= test.subject.split(":")[0] %>.png'>
-                <span><%= test.title %></span>
-                <div class="editDeleteOp">
-                    <a title="Atribuir teste"><i
-                            testID="<%= test._id %>" testName="<%= test.title %>" class="fa fa-calendar"></i></a>
-                    <a title="Apagar teste"><i class="fa fa-trash-o"></i></a>
 
-                </div>
+
             </div>
         </div>
         <% }); %>
@@ -168,7 +146,8 @@
                     <div class="row col-md-6">
                         <div class='input-group date'>
                             <span class="input-group-addon">De</span>
-                            <input type='text' class="form-control" name="beginDate" placeholder="Data de Inicio"/>
+                            <input type='text' class="form-control mandatory" name="beginDate"
+                                   placeholder="Data de Inicio"/>
                         </div>
                     </div>
                     <div class="row col-md-6">
@@ -176,7 +155,7 @@
                             <span class="input-group-addon">
                                 Até
                             </span>
-                            <input type='text' class="form-control" name="endDate" placeholder="Data de Fim"/>
+                            <input type='text' class="form-control mandatory" name="endDate" placeholder="Data de Fim"/>
 
                         </div>
                     </div>

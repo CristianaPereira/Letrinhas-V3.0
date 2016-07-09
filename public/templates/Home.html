@@ -6,18 +6,16 @@
         try {
             $.fn.fullpage.destroy('all');
             $('#fullpage').fullpage({
-                sectionsColor: ['#1bbc9b', '#4BBFC3', '#7BAABE'],
+                sectionsColor: ['#fac7da', '#fac7da', '#7BAABE'],
                 navigation: true,
-                navigationPosition: 'right',
-                navigationTooltips: ['Inicio', 'Second page', 'Third and last page']
+
             });
         }
         catch (err) {
             $('#fullpage').fullpage({
-                sectionsColor: ['#1bbc9b', '#4BBFC3', '#7BAABE'],
+                sectionsColor: ['#fac7da', '#fac7da', '#7BAABE'],
                 navigation: true,
-                navigationPosition: 'right',
-                navigationTooltips: ['Inicio', 'Second page', 'Third and last page']
+
             });
         }
         finally {
@@ -64,20 +62,6 @@
                 <li>
                     <img src="../img/ESAG.png">
                 </li>
-                <li id="sepProf">
-                    <a href="#teachers" aria-expanded="false" title="Ver funcionários">
-                        <i class="fa fa-users"></i>
-                        Professores
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#user">Perfil</a></li>
-                        <li><a href="#">Another action</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li class="dropdown-header">Nav header</li>
-                        <li><a href="#">Separated link</a></li>
-                        <li><a href="#">Sair <i class="fa fa-sign-out"></i></a></li>
-                    </ul>
-                </li>
             </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
@@ -99,8 +83,10 @@
     </div>
     <div class="section" id="section1">
         <div class="intro">
-            <h1>More Simple yet</h1>
-            <p>Sections won't contain anchor links. It's more simple to configure but a bit more restrictive.</p>
+            <iframe src="https://player.vimeo.com/video/152836044" width="640" height="351" frameborder="0"
+                    webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+            <p><a href="https://vimeo.com/152836044">Letrinhas</a> from <a href="https://vimeo.com/user47071707">Bibliotecas
+                AEAG</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
         </div>
     </div>
 
@@ -132,7 +118,7 @@
 
                 <div class="media" style="float:left; width:50%; padding:10px 0; margin:0;">
                     <div class="media-left">
-                        <a href="../apps/LetrasAndroid.apk">
+                        <a href="../apps/letrinhas.apk">
                             <img class="media-object" src="http://i.imgur.com/U9Iyocy.jpg" alt="..."
                                  style="height:60px">
                         </a>

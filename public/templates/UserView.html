@@ -23,12 +23,12 @@
                     <div class="row">
                         <div class="col-md-12">
                             <i class="fa fa-university"></i>
-                            <label><%= school.id %></label>
+                            <label ><%= school.name %></label>
                         </div>
                         <div class="col-md-8">
                             <!--Por cada escola turma-->
                             <% _.each(school.class,function(classes){ %>
-                            <button class="classBtn" id="<%= classes.id %>"><%= classes.name %></button>
+                            <button class="classBtn" id="<%= school.id %>:<%= classes.id %>"><%= classes.name %></button>
                             <% }); %>
                         </div>
                     </div>

@@ -3,25 +3,17 @@ window.StudentsView = Backbone.View.extend({
         "click #newstudentbtn": "newStudent",
         "click #deletebtn": "deleteStudent",
         'click .listButton': "fillPreview",
-        "click .delete": "confirmDelete"
+        "click .deleteStudent": "confirmDelete"
     },
 
-    //Check Auth
-    auth: function (e) {
-        if (!window.sessionStorage.getItem("keyo")) {
-            app.navigate("/#", true);
-            return false;
-        }
-        return true;
-    },
 
     //Solicita confirmação para apagar o professor
     confirmDelete: function (e) {
-        var id = $(e.currentTarget).parent().parent().attr("id");
-        var nome = $(e.currentTarget).parent().parent().attr("value");
+        var id = $(e.currentTarget).attr("id");
+        var nome = $(e.currentTarget).attr("value");
 
         var modal = delModal("Apagar escola",
-            "Tem a certeza que pretende eliminar a escola <label>" + nome + " </label> ?",
+            "Tem a certeza que pretende eliminar o aluno <label>" + nome + " </label> ?",
             "deletebtn", id);
 
 
@@ -66,6 +58,7 @@ window.StudentsView = Backbone.View.extend({
         var $divDados = $("<div>", {
             class: "col-md-9"
         }).append('<label class="col-md-4 lblDataDetails">Escola:</label> <label class="col-md-8">' + studentData.schoolDetails + '</label><br>')
+            .append('<label class="col-md-4 lblDataDetails">Unername:</label> <label class="col-md-8">' + studentData.username + '</label><br>')
             .append('<label class="col-md-4 lblDataDetails">Número:</label> <label class="col-md-8">' + studentData.number + '</label><br>')
 
         $('#studentsPreview').append(
@@ -103,7 +96,10 @@ window.StudentsView = Backbone.View.extend({
                     ),
                     $('<li>').append(
                         $('<a>', {
-                            href: "#", html: '  Eminar aluno'
+                            html: '  Eminar aluno',
+                            class: 'deleteStudent',
+                            id: studentData._id,
+                            value: studentData.name
                         }).prepend(
                             '<i class="fa fa-trash"></i>'
                         )
@@ -129,11 +125,6 @@ window.StudentsView = Backbone.View.extend({
     //Class Renderer
     render: function () {
         var self = this;
-
-        //Check Local Auth
-        if (!self.auth()) {
-            return false;
-        }
 
         //Render Template
         $(this.el).html(this.template({collection: self.data}));

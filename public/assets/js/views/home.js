@@ -55,6 +55,10 @@ window.Home = Backbone.View.extend({
             function (json) {
                 console.log(json);
                 $("#mLogin").modal("hide");
+                //If Session Already Present, Go to user main
+                app.navigate("/user", {
+                    trigger: true
+                });
                 //Show menus
             },
 

@@ -26,7 +26,7 @@ var category = require('./routes/category'),
     statistics = require('./routes/statistics'),
     teachers = require('./routes/teachers'),
     tests = require('./routes/tests'),
-    testTypes = require('./routes/testtypes');
+    testTypes = require('./routes/testTypes');
 
 //Express Variable
 var app = express();
@@ -163,7 +163,7 @@ var perms = function (level) {
         }
         else {
             console.log("Permission Error");
-            res.status(401).json(["Permission Error"]);
+            res.status(401).json({text: "Não possui permissões para executar esta tarefa."});
         }
     }
 };
@@ -222,6 +222,10 @@ app.route('/schools/:id/newclass')
 app.route('/schools/:id/removeclass')
     .post(auth, perms(3), schools.removeClass);
 
+app.route('/classes/:school/:class')
+    .get(auth, perms(3), schools.getClass);
+
+
 //-----------------------------------------------------STUDENTS
 
 //Only Return Teacher Related Students
@@ -277,6 +281,9 @@ app.route('/teachers/rmvClass')
 app.route('/tests')
     .post(auth, tself, perms(2), tests.newGeneric)
     .get(auth, tself, perms(2), tests.getAll);
+
+app.route('/tests/:id')
+    .delete(auth, tself, perms(2), tests.delete)
 
 app.route('/testTypes')
     .get(auth, tself, perms(2), testTypes.getAll);

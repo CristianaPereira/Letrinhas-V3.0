@@ -15,15 +15,6 @@ window.QuestionsTextNew = Backbone.View.extend({
 
     },
 
-    //Check Auth
-    auth: function () {
-        if (!window.sessionStorage.getItem("keyo")) {
-            return false;
-        }
-        return true;
-    },
-
-
     //Go back to the last visited page
     goBack: function (e) {
         e.preventDefault();
@@ -46,10 +37,10 @@ window.QuestionsTextNew = Backbone.View.extend({
         var isValid = isFormValid(allListElements);
         //If they are
         if (isValid) {
-
+            $('#content').append(loadingSpinner());
             modem('POST', 'questions',
                 function () {
-                    sucssesMsg($(".form"), "Pergunta inserida com sucesso!");
+                    sucssesMsg($("body"), "Pergunta inserida com sucesso!");
                     setTimeout(function () {
                         app.navigate("questions", {
                             trigger: true
@@ -58,7 +49,7 @@ window.QuestionsTextNew = Backbone.View.extend({
                 },
                 //Error Handling
                 function (xhr, ajaxOptions, thrownError) {
-                    failMsg($(".form"), "Não foi possível inserir a nova pergunta. \n (" + JSON.parse(xhr.responseText).result + ").");
+                    failMsg($("body"), "Não foi possível inserir a nova pergunta.");
                 },
                 new FormData($("#newTextTestForm")[0])
             );
@@ -70,7 +61,13 @@ window.QuestionsTextNew = Backbone.View.extend({
     //Show Voice Recorder Equalizer
     showEqualizer: function (e) {
         e.preventDefault();
+        console.log("somm")
         $("#myModalRecord").modal("show");
+        //Limpa a div
+        $("#rTexto").empty();
+        //Clona o texto
+        $("#InputTexto").clone().appendTo("#rTexto");
+
         initAudio();
     },
 
@@ -130,11 +127,6 @@ window.QuestionsTextNew = Backbone.View.extend({
     //Class Renderer
     render: function () {
         var self = this;
-
-        //Check Local Auth
-        if (!self.auth()) {
-            return false;
-        }
 
         getCategories();
 

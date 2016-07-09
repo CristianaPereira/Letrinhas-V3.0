@@ -75,7 +75,7 @@ window.orderContentList = function (mylist, e) {
     var listitems = mylist.children('div').get();
 
     listitems.sort(function (a, b) {
-        return $(a).children('span').text().toUpperCase().localeCompare($(b).children('span').text().toUpperCase());
+        return $(a).find('span').text().toUpperCase().localeCompare($(b).find('span').text().toUpperCase());
     });
     //ordenar de forma descendente/ascendente
     if (!$(e.currentTarget).children('span').hasClass("fa-sort-alpha-asc")) {
@@ -227,7 +227,8 @@ window.getUserRole = function (permissionLevel) {
     }
 };
 
-window.getCategories = function () {
+window.getCategories = function (cat) {
+
     //Gets all registed categories
     modem('GET', 'categories',
         //Response Handler
@@ -285,7 +286,15 @@ window.getCategories = function () {
                     });
                 }
             )
-
+            //Selecciona a categoria passada por parametro
+            if (cat) {
+                cat = cat.split(":");
+                $("#selectSubject").val(cat[0])
+                $("#selectSubject").change();
+                $("#selectContent").val(cat[1])
+                $("#selectContent").change();
+                $("#selectSpecification").val(cat[2])
+            }
 
         },
 
@@ -293,73 +302,9 @@ window.getCategories = function () {
         function (xhr, ajaxOptions, thrownError) {
         }
     );
+
 };
 
-window.getSetCategories = function (cate) {
-    var res = cate.split(":");
-    //Gets all registed categories
-    modem('GET', 'category',
-        //Response Handler
-        function (json) {
-            $.each(json, function (i, key) {
-                $("#selectSubject").append(
-                    $("<option>", {html: key.doc.subject, id: key.doc._id, value: key.doc._id})
-                );
-                //Populates dd with the contents of selects subject
-                var myEl = document.getElementById('selectSubject');
-
-                console.log("change")
-                myEl.addEventListener('change', function () {
-
-                    var selectedSubject = $(this).children(":selected").attr("id");
-                    if (key.doc._id === selectedSubject) {
-                        //Limpa a dd
-                        $("#selectContent").html("");
-                        $.each(key.doc.content, function (id, content) {
-                            $("#selectContent").append($("<option>", {
-                                html: content.name,
-                                id: content._id,
-                                value: content._id
-                            }));
-                        });
-                    }
-                }, false);
-                $("#selectSubject").val(res[0]).change();
-                $(myEl).trigger("change");
-                //Populates dd with the contents of selects subject
-                var myEll = document.getElementById('selectContent');
-                console.log("change")
-                myEll.addEventListener('change', function () {
-                    var selectedSubject = $("#selectSubject").children(":selected").attr("id");
-                    var selectedContent = $(this).children(":selected").attr("id");
-                    if (key.doc._id === selectedSubject) {
-                        //Limpa a dd
-                        $("#selectSpecification").html("");
-                        $.each(key.doc.content, function (id, content) {
-                            if (content._id === selectedContent) {
-                                $.each(content.specification, function (ids, specif) {
-                                    $("#selectSpecification").append($("<option>", {
-                                        html: specif.name,
-                                        id: specif._id,
-                                        value: specif._id
-                                    }));
-                                });
-                            }
-                        });
-                    }
-                }, false);
-            });
-            console.log(res[0])
-
-
-            $("#" + res[1]).attr("selected", true)
-        },
-
-        //Error Handling
-        function (xhr, ajaxOptions, thrownError) {
-        }
-    );
-};
 
 //Gets categories filters to questions and tests
 window.getFilters = function () {
@@ -368,7 +313,7 @@ window.getFilters = function () {
         //Response Handler
         function () {
             categories.each(function (item) {
-                var $content = $("<ul >", {class: "dropdown-menu pull-left"});
+                var $content = $("<ul >", {class: "dropdown-menu pull-right"});
 
                 $("#filterSubject").append(
                     $("<li>", {class: "dropdown-submenu pull-left"}).append(
@@ -385,7 +330,7 @@ window.getFilters = function () {
                     )
                 );
                 $.each(item.get("content"), function (idc, content) {
-                    var $description = $("<ul >", {class: "dropdown-menu pull-left"});
+                    var $description = $("<ul >", {class: "dropdown-menu pull-right"});
                     $content.append(
                         $("<li>", {class: "dropdown-submenu pull-left"}).append(
                             $("<a>", {
@@ -481,8 +426,7 @@ window.getImportanceDD = function () {
     });
     $imp.val(3)
     return $imp;
-}
-;
+};
 
 
 //Devolve os tipos de perguntas existentes
@@ -521,13 +465,12 @@ window.isFormValid = function (elementsList) {
             //Se for o b64, muda a border do pai
             if ($(elem).is("[type=hidden]")) {
                 $(elem).parent().addClass("emptyField");
-                return;
             }
             //Se o elemento for um select
             if ($(elem).is("select")) {
                 // $(elem).parent().addClass("emptyField");
                 $(elem).addClass("emptyField");
-                return;
+
             }
             $(elem).addClass("emptyField");
             isValid = false;
@@ -582,6 +525,15 @@ window.matchingPswds = function (password, confPassword) {
     }
 };
 
+
+/********************************************************************************LOGIN***************/
+
+window.isLogged = function () {
+    if (!window.sessionStorage.getItem("keyo") && !window.localStorage.getItem("keyo")) {
+        showLoginModal($("body"))
+        return false;
+    }
+};
 //Mostra o formulário de login no form indicado
 window.showLoginModal = function (form) {
 
@@ -619,27 +571,39 @@ window.showLoginModal = function (form) {
                         ).append($("<span>", {
                             id: "imgMail", class: "glyphicon glyphicon-envelope"
                         }))
-                    )
-                    )
-                    .append(
+                    ),
+                    $("<div>", {
+                        class: "row form-group",
+                    }).append(
                         $("<div>", {
-                            class: "row form-group",
+                            class: " col-sm-12",
                         }).append(
-                            $("<div>", {
-                                class: " col-sm-12",
-                            }).append(
-                                $("<input>", {
-                                    id: "psswrd",
-                                    class: "form-control",
-                                    placeholder: "Palavra-passe",
-                                    name: "password",
-                                    type: "password"
-                                })
-                            ).append($("<span>", {
-                                id: "pwdIcon", class: "glyphicon glyphicon-lock"
-                            }))
-                        )
+                            $("<input>", {
+                                id: "psswrd",
+                                class: "form-control",
+                                placeholder: "Palavra-passe",
+                                name: "password",
+                                type: "password"
+                            })
+                        ).append($("<span>", {
+                            id: "pwdIcon", class: "glyphicon glyphicon-lock"
+                        }))
+                    ),
+                    $("<div>", {
+                        class: "row form-group",
+                    }).append(
+                        $("<div>", {
+                            class: " col-sm-12 checkbox",
+                        }).append(
+                            $("<label>", {
+                                html: "Manter sessão iniciada"
+                            }).append($("<input>", {
+                                type: "checkbox",
+                                value: '',
+                                id: 'keepsession'
+                            })))
                     )
+                )
             ).append(
                 $("<div>", {
                     class: "modal-footer",
@@ -659,7 +623,62 @@ window.showLoginModal = function (form) {
     $("#mLogin").modal("show");
 };
 
-//Mostra o formulário de login no form indicado
+//Tenta efectuar login
+window.attemptLogin = function () {
+    //Create Credentials
+    var cre = $('#userEmail').val() + ':' + md5($("#psswrd").val());   //Credentials = Username:Password
+    if ($("#keepsession").prop("checked")) {
+        window.localStorage.setItem("keyo", btoa(cre));                  //Store Credentials Base64
+    } else {
+        window.sessionStorage.setItem("keyo", btoa(cre));                  //Store Credentials Base64
+    }
+
+    //Check User Authenticity
+    modem('GET', 'me',
+
+        //Response Handler
+        function (user) {
+            //Hides Login Modal
+            $("#mLogin").modal("hide");
+
+            //Se a opçao manter sessao iniciada estiver 'ligada'
+            if ($("#keepsession").prop("checked")) {
+                window.localStorage.setItem("username", user._id)
+                window.localStorage.setItem("name", user.name)
+                window.localStorage.setItem("b64", user.b64)
+            } else {
+                window.sessionStorage.setItem("username", user._id)
+                window.sessionStorage.setItem("name", user.name)
+                window.sessionStorage.setItem("b64", user.b64)
+            }
+
+            //Reloads actual view
+
+            document.location.reload(true);
+
+        },
+        //Error Handling
+        function (xhr, ajaxOptions, thrownError) {
+            var json = JSON.parse(xhr.responseText);
+            console.log(xhr)
+            console.log(ajaxOptions)
+            console.log(thrownError)
+
+        }
+    );
+};
+
+
+//efectua logout
+window.logout = function () {
+    window.sessionStorage.clear();
+    window.localStorage.clear();
+    app.navigate("/home", {
+        trigger: true
+    });
+};
+
+/********************************************************************************CROPPER***************/
 //showCropper("nomeFormulario/div", maxWidth da tela, Width do resultado, height do resultado , ratio (1=quadrado) (16/9=rectangulo);
 window.showCropper = function (form, base_image, resWidth, aspectRatio, result) {
     //Se a imagem for verticalmente maior
@@ -746,37 +765,6 @@ function updatePreview(c) {
     }
 }
 
-//Tenta efectuar login
-window.attemptLogin = function () {
-    //Create Credentials
-    var cre = $('#userEmail').val() + ':' + md5($("#psswrd").val());   //Credentials = Username:Password
-    window.sessionStorage.setItem("keyo", btoa(cre));                  //Store Credentials Base64
-
-    //Check User Authenticity
-    modem('GET', 'me',
-
-        //Response Handler
-        function (user) {
-            //Hides Login Modal
-            $("#mLogin").modal("hide");
-            window.sessionStorage.setItem("username", user._id)
-            window.sessionStorage.setItem("name", user.name)
-            window.sessionStorage.setItem("b64", user.b64)
-            //Reloads actual view
-            app.navigate("user", {
-                trigger: true
-            });
-        },
-        //Error Handling
-        function (xhr, ajaxOptions, thrownError) {
-            var json = JSON.parse(xhr.responseText);
-            console.log(xhr)
-            console.log(ajaxOptions)
-            console.log(thrownError)
-
-        }
-    );
-};
 
 window.sortJsonByCol = function (property) {
 
@@ -924,11 +912,11 @@ window.showCorrectionDD = function (word, id) {
 window.getQuestionVoice = function (questionID) {
     var self = this;
     self.bd2 = 'let_questions';
-    self.site = 'http://127.0.0.1:5984';//process.env.COUCHDB;
+    self.site = 'http://letrinhas.pt:5984';//process.env.COUCHDB;
     var $soundDiv = $('<div>');
     $($soundDiv)
-        .append($('<audio>', {
-                class: "col-md-12",
+        .append(' <label class="col-md-2 audioLbl"> Professor </label>', $('<audio>', {
+                class: "col-md-10",
                 "controls": "controls",
                 id: "teacherVoice"
             })
@@ -1134,6 +1122,160 @@ window.setMultimediaPreview = function (question, div) {
     return [$contentDiv.wrap('<p/>').parent().html(), $answersDiv.wrap('<p/>').parent().html()];
 };
 
-window.hello = function () {
-    alert("hello")
-}
+//Preenche a div desejada com a preview da pergunta
+window.setBoxesPreview = function (question) {
+    // console.log(question)
+    var $contentDiv = $('<div>', {class: 'col-md-12'});
+    var nWords = 0;
+    //Coloca as palavras nas coluna
+    $.each(question.content.boxes, function (i, box) {
+        var words = $();
+
+        $.each(box.words, function (iw, word) {
+            words = words.add($('<span>', {
+                    text: word,
+                    id: "wd" + nWords
+                }).add('<br>')
+            );
+            nWords++;
+        });
+
+        $contentDiv.append(
+            $('<div>', {
+                class: "col-md-" + (12 / question.content.boxes.length)
+            }).append(
+                $('<div>', {
+                        class: "questBox centered box" + i
+                    }
+                ).append($('<span>', {
+                        text: box.name,
+                        id: box._id,
+                        class: "boxTitle" + i
+
+                    }), $('<hr>', {}))
+                    .append(words))
+        );
+    });
+    return [$contentDiv.wrap('<p/>').parent().html()]
+};
+
+//Preenche a div desejada com a preview da pergunta
+window.setWhiteSpacesPreview = function (question) {
+
+    var Sids = [];
+    //Recolhe todos os spans marcados
+    $.each(question.content.sid, function (iList, list) {
+        Sids = Sids.concat(list.sids);
+    })
+    console.log(Sids)
+    console.log(Sids.indexOf(3 + ""))
+    console.log(Sids.indexOf(9 + ""))
+    console.log(Sids.indexOf(1 + ""))
+    //Carrega o som,
+    var $contentDiv = $('<div>', {class: 'col-md-12'});
+    var $soundDiv = getQuestionVoice(question._id);
+    var words = $();
+    var $text = $('<div>', {class: 'questBox'});
+    $contentDiv.append($text);
+
+
+    //Separa o texto em paragrafos
+    var $paragraph = question.content.text.split(/\n/);
+    var words = $();
+    var nWords = 0;
+    //por cada paragrafo adiciona a palavra a lista, e a new line
+    $.each($paragraph, function (iLine, line) {
+        var $wordsList = line.replace(/\,/gi, " ,").replace(/\-/gi, "- ").replace(/\:/gi, " :").replace(/\./gi, " .").replace(/\!/gi, " !").replace(/\?/gi, " ?").replace(/'.'/gi, " .").split(" ");
+        $.each($wordsList, function (i, word) {
+            //Replace String With Selectable Span (Não esquecer os PARAGRAFOS)
+            if (Sids.indexOf(nWords + "") != -1) {
+                words = words.add($('<span>', {
+                    text: word + " ",
+                    class: "whitespace"
+                }))
+            } else {
+                words = words.add($('<span>', {
+                    text: word + " "
+                }))
+            }
+            //incrementa o nr de palavras (nao conta os breaks
+            nWords++;
+        });
+        words = words.add('<br />')
+    });
+    $text.append(words);
+    return [$contentDiv.wrap('<p/>').parent().html(), $soundDiv.wrap('<p/>').parent().html()]
+};
+
+window.loadingSpinner = function () {
+    return $('<div>', {class: "cssload-container"}).append(
+        $('<div>', {class: "cssload-whirlpool"}),
+        $('<p>', {text: "A carregar..."})
+    )
+};
+
+//Shows some class info
+window.showClassInfo = function (idSchool, idClass) {
+
+    $("#mClass").remove();
+
+    //Recolhe os dados da turma
+    modem('GET', 'classes/' + idSchool + '/' + idClass,
+        //Response Handler
+        function (classData) {
+
+            var $modalBody = $('<div>', {class: 'row'});
+
+            $.each(classData.students, function (iS, student) {
+                //Separa o nome
+                var name = student.name.split(" ");
+                $modalBody.append(
+                    $('<div>', {class: 'col-md-3'}).append(
+                        $('<img>', {class: 'dataImage', src: student.b64}),
+                        $('<p>', {class: 'pictureLabel', html: name[0] + " " + name[name.length - 1]})
+                    )
+                )
+            })
+
+            var $classModal = $("<div>", {
+                    class: "modal fade", tabindex: "-1", id: "mClass", role: "dialog",
+                    "aria-labelledby": "myModalLabel", "aria-hidden": "true"
+                }).append(
+                $("<div>", {class: "modal-dialog modal-lg"}).append(
+                    $("<div>", {class: "modal-content"}
+                        // MODAl HEATHER
+                    ).append(
+                        $("<div>", {class: "modal-header"}).append(
+                            $("<button>", {
+                                type: "button", class: "close", "data-dismiss": "modal", "aria-label": "Close"
+                            }),
+                            $("<h3>", {
+                                class: "modal-title", text: classData.year + "º " + classData.name
+                            })
+                        )
+                        // MODAl HEATHER
+                    ).append(
+                        $("<div>", {
+                            class: "modal-body",
+                        }).append(
+                            $modalBody
+                        )
+                    )
+                ))
+                ;
+
+            $('body').append($classModal);
+            $("#mClass").modal("show");
+
+        },
+        //Error Handling
+        function (xhr, ajaxOptions, thrownError) {
+            var json = JSON.parse(xhr.responseText);
+            console.log(xhr)
+            console.log(ajaxOptions)
+            console.log(thrownError)
+
+        }
+    )
+
+};

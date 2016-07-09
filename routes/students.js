@@ -10,11 +10,11 @@ var dbResolutions = nano.use('let_resolutions');
 var jsonQuery = require('json-query');
 exports.new = function (req, res) {
 
-    console.log(req.body)
+    //console.log(req.body)
     //Verify Fields
     if (JSON.stringify(req.body).indexOf('""') == -1) {
         //verifica se o username nao esta a ser utilizado
-        exists(req.body.username, function (exists) {
+        exists(req.body.username.trim().toLowerCase(), function (exists) {
             if (!exists) {
                 //!TEMPORARY! - Separating Class From School
                 var newStudent = {
@@ -23,7 +23,7 @@ exports.new = function (req, res) {
                     "b64": req.body.b64,
                     "number": req.body.number,
                     "password": req.body.password,
-                    "username": req.body.username,
+                    "username": req.body.username.trim().toLowerCase(),
                     "class": req.body.class
                 };
 
@@ -87,7 +87,7 @@ exports.getInfo = function (req, res) {
             }
             //Recolhe os testes do aluno
             var studentTests = jsonQuery('[doc][*studentID=' + id + ']', {data: testsData.rows}).value;
-            console.log(studentTests)
+            //console.log(studentTests)
             //Adiciona-os ao json da view o nr de testes por resolver
             console.log(jsonQuery('[*solved=false]', {data: studentTests}).value)
             studentData.unsolvedTests = jsonQuery('[*solved=false]', {data: studentTests}).value || [];
@@ -103,7 +103,7 @@ exports.getInfo = function (req, res) {
                     });
                 }
                 //Recolhe os testes do aluno
-                var resolutions = jsonQuery('[doc][*studentID=' + id + ']', {data: resolData.rows}).value;
+                var resolutions = jsonQuery('[doc][*studentID=' + id + '& note != -1]', {data: resolData.rows}).value;
                 //Adiciona-os ao json da view
                 studentData.resolutions = resolutions || [];
                 res.json(studentData);
@@ -115,6 +115,7 @@ exports.getInfo = function (req, res) {
 //NEW
 exports.editStudent = function (req, res) {
 
+    console.log(req.body)
     if (JSON.stringify(req.body).indexOf('""') == -1) {
         //Fetch School
         console.log('Edit Student: Fetching Student ' + req.params.id + ''.green);
@@ -128,6 +129,8 @@ exports.editStudent = function (req, res) {
             else {
                 body.name = req.body.name;
                 body.number = req.body.number;
+                body.school = req.body.school;
+                body.class = req.body.class;
 
                 if (req.body.b64 != '')
                     body.b64 = req.body.b64;
@@ -139,7 +142,7 @@ exports.editStudent = function (req, res) {
                     }
                     else {
                         console.log("Student Edited");
-                        res.send(200);
+                        res.send(200, {text: "Os dados do aluno" + body.name + "foram alterados com sucesso!"});
                     }
                 });
             }
@@ -187,6 +190,7 @@ exports.getAll = function (req, res) {
                 }
             }
         }
+        console.log(escolas)
         //Fetch Students From Classes
         db.list({
             'include_docs': true,
@@ -264,64 +268,18 @@ function exists(username, callback) {
         'attachments': false,
         'limit': undefined,
         'descending': true
-    }, function (err, data) {
+    }, function (err, studentsList) {
         if (err) {
             return res.status(err.statusCode).json({});
         }
-        var students = data.rows;
-        console.log(username)
-        for (var i = 0; i < students.length; i++) {
-            console.log(students[i].doc.username)
+        //Verica se o username ja esta em uso
+        var student = jsonQuery('rows[doc][*username=' + username + ']', {data: studentsList}).value;
 
-            if (students[i].doc.username == username) {
-                callback(true);
-            }
+        if (student.length > 0) {
+            callback(true);
+        } else {
+            callback(false);
         }
-        callback(false);
     });
 };
 
-
-function getEscola(turma) {
-    var escola = '';
-
-    for (i = 0; i < turma.length; i++) {
-        //procuro o separador ':' --> id_escola:id_Turma;
-        if (turma.charCodeAt(i) != 58) {
-            //adiciona o caracter ao ID
-            escola += turma.charAt(i);
-        }
-        //devole o id da escola
-        else return escola;
-    }
-
-    return null;
-};
-
-function getTurma(turma) {
-    var tturma = '';
-    var isIdTurma = false;
-
-    for (i = 0; i < turma.length; i++) {
-        //procuro o separador ':' --> id_escola:id_Turma;
-        if (turma.charCodeAt(i) != 58) {
-            if (isIdTurma) {
-                //se estou a ler o id da turma
-                //entã espero encontrar o separador ';'
-                //para identificar o fim da leitura
-                if (turma.charCodeAt(i) == 59) {
-                    return tturma;
-                }
-                else {
-                    tturma += turma.charAt(i);
-                }
-            }
-        }
-        else {
-            //encontrei o separador da ":" começo a ler o id da turma
-            isIdTurma = true;
-        }
-    }
-
-    return null;
-};

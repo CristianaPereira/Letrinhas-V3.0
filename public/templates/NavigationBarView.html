@@ -29,28 +29,26 @@
                         Perguntas
                     </a>
                 </li>
-                <li>
-                    <a href="#tests" aria-expanded="false" title="Ver perguntas">
-                        <i class="fa fa-file-text-o"></i>
-                        Testes
-                    </a>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">
+                        <i class="fa fa-file-text-o"></i> Testes</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#tests" aria-expanded="false" title="Ver perguntas">
+                            <i class="fa fa-file-text-o"></i>
+                            Genéricos
+                        </a></li>
+                        <li><a href="#tests" aria-expanded="false" title="Ver perguntas">
+                            <i class="fa fa-file-text-o"></i>
+                            Atribuidos
+                        </a></li>
+                    </ul>
                 </li>
+
                 <li>
                     <a href="#resolutions" aria-expanded="false" title="Ver resoluções">
                         <i class="fa fa-check-square-o"></i>
                         Resoluções
-                    </a>
-                </li>
-                <li>
-                    <a href="#statistics" aria-expanded="false" title="Ver estatísticas">
-                        <i class="fa fa-area-chart"></i>
-                        Estatísticas
-                    </a>
-                </li>
-                <li>
-                    <a href="#schools" aria-expanded="false" title="Ver escolas">
-                        <i class="fa fa-university"></i>
-                        Escolas
                     </a>
                 </li>
                 <li>
@@ -59,12 +57,28 @@
                         Alunos
                     </a>
                 </li>
-                <li id="sepProf">
-                    <a href="#teachers" aria-expanded="false" title="Ver funcionários">
-                        <i class="fa fa-users"></i>
-                        Professores
-                    </a>
+
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">
+                        <i class="fa fa-gears"></i> Administração</a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="#schools" aria-expanded="false" title="Ver escolas">
+                                <i class="fa fa-university"></i>
+                                Escolas
+                            </a>
+                        </li>
+                        <li id="sepProf">
+                            <a href="#teachers" aria-expanded="false" title="Ver funcionários">
+                                <i class="fa fa-users"></i>
+                                Professores
+                            </a>
+                        </li>
+                    </ul>
                 </li>
+
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
@@ -75,12 +89,14 @@
                     </a>
 
                     <ul class="dropdown-menu">
-                        <li><a href="#user">Perfil</a></li>
-                        <li><a href="#">Another action</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li class="dropdown-header">Nav header</li>
-                        <li><a href="#">Separated link</a></li>
-                        <li><a href="#">Sair <i class="fa fa-sign-out"></i></a></li>
+                        <li><a href="#user"> <i class="fa fa-user"></i> Perfil</a></li>
+                        <li>
+                            <a href="#statistics" aria-expanded="false" title="Ver estatísticas">
+                                <i class="fa fa-area-chart"></i>
+                                Estatísticas
+                            </a>
+                        </li>
+                        <li><a onclick="logout()"><i class="fa fa-sign-out"></i> Sair </a></li>
                     </ul>
                 </li>
             </ul>

@@ -16,19 +16,8 @@ window.QuestionsTextEdit = Backbone.View.extend({
     },
     //Initializes popover content
     pop: function () {
-        $("#selectSubject").val("6b348c67c111a8e7f010c054b4001b85");
-        console.log("here")
         setPopOver("Titulo, Discuplina, Ano escolar, Pergunta, Descrição, Texto e Audio");
     },
-
-    //Check Auth
-    auth: function () {
-        if (!window.sessionStorage.getItem("keyo")) {
-            return false;
-        }
-        return true;
-    },
-
 
     //Go back to the last visited page
     goBack: function (e) {
@@ -46,18 +35,31 @@ window.QuestionsTextEdit = Backbone.View.extend({
     //Before Sending Request To Server
     beforeSend: function (e) {
         e.preventDefault();
-        modem('PUT', 'questions/' + this.model.toJSON().id,
+        console.log($("#newTextTestForm")[0]);
+        $('#content').append(loadingSpinner());
+        modem('PUT', 'questions/' + this.data._id,
             function (json) {
-                success($("body"), "OK", 1000);
+                sucssesMsg($("body"), "Pergunta editada com sucesso!");
+                setTimeout(function () {
+                    app.navigate("questions", {
+                        trigger: true
+                    });
+                }, 1500);
 
             },
             //Error Handling
             function (xhr, ajaxOptions, thrownError) {
-                failMsg($("body"), "Não foi possível inserir a nova pergunta. \n (" + JSON.parse(xhr.responseText).result + ").");
+
+                var json = JSON.parse(xhr.responseText);
+                failMsg($("body"), json.text);
+                setTimeout(function () {
+                    app.navigate('/user', {
+                        trigger: true
+                    });
+                }, json.text.length * 50);
             },
             new FormData($("#newTextTestForm")[0])
-        )
-        ;
+        );
     },
 
     //Show Voice Recorder Equalizer
@@ -105,24 +107,24 @@ window.QuestionsTextEdit = Backbone.View.extend({
     create: function () {
         console.log("sd")
     },
+    afterRender: function () {
+        var self = this;
+        //seleecciona o ano escolar
+        $("#selectAno").val(self.data.schoolYear)
 
+    },
     //Class Renderer
     render: function () {
         var self = this;
-        //Check Local Auth
-        if (!self.auth()) {
-            return false;
-        }
 
+        self.data = this.model.toJSON();
+        console.log(self.data)
 
-        $(self.el).html(self.template(self.model.toJSON()));
-        getSetCategories(self.model.toJSON().subject);
+        $(self.el).html(self.template(self.data));
+        getCategories(self.data.subject);
 
-        var data = this.model.toJSON();
-        console.log(data)
         return self;
 
     },
 
-})
-;
+});

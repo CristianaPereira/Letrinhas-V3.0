@@ -10,14 +10,6 @@ window.StudentsEdit = Backbone.View.extend({
     pop: function () {
         setPopOver("Nome, Número, Fotografia, Escola e Turma");
     },
-    //Check Auth
-    auth: function (e) {
-        if (!window.sessionStorage.getItem("keyo")) {
-            app.navigate("/#", true);
-            return false;
-        }
-        return true;
-    },
 
     //Convert Photo To Base64 String
     convertPhoto: function (e) {
@@ -61,13 +53,14 @@ window.StudentsEdit = Backbone.View.extend({
         //If they are
         if (isValid) {
             //Send Student Changes to Server
-            var student = new Student({_id: this.data._id});
+            var student = new Student({id: self.data._id});
             var studentDetails = $('#editstudentform').serializeObject();
             console.log(student)
             console.log(studentDetails)
+
             student.save(studentDetails, {
                 success: function () {
-                    sucssesMsg($(".form"), "Aluno inserido com sucesso!");
+                    sucssesMsg($(".form"), "Aluno alterado com sucesso!");
                     setTimeout(function () {
                         app.navigate("students", {
                             trigger: true
@@ -93,10 +86,6 @@ window.StudentsEdit = Backbone.View.extend({
     render: function () {
         var self = this;
 
-        //Check Local Auth
-        if (!self.auth()) {
-            return false;
-        }
         console.log(self.data)
         $(this.el).html(this.template(self.data));
 

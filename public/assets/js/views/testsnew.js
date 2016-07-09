@@ -86,7 +86,8 @@ window.TestsNewView = Backbone.View.extend({
         $(e.currentTarget).html("+").removeClass("removeQuestion btn-Rmv").addClass(
             "btn-Add addQuestion"
         )
-
+        //Remove a dd da importancia
+        $(e.currentTarget).parent().find("select").remove()
         //Incrementa o nr de perguntas
         $("#questionsTestBadge").text($("#questionsList .panel").length)
         $("#questionsBadge").text($("#allQuestions .panel:visible").length + "/" + $("#allQuestions .panel").length)
@@ -101,16 +102,25 @@ window.TestsNewView = Backbone.View.extend({
         var allListElements = $(".mandatory");
         //Verifies if all inputs are OK
         var isValid = isFormValid(allListElements);
+
+        //Recolhe os paineis das peguntas
+        var questions = $("#newTestForm .panel");
+
+        //Se o teste nao possuir nenhuma pergunta
+        if (questions.length == 0) {
+            isValid = false;
+            alertMsg($("body"), "O teste deverá conter no mínimo uma pergunta.")
+        }
         //If they are
         if (isValid) {
+            $('#content').append(loadingSpinner());
             //Recolhe os dados da view
             var testDetails = $('#newTestForm').serializeObject();
             //Cria um novo model
             var test = new Test(testDetails);
             test.attributes.questions = [];
 
-            //Recolhe os paineis das peguntas
-            var questions = $("#newTestForm .panel");
+
             //Adiciona os seus id's e a sua dificuldade ao array de perguntas
             $.each(questions, function (iQ, question) {
                 test.attributes.questions.push({
@@ -126,11 +136,11 @@ window.TestsNewView = Backbone.View.extend({
             test.save(null, {
                 success: function (user) {
                     sucssesMsg($(".form"), "Teste inserido com sucesso!");
-                    /*  setTimeout(function () {
-                     app.navigate("tests", {
-                     trigger: true
-                     });
-                     }, 2000);*/
+                    setTimeout(function () {
+                        app.navigate("tests", {
+                            trigger: true
+                        });
+                    }, 2000);
                 },
                 error: function (model, response) {
                     console.log()

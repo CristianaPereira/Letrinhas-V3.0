@@ -17,10 +17,10 @@ var Test = Backbone.Model.extend({
                 var json = JSON.parse(xhr.responseText);
                 failMsg($("body"), json.text);
                 setTimeout(function () {
-                    app.navigate('/home', {
+                    app.navigate('/user', {
                         trigger: true
                     });
-                }, json.text.length * 45);
+                }, json.text.length * 50);
             }
         );
     },
@@ -50,12 +50,20 @@ var Tests = Backbone.Collection.extend({
         var self = this;
         modem('GET', 'tests',
             function (json) {
+                console.log(json)
                 for (i = 0; i < json.length; i++) {
                     self.models.push(new Test(json[i]));
                 }
                 after_fetch();
             },
-            function () {
+            function (xhr, ajaxOptions, thrownError) {
+                var json = JSON.parse(xhr.responseText);
+                failMsg($("body"), json.text);
+                setTimeout(function () {
+                    app.navigate('/user', {
+                        trigger: true
+                    });
+                }, json.text.length * 50);
             }
         );
     },

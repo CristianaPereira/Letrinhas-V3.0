@@ -9,6 +9,7 @@
     "colors": "*",
     "express": "~4.0.0",
     "fs-extra": "^0.28.0",
+    "json-query": "^2.1.0",
     "nano": "^6.1.5",
     "request": "*"
   },

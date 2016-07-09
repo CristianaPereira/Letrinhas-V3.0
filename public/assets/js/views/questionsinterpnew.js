@@ -15,14 +15,6 @@ window.QuestionsInterpNew = Backbone.View.extend({
     pop: function () {
         setPopOver("Ano, Disciplina, Conteúdo, Especificação, Título, Pergunta, Texto");
     },
-    //Check Auth
-    auth: function () {
-        if (!window.sessionStorage.getItem("keyo")) {
-            app.navigate("/#", true);
-            return false;
-        }
-        return true;
-    },
 
     //Verifies if an input is empty
     isEmpty: function (e) {
@@ -46,6 +38,7 @@ window.QuestionsInterpNew = Backbone.View.extend({
         var isValid = isFormValid(allListElements);
         //If they are
         if (isValid) {
+            $('#content').append(loadingSpinner());
             //Generate Form Data
             var fd = new FormData($("#newInterpretationTestForm")[0]);
 
@@ -54,17 +47,27 @@ window.QuestionsInterpNew = Backbone.View.extend({
             $("#inputPanel").find(".badge").each(function () {
                 $sid.push((this.id).substring(3));
             });
-
+            console.log($sid)
             fd.append("sid", $sid);
 
             modem('POST', 'questions',
-                function (json) {
+                function () {
+                    sucssesMsg($("body"), "Pergunta inserida com sucesso!");
+                    setTimeout(function () {
+                        app.navigate("questions", {
+                            trigger: true
+                        });
+                    }, 1500);
                 },
                 //Error Handling
                 function (xhr, ajaxOptions, thrownError) {
+                    var json = JSON.parse(xhr.responseText);
+                    failMsg($("body"), "Não foi possível inserir a pergunta!");
+
                 },
                 fd
-            );
+            )
+            ;
 
         }
 
@@ -75,6 +78,11 @@ window.QuestionsInterpNew = Backbone.View.extend({
     showEqualizer: function (e) {
         e.preventDefault();
         $("#myModalRecord").modal("show");
+        //Limpa a div
+        $("#rTexto").empty();
+        //Clona o texto
+        $("#inputTextArea").clone().appendTo("#rTexto");
+
         initAudio();
     },
 
@@ -122,10 +130,12 @@ window.QuestionsInterpNew = Backbone.View.extend({
     //Text Marking
     markText: function (e) {
         e.preventDefault();
-
+        //Generate Answers Locations
+        var $sid = [];
+        $("#inputPanel").find(".badge").each(function () {
+            $sid.push((this.id).substring(3));
+        });
         var self = this;
-
-        alertMsg($(".form"), "Marcar o texto deve ser um processo final. \nCaso altere o texto ou pretenda remarcar o mesmo, todas as marcações anteriores serão removidas!")
 
         //Separa o texto em paragrafos
         var $paragraph = $("#inputTextArea").val().split(/\r|\n/);
@@ -135,11 +145,14 @@ window.QuestionsInterpNew = Backbone.View.extend({
         $.each($paragraph, function (iLine, line) {
             var $wordsList = line.split(" ");
             $.each($wordsList, function (i, word) {
+                console.log(nWords)
+                console.log(jQuery.inArray(nWords, $sid) != -1)
                 //Replace String With Selectable Span (Não esquecer os PARAGRAFOS)
                 words = words.add($('<span>', {
                     text: word + " ",
                     id: 'sid' + nWords,
-                    class: "selectable"
+                    //Verifica se a palavra ja foi previamente seleccionada
+                    class: "selectable " + (jQuery.inArray(nWords + "", $sid) != -1 ? 'badge' : '')
                 }))
                 //incrementa o nr de palavras (nao conta os breaks
                 nWords++;
@@ -179,10 +192,6 @@ window.QuestionsInterpNew = Backbone.View.extend({
     render: function () {
         var self = this;
 
-        //Check Local Auth
-        if (!self.auth()) {
-            return false;
-        }
 
         getCategories();
         $(this.el).html(this.template());

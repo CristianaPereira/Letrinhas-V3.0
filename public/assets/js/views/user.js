@@ -1,6 +1,14 @@
 window.UserView = Backbone.View.extend({
     events: {
         "click #btnUserEdit": "editUser",
+        "click .classBtn": "getClass",
+    },
+
+
+    getClass: function (e) {
+        //Separa o id da escola do id da turma
+        var ids = $(e.currentTarget).attr("id").split(":");
+        showClassInfo(ids[0], ids[1]);
     },
 
     verAluno: function (btn) {

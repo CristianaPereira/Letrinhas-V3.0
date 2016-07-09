@@ -15,15 +15,6 @@ window.QuestionsListNew = Backbone.View.extend({
 
     },
 
-    //Check Auth
-    auth: function () {
-        if (!window.sessionStorage.getItem("keyo")) {
-            app.navigate("/#", true);
-            return false;
-        }
-        return true;
-    },
-
     //Go back to the last visited page
     goBack: function (e) {
         e.preventDefault();
@@ -46,6 +37,7 @@ window.QuestionsListNew = Backbone.View.extend({
         var isValid = isFormValid(allListElements);
         //If they are
         if (isValid) {
+            $('#content').append(loadingSpinner());
             //Recolhe as listas
             var wordsLists = $(".list");
             var lists = [];
@@ -60,7 +52,7 @@ window.QuestionsListNew = Backbone.View.extend({
 
             modem('POST', 'questions',
                 function () {
-                    sucssesMsg($(".form"), "Pergunta inserida com sucesso!");
+                    sucssesMsg($("body"), "Pergunta inserida com sucesso!");
                     setTimeout(function () {
                         app.navigate("questions", {
                             trigger: true
@@ -69,6 +61,7 @@ window.QuestionsListNew = Backbone.View.extend({
                 },
                 //Error Handling
                 function (xhr, ajaxOptions, thrownError) {
+                    failMsg($("body"), "Não foi possível inserir a nova pergunta.");
                 },
                 new FormData($("#newListTestForm")[0])
             );
@@ -80,6 +73,11 @@ window.QuestionsListNew = Backbone.View.extend({
     showEqualizer: function (e) {
         e.preventDefault();
         $("#myModalRecord").modal("show");
+        //Limpa a div
+        $("#rTexto").empty();
+        //Clona o texto
+        $("#lists").clone().appendTo("#rTexto");
+
         initAudio();
     },
 
@@ -121,10 +119,6 @@ window.QuestionsListNew = Backbone.View.extend({
     render: function () {
         var self = this;
 
-        //Check Local Auth
-        if (!self.auth()) {
-            return false;
-        }
         getCategories();
 
         $(this.el).html(this.template());

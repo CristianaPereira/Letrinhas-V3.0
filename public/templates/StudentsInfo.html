@@ -24,16 +24,40 @@
             <label class="col-md-4 lblDataDetails">Testes corrigidos :</label>
             <% var noNuts = _(solvedTests).filter(function (x) { return x.note != -1;})%>
             <label class="col-md-8"><%=noNuts.length%></label>
-            <%="!"+ resolutions.length %>
-            <% _.each(resolutions,function(resol){ %>
-            <% console.log(resol) %>
+            <% var p =_.groupBy(resolutions, 'subject') %>
+            <% console.log(p) %>
+
+            <% _.each(p,function(sub,i){ %>
+            <img src="../img/<%= i %>.png" class="smallImgPreView">
+
+            <table class="highchart" data-graph-container-before="1" data-graph-type="line" style="display:none">
+                <thead>
+                <tr>
+                    <th>Tipo</th>
+                    <th>Nota</th>
+
+                </tr>
+                </thead>
+                <tbody>
+
+                <% _.each(sub,function(resol){ %>
+                <tr>
+                    <td><%=resol.resolutionDate%></td>
+                    <td><%=resol.note%></td>
+                    <%console.log(resol.note) %>
+                </tr>
+                <% }); %>
+
+
+                </tbody>
+            </table>
             <% }); %>
 
-            <% resolutions= _.groupBy(resolutions, 'testID') %>
-            <%="!"+ resolutions.length %>
-            <% _.each(resolutions,function(resol){ %>
-            <% console.log(resol) %>
-            <% }); %>
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function () {
+        $('table.highchart').highchartTable();
+    });
+</script>

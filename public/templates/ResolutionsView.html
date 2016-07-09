@@ -119,38 +119,62 @@
         <!-- END REGIONAL STATS PORTLET-->
     </div>
     <div class=" panel-body">
-        <div id="resolutionsContent" class=" panel-body col-md-12" align=center>
-            <% _.each(collection,function(resolution){ %>
-            <div class="row">
-                <div class="listButton divWidget"
-                     id='<%= resolution._id %>'>
+        <div id="resolutionsContent" class=" panel-body col-md-12">
+            <div class="panel-group" id="accordion">
 
-                    <img src="<%= resolution.studentFoto %>">
-                    <img src='../img/<%= resolution.subject.split(":")[0] %>.png'>
-                    <span><%= resolution.studentName %> (<%= resolution.title %> - <%= resolution.resolutionDate %>)</span>
+                <% var p =_.groupBy(_.sortBy(collection, function(num) { return num; }).reverse(), 'solved') %>
+                <% console.log(p)%>
+                <% _.each(p,function(resolution, iResol){ %>
+                <% console.log(iResol) %>
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse<%=iResol%>">
+                                <%if(iResol=='false'){print('Por resolver')}else{print('Por corrigir')}%></a>
+                            <span class="badge"><%=resolution.length%></span>
+                        </h4>
+                    </div>
+                    <div id="collapse<%=iResol%>" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <% _.each(resolution,function(test, iTest){ %>
+                            <div class="row">
+                                <div class="listButton divWidget"
+                                     id='<%= test._id %>'>
 
-                    <div class="editDeleteOp">
-                        <div class="dropdown">
-                            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-                                <i class="fa fa-gear "></i> <span class="caret"></span></button>
-                            <ul class="dropdown-menu">
-                                <li><a href="#resolutions/<%= resolution._id %>"
+                                    <img src="<%= test.studentFoto %>">
+                                    <img src='../img/<%= test.subject.split(":")[0] %>.png'>
+                                    <span><%= test.studentName %> - <%= test.title %></span>
+
+                                    <% if ( test.solved){ %>
+                                    <span>(<%= test.resolutionDate %>)</span>
+                                    <a href="#resolutions/<%= test._id %>"
                                        title="Corrigir">
+                                        <i class="fa fa-check-square-o fa-2x"></i>
+                                    </a>
 
-                                    <i id="btnEdit" class="fa fa-check-square-o fa-2x"></i>
-                                </a>
-                                </li>
-                                <li><a href="#students" class="delete" title="Apagar aluno">
-                                    <i class="fa fa-trash-o fa-2x"></i>
-                                </a></li>
-                            </ul>
+                                    <%}else{%>
+                                    <a href="#test/<%= test._id %>/edit"
+                                       title="Editar">
+                                        <i id="btnEdit" class="fa fa-edit fa-2x"></i>
+                                    </a>
+
+                                    <%}%>
+
+
+                                </div>
+
+                            </div>
+                            <% _}); %>
                         </div>
                     </div>
-
                 </div>
 
+                <% _}); %>
+
+
             </div>
-            <% }); %>
+
+
         </div>
     </div>
 </div>

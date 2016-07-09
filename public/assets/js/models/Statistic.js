@@ -17,7 +17,12 @@ var Statistic = Backbone.Model.extend({
             //Error Handling
             function (xhr, ajaxOptions, thrownError) {
                 var json = JSON.parse(xhr.responseText);
-                error_launch(json.message);
+                failMsg($("body"), json.text);
+                setTimeout(function () {
+                    app.navigate('/user', {
+                        trigger: true
+                    });
+                }, json.text.length * 50);
             }
         );
     }
@@ -36,7 +41,14 @@ var Statistics = Backbone.Collection.extend({
                 }
                 after_fetch();
             },
-            function () {
+            function (xhr, ajaxOptions, thrownError) {
+                var json = JSON.parse(xhr.responseText);
+                failMsg($("body"), json.text);
+                setTimeout(function () {
+                    app.navigate('/user', {
+                        trigger: true
+                    });
+                }, json.text.length * 50);
             }
         );
 
