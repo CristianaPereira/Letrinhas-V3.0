@@ -36,7 +36,7 @@ window.TestsNewView = Backbone.View.extend({
         //Esconde os testes cujas checkboxes não estão seleccionadas
         $.each($("input:checkbox:not(:checked)"), function (i, k) {
             console.log($(k).attr("value"))
-            $(".panel-default[type=" + $(k).attr("value") + "]").hide();
+            $("#allQuestions  .panel-default[type=" + $(k).attr("value") + "]").hide();
         });
 
         //Esconde os que ao correspondem conteudos seleccionados
@@ -119,20 +119,16 @@ window.TestsNewView = Backbone.View.extend({
             //Cria um novo model
             var test = new Test(testDetails);
             test.attributes.questions = [];
-
-
             //Adiciona os seus id's e a sua dificuldade ao array de perguntas
             $.each(questions, function (iQ, question) {
                 test.attributes.questions.push({
                     _id: $(question).attr("id"),
                     dif: $("#" + $(question).attr("id") + " select").val()
                 });
-                //Converte para inteiro
+                //Converte o ano escolar para inteiro
                 test.attributes.schoolYear = parseInt(test.attributes.schoolYear);
             })
 
-            console.log(questions)
-            console.log(test.attributes)
             test.save(null, {
                 success: function (user) {
                     sucssesMsg($(".form"), "Teste inserido com sucesso!");
@@ -143,7 +139,6 @@ window.TestsNewView = Backbone.View.extend({
                     }, 2000);
                 },
                 error: function (model, response) {
-                    console.log()
                     failMsg($(".form"), "Lamentamos mas não foi possível inserir o teste! \n" + JSON.parse(response.responseText).result);
                 }
             });

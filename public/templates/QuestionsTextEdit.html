@@ -46,17 +46,17 @@
                     </div>
                     <div class="col-sm-3 row">
                         <label for="selectSubject">Disciplina:</label>
-                        <select class="form-control" id="selectSubject" name="subject">
+                        <select class="form-control mandatory" id="selectSubject" name="subject">
                         </select>
                     </div>
                     <div class="col-sm-3 row">
                         <label for="selectContent">Conteúdo:</label>
-                        <select class="form-control" id="selectContent" name="content">
+                        <select class="form-control mandatory" id="selectContent" name="content">
                         </select>
                     </div>
                     <div class="col-sm-4 row">
                         <label for="selectContent">Especificação:</label>
-                        <select class="form-control" id="selectSpecification" name="specification">
+                        <select class="form-control mandatory" id="selectSpecification" name="specification">
                         </select>
                     </div>
 
@@ -106,7 +106,7 @@
                         <hr class="formBar">
                         </br>
                     </div>
-                    <audio class="col-md-12" controls="controls">
+                    <audio class="col-md-12" controls="controls" id="teacherVoice">
                         <source src="<%= voice %>" type="audio/mpeg">
                     </audio>
                     <div class="form-group">
@@ -120,7 +120,7 @@
                         </span>
                         </div>
                         <div class="col-sm-3" style="padding-left: 0px;">
-                            <input type="text" class="form-control mandatory" id="soundPath"
+                            <input type="text" class="form-control" id="soundPath"
                                    placeholder="Nenhum ficheiro seleccionado"
                             >
                         </div>
@@ -150,7 +150,7 @@
                                 <div class="col-sm-6">
                                     <button id="subTxt" type="submit" class="btn btn-success btn-block btn-created"
                                             title="Todos os campos são de preenchimento obrigatório.">
-                                        Submeter
+                                        Editar
                                     </button>
                                 </div>
 

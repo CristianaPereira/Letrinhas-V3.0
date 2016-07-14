@@ -55,13 +55,14 @@ exports.new = function (req, res) {
 
 
 };
+
 exports.addSpecif = function (req, res) {
     console.log(req.body)
-    console.log('Adding specification: '.green + req.body.id);
-    var newId = new Date().getTime() * 0.3;
+    console.log('Adding specification: '.green + req.body.subject);
+    var newId = new Date().getTime();
     var inserido = false;
-    //Search School Parameters
-    db.get(req.body.id, function (err, data) {
+    //Search category Parameters
+    db.get(req.body.subject, function (err, data) {
             if (err) {
                 console.log("Especificação não inserida");
                 return res.status(400).json({});
@@ -72,7 +73,7 @@ exports.addSpecif = function (req, res) {
                     if (data.content[i]._id == req.body.content) {
                         data.content[i].specification.push({_id: newId, name: req.body.specification});
                         //insere na bd
-                        db.insert(data, req.body.id, function (err) {
+                        db.insert(data, req.body.subject, function (err) {
                             if (err) {
                                 console.log("Especificação não inserida");
                                 return res.send(200, {text: "Especificação não inserida."});

@@ -127,6 +127,14 @@ window.Home = Backbone.View.extend({
 
     //Class Initializer
     initialize: function () {
+        $('body').bind('mousewheel', function (e) {
+            if (e.originalEvent.wheelDelta / 120 > 0) {
+                $(this).carousel('prev');
+            }
+            else {
+                $(this).carousel('next');
+            }
+        });
     },
 
     //Class Renderer

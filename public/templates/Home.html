@@ -1,29 +1,3 @@
-<!-- TEMPORARY | Until I find out how to do it on controller -->
-
-<script type="text/javascript">
-
-    $(document).ready(function () {
-        try {
-            $.fn.fullpage.destroy('all');
-            $('#fullpage').fullpage({
-                sectionsColor: ['#fac7da', '#fac7da', '#7BAABE'],
-                navigation: true,
-
-            });
-        }
-        catch (err) {
-            $('#fullpage').fullpage({
-                sectionsColor: ['#fac7da', '#fac7da', '#7BAABE'],
-                navigation: true,
-
-            });
-        }
-        finally {
-            $.fn.fullpage.reBuild();
-        }
-    });
-
-</script>
 <!-- ----------------------------------------------------------------- -->
 <nav id="topMainBar" class="navbar navbar-default  navbar-fixed-top">
     <div class="container-fluid">
@@ -66,46 +40,149 @@
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
 </nav>
-<div id="fullpage">
-    <div class="section " id="section0">
-        <button id="showlogin" class="btn btn-hero btn-lg backOfficeBtn" role="button">
-            <i class="fa fa-cogs"></i>
-            <span> Login</span>
-        </button>
 
-        <h1 style="text-shadow: 2px 2px #000;">Letrinhas</h1>
-        <p style="text-shadow: 2px 2px #000;">A aplicação que permite a avaliação da fluência na leitura dos alunos.</p>
-        <br><br>
-        <button id="showDownload" class="btn btn-hero btn-lg" role="button">
-            <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
-            Descarregar a Aplicação
-        </button>
-    </div>
-    <div class="section" id="section1">
-        <div class="intro">
-            <iframe src="https://player.vimeo.com/video/152836044" width="640" height="351" frameborder="0"
-                    webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
-            <p><a href="https://vimeo.com/152836044">Letrinhas</a> from <a href="https://vimeo.com/user47071707">Bibliotecas
-                AEAG</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
+
+<div class="mainDiv" style="    background: url('../../img/study-with-books.jpg');">
+    <br>
+    <div id="homeCarousel" class="carousel slide" data-ride="carousel">
+        <!-- Indicators -->
+        <ol class="carousel-indicators">
+            <li data-target="#homeCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#homeCarousel" data-slide-to="1"></li>
+            <li data-target="#homeCarousel" data-slide-to="2"></li>
+            <li data-target="#homeCarousel" data-slide-to="3"></li>
+        </ol>
+
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner" role="listbox">
+
+            <div class="item active" align="center">
+                <button id="showlogin" class="btn btn-hero btn-lg backOfficeBtn" role="button">
+                    <i class="fa fa-cogs"></i>
+                    <span> Login</span>
+                </button>
+
+                <h1 style="text-shadow: 2px 2px #000;">Letrinhas</h1>
+                <p style="text-shadow: 2px 2px #000;">A aplicação que permite a avaliação da fluência na leitura dos
+                    alunos.</p>
+                <br><br>
+                <button id="showDownload" class="btn btn-hero btn-lg" role="button">
+                    <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+                    Descarregar a Aplicação
+                </button>
+            </div>
+
+            <div class="item" align="center">
+                <div class="intro">
+                    <iframe src="https://player.vimeo.com/video/152836044" frameborder="0"
+                            webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                    <p><a href="https://vimeo.com/152836044">Letrinhas</a> from <a
+                            href="https://vimeo.com/user47071707">Bibliotecas
+                        AEAG</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
+                </div>
+            </div>
+
+            <div class="item">
+                <h3>Publicações</h3>
+
+                <div class="col-md-3 col-xs-3">
+                    <div class="divWidget">
+                        <a href="../../papers/Letrinhas_EJML_2016.pdf" download>
+                            <img src="../../papers/ejml.jpg" class="dataImage">
+                        </a>
+                        <a target="_blank"
+                           href="http://ejml2016.fpce.uc.pt">
+                            Aprender a ler através de dispositivos móveis (ejml)
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-3 col-xs-3">
+                    <div class="divWidget">
+                        <a href="../../papers/IEEE_Letrinhas.pdf" download>
+                            <img src="../../papers/ieee.jpg" class="dataImage">
+                        </a>
+                        <a target="_blank"
+                           href="http://ieeexplore.ieee.org/xpl/login.jsp?tp=&arnumber=7451648&url=http%3A%2F%2Fieeexplore.ieee.org%2Fiel7%2F7447900%2F7451633%2F07451648.pdf%3Farnumber%3D7451648">
+                            Promoting reading through mobile devices (IEEE)
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-3 col-xs-3">
+                    <div class="divWidget">
+                        <a href="../../papers/Letrinhas_siee15.pdf" download>
+                            <img src="../../papers/siee15.jpg" class="dataImage">
+                        </a>
+                        <a target="_blank"
+                           href="http://siie15.ese.ips.pt/spco.html">
+                            Promoção da leitura através de dispositivos móveis (SIIE'15)
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-3 col-xs-3">
+                    <div class="divWidget">
+                        <a href="../../papers/Letrinhas-CISTI 2016.pdf" download>
+                            <img src="../../papers/aisti.jpg" class="dataImage">
+                        </a>
+                        <a target="_blank"
+                           href="http://www.aistic.org/cisti2016/oc16/modules/request.php?module=oc_program&action=summary.php&id=225">
+                            Information system to promote reading literacy (CISTI'16)
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item">
+                <h3>Equipa</h3>
+                <div class="col-md-2 col-xs-3">
+                    <div class="divWidget">
+                        <img src="../../img/pereira.jpg" class="dataImage">
+                    </div>
+                </div>
+                <div class="col-md-2 col-xs-3">
+                    <div class="divWidget">
+                        <img src="../../img/pestana.jpg" class="dataImage">
+                    </div>
+                </div>
+                <div class="col-md-2 col-xs-3">
+                    <div class="divWidget">
+                        <img src="../../img/manso.jpg" class="dataImage">
+                    </div>
+                </div>
+                <div class="col-md-2 col-xs-3">
+                    <div class="divWidget">
+                        <img src="../../img/dias.jpg" class="dataImage">
+                    </div>
+                </div>
+                <div class="col-md-2 col-xs-3">
+                    <div class="divWidget">
+                        <img src="../../img/marques.jpg" class="dataImage">
+                    </div>
+                </div>
+                <div class="col-md-2 col-xs-3">
+                    <div class="divWidget">
+                        <img src="../../img/carvalho.jpg" class="dataImage">
+                    </div>
+                </div>
+                <div class="col-md-2 col-xs-3">
+                    <div class="divWidget">
+                        <img src="../../img/fernandes.jpg" class="dataImage">
+                    </div>
+                </div>
+                <div class="col-md-2 col-xs-3">
+                    <div class="divWidget">
+                        <img src="../../img/gomes.jpg" class="dataImage">
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
-
-
-    <div class="section" id="section2">
-        <div class="intro">
-            <h1>URL without /#</h1>
-            <p>But back button won't work!</p>
-        </div>
-    </div>
-
 </div>
-
 
 <!-- APP DOWLOAD MODAL -->
 <div class="modal fade" id="mApp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">&times;</span></button>
@@ -172,3 +249,6 @@
         </div>
     </div>
 </div>
+<script>
+
+</script>

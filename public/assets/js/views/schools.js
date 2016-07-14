@@ -114,7 +114,7 @@ window.SchoolsView = Backbone.View.extend({
             },
             error: function (model, response) {
                 console.log(response)
-                failMsg($("#schoolsDiv"), "Não foi possível remover a turma. \n (" + JSON.parse(response.responseText).result + ").");
+                failMsg($("#schoolsDiv"), "Não foi possível remover a escola. \n (" + JSON.parse(response.responseText).result + ").");
             }
         });
 

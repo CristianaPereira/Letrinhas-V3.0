@@ -191,21 +191,6 @@ section {
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
 }
 
-/* Large desktop */
-@media (min-width: 1200px) {
-
-}
-
-/* Landscape phone to portrait tablet */
-@media (max-width: 767px) {
-
-}
-
-/* Landscape phones and down */
-@media (max-width: 480px) {
-
-}
-
 .navbar-nav i {
     margin-right: 5px;
 }
@@ -1396,12 +1381,11 @@ option:hover {
 }
 
 .asnwerBox {
-    background-color: #DFECF5;
-    border: 1px solid #B8D0E8;
+    background-color: #fff9c5;
+    border: 1px solid #ffef60;
     border-radius: 5px;
     height: 100px;
     width: 100%;
-
 }
 
 .centered {
@@ -1412,14 +1396,12 @@ option:hover {
     display: inline-block;
     min-width: 10px;
     padding: 3px 7px;
-    font-size: 12px;
-    font-weight: 700;
     line-height: 1;
-    color: #673AB7;
+    color: #8265b4;
     text-align: center;
     white-space: nowrap;
     vertical-align: middle;
-    background-color: #F5D5FD;
+    background-color: #f6e8fa;
     border-radius: 10px;
 }
 
@@ -1453,7 +1435,27 @@ option:hover {
 }
 
 .rightAnswer {
-    background-color: #caff8c;
+    display: inline-block;
+    min-width: 10px;
+    padding: 3px 7px;
+    line-height: 1;
+    color: #83a9bd;
+    text-align: center;
+    vertical-align: middle;
+    background-color: #ebf2f6;
+    border-radius: 10px;
+}
+
+.wrongAnswer {
+    display: inline-block;
+    min-width: 10px;
+    padding: 3px 7px;
+    line-height: 1;
+    color: #be9559;
+    text-align: center;
+    vertical-align: middle;
+    background-color: #ffe5bf;
+    border-radius: 10px;
 }
 
 /*CORRECTIONS*/
@@ -1465,16 +1467,8 @@ option:hover {
     color: #b19f00;
 }
 
-#timeDif, #textDif, #inflectionDif, #ponctuationDif, #accuracyDif, #fluidityDif {
+#textDif, #inflectionDif, #ponctuationDif, #accuracyDif, #fluidityDif {
     width: 80px;
-}
-
-#accuracy, #fluidity {
-    width: 80px;
-}
-
-#time, #text, #inflection, #ponctuation {
-    width: 140px;
 }
 
 .audioLbl {
@@ -1604,11 +1598,30 @@ option:hover {
     line-height: 1;
     color: #673AB7;
     text-align: center;
-    border: 1px solid #b5e61c;
     border-radius: 5px;
 }
 
 .pictureLabel {
     text-align: center;
     font-size: 16px;
+}
+
+/* Landscape phone to portrait tablet */
+@media (max-width: 767px) {
+
+    .divWidget {
+        padding: 5px;
+    }
+}
+
+.rightBox {
+    color: #22668b;
+}
+
+.wrongBox {
+    color: #ffbf63;
+}
+
+.studentName {
+    font-size: 15px;
 }

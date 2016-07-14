@@ -28,7 +28,7 @@
                         <div class="col-md-8">
                             <!--Por cada escola turma-->
                             <% _.each(school.class,function(classes){ %>
-                            <button class="classBtn" id="<%= school.id %>:<%= classes.id %>"><%= classes.name %></button>
+                            <button class="classBtn" id="<%= school.id %>:<%= classes._id %>"><%= classes.name %></button>
                             <% }); %>
                         </div>
                     </div>

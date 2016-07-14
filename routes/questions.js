@@ -207,7 +207,7 @@ exports.test = function (req, res) {
                 break;
 
             case "list":
-                body.content["columns"] = JSON.parse(req.body.columns.replace(/,""/gi, ''));
+                $question.content["columns"] = JSON.parse(req.body.columns.replace(/,""/gi, ''));
                 break;
 
             case "interpretation":
@@ -223,7 +223,7 @@ exports.test = function (req, res) {
 
                 break;
             case "multimedia":
-                console.log(JSON.parse(req.body.answers));
+                //Obtem o tipo de pergunta e o tipo de resposta
                 $question.content["questionType"] = req.body.questionType;
                 $question.content["answerType"] = req.body.answerType;
                 //Se a pegunta nao for do tipo audio (imagem ou texto
@@ -234,10 +234,15 @@ exports.test = function (req, res) {
                 break;
             case "boxes":
                 $question.content["boxes"] = JSON.parse(req.body.boxes.replace(/,""/gi, ''));
+                for (var i in  $question.content.boxes) {
+                    //Adiciona um id a lista
+                    $question.content.boxes[i]._id = i;
+                }
                 break;
             case "whitespaces":
+                console.log(req.body.text)
                 //Content Text
-                $question.content["text"] = req.body.text;
+                $question.content["text"] = req.body.text.replace(/\. \n/gi, ".").replace(/\! \n/gi, "!").replace(/\? \n/gi, "?");
 
                 //Iterate SID's
                 $question.content["sid"] = JSON.parse(req.body.sid);

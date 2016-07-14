@@ -87,6 +87,7 @@ var Router = Backbone.Router.extend({
         "interpretationTest/new": "interpretationTestNew",
 
         "whitespaces/new": "questionsWhiteSpacesNew",
+        "connections/new": "connectionsNew",
 
         "questionsBoxes/new": "questionsBoxesNew",
 
@@ -522,6 +523,18 @@ var Router = Backbone.Router.extend({
                     self.afterRender(v, $('#content'))
                 })
 
+            }
+        );
+    },
+    connectionsNew: function (id) {
+        var self = this;
+
+        self.navbar();
+
+        templateLoader.load(["QuestionsConnectionsNew"],
+            function () {
+                var v = new QuestionsConnectionsNew({});
+                self.showView(v, $('#content'));
             }
         );
     },

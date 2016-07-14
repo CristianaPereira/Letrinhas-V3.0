@@ -161,7 +161,7 @@ window.QuestionsMultimediaNew = Backbone.View.extend({
         )
     },
 
-//Changes content input type
+    //Changes content input type
     getQuestion: function (e) {
 
         if ($(e.currentTarget).attr("accept").indexOf("image") != -1) {
@@ -179,8 +179,7 @@ window.QuestionsMultimediaNew = Backbone.View.extend({
             reader.readAsDataURL(file);
         }
         console.log($(e.currentTarget).val())
-    }
-    ,
+    },
 
 
 //Recorta a foto
@@ -286,23 +285,23 @@ window.QuestionsMultimediaNew = Backbone.View.extend({
             $("#inputAnswers").val(JSON.stringify(answers));
             //Se algum dos campos estiver vazio
             console.log(answers)
-            /*
-             modem('POST', 'questions',
-             function () {
-             sucssesMsg($("body"), "Pergunta inserida com sucesso!");
-             setTimeout(function () {
-             app.navigate("questions", {
-             trigger: true
-             });
-             }, 1500);
-             },
-             //Error Handling
-             function (xhr, ajaxOptions, thrownError) {
-             failMsg($("body"), "Não foi possível inserir a nova pergunta.");
-             },
-             new FormData($("#newMultimediaTestForm")[0])
-             );
-             */
+
+            modem('POST', 'questions',
+                function () {
+                    sucssesMsg($("body"), "Pergunta inserida com sucesso!");
+                    setTimeout(function () {
+                        app.navigate("questions", {
+                            trigger: true
+                        });
+                    }, 1500);
+                },
+                //Error Handling
+                function (xhr, ajaxOptions, thrownError) {
+                    failMsg($("body"), "Não foi possível inserir a nova pergunta.");
+                },
+                new FormData($("#newMultimediaTestForm")[0])
+            );
+
         }
 
     }

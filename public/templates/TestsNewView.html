@@ -267,9 +267,13 @@
                                 <% if ( question.type == 'interpretation'){ %>
                                 <%print(setInterpretationPreview(question)) %>
                                 <% } %>
-                                <!--Se a pergunta for de Interpretacao obtem o html da preview-->
+                                <!--Se a pergunta for de Caixas obtem o html da preview-->
                                 <% if ( question.type == 'boxes'){ %>
                                 <%print(setBoxesPreview(question)) %>
+                                <% } %>
+                                <!--Se a pergunta for de whiteSpaces obtem o html da preview-->
+                                <% if ( question.type == 'whitespaces'){ %>
+                                <%print(setWhiteSpacesPreview(question)) %>
                                 <% } %>
                             </div>
                         </div>

@@ -18,10 +18,13 @@
                         <li class="list-group-item list-group-item-warning">
                             <span class="badge"><%=content.specification.length%></span>
                             <div class="options">
-                                <button class="fa fa-trash"><%=content.id%></button>
-                                <button class="fa fa-pencil"><%=content.id%></button>
+                                <button class="fa fa-trash" value="<%=content._id%>"></button>
+                                <button class="fa fa-pencil editContent" value="<%=content._id%>"></button>
                             </div>
-                            <%=content.name%>
+                            <form id="<%=content._id%>">
+                                <label><%=content.name%></label>
+                            </form>
+
                         </li>
                         <!--Por cada especificacao-->
                         <% _.each(content.specification,function(specification){ %>
@@ -36,7 +39,7 @@
                         </li>
                         <% }); %>
                         <li class="list-group-item">
-                            <form class="input-group row" category="<%=category._id%>" content="<%=content._id%>">
+                            <form class="input-group row" subject="<%=category._id%>" content="<%=content._id%>">
                                 <input class="form-control" type="text" id="classDesig" placeholder="Especificação"
                                        name="specification">
                                 <span class="input-group-addon addon-button">
