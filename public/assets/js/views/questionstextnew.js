@@ -111,9 +111,6 @@ window.QuestionsTextNew = Backbone.View.extend({
         var mySnd = document.getElementById("teacherVoice");
         //mySnd.playbackRate = 0.5;
         console.log(mySnd.playbackRate)
-        $('#ex1').slider({
-            max: 100
-        });
     },
 
     //Class Initializer

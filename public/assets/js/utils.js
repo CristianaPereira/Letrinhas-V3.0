@@ -655,7 +655,7 @@ window.attemptLogin = function () {
             //Reloads actual view
 
             document.location.reload(true);
-
+            app.navigate('user', true);
         },
         //Error Handling
         function (xhr, ajaxOptions, thrownError) {
@@ -1127,10 +1127,10 @@ window.setBoxesPreview = function (question) {
     // console.log(question)
     var $contentDiv = $('<div>', {class: 'col-md-12'});
     var nWords = 0;
-    //Coloca as palavras nas coluna
+    //Por cada coluna: Coloca as palavras nas coluna
     $.each(question.content.boxes, function (i, box) {
         var words = $();
-
+        //Por cada palavra
         $.each(box.words, function (iw, word) {
             words = words.add($('<span>', {
                     text: word,
@@ -1159,6 +1159,1040 @@ window.setBoxesPreview = function (question) {
     return [$contentDiv.wrap('<p/>').parent().html()]
 };
 
+
+//*******************************************CORRECOES**********
+
+
+//Exibe os detalhes da pergunta, as eventuais respostas e a correcao automatica
+window.getCorrectionPreview = function (question) {
+    //Consoante o tipo de pergunta
+    switch (question.info.type) {
+        case'text':
+            return setCorrecTextPreview(question)
+            break;
+        case'list':
+            return setCorrecListPreview(question)
+            break;
+        case'multimedia':
+            return setCorrecMultimediaPreview(question)
+            break;
+        case'interpretation':
+            return setCorrecInterpretationPreview(question)
+            break;
+        case'boxes':
+            return setCorrecBoxesPreview(question)
+            break;
+        case'whitespaces':
+            return setCorrecWhiteSpacesPreview(question)
+            break;
+    }
+}
+//Preenche a div desejada com a preview da pergunta
+window.setCorrecInterpretationPreview = function (question) {
+    var info = question.info;
+    var resol = question.resol;
+    var $formDiv = $('<form>', {id: info._id, type: info.type});
+    var $contentDiv = $('<div>', {class: "col-md-7"});
+    $contentDiv.append($('<label>', {
+        class: "dataTitle col-md-12", html: info.title
+    }).append('<hr>'));
+
+    var $correctDiv = $('<div>', {
+        class: "col-md-5",
+        style: "border-left: 1px solid #f9cfdc;max-width: 352px;"
+    });
+
+    var $soundDiv = getQuestionVoice(info._id);
+    var words = $();
+    var $text = $('<div>', {class: 'questBox col-md-12'});
+    $contentDiv.append($text);
+
+
+    //Separa o texto em paragrafos
+    var $paragraph = info.content.text.split(/\n/);
+    var words = $();
+    var nWords = 0;
+    var nRights = 0;
+    //por cada paragrafo adiciona a palavra a lista, e a new line
+    $.each($paragraph, function (iLine, line) {
+        var $wordsList = line.split(" ");
+        $.each($wordsList, function (i, word) {
+            //Se a palavra esta marcada
+            if (info.content.sid.indexOf(nWords + "") != -1) {
+                //se o aluno a encontrou
+                if (resol.answer.solution.indexOf(nWords + "") != -1) {
+                    words = words.add($('<span>', {
+                        text: word + " ",
+                        class: "rightAnswer"
+                    }))
+                    nRights++;
+                } else {
+                    words = words.add($('<span>', {
+                        text: word + " ",
+                        class: "markedWord"
+                    }))
+                }
+            } else {
+                //se o aluno a encontrou
+                if (resol.answer.solution.indexOf(nWords + "") != -1) {
+                    words = words.add($('<span>', {
+                        text: word + " ",
+                        class: "wrongAnswer"
+                    }))
+                } else {
+                    words = words.add($('<span>', {
+                        text: word + " "
+                    }))
+                }
+
+            }
+
+            //incrementa o nr de palavras (nao conta os breaks
+            nWords++;
+        });
+        words = words.add('<br />')
+    });
+    $text.append(words);
+    //Valor individual de cada opcao
+    value = 100 / info.content.sid.length;
+    //Prepara o conteudo da correcao
+    $correctDiv.append(
+        $('<label>', {
+                class: "dataTitle col-md-12 row", html: 'Correção'
+            }
+        ).append('<hr>'),
+        $('<label>', {
+                class: "col-md-7 row", html: 'Total de opções'
+            }
+        ),
+        $('<label>', {
+                class: "col-md-5 row", html: info.content.sid.length
+            }
+        ),
+        $('<label>', {
+                class: "col-md-7 row", html: 'Opções correctas'
+            }
+        ),
+        $('<label>', {
+                class: "col-md-5 row rightAnswer", html: nRights
+            }
+        ),
+        $('<label>', {
+                class: "col-md-7 row", html: 'Opções erradas'
+            }
+        ),
+        $('<label>', {
+                class: "col-md-5 row wrongAnswer", html: resol.answer.solution.length - nRights
+            }
+        ),
+        $('<label>', {
+                class: "col-md-7 row", html: 'Opções não encontradas'
+            }
+        ),
+        $('<label>', {
+                class: "col-md-5 row markedWord", html: info.content.sid.length - nRights
+            }
+        ),
+        $('<div>', {
+                class: "col-md-12 row"
+            }
+        ).append(
+            $('<input>', {
+                type: "number", class: "form-control mandatory", questionID: info._id,
+                placeholder: "Nota", name: "note", readonly: "readonly",
+                dif: question.dif, value: (nRights * value).toFixed(2)
+            }),
+            $('<span>', {
+                class: "glyphicon"
+            }).append(
+                $('<i>', {
+                    class: "fa fa-percent"
+                })
+            )
+        )
+    )
+
+    /*Adciona o id, o conteudo e a correcao da pergunta*/
+    $formDiv.append(
+        $('<input>', {
+            type: "hidden", name: "resolID", value: resol._id
+        }).append(
+            $contentDiv
+        ), $contentDiv, $correctDiv
+    );
+    return [$formDiv.wrap('<p/>').parent().html()]
+};
+
+//Preenche a div desejada com a preview da pergunta
+window.setCorrecMultimediaPreview = function (question) {
+    var info = question.info;
+    var resol = question.resol;
+    var $formDiv = $('<form>', {id: info._id, type: info.type});
+    var $contentDiv = $('<div>', {class: "col-md-7"});
+    $contentDiv.append($('<label>', {
+        class: "dataTitle col-md-12", html: info.title
+    }).append('<hr>'));
+
+    var $correctDiv = $('<div>', {
+        class: "col-md-5",
+        style: "border-left: 1px solid #f9cfdc;max-width: 352px;"
+    });
+
+    var $answersDiv = $('<div>');
+    //Se o questione for do tipo audio
+    switch (info.content.questionType) {
+        case "audio":
+            //Adiciona o som
+            $contentDiv.append(getQuestionVoice(info._id));
+            break;
+        case "image":
+            //Adiciona a imagem
+            $contentDiv.append($('<div>', {class: 'col-md-12 questBox centered'}).append(
+                $('<img>', {src: info.content.question})
+            ));
+            break;
+        case "text":
+            //Adiciona o texto
+            $contentDiv.append($('<label>', {class: 'col-md-12 questBox centered', text: info.content.question}));
+            break;
+    }
+    //Mostra as opções de resposta
+    var nWrongAnswers = info.content.answers.length;
+
+    switch (info.content.answerType) {
+        case "text":
+            $.each(info.content.answers, function (i, key) {
+                $answersDiv
+                    .append($('<div>', {class: 'col-md-' + 12 / nWrongAnswers}).append(
+                        ($('<button>', {
+                            value: i,
+                            /*Maraca a opcao correcta e a escolhida*/
+                            class: 'asnwerBox ' + (i == 0 ? "rightAnswer" : (i == resol.answer.solution ? " wrongAnswer" : "")),
+                            html: key.content
+                        })))
+                    )
+            })
+            ;
+            break;
+        case
+        "image"        :
+            $.each(info.content.answers, function (i, key) {
+                $answersDiv
+                    .append($('<div>', {class: 'col-md-' + 12 / nWrongAnswers}).append(
+                        ($('<img>', {
+                            value: i,
+                            class: 'asnwerBox ' + (i == 0 ? "rightAnswer" : ""),
+                            src: key.content
+                        })))
+                    )
+            })
+            ;
+            break;
+
+    }
+
+    $contentDiv.append($answersDiv);
+
+    //Prepara o conteudo da correcao
+    $correctDiv.append(
+        $('<label>', {
+                class: "dataTitle col-md-12 row", html: 'Correção'
+            }
+        ).append('<hr>'),
+        $('<label>', {
+                class: "col-md-7 row", html: 'Resposta do aluno'
+            }
+        ),
+        $('<label>', {
+                class: "col-md-5 row", html: (0 == resol.answer.solution ? "Correcta" : "Incorrecta")
+            }
+        ),
+        $('<div>', {
+                class: "col-md-12 row"
+            }
+        ).append(
+            $('<input>', {
+                type: "number", class: "form-control mandatory", questionID: info._id,
+                placeholder: "Nota", name: "note", readonly: "readonly",
+                dif: question.dif, value: (0 == resol.answer.solution ? "100" : "0")
+            }),
+            $('<span>', {
+                class: "glyphicon"
+            }).append(
+                $('<i>', {
+                    class: "fa fa-percent"
+                })
+            )
+        )
+    )
+
+    /*Adciona o id, o conteudo e a correcao da pergunta*/
+    $formDiv.append(
+        $('<input>', {
+            type: "hidden", name: "resolID", value: resol._id
+        }).append(
+            $contentDiv
+        ), $contentDiv, $correctDiv
+    );
+    return [$formDiv.wrap('<p/>').parent().html()]
+};
+
+//Preenche a div desejada com a preview da pergunta e verifica a correcao
+window.setCorrecListPreview = function (question) {
+
+    var info = question.info;
+    var resol = question.resol;
+
+    var $formDiv = $('<form>', {id: info._id, type: info.type});
+    var $contentDiv = $('<div>', {class: "col-md-7"});
+    $contentDiv.append($('<label>', {
+        class: "dataTitle col-md-12", html: info.title
+    }).append('<hr>'));
+    //Carrega o som,
+    var $soundDiv = getQuestionVoice(info._id);
+    var $correctDiv = $('<div>', {
+        class: "col-md-5",
+        style: "border-left: 1px solid #f9cfdc;max-width: 352px;"
+    });
+    //Separa o texto em paragrafos
+    //var $paragraph = info.content.text.split(/\n/);
+    var words = $();
+    var nWords = 0;
+
+    var studentDuration = 0;
+
+//Coloca as palavras nas coluna
+    $.each(info.content.columns, function (i, column) {
+        var words = $();
+
+        $.each(column.words, function (iw, word) {
+            words = words.add($('<span>', {
+                    text: word,
+                    id: "wd" + nWords
+                }).add('<br>')
+            );
+            nWords++;
+        });
+
+        $contentDiv.append(
+            $('<div>', {
+                class: "col-md-" + (12 / info.content.columns.length)
+            }).append(
+                $('<div>', {
+                        class: "questBox centered"
+                    }
+                ).append(words))
+        );
+    });
+    //Calcula o nr de palavras por segundo
+    var x = document.createElement("AUDIO");
+    x.setAttribute("src", "http://letrinhas.pt:5984/let_resolutions/" + resol._id + "/record.m4a");
+    x.addEventListener("loadedmetadata", function (_event) {
+        studentDuration = x.duration;
+        $("#" + info._id + " #wordsMin").html(parseInt(nWords / (studentDuration / 60)));
+    });
+
+    $contentDiv.append(
+        $soundDiv, $('<label>', {class: "col-md-2 audioLbl", html: 'Aluno'}),
+        $('<audio>', {
+            class: "col-md-10", "controls": "controls",
+            id: "studentsVoice"
+        })
+            .append(
+                $('<source>', {
+                    src: "http://letrinhas.pt:5984/let_resolutions/" + resol._id + "/record.m4a",
+                    type: "audio/mp4"
+                })
+            )
+    );
+
+    //Prepara o conteudo da correcao
+    $correctDiv.append(
+        $('<label>', {
+                class: "dataTitle col-md-12 row", html: 'Correção'
+            }
+        ).append('<hr>'),
+        $('<label>', {
+                class: "col-md-7 row", html: 'Total de palavras:'
+            }
+        ),
+        $('<label>', {
+                class: "col-md-5 row", id: "wordsCount", html: nWords
+            }
+        ),
+        $('<label>', {
+                class: "col-md-7 row", html: 'Palavras por minuto:'
+            }
+        ),
+        $('<label>', {
+                class: "col-md-5 row", id: "wordsMin", html: parseInt(nWords / (studentDuration / 60))
+            }
+        ),
+        $('<label>', {
+                class: "col-md-7 row", html: 'Total de erros:'
+            }
+        ),
+        $('<label>', {
+                class: "col-md-5 row", id: "errorCount", html: '0'
+            }
+        ), $('<div>', {class: "col-md-12 "}).append(
+            $('<div>', {class: "input-group"}).append(
+                $('<input>', {
+                        readonly: 'readonly', class: "form-control mandatory",
+                        questionID: info._id, value: "0", id: "fluidity"
+                    }
+                ),
+                $('<span>', {
+                        class: "input-group-addon btn-white", style: "width: 100px;", html: 'Fluidez'
+                    }
+                ),
+                $('<select>', {class: 'form-control', id: "fluidityDif"}
+                ).append(
+                    $('<option>', {disbled: 'disabled', selected: 'selected', html: 'Peso'}),
+                    $('<option>', {disbled: 'disabled', html: '1'}),
+                    $('<option>', {disbled: 'disabled', html: '2'}),
+                    $('<option>', {disbled: 'disabled', html: '3'}),
+                    $('<option>', {disbled: 'disabled', html: '4'}),
+                    $('<option>', {disbled: 'disabled', html: '5'})
+                )
+            )
+            /*Precisao*/
+        ), $('<div>', {class: "col-md-12 row"}).append(
+            $('<div>', {class: "input-group"}).append(
+                $('<input>', {
+                        readonly: 'readonly', class: "form-control mandatory",
+                        questionID: info._id, value: "0", id: "accuracy"
+                    }
+                ),
+                $('<span>', {
+                        class: "input-group-addon btn-white", style: "width: 100px;", html: 'Exactião'
+                    }
+                ),
+                $('<select>', {class: 'form-control', id: "accuracyDif"}
+                ).append(
+                    $('<option>', {disbled: 'disabled', selected: 'selected', html: 'Peso'}),
+                    $('<option>', {disbled: 'disabled', html: '1'}),
+                    $('<option>', {disbled: 'disabled', html: '2'}),
+                    $('<option>', {disbled: 'disabled', html: '3'}),
+                    $('<option>', {disbled: 'disabled', html: '4'}),
+                    $('<option>', {disbled: 'disabled', html: '5'})
+                )
+            )
+            /*Tempo*/
+        ), $('<div>', {class: "col-md-12 row"}).append(
+            $('<div>', {class: "input-group"}).append(
+                $('<select>', {class: 'form-control', id: "time", name: "time"}
+                ).append(
+                    $('<option>', {disabled: 'disabled', selected: 'selected', html: 'Tempo'}),
+                    $('<option>', {html: '1'}),
+                    $('<option>', {html: '2'}),
+                    $('<option>', {html: '3'}),
+                    $('<option>', {html: '4'}),
+                    $('<option>', {html: '5'})
+                ),
+                $('<span>', {class: 'input-group-addon btn-white'}).append(
+                    $('<i>', {class: 'fa fa-clock-o'})),
+                $('<select>', {class: 'form-control', id: "timeDif"}
+                ).append(
+                    $('<option>', {disabled: 'true', selected: 'true', html: 'Peso'}),
+                    $('<option>', {html: '1'}),
+                    $('<option>', {html: '2'}),
+                    $('<option>', {html: '3'}),
+                    $('<option>', {html: '4'}),
+                    $('<option>', {html: '5'})
+                )
+            )
+        ), $('<div>', {
+                class: "col-md-12 row"
+            }
+        ).append(
+            $('<input>', {
+                type: "number", class: "form-control mandatory", questionID: info._id,
+                placeholder: "Nota", name: "note", readonly: "readonly",
+                dif: question.dif, value: 0
+            }),
+            $('<span>', {
+                class: "glyphicon"
+            }).append(
+                $('<i>', {
+                    class: "fa fa-percent"
+                })
+            )
+            /*FLUIDEZ*/
+        )
+    )
+
+    /*Adciona o id, o conteudo e a correcao da pergunta*/
+    $formDiv.append(
+        $('<input>', {
+            type: "hidden", name: "resolID", value: resol._id
+        }), $contentDiv, $correctDiv
+    );
+
+    return [$formDiv.wrap('<p/>').parent().html()]
+
+
+}
+
+//Preenche a div desejada com a preview da pergunta e verifica a correcao
+window.setCorrecTextPreview = function (question) {
+
+    var info = question.info;
+    var resol = question.resol;
+
+    var $formDiv = $('<form>', {id: info._id, type: info.type});
+    var $contentDiv = $('<div>', {class: "col-md-7"});
+    $contentDiv.append($('<label>', {
+        class: "dataTitle col-md-12", html: info.title
+    }).append('<hr>'));
+    //Carrega o som,
+    var $soundDiv = getQuestionVoice(info._id);
+    var $correctDiv = $('<div>', {
+        class: "col-md-5",
+        style: "border-left: 1px solid #f9cfdc;max-width: 352px;"
+    });
+    //Separa o texto em paragrafos
+    var $paragraph = info.content.text.split(/\n/);
+    var words = $();
+    var nWords = 0;
+
+    var studentDuration = 0;
+
+    //por cada paragrafo adiciona a palavra a lista, e a new line
+    $.each($paragraph, function (iLine, line) {
+        var $wordsList = line.split(" ");
+        $.each($wordsList, function (i, word) {
+            //Replace String With Selectable Span (Não esquecer os PARAGRAFOS)
+            var wordTime = getObjects(info.content.wordTimes, 'pos', nWords)[0];
+            //If word as associated time
+            if (wordTime) {
+                words = words.add($('<span>', {
+                    text: word + " ",
+                    id: "wd" + nWords,
+                    class: "word",
+                    'data-start': wordTime.start
+                }))
+            } else {
+                words = words.add($('<span>', {
+                    text: word + " ",
+                    id: "wd" + nWords
+
+                }))
+            }
+            //incrementa o nr de palavras (nao conta os breaks
+            nWords++;
+        });
+        words = words.add('<br />')
+    });
+
+    //Calcula o nr de palavras por segundo
+    var x = document.createElement("AUDIO");
+    x.setAttribute("src", "http://letrinhas.pt:5984/let_resolutions/" + resol._id + "/record.m4a");
+    x.addEventListener("loadedmetadata", function (_event) {
+        studentDuration = x.duration;
+        $("#" + info._id + " #wordsMin").html(parseInt(nWords / (studentDuration / 60)));
+    });
+
+    $contentDiv.append($('<div>', {class: 'questBox col-md-12', question: info._id}).append(
+        words
+        ), $soundDiv, $('<label>', {class: "col-md-2 audioLbl", html: 'Aluno'}),
+        $('<audio>', {
+            class: "col-md-10", "controls": "controls",
+            id: "studentsVoice"
+        })
+            .append(
+                $('<source>', {
+                    src: "http://letrinhas.pt:5984/let_resolutions/" + resol._id + "/record.m4a",
+                    type: "audio/mp4"
+                })
+            )
+    );
+
+    //Prepara o conteudo da correcao
+    $correctDiv.append(
+        $('<label>', {
+                class: "dataTitle col-md-12 row", html: 'Correção'
+            }
+        ).append('<hr>'),
+        $('<label>', {
+                class: "col-md-7 row", html: 'Total de palavras:'
+            }
+        ),
+        $('<label>', {
+                class: "col-md-5 row", id: "wordsCount", html: nWords
+            }
+        ),
+        $('<label>', {
+                class: "col-md-7 row", html: 'Palavras por minuto:'
+            }
+        ),
+        $('<label>', {
+                class: "col-md-5 row", id: "wordsMin", html: parseInt(nWords / (studentDuration / 60))
+            }
+        ),
+        $('<label>', {
+                class: "col-md-7 row", html: 'Total de erros:'
+            }
+        ),
+        $('<label>', {
+                class: "col-md-5 row", id: "errorCount", html: '0'
+            }
+        ), $('<div>', {class: "col-md-12 "}).append(
+            $('<div>', {class: "input-group"}).append(
+                $('<input>', {
+                        readonly: 'readonly', class: "form-control mandatory",
+                        questionID: info._id, value: "0", id: "fluidity"
+                    }
+                ),
+                $('<span>', {
+                        class: "input-group-addon btn-white", style: "width: 100px;", html: 'Fluidez'
+                    }
+                ),
+                $('<select>', {class: 'form-control', id: "fluidityDif"}
+                ).append(
+                    $('<option>', {disbled: 'disabled', selected: 'selected', html: 'Peso'}),
+                    $('<option>', {disbled: 'disabled', html: '1'}),
+                    $('<option>', {disbled: 'disabled', html: '2'}),
+                    $('<option>', {disbled: 'disabled', html: '3'}),
+                    $('<option>', {disbled: 'disabled', html: '4'}),
+                    $('<option>', {disbled: 'disabled', html: '5'})
+                )
+            )
+            /*Precisao*/
+        ), $('<div>', {class: "col-md-12 row"}).append(
+            $('<div>', {class: "input-group"}).append(
+                $('<input>', {
+                        readonly: 'readonly', class: "form-control mandatory",
+                        questionID: info._id, value: "0", id: "accuracy"
+                    }
+                ),
+                $('<span>', {
+                        class: "input-group-addon btn-white", style: "width: 100px;", html: 'Exactião'
+                    }
+                ),
+                $('<select>', {class: 'form-control', id: "accuracyDif"}
+                ).append(
+                    $('<option>', {disbled: 'disabled', selected: 'selected', html: 'Peso'}),
+                    $('<option>', {disbled: 'disabled', html: '1'}),
+                    $('<option>', {disbled: 'disabled', html: '2'}),
+                    $('<option>', {disbled: 'disabled', html: '3'}),
+                    $('<option>', {disbled: 'disabled', html: '4'}),
+                    $('<option>', {disbled: 'disabled', html: '5'})
+                )
+            )
+            /*Tempo*/
+        ), $('<div>', {class: "col-md-12 "}).append(
+            $('<div>', {class: "input-group"}).append(
+                $('<select>', {class: 'form-control', id: "time", name: "time"}
+                ).append(
+                    $('<option>', {disabled: 'disabled', selected: 'selected', html: 'Tempo'}),
+                    $('<option>', {html: '1'}),
+                    $('<option>', {html: '2'}),
+                    $('<option>', {html: '3'}),
+                    $('<option>', {html: '4'}),
+                    $('<option>', {html: '5'})
+                ),
+                $('<span>', {
+                        class: "input-group-addon btn-white"
+                    }
+                ).append($('<i>', {class: 'fa fa-clock-o'})),
+                $('<select>', {class: 'form-control', id: "timeDif"}
+                ).append(
+                    $('<option>', {disabled: 'true', selected: 'true', html: 'Peso'}),
+                    $('<option>', {html: '1'}),
+                    $('<option>', {html: '2'}),
+                    $('<option>', {html: '3'}),
+                    $('<option>', {html: '4'}),
+                    $('<option>', {html: '5'})
+                )
+            )
+            /*Expressividade*/
+        ), $('<div>', {class: "col-md-12 row"}).append(
+            $('<div>', {class: "input-group"}).append(
+                $('<select>', {class: 'form-control', id: "expression", name: "expression"}
+                ).append(
+                    $('<option>', {disabled: 'disabled', selected: 'selected', html: 'Expressividade'}),
+                    $('<option>', {html: '1'}),
+                    $('<option>', {html: '2'}),
+                    $('<option>', {html: '3'}),
+                    $('<option>', {html: '4'}),
+                    $('<option>', {html: '5'})
+                ),
+                $('<span>', {
+                    class: "input-group-addon btn-white"
+                }).append($('<i>', {class: 'fa fa-comment-o'})),
+                $('<select>', {class: 'form-control', id: "expressionDif"}
+                ).append(
+                    $('<option>', {disabled: 'disabled', selected: 'selected', html: 'Peso'}),
+                    $('<option>', {html: '1'}),
+                    $('<option>', {html: '2'}),
+                    $('<option>', {html: '3'}),
+                    $('<option>', {html: '4'}),
+                    $('<option>', {html: '5'})
+                )
+            )
+        ), $('<div>', {
+                class: "col-md-12 row"
+            }
+        ).append(
+            $('<input>', {
+                type: "number", class: "form-control mandatory", questionID: info._id,
+                placeholder: "Nota", name: "note", readonly: "readonly",
+                dif: question.dif, value: 0
+            }),
+            $('<span>', {
+                class: "glyphicon"
+            }).append(
+                $('<i>', {
+                    class: "fa fa-percent"
+                })
+            )
+            /*FLUIDEZ*/
+        )
+    )
+
+    /*Adciona o id, o conteudo e a correcao da pergunta*/
+    $formDiv.append(
+        $('<input>', {
+            type: "hidden", name: "resolID", value: resol._id
+        }), $contentDiv, $correctDiv
+    );
+
+    return [$formDiv.wrap('<p/>').parent().html()]
+
+
+}
+
+//Preenche a div desejada com a preview da pergunta e verifica a correcao
+window.setCorrecBoxesPreview = function (question) {
+
+    var info = question.info;
+    var resol = question.resol;
+
+    var $formDiv = $('<form>', {id: info._id, type: info.type});
+    var $contentDiv = $('<div>', {class: "col-md-7"});
+    $contentDiv.append($('<label>', {
+        class: "dataTitle col-md-12", html: info.title
+    }).append('<hr>'));
+    var $correctDiv = $('<div>', {
+        class: "col-md-5",
+        style: "border-left: 1px solid #f9cfdc;max-width: 352px;"
+    });
+    var nWords = 0;
+    var classe = '';
+    var nRights = 0;
+    <!--cotacao de cada perg-->
+    var value = 0;
+
+    //Prepara o conteudo da pergunta
+    $.each(info.content.boxes, function (i, box) {
+        var words = $();
+        //Obtem as respostas do aluno e verifica se sao iguasi
+        var answer = getObjects(resol.answer.boxes, '_id', box._id)[0].words;
+        //  console.log(answer)
+        $.each(box.words, function (iw, word) {
+
+            //Verifica se o aluno seleccionaou e soma as certas ou erradas
+            if (jQuery.inArray(word + "", answer) != -1) {
+                nRights++;
+                classe = 'rightBox';
+            } else {
+                classe = 'wrongBox';
+            }
+
+            words = words.add($('<span>', {
+                    text: word,
+                    id: "wd" + nWords,
+                    class: classe
+                }).add('<br>')
+            );
+            nWords++;
+        });
+
+        $contentDiv.append(
+            $('<div>', {
+                class: "col-md-" + (12 / info.content.boxes.length)
+            }).append(
+                $('<div>', {
+                        class: "questBox centered box" + i
+                    }
+                ).append($('<span>', {
+                        text: box.name,
+                        id: box._id,
+                        class: "boxTitle" + i
+
+                    }), $('<hr>', {}))
+                    .append(words)
+            )
+        );
+    });
+
+    //Valor individual de cada opcao
+    value = 100 / nWords;
+
+    //Prepara o conteudo da correcao
+    $correctDiv.append(
+        $('<label>', {
+                class: "dataTitle col-md-12 row", html: 'Correção'
+            }
+        ).append('<hr>'),
+        $('<label>', {
+                class: "col-md-7 row", html: 'Total de opções'
+            }
+        ),
+        $('<label>', {
+                class: "col-md-5 row", html: nWords
+            }
+        ),
+        $('<label>', {
+                class: "col-md-7 row", html: 'Opções correctas'
+            }
+        ),
+        $('<label>', {
+                class: "col-md-5 row rightBox", html: nRights
+            }
+        ),
+        $('<label>', {
+                class: "col-md-7 row", html: 'Opções erradas'
+            }
+        ),
+        $('<label>', {
+                class: "col-md-5 row wrongBox", html: nWords - nRights
+            }
+        ), $('<div>', {
+                class: "col-md-12 row"
+            }
+        ).append(
+            $('<input>', {
+                type: "number", class: "form-control mandatory", questionID: info._id,
+                placeholder: "Nota", name: "note", readonly: "readonly",
+                dif: question.dif, value: (nRights * value).toFixed(2)
+            }),
+            $('<span>', {
+                class: "glyphicon"
+            }).append(
+                $('<i>', {
+                    class: "fa fa-percent"
+                })
+            )
+        )
+    )
+    /*Adciona o id, o conteudo e a correcao da pergunta*/
+    $formDiv.append(
+        $('<input>', {
+            type: "hidden", name: "resolID", value: resol._id
+        }), $contentDiv, $correctDiv
+    );
+
+    return [$formDiv.wrap('<p/>').parent().html()]
+};
+
+//Preenche a div desejada com a preview da pergunta
+window.setCorrecWhiteSpacesPreview = function (question) {
+    var info = question.info;
+    var resol = question.resol;
+    var $formDiv = $('<form>', {id: info._id, type: info.type});
+    var $contentDiv = $('<div>', {class: "col-md-7"});
+    $contentDiv.append($('<label>', {
+        class: "dataTitle col-md-12", html: info.title
+    }).append('<hr>'));
+
+    var $correctDiv = $('<div>', {
+        class: "col-md-5",
+        style: "border-left: 1px solid #f9cfdc;max-width: 352px;"
+    });
+    var nWords = 0;
+    var classe = '';
+    var nRights = 0;
+    <!--cotacao de cada perg-->
+    var value = 0;
+
+
+    var Sids = [];
+    //Recolhe todos os spans marcados
+    $.each(info.content.sid, function (iList, list) {
+        Sids = Sids.concat(list.sids);
+    })
+    //Carrega o som,
+    var $soundDiv = getQuestionVoice(info._id);
+    var words = $();
+    var $text = $('<div>', {class: 'questBox col-md-12 '});
+    $contentDiv.append($text);
+    $contentDiv.append($soundDiv);
+
+    //console.log(question.content.text)
+    //Separa o texto em paragrafos
+    var $paragraph = info.content.text.split(/\r|\n/);
+    // console.log($paragraph)
+    var words = $();
+    var nWords = 0;
+
+    var rightAnswers = [];
+    //Verifica todas as strings
+    $.each(info.content.sid, function (iSid, sid) {
+        //Obtem o array de indices para determinada string
+        var res = getObjects(resol.answer.whitespaces, 'text', sid.text)[0];
+        if (res) {
+            rightAnswers = rightAnswers.concat(_.intersection(sid.sids, getObjects(resol.answer.whitespaces, 'text', sid.text)[0].sid))
+        }
+    });
+
+    //por cada paragrafo adiciona a palavra a lista, e a new line
+    $.each($paragraph, function (iLine, line) {
+        if (line) {
+            var $wordsList = line.replace(/\,/gi, " ,").replace(/\-/gi, "- ").replace(/\:/gi, " :").replace(/\./gi, " .").replace(/\!/gi, " !").replace(/\?/gi, " ?").split(" ");
+            // console.log($wordsList)
+            $.each($wordsList, function (i, word) {
+
+                if (word) {
+                    //Verifica se o aluno seleccionaou e soma as certas ou erradas
+                    if (jQuery.inArray(nWords + "", rightAnswers) != -1) {
+                        nRights++;
+                        classe = 'rightAnswer';
+                    } else {
+                        classe = 'wrongAnswer';
+                    }
+                    //Replace String With Selectable Span (Não esquecer os PARAGRAFOS)
+                    words = words.add($('<span>', {
+                        //Coloca um espaco a frente da palavra, se a segiur nao existir pontuacao
+                        text: word + ' ',
+                        id: 'sid' + nWords,
+                        //Verifica se a palavra ja foi previamente seleccionada e se faz parte das respostas
+                        class: "selectable " + (jQuery.inArray(nWords + "", Sids) != -1 ? 'whitespace ' + classe : '')
+                    }))
+                    //incrementa o nr de palavras (nao conta os breaks
+                    nWords++;
+                }
+            });
+            words = words.add('<br />')
+        }
+    });
+    $text.append(words);
+
+    //Valor individual de cada opcao
+    value = 100 / Sids.length;
+
+
+    //Prepara o conteudo da correcao
+    $correctDiv.append(
+        $('<label>', {
+                class: "dataTitle col-md-12 row", html: 'Correção'
+            }
+        ).append('<hr>'),
+        $('<label>', {
+                class: "col-md-7 row", html: 'Total de opções'
+            }
+        ),
+        $('<label>', {
+                class: "col-md-5 row", html: Sids.length
+            }
+        ),
+        $('<label>', {
+                class: "col-md-7 row", html: 'Opções correctas'
+            }
+        ),
+        $('<label>', {
+                class: "col-md-5 row rightAnswer", html: nRights
+            }
+        ),
+        $('<label>', {
+                class: "col-md-7 row", html: 'Opções erradas'
+            }
+        ),
+        $('<label>', {
+                class: "col-md-5 row wrongAnswer", html: Sids.length - nRights
+            }
+        ), $('<div>', {
+                class: "col-md-12 row"
+            }
+        ).append(
+            $('<input>', {
+                type: "number", class: "form-control mandatory", questionID: info._id,
+                placeholder: "Nota", name: "note", readonly: "readonly",
+                dif: question.dif, value: (nRights * value).toFixed(2)
+            }),
+            $('<span>', {
+                class: "glyphicon"
+            }).append(
+                $('<i>', {
+                    class: "fa fa-percent"
+                })
+            )
+        )
+    )
+
+    /*Adciona o id, o conteudo e a correcao da pergunta*/
+    $formDiv.append(
+        $('<input>', {
+            type: "hidden", name: "resolID", value: resol._id
+        }).append(
+            $contentDiv
+        ), $contentDiv, $correctDiv
+    );
+    return [$formDiv.wrap('<p/>').parent().html()]
+};
+
+window.autoCorrecWhiteSpaces = function (question, resol) {
+    console.log(question.content)
+    console.log(resol.answer)
+
+    var Sids = [];
+    //Recolhe todos os spans marcados
+    $.each(question.content.sid, function (iList, list) {
+        Sids = Sids.concat(list.sids);
+    })
+    //Carrega o som,
+    var $contentDiv = $('<div>', {class: 'col-md-12'});
+    var $soundDiv = getQuestionVoice(question._id);
+    var words = $();
+    var $text = $('<div>', {class: 'questBox'});
+    $contentDiv.append($text);
+
+    //console.log(question.content.text)
+    //Separa o texto em paragrafos
+    var $paragraph = question.content.text.split(/\r|\n/);
+    // console.log($paragraph)
+    var words = $();
+    var nWords = 0;
+
+    var rightAnswers = [];
+    //Verifica todas as strings
+    $.each(question.content.sid, function (iSid, sid) {
+        //Obtem o array de indices para determinada string
+        var res = getObjects(resol.answer.whitespaces, 'text', sid.text)[0];
+        if (res) {
+            rightAnswers = rightAnswers.concat(_.intersection(sid.sids, getObjects(resol.answer.whitespaces, 'text', sid.text)[0].sid))
+
+        }
+
+    });
+    console.log(rightAnswers)
+    //por cada paragrafo adiciona a palavra a lista, e a new line
+    $.each($paragraph, function (iLine, line) {
+        if (line) {
+            var $wordsList = line.replace(/\,/gi, " ,").replace(/\-/gi, "- ").replace(/\:/gi, " :").replace(/\./gi, " .").replace(/\!/gi, " !").replace(/\?/gi, " ?").split(" ");
+            // console.log($wordsList)
+            $.each($wordsList, function (i, word) {
+                if (word) {
+                    //Replace String With Selectable Span (Não esquecer os PARAGRAFOS)
+                    words = words.add($('<span>', {
+                        //Coloca um espaco a frente da palavra, se a segiur nao existir pontuacao
+                        text: word + ' ',
+                        id: 'sid' + nWords,
+                        //Verifica se a palavra ja foi previamente seleccionada e se faz parte das respostas
+                        class: "selectable " + (jQuery.inArray(nWords + "", Sids) != -1 ? 'whitespace' : '') + (jQuery.inArray(nWords + "", rightAnswers) != -1 ? ' rightAnswer' : '')
+                    }))
+                    //incrementa o nr de palavras (nao conta os breaks
+                    nWords++;
+                }
+            });
+            words = words.add('<br />')
+        }
+    });
+    $text.append(words);
+    return [$contentDiv.wrap('<p/>').parent().html(), $soundDiv.wrap('<p/>').parent().html()]
+};
+
 //Preenche a div desejada com a preview da pergunta
 window.setWhiteSpacesPreview = function (question) {
 
@@ -1167,10 +2201,6 @@ window.setWhiteSpacesPreview = function (question) {
     $.each(question.content.sid, function (iList, list) {
         Sids = Sids.concat(list.sids);
     })
-    console.log(Sids)
-    console.log(Sids.indexOf(3 + ""))
-    console.log(Sids.indexOf(9 + ""))
-    console.log(Sids.indexOf(1 + ""))
     //Carrega o som,
     var $contentDiv = $('<div>', {class: 'col-md-12'});
     var $soundDiv = getQuestionVoice(question._id);
@@ -1178,30 +2208,34 @@ window.setWhiteSpacesPreview = function (question) {
     var $text = $('<div>', {class: 'questBox'});
     $contentDiv.append($text);
 
-
+    //console.log(question.content.text)
     //Separa o texto em paragrafos
-    var $paragraph = question.content.text.split(/\n/);
+    var $paragraph = question.content.text.split(/\r|\n/);
+    // console.log($paragraph)
     var words = $();
+    var ponctuation = ['.', '!', '?', '-', ';', ':'];
     var nWords = 0;
     //por cada paragrafo adiciona a palavra a lista, e a new line
     $.each($paragraph, function (iLine, line) {
-        var $wordsList = line.replace(/\,/gi, " ,").replace(/\-/gi, "- ").replace(/\:/gi, " :").replace(/\./gi, " .").replace(/\!/gi, " !").replace(/\?/gi, " ?").replace(/'.'/gi, " .").split(" ");
-        $.each($wordsList, function (i, word) {
-            //Replace String With Selectable Span (Não esquecer os PARAGRAFOS)
-            if (Sids.indexOf(nWords + "") != -1) {
-                words = words.add($('<span>', {
-                    text: word + " ",
-                    class: "whitespace"
-                }))
-            } else {
-                words = words.add($('<span>', {
-                    text: word + " "
-                }))
-            }
-            //incrementa o nr de palavras (nao conta os breaks
-            nWords++;
-        });
-        words = words.add('<br />')
+        if (line) {
+            var $wordsList = line.replace(/\,/gi, " ,").replace(/\-/gi, "- ").replace(/\:/gi, " :").replace(/\./gi, " .").replace(/\!/gi, " !").replace(/\?/gi, " ?").split(" ");
+            // console.log($wordsList)
+            $.each($wordsList, function (i, word) {
+                if (word) {
+                    //Replace String With Selectable Span (Não esquecer os PARAGRAFOS)
+                    words = words.add($('<span>', {
+                        //Coloca um espaco a frente da palavra, se a segiur nao existir pontuacao
+                        text: word + ' ',
+                        id: 'sid' + nWords,
+                        //Verifica se a palavra ja foi previamente seleccionada
+                        class: "selectable " + (jQuery.inArray(nWords + "", Sids) != -1 ? 'whitespace' : '')
+                    }))
+                    //incrementa o nr de palavras (nao conta os breaks
+                    nWords++;
+                }
+            });
+            words = words.add('<br />')
+        }
     });
     $text.append(words);
     return [$contentDiv.wrap('<p/>').parent().html(), $soundDiv.wrap('<p/>').parent().html()]
@@ -1279,3 +2313,12 @@ window.showClassInfo = function (idSchool, idClass) {
     )
 
 };
+
+window.getRandomColor = function () {
+    var letters = '0123456789ABCDEF'.split('');
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}

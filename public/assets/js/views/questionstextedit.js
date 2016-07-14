@@ -16,7 +16,7 @@ window.QuestionsTextEdit = Backbone.View.extend({
     },
     //Initializes popover content
     pop: function () {
-        setPopOver("Titulo, Discuplina, Ano escolar, Pergunta, Descrição, Texto e Audio");
+        setPopOver("Titulo, Discuplina, Ano escolar, Pergunta, Descrição e Texto");
     },
 
     //Go back to the last visited page
@@ -35,31 +35,37 @@ window.QuestionsTextEdit = Backbone.View.extend({
     //Before Sending Request To Server
     beforeSend: function (e) {
         e.preventDefault();
-        console.log($("#newTextTestForm")[0]);
-        $('#content').append(loadingSpinner());
-        modem('PUT', 'questions/' + this.data._id,
-            function (json) {
-                sucssesMsg($("body"), "Pergunta editada com sucesso!");
-                setTimeout(function () {
-                    app.navigate("questions", {
-                        trigger: true
-                    });
-                }, 1500);
+        //Se algum dos campos estiver vazio
+        var allListElements = $(".mandatory");
+        //Verifies if all inputs are OK
+        var isValid = isFormValid(allListElements);
+        //If they are
+        if (isValid) {
+            $('#content').append(loadingSpinner());
+            modem('PUT', 'questions/' + this.data._id,
+                function (json) {
+                    sucssesMsg($("body"), "Pergunta editada com sucesso!");
+                    setTimeout(function () {
+                        app.navigate("questions", {
+                            trigger: true
+                        });
+                    }, 1500);
 
-            },
-            //Error Handling
-            function (xhr, ajaxOptions, thrownError) {
+                },
+                //Error Handling
+                function (xhr, ajaxOptions, thrownError) {
 
-                var json = JSON.parse(xhr.responseText);
-                failMsg($("body"), json.text);
-                setTimeout(function () {
-                    app.navigate('/user', {
-                        trigger: true
-                    });
-                }, json.text.length * 50);
-            },
-            new FormData($("#newTextTestForm")[0])
-        );
+                    var json = JSON.parse(xhr.responseText);
+                    failMsg($("body"), json.text);
+                    setTimeout(function () {
+                        app.navigate('/user', {
+                            trigger: true
+                        });
+                    }, json.text.length * 50);
+                },
+                new FormData($("#newTextTestForm")[0])
+            );
+        }
     },
 
     //Show Voice Recorder Equalizer
@@ -92,10 +98,23 @@ window.QuestionsTextEdit = Backbone.View.extend({
     //Upload Sound File
     uploadSoundFile: function () {
         var files = $("#uploadSoundFile").prop('files');
+        var reader = new FileReader();
+        var sound = document.getElementById('teacherVoice');
+        reader.onload = (function (audio) {
+            return function (e) {
+                audio.src = e.target.result;
+            };
+        })(sound);
+        reader.readAsDataURL(files[0]);
+
         $("#soundPath")
             .attr("placeholder", files[0].name)
             .attr("value", files[0].name)
             .css('border', 'solid 1px #cccccc');
+        $("#teacherVoice source").attr("src", files[0].name);
+        var mySnd = document.getElementById("teacherVoice");
+        //mySnd.playbackRate = 0.5;
+        console.log(mySnd.playbackRate)
     },
 
     //Class Initializer

@@ -60,6 +60,7 @@ window.ResolutionsNewView = Backbone.View.extend({
         });
         //se todas estiverem corrigidas
         if (corrected) {
+            console.log(resolution)
             resolution.save(null, {
                 success: function (user, response) {
                     sucssesMsg($(".form"), response.text);
@@ -114,7 +115,7 @@ window.ResolutionsNewView = Backbone.View.extend({
             finalNote += fluidityNote;
         }
 
-        console.log("fluidityError " + accuracyError + " : " + fluidityNote)
+        console.log("fluidityError " + fluidityError + " : " + fluidityNote)
 
         //Calcula o subtotal da pontuacao
         var expressionNote = (parseInt($("#" + formName + " #expression").val()) * parseInt($("#" + formName + " #expressionDif").val()));
@@ -152,12 +153,14 @@ window.ResolutionsNewView = Backbone.View.extend({
         //obtem o respectivo form
         var formName = $(e.currentTarget).closest('form').attr("id");
 
+        /*
+         //Obtem as palavras/min do aluno
+         var studentDuration = $("#" + formName + " #studentsVoice")[0].duration;
+         //Numero total de palavras
+         var nWords = parseInt($("#" + formName + " #wordsCount").html());
+         $("#" + formName + " #wordsMin").html(parseInt(nWords / (studentDuration / 60)));
+         */
 
-        //Obtem as palavras/min do aluno
-        var studentDuration = $("#" + formName + " #studentsVoice")[0].duration;
-        //Numero total de palavras
-        var nWords = parseInt($("#" + formName + " #wordsCount").html());
-        $("#" + formName + " #wordsMin").html(parseInt(nWords / (studentDuration / 60)));
         //incrementa o total de erros
 
         $("#correctionDD").addClass(err)
@@ -211,23 +214,22 @@ window.ResolutionsNewView = Backbone.View.extend({
 
     afterRender: function () {
         var self = this;
-
         //Coloca as notas dos testes automaticos nas tabelas
-
         var $notes = $("input[name='note']");
         var totalNote = 0;
         var totalDif = 0;
         //Recolhe as notas e a dificuldade de cada teste
         $.each($notes, function (iNote, note) {
-            var questNote = parseInt($(note).val());
+            var questNote = parseFloat($(note).val());
             var questDif = parseInt($(note).attr("dif"));
             //Coloca o valor na tabela
             $("#finalNote" + $(note).attr("questionID")).html(questNote)
             totalNote += questNote * questDif;
+
             totalDif += questDif;
         });
         //Calcula a nota final do teste
-        $("#testNote").val(totalNote / totalDif)
+        $("#testNote").val((totalNote / totalDif).toFixed(2))
     },
 //Class Renderer
     render: function () {
@@ -235,12 +237,11 @@ window.ResolutionsNewView = Backbone.View.extend({
         var self = this;
 
 //conta o numero de palavras
-//self.model.attributes.answer.wordsTotal = self.model.attributes.question.content.text.split(" ").length;
         self.data = self.model.toJSON();
-        console.log(self.data)
+        //  console.log(self.data)
 
         $(this.el).html(this.template({model: self.data}));
-        console.log("já render")
+        //console.log("já render")
 
         return this;
 

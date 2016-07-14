@@ -59,15 +59,16 @@ window.QuestionsWhiteSpacesNew = Backbone.View.extend({
                 })
                 .value();
             fd.append("sid", JSON.stringify($sid));
+            console.log(fd)
 
             modem('POST', 'questions',
                 function () {
                     sucssesMsg($("body"), "Pergunta inserida com sucesso!");
-                    /*  setTimeout(function () {
-                     app.navigate("questions", {
-                     trigger: true
-                     });
-                     }, 1500);*/
+                    setTimeout(function () {
+                        app.navigate("questions", {
+                            trigger: true
+                        });
+                    }, 1500);
                 },
                 //Error Handling
                 function (xhr, ajaxOptions, thrownError) {
@@ -76,8 +77,7 @@ window.QuestionsWhiteSpacesNew = Backbone.View.extend({
 
                 },
                 fd
-            )
-            ;
+            );
 
         }
 
@@ -155,16 +155,17 @@ window.QuestionsWhiteSpacesNew = Backbone.View.extend({
         //por cada paragrafo adiciona a palavra a lista, e a new line
         $.each($paragraph, function (iLine, line) {
             //Separa a pontuação
-            var $wordsList = line.replace(/\,/gi, " ,").replace(/\-/gi, "- ").replace(/\:/gi, " :").replace(/\./gi, " .").replace(/\!/gi, " !").replace(/\?/gi, " ?").replace(/'.'/gi, " .").split(" ");
+            var $wordsList = line.replace(/\,/gi, " ,").replace(/\-/gi, "- ").replace(/\:/gi, " :").replace(/\./gi, " .").replace(/\!/gi, " !").replace(/\?/gi, " ?").split(" ");
             console.log($wordsList)
             $.each($wordsList, function (i, word) {
                 if (word) {
                     //Replace String With Selectable Span (Não esquecer os PARAGRAFOS)
                     words = words.add($('<span>', {
-                        text: word + " ",
+                        //Coloca um espaco a frente da palavra, se a segiur nao existir pontucao
+                        text: word + ($wordsList[i + 1] == ',' ? '' : ' '),
                         id: 'sid' + nWords,
                         //Verifica se a palavra ja foi previamente seleccionada
-                        class: "selectable " + (jQuery.inArray(nWords + "", $sid) != -1 ? 'badge' : '')
+                        class: "selectable " + (jQuery.inArray(nWords + "", $sid) != -1 ? 'whitespace' : '')
                     }))
                     //incrementa o nr de palavras (nao conta os breaks
                     nWords++;

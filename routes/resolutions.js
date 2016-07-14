@@ -36,17 +36,11 @@ exports.new = function (req, res) {
             var questResol = jsonQuery('rows[doc][_id=' + quest.resolID + ']', {data: resolutions}).value;
 
             questResol.note = parseFloat(quest.note).toFixed(2);
-            if (quest.text) {
-                questResol.text = quest.text;
-            }
             if (quest.time) {
                 questResol.time = quest.time;
             }
-            if (quest.inflection) {
-                questResol.inflection = quest.inflection;
-            }
-            if (quest.ponctuation) {
-                questResol.ponctuation = quest.ponctuation;
+            if (quest.expression) {
+                questResol.expression = quest.expression;
             }
             if (quest.errors) {
                 questResol.errors = quest.errors;
@@ -153,7 +147,7 @@ exports.getAll = function (req, res) {
                 'message': err
             });
         }
-        console.log(solvedTests)
+        // console.log(solvedTests)
         //Filtra as resolucoes por apenas as que pertencem ao professor e nao estao corrigidas
         var output = jsonQuery('[doc][*profID=' + user + ' & note=-1]', {data: solvedTests.rows}).value
         //console.log(output)
