@@ -3,6 +3,8 @@ window.StudentsView = Backbone.View.extend({
         "click #newstudentbtn": "newStudent",
         "click #deletebtn": "deleteStudent",
         'click .listButton': "fillPreview",
+        "keyup #txtSearch": "filterBy",
+        "click #orderBy": "orderStudents",
         "click .deleteStudent": "confirmDelete"
     },
 
@@ -41,6 +43,25 @@ window.StudentsView = Backbone.View.extend({
         });
 
 
+    },
+
+    //Applys filters
+    filterBy: function () {
+        var typedText = $("#txtSearch").val();
+
+        //Esconde todos os testes
+        $(".listButton").hide();
+        //Mostra apenas os que contém a string escrita
+        $(".listButton:containsi(" + typedText + ")").show();
+
+        $("#studentsBadge").text($(".listButton:visible").length + "/" + this.data.length)
+
+    },
+
+    orderStudents: function (e) {
+        var mylist = $('#studentsContent');
+
+        orderContentList(mylist, e);
     },
 
     //Fill School Preview

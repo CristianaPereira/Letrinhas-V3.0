@@ -19,7 +19,7 @@ window.ResolutionsNewView = Backbone.View.extend({
         $.each($('form'), function (iForm, form) {
             var formData = $(form).serializeObject();
             console.log(formData);
-
+            var nAccuracy = 0;
             formData.id = $(form).attr("id");
             formData.type = $(form).attr("type");
 
@@ -37,6 +37,9 @@ window.ResolutionsNewView = Backbone.View.extend({
                         subError: error[1]
                     })
                 })
+                //Recolhe o nr de palavras e as palavras/min
+                formData.wordsCount = $("#" + formData.id + " #wordsCount").html();
+                formData.wordsMin = $("#" + formData.id + " #wordsMin").html();
             }
             //Diferencia o teste das perguntas
             if (formData.type == "test") {
@@ -209,8 +212,12 @@ window.ResolutionsNewView = Backbone.View.extend({
         var self = this;
         self.bd2 = 'let_resolutions';
 
-    }
-    ,
+    },
+    initialize: function () {
+        var self = this;
+        self.bd2 = 'let_resolutions';
+
+    }    ,
 
     afterRender: function () {
         var self = this;

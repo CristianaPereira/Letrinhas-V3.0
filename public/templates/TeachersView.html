@@ -1,59 +1,61 @@
-</div>
-<div id="teachersDiv" class="mainDiv">
-    <div class="col-md-12">
-        <section class="panel subMenu">
-
+<nav class="navbar navbar-default sidebar" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#bs-sidebar-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li><a href="#teachers">Total: <%= collection.length %><label id="teachersBadge" class=""></label>
+                <li><a>Total: <label id="schoolsBadge" class=""><%=collection.length%></label>
+                     <span style="font-size:16px;"
+                           class="pull-right hidden-xs showopacity fa fa-users"></span>
                 </a></li>
-                <li class="divider-vertical"></li>
-
                 <li>
-                    <div class="input-group" style="width: 350px;padding-top: 11px;">
-                        <input id="txtSearch" type="text" class="form-control" placeholder="Pesquisar"
-                               aria-describedby="basic-addon2">
-                        <span class="input-group-addon"> <i class="fa fa-search"></i></span>
-                    </div>
+                    <input id="txtSearch" type="text" class="form-control" placeholder="Pesquisar"
+                           aria-describedby="basic-addon2">
                 </li>
-                <li><a id="orderBy" class="order"><i class="fa fa-sort-alpha-asc"></i> </a></li>
-                <li class="divider-vertical"></li>
-                <li><a href="#teachers/new" title="Adicionar utilizador"><i class="fa fa-user-plus"></i></a></li>
-                <li class="divider-vertical"></li>
-                <li><a href="#user">Eu</a></li>
-
+                <li class="active">
+                    <a id="orderBy" class="order">Ordenar
+                        <span style="font-size:16px;"
+                              class="pull-right hidden-xs showopacity fa fa-sort-alpha-desc"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#teachers/new">Inserir
+                        <span style="font-size:16px;"
+                              class="pull-right hidden-xs showopacity glyphicon glyphicon-plus-sign"></span>
+                    </a>
+                </li>
             </ul>
-        </section>
-        <!-- END REGIONAL STATS PORTLET-->
+        </div>
     </div>
-
+</nav>
+<div id="teachersDiv" class="mainDiv">
     <div class=" panel-body col-md-5" align=center>
-
-
         <div id="teachersContent" class=" panel-body col-md-12" align=center>
-
-
             <% _.each(collection,function(prof){ %>
-            <div class="row">
-                <div class="listButton divWidget"
-                     id='<%= prof._id %>' value="<%= prof.name %>">
+            <div class="listButton divWidget row"
+                 id='<%= prof._id %>' value="<%= prof.name %>">
 
-                    <img src="<%= prof.b64 %>">
-                    <span><%= prof.name %></span>
-                    <div class="editDeleteOp">
-                        <a href="#teachers/<%= prof._id %>/edit" title="Editar professor">
-                            <i id="btnEdit" class="fa fa-edit"></i>
-                        </a>
-                        <a href="#teachers" class="delete" title="Apagar professor">
-                            <i class="fa fa-trash-o"></i>
-                        </a>
-                    </div>
-
+                <img src="<%= prof.b64 %>">
+                <span><%= prof.name %></span>
+                <div class="editDeleteOp">
+                    <a href="#teachers/<%= prof._id %>/edit" title="Editar professor">
+                        <i id="btnEdit" class="fa fa-edit"></i>
+                    </a>
+                    <a href="#teachers" class="delete" title="Apagar professor">
+                        <i class="fa fa-trash-o"></i>
+                    </a>
                 </div>
+
             </div>
             <% }); %>
         </div>
-
-
     </div>
     <div class="col-md-7" style="padding: 30px; " align="center">
         <div id="teachersPreview" class="col-md-12 divWidget" align="center">

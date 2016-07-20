@@ -2,11 +2,39 @@ window.QuestionsTextNew = Backbone.View.extend({
     events: {
         "click #showEqualizer": "showEqualizer",
         "click #record": "initRecord",
+        "click #btnSync": "syncText",
         "click #backbtn": "goBack",
         "change #uploadSoundFile": "uploadSoundFile",
         "blur .emptyField": "isEmpty",
         "submit": "beforeSend",
         "mouseover #subTxt": "pop"
+    },
+    syncText: function (e) {
+        e.preventDefault();
+        var text = $("#InputTexto").val();
+
+
+        //Calcula a duracao de cada caracter
+        var x = document.getElementById("teacherVoice");
+        var letterTime = x.duration / text.length;
+
+        var acumulatedTime = 4;
+
+        //separa o texto por espacos e coloca-os na div de seleccao
+        $.each(text.split(' '), function (iWord, word) {
+            $("#divWords").append(
+                $('<span>', {
+                    text: word + " ",
+                })
+            )
+        })
+
+        //pop.play();
+
+        //var mySnd = document.getElementById("teacherVoice");
+        x.playbackRate = 0.5;
+        x.play();
+
     },
     //Initializes popover content
     pop: function () {

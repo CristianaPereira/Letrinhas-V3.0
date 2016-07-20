@@ -162,6 +162,7 @@ window.QuestionsView = Backbone.View.extend({
         switch (question.type) {
             case 'text':
                 $("#questionsPreview").append(getTextPreview(question));
+                setSyncr(question)
                 break;
             case 'list':
                 $("#questionsPreview").append(setListPreview(question))

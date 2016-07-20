@@ -45,6 +45,12 @@ exports.new = function (req, res) {
             if (quest.errors) {
                 questResol.errors = quest.errors;
             }
+            if (quest.wordsCount) {
+                questResol.wordsCount = quest.wordsCount;
+            }
+            if (quest.wordsMin) {
+                questResol.wordsMin = quest.wordsMin;
+            }
             console.log(questResol)
             //guarda na bd os dados da correcao
             dbResolutions.insert(questResol, questResol._id, function (err) {
@@ -172,9 +178,12 @@ function getStudentsData(output, callback) {
         for (var out = 0; out < output.length; out++) {
             //Obtem o campo b64
             var student = jsonQuery('rows[id=' + output[out].studentID + '].doc', {data: students}).value;
-            // console.log(student)
-            output[out].studentFoto = student.b64;
-            output[out].studentName = student.name;
+            // se o aluno existir (pode ter sido apagado
+            if (student) {
+                output[out].studentFoto = student.b64;
+                output[out].studentName = student.name;
+            }else{
+            }
         }
         callback();
     });

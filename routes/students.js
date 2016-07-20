@@ -5,6 +5,7 @@ var nano = require('nano')(process.env.COUCHDB);
 var db = nano.use('let_students');
 var dbe = nano.use('let_schools');
 var dbTests = nano.use('let_tests');
+var dbSchools = nano.use('let_schools');
 var dbResolutions = nano.use('let_resolutions');
 
 var jsonQuery = require('json-query');
@@ -89,7 +90,7 @@ exports.getInfo = function (req, res) {
             var studentTests = jsonQuery('[doc][*studentID=' + id + ']', {data: testsData.rows}).value;
             //console.log(studentTests)
             //Adiciona-os ao json da view o nr de testes por resolver
-            console.log(jsonQuery('[*solved=false]', {data: studentTests}).value)
+
             studentData.unsolvedTests = jsonQuery('[*solved=false]', {data: studentTests}).value || [];
             studentData.solvedTests = jsonQuery('[*solved=true]', {data: studentTests}).value || [];
             dbResolutions.list({
@@ -104,9 +105,25 @@ exports.getInfo = function (req, res) {
                 }
                 //Recolhe os testes do aluno
                 var resolutions = jsonQuery('[doc][*studentID=' + id + '& note != -1]', {data: resolData.rows}).value;
+                for (var i = 0; i < resolutions.length; i++) {
+                    console.log(resolutions[i])
+                }
+
                 //Adiciona-os ao json da view
                 studentData.resolutions = resolutions || [];
-                res.json(studentData);
+
+                //Obtem o nome da escola e da turma
+                //Search School Parameters
+                dbSchools.get(studentData.school, function (err, school) {
+                    if (err) {
+                        return res.status(err.statusCode).json({});
+                    }
+                    studentData.schoolName = school.name;
+                    var classe = jsonQuery('[classes][_id=' + studentData.class + ']', {data: school}).value;
+                    studentData.classe = classe.year + "º " + classe.name;
+                    res.json(studentData);
+                });
+
             });
         });
 
@@ -227,10 +244,10 @@ exports.getAll = function (req, res) {
 
 exports.removeStudent = function (req, res) {
 
-    //Fetch School
+    //Fetch Student
     console.log('Remove Student: Fetching Student ' + req.params.id + ''.green);
 
-    //Search School Info
+    //Search Student Info
     db.get(req.params.id, function (err, body) {
 
         if (err) {
@@ -239,7 +256,6 @@ exports.removeStudent = function (req, res) {
             return res.status(err.statusCode).json({});
         }
         else {
-
             db.destroy(body._id, body._rev, function (err) {
 
                 if (err) {
@@ -248,14 +264,63 @@ exports.removeStudent = function (req, res) {
                     return res.status(err.statusCode).json({});
                 }
                 else {
-                    console.log("Student Removed");
-                    return res.status(200).json({});
+                    console.log("Student Removed - Removing tests and resolutions");
+                    dbTests.list({
+                        'include_docs': true,
+                        'limit': undefined,
+                        'descending': true
+                    }, function (err, solvedTests) {
+                        if (err) {
+                            return res.status(500).json({
+                                'result': 'nok',
+                                'message': err
+                            });
+                        }
+                        //Apaga os testes desse aluno
+                        var tests = jsonQuery('[doc][*studentID=' + body._id + ']', {data: solvedTests.rows}).value
+                        for (var t = 0; t < tests.length; t++) {
+                            dbTests.destroy(tests[t]._id, tests[t]._rev, function (err) {
+
+                                if (err) {
+                                    console.log("test not Removed".red);
+                                }
+                                else {
+                                    console.log(t + 1 + "test Removed".green);
+                                }
+                            });
+                        }
+                        console.log("Tests Removed");
+                        dbResolutions.list({
+                            'include_docs': true,
+                            'limit': undefined,
+                            'descending': true
+                        }, function (err, resolutions) {
+                            if (err) {
+                                return res.status(500).json({
+                                    'result': 'nok',
+                                    'message': err
+                                });
+                            }
+                            //Apaga os testes desse aluno
+                            var resol = jsonQuery('[doc][*studentID=' + body._id + ']', {data: resolutions.rows}).value
+                            for (var r = 0; r < r.length; t++) {
+                                dbTests.destroy(resol[r]._id, resol[r]._rev, function (err) {
+
+                                    if (err) {
+                                        console.log("resolution not Removed".red);
+                                    }
+                                    else {
+                                        console.log(t + 1 + "resolution Removed".green);
+                                    }
+                                });
+                            }
+                            console.log("Resolutions Removed");
+                            return res.status(200).json({});
+                        })
+                    })
                 }
-
             });
-
         }
-
     });
 
 

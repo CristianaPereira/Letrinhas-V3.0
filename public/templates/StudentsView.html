@@ -11,10 +11,18 @@
         </div>
         <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
             <ul class="nav navbar-nav">
+                <li><a>Total: <label id="studentsBadge" class=""><%=collection.length%></label>
+                     <span style="font-size:16px;"
+                           class="pull-right hidden-xs showopacity fa fa-graduation-cap"></span>
+                </a></li>
+                <li>
+                    <input id="txtSearch" type="text" class="form-control" placeholder="Pesquisar"
+                           aria-describedby="basic-addon2">
+                </li>
                 <li class="active">
-                    <a>Total: <%=collection.length%>
+                    <a id="orderBy" class="order">Ordenar
                         <span style="font-size:16px;"
-                              class="pull-right hidden-xs showopacity fa fa-graduation-cap"></span>
+                              class="pull-right hidden-xs showopacity fa fa-sort-alpha-desc"></span>
                     </a>
                 </li>
                 <li>
@@ -23,69 +31,21 @@
                               class="pull-right hidden-xs showopacity glyphicon glyphicon-plus-sign"></span>
                     </a>
                 </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Filtrar <span
-                            class="caret"></span><span
-                            style="font-size:16px;"
-                            class="pull-right hidden-xs showopacity glyphicon glyphicon-sort-by-order"></span></a>
-                    <ul class="dropdown-menu forAnimate" role="menu">
-                        <li><a href="{{URL::to('createusuario')}}">Crear</a></li>
-                        <li><a href="#">Modificar</a></li>
-                        <li><a href="#">Reportar</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#">Separated link</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#">Informes</a></li>
-                    </ul>
-                </li>
-                <li><a href="#">Libros<span style="font-size:16px;"
-                                            class="pull-right hidden-xs showopacity glyphicon glyphicon-th-list"></span></a>
-                </li>
-                <li><a href="#">Tags<span style="font-size:16px;"
-                                          class="pull-right hidden-xs showopacity glyphicon glyphicon-tags"></span></a>
-                </li>
             </ul>
         </div>
     </div>
 </nav>
 <div id="studentsDiv" class="mainDiv">
-    <div class="col-md-12">
-        <section class="panel subMenu">
-
-            <ul class="nav navbar-nav">
-                <li><a>Total:<%= collection.length %> <label id="studentsBadge" class=""></label>
-                </a></li>
-                <li>
-                    <div class="input-group" style="width: 350px;padding-top: 11px;">
-                        <input id="txtSearch" type="text" class="form-control" placeholder="Pesquisar"
-                               aria-describedby="basic-addon2">
-                        <span class="input-group-addon"> <i class="fa fa-search"></i></span>
-                    </div>
-                </li>
-                <li><a id="orderBy" class="order"><i class="fa fa-sort-alpha-asc"></i> </a></li>
-
-                <li><a href="#students/new" title="Adicionar escola">
-                    <i class="fa fa-graduation-cap"><span class="badge-over">  <i class="fa fa-plus-circle"></i></span></i>
-
-                </a></li>
-            </ul>
-
-        </section>
-        <!-- END REGIONAL STATS PORTLET-->
-    </div>
     <div class="panel-scroll col-md-5" align=center>
 
         <div id="studentsContent" class=" panel-body col-md-12" align=center>
             <% _.each(collection,function(student){ %>
-            <div class="row">
-                <div class="listButton divWidget"
-                     id='<%= student._id %>' value="<%= student.name %>">
+            <div class="listButton divWidget row"
+                 id='<%= student._id %>' value="<%= student.name %>">
 
-                    <img src="<%= student.b64 %>">
-                    <span><%= student.name %></span>
-                    <i class="fa fa-eye"></i>
-
-                </div>
+                <img src="<%= student.b64 %>">
+                <span><%= student.name %></span>
+                <i class="fa fa-eye"></i>
 
             </div>
             <% }); %>
