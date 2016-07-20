@@ -85,7 +85,9 @@
                     ></textarea>
                         </div>
                     </div>
-
+                    <button id="btnSync" class="btn btn-default" data-toggle="modal" data-target="#audioSync">
+                        Sync
+                    </button>
                     <div id="painelInvisivel" class="form-group  col-sm-8" style="display:none">
                         <select class="form-control" id="selectEstado" name="state">
                             <option>1</option>
@@ -163,7 +165,31 @@
         </div>
     </div>
 </div>
+<!-- Modal -->
+<div id="audioSync" class="modal fade" role="dialog">
+    <div class="modal-dialog">
 
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Modal Header</h4>
+            </div>
+            <div class="modal-body row ">
+                <div class="col-md-12 row" id="divWords">
+
+                </div>
+                <div class="col-md-12 row" id="divWordsDetails">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
 
 <!-- MODAL para apresentar o equalizador para gravar o som -->
 <div class="modal fade" id="myModalRecord" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"

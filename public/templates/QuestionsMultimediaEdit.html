@@ -117,7 +117,9 @@
                                            result="base64Question"><input
                                             type="hidden" class="form-control" id="base64Question"
                                             name="contentQuest" value="<%=content.question%>">
-                                    <img id="base64QuestionImg" src="<%=content.question%>">
+                                    <span class="input-group-addon btn-white">
+                                        <img id="base64QuestionImg" src="<%=content.question%>">
+                                    </span>
                                 </div>
                             </div>
                             <%}%>
@@ -219,7 +221,9 @@
                                             type="hidden" class="form-control" id="rightAnswer"
                                             accept="image/*"
                                             value="<%=content.answers[0].content%>">
-                                    <img id="rightAnswerImg" src="<%=content.answers[0].content%>">
+                                     <span class="input-group-addon btn-white">
+                                        <img id="rightAnswerImg" src="<%=content.answers[0].content%>">
+                                    </span>
                                 </div>
                             </div>
 
@@ -237,7 +241,9 @@
                                             id="wrongAnswer<%=iAnswer-1%>"
                                             accept="image/*"
                                             value="<%=answer.content%>">
-                                    <img id="wrongAnswer<%=iAnswer-1%>Img" src="<%=answer.content%>">
+                                     <span class="input-group-addon btn-white">
+                                         <img id="wrongAnswer<%=iAnswer-1%>Img" src="<%=answer.content%>">
+                                    </span>
                                 </div>
                                 <%}%>
                                 <%})%>

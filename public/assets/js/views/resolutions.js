@@ -2,7 +2,8 @@ window.ResolutionsView = Backbone.View.extend({
     events: {
 
         'click [type="checkbox"]': "filterBy",
-        'mouseleave .listButton': "closeDD"
+        'mouseleave .listButton': "closeDD",
+        "keyup #txtSearch": "filterBy"
     },
     //Quando a resolution perder o foco, fecha a dd
     closeDD: function (e) {
@@ -10,12 +11,27 @@ window.ResolutionsView = Backbone.View.extend({
     },
     //Applys filters
     filterBy: function () {
-        //Mostra todos os testes
-        $(".listButton").show();
+        var typedText = $("#txtSearch").val();
+
+        //Esconde todos os testes
+        $(".listButton").hide();
+        //Mostra apenas os que contém a string escrita
+        $(".listButton:containsi(" + typedText + ")").show();
+
         //Esconde os testes cujas checkboxes não estão seleccionadas
         $.each($("input:checkbox:not(:checked)"), function (i, k) {
+            console.log($(k).attr("value"))
             $(".listButton[type=" + $(k).attr("value") + "]").hide();
         });
+
+        //Esconde os que ao correspondem conteudos seleccionados
+        $.each($(".listButton:visible"), function (i, k) {
+            //Se nao pertencerem à categoria escolhida, esconde-os
+            if ($(k).attr("value").indexOf($("#filterSubject").attr("filter")) == -1) {
+                $(k).hide();
+            }
+        });
+        $("#questionsBadge").text($(".listButton:visible").length + "/" + this.data.length)
     },
 
 

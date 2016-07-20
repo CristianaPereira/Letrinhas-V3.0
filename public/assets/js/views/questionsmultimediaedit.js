@@ -49,9 +49,11 @@ window.QuestionsMultimediaEdit = Backbone.View.extend({
                     type: "hidden", class: "form-control mandatory", id: "base64Question",
                     name: "contentQuest"
                 }));
-                elements = elements.add($("<img>", {
+                elements = elements.add($("<span>", {
+                    class: "input-group-addon btn-white"
+                }).append($("<img>", {
                     id: "base64QuestionImg"
-                }));
+                })));
 
                 break;
         }
@@ -113,9 +115,11 @@ window.QuestionsMultimediaEdit = Backbone.View.extend({
                         accept: "image/*"
                     })
                 );
-                rightAnswer = rightAnswer.add($("<img>", {
+                rightAnswer = rightAnswer.add($("<span>", {
+                    class: "input-group-addon btn-white"
+                }).append($("<img>", {
                     id: "rightAnswerImg"
-                }));
+                })));
                 wrongAnswer = wrongAnswer.add(
                     $("<input>", {
                         type: "file", class: "form-control mandatory",
@@ -127,9 +131,11 @@ window.QuestionsMultimediaEdit = Backbone.View.extend({
                         type: "hidden", class: "form-control mandatory wrongAnswer", id: "wrongAnswer0"
                     })
                 );
-                wrongAnswer = wrongAnswer.add($("<img>", {
+                wrongAnswer = wrongAnswer.add($("<span>", {
+                    class: "input-group-addon btn-white"
+                }).append($("<img>", {
                     id: "wrongAnswer0Img"
-                }));
+                })));
                 break;
         }
         $('#rightAnswers').append(
@@ -241,9 +247,11 @@ window.QuestionsMultimediaEdit = Backbone.View.extend({
                                 class: "form-control mandatory wrongAnswer",
                                 id: "wrongAnswer" + nWrongAnswers,
                             }),
-                            $("<img>", {
+                            $("<span>", {
+                                class: "input-group-addon btn-white"
+                            }).append($("<img>", {
                                 id: "wrongAnswer" + nWrongAnswers + "Img"
-                            })
+                            }))
                         )
                     )
 

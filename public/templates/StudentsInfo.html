@@ -1,63 +1,34 @@
-<div class="mainDiv">
-    <div class="col-md-3 ">
+<div class="form">
+    <div class="col-md-4 ">
         <div class="row divWidget">
             <img src="<%=b64%>"
                  class="dataImage">
-            <label class="col-md-4 lblDataDetails">Nome :</label>
-            <label class="col-md-8"><%=name%></label>
-            <label class="col-md-4 lblDataDetails">Turma :</label>
-            <label class="col-md-8"><%=name%></label>
-        </div>
-    </div>
-    <div class="col-md-9 ">
-        <div class="row divWidget">
-            <label class="dataTitle col-md-12">Estatísticas</label>
             <div class="col-md-12">
                 <hr class="dataHr">
             </div>
-            <!--Verifica quantos testes tem associados e quantos ja foram resolvidos-->
 
-            <label class="col-md-4 lblDataDetails">Testes por resolver :</label>
-            <label class="col-md-8"><%=unsolvedTests.length%></label>
-            <label class="col-md-4 lblDataDetails">Testes resolvidos :</label>
-            <label class="col-md-8"><%=solvedTests.length%></label>
-            <label class="col-md-4 lblDataDetails">Testes corrigidos :</label>
-            <% var noNuts = _(solvedTests).filter(function (x) { return x.note != -1;})%>
-            <label class="col-md-8"><%=noNuts.length%></label>
-            <% var p =_.groupBy(resolutions, 'subject') %>
-            <% console.log(p) %>
-
-            <% _.each(p,function(sub,i){ %>
-            <img src="../img/<%= i %>.png" class="smallImgPreView">
-
-            <table class="highchart" data-graph-container-before="1" data-graph-type="line" style="display:none">
-                <thead>
-                <tr>
-                    <th>Tipo</th>
-                    <th>Nota</th>
-
-                </tr>
-                </thead>
-                <tbody>
-
-                <% _.each(sub,function(resol){ %>
-                <tr>
-                    <td><%=resol.resolutionDate%></td>
-                    <td><%=resol.note%></td>
-                    <%console.log(resol.note) %>
-                </tr>
-                <% }); %>
-
-
-                </tbody>
-            </table>
-            <% }); %>
-
+            <label class="col-md-12 lblDataDetails"><%=name%></label>
+            <label class="col-md-12 dataSubTitle"><%=schoolName%>, <%=classe%></label>
+            <div class="col-md-12">
+                <hr class="dataHr">
+            </div>
+            <label class="col-md-8 lblDataDetails">Testes por resolver :</label>
+            <label class="col-md-4"><%=unsolvedTests.length%></label>
+            <label class="col-md-8 lblDataDetails">Testes resolvidos :</label>
+            <label class="col-md-4"><%=solvedTests.length%></label>
+        </div>
+    </div>
+    <div class="col-md-8 ">
+        <div class="row divWidget">
+            <!--Recolhe as estatisticas do aluno-->
+            <%=getStudentStatistics(resolutions)%>
+            <script>
+                $(document).ready(function () {
+                    $('table.highchart').bind('highchartTable.beforeRender', function (event, highChartConfig) {
+                        highChartConfig.colors = ['#92cabc', '#f8d6dd', '#228E8E', '#CCFFFF', '#00CCCC', '#3399CC'];
+                    }).highchartTable();
+                });
+            </script>
         </div>
     </div>
 </div>
-<script>
-    $(document).ready(function () {
-        $('table.highchart').highchartTable();
-    });
-</script>

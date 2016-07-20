@@ -1608,7 +1608,6 @@ option:hover {
 
 /* Landscape phone to portrait tablet */
 @media (max-width: 767px) {
-
     .divWidget {
         padding: 5px;
     }
@@ -1624,4 +1623,12 @@ option:hover {
 
 .studentName {
     font-size: 15px;
+}
+
+span > img {
+    height: 30px;
+}
+
+ol, ul {
+    padding-left: 0px;
 }

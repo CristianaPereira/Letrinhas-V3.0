@@ -780,6 +780,7 @@ window.sortJsonByCol = function (property) {
     };
 
 };
+
 //Gets object by  value
 window.getObjects = function (obj, key, val) {
     var objects = [];
@@ -968,33 +969,35 @@ window.getTextPreview = function (question) {
     $contentDiv.append($('<div>', {class: 'questBox', question: question._id}).append(
         words
     ));
-    /*
-     var pop = Popcorn("audio");
 
-     $.each(question.content.wordTimes, function (id, time) {
-     console.log(time)
-     pop.footnote({
-     start: time.start,
-     end: time.end,
-     text: '',
-     target: 'wd' + time.pos,
-     effect: "applyclass",
-     applyclass: "selected"
-     });
-     });
-
-     //pop.play();
-
-     //var mySnd = document.getElementById("teacherVoice");
-     //mySnd.playbackRate = 0.5;
-     $('.word').click(function () {
-     var audio = $('audio');
-     audio[0].currentTime = parseFloat($(this).data('start'), 10);
-     audio[0].play();
-     });*/
     return [$contentDiv.wrap('<p/>').parent().html() + $soundDiv.wrap('<p/>').parent().html()]
 };
 
+window.setSyncr = function (question) {
+    var pop = Popcorn("audio");
+
+    $.each(question.content.wordTimes, function (id, time) {
+        console.log(time)
+        pop.footnote({
+            start: time.start,
+            end: time.end,
+            text: '',
+            target: 'wd' + time.pos,
+            effect: "applyclass",
+            applyclass: "selected"
+        });
+    });
+
+    //pop.play();
+
+    //var mySnd = document.getElementById("teacherVoice");
+    //mySnd.playbackRate = 0.5;
+    $('.word').click(function () {
+        var audio = $('audio');
+        audio[0].currentTime = parseFloat($(this).data('start'), 10);
+        audio[0].play();
+    });
+};
 //Preenche a div desejada com a preview da pergunta
 window.setListPreview = function (question) {
     // console.log(question)
@@ -2259,14 +2262,21 @@ window.showClassInfo = function (idSchool, idClass) {
         function (classData) {
 
             var $modalBody = $('<div>', {class: 'row'});
-
+            //por cada aluno cria um quadrado com a sua foto e nome
             $.each(classData.students, function (iS, student) {
                 //Separa o nome
                 var name = student.name.split(" ");
                 $modalBody.append(
                     $('<div>', {class: 'col-md-3'}).append(
-                        $('<img>', {class: 'dataImage', src: student.b64}),
-                        $('<p>', {class: 'pictureLabel', html: name[0] + " " + name[name.length - 1]})
+                        $('<a>', {
+                            href: "#students/" + student._id + "/info"
+                        }).append(
+                            $('<img>', {class: 'dataImage', src: student.b64}),
+                            $('<p>', {class: 'pictureLabel', html: name[0] + " " + name[name.length - 1]})
+                        ).click(function () {
+                            //actualiza a pagina
+                            document.location.reload(true);
+                        })
                     )
                 )
             })
@@ -2321,4 +2331,253 @@ window.getRandomColor = function () {
         color += letters[Math.floor(Math.random() * 16)];
     }
     return color;
+}
+
+window.getStudentStatistics = function (tests) {
+
+    //lista de testes agrupados por disciplina
+    var groupByTest = _.groupBy(tests, 'subject');
+
+    //grupo de testes so de leitura
+    var groupByReading = _.filter(tests, function (test) {
+        return test.type == 'text' || test.type == 'list';
+    });
+    //agrupa os testes de leitura por disciplina
+    groupByReading = _.groupBy(groupByReading, 'subject');
+
+    var $tbodyDisc = $('<tbody>');
+    var noteSum = 0;
+    var noteAvrg = 0;
+    //calcula a media nao poderada das perguntas agrupadas por disciplina
+    $.each(groupByTest, function (iDisc, disc) {
+        noteSum = 0;
+        noteAvrg = 0;
+        //por cada pergunta
+        $.each(disc, function (iQuest, quest) {
+            noteSum += parseFloat(quest.note);
+        });
+        noteAvrg = ( noteSum / disc.length).toFixed(2);
+        $tbodyDisc.append(
+            $('<tr>').append(
+                $('<td>', {html: iDisc}),
+                $('<td>', {html: noteAvrg})
+            )
+        );
+    });
+
+
+    var $statDisc = $('<div>');
+    //ESTATISTICA GERAL
+    var $tableDisc = $('<table>', {
+        class: "highchart", 'data-graph-container-before': "1", 'data-graph-type': "column", style: "display:none",
+        'data-graph-xaxis-start-on-tick': "1"
+    }).append(
+        $('<thead>').append(
+            $('<tr>').append(
+                $('<th>', {html: 'Disciplina'}),
+                $('<th>', {html: 'Media'})
+            )
+        ), $tbodyDisc);
+    console.log($tableDisc.html())
+
+    var $navPillsDisc = $('<ul>', {class: 'nav nav-pills'}).append(
+        $('<li>', {class: 'active'}).append(
+            $('<a>', {'data-toggle': "pill", href: "#geral", html: 'Geral'})
+        )
+    );
+    var $tabContentDisc = $('<ul>', {class: 'tab-content'}).append(
+        $('<div>', {id: 'geral', class: "tab-pane fade in active"}).append(
+            $tableDisc
+        )
+    );
+
+    //ESTATISTICA POR DISCIPLINA
+    //Por cada disciplina adiciona um tab e um grafico com a evolucao
+    $.each(groupByTest, function (iDisc, disc) {
+        $navPillsDisc.append(
+            $('<li>').append(
+                $('<a>', {'data-toggle': "pill", href: "#" + iDisc}).append(
+                    $('<img>', {src: "../img/" + iDisc + ".png", class: "smallImgPreView"})
+                )
+            )
+        );
+        $tbodyDisc = $('<tbody>');
+        //Cria o grafico de evolucao da disciplina
+        $.each(disc, function (iQuest, quest) {
+            console.log(quest.note)
+            $tbodyDisc.append(
+                $('<tr>').append(
+                    $('<td>', {html: quest.resolutionDate}),
+                    $('<td>', {html: quest.note})
+                )
+            );
+        });
+
+        var $table1 = $('<table>', {
+            class: "highchart", 'data-graph-container-before': "1", 'data-graph-type': "line", style: "display:none",
+            'data-graph-xaxis-start-on-tick': "1"
+        }).append(
+            $('<thead>').append(
+                $('<tr>').append(
+                    $('<th>', {html: 'Data'}),
+                    $('<th>', {html: 'Nota'})
+                )
+            ), $tbodyDisc);
+
+        $tabContentDisc.append(
+            $('<div>', {id: iDisc, class: "tab-pane fade in"}).append(
+                $('<h3>', {html: 'Progresso por disciplina'}),
+                $table1
+            )
+        );
+    });
+    $statDisc.append($navPillsDisc, $tabContentDisc)
+
+
+    /*****************************************************************************************************/
+    var $tbodyRead = $('<tbody>');
+    var noteSum = 0;
+    var noteAvrg = 0;
+    //calcula a media nao poderada das perguntas agrupadas por disciplina
+    $.each(groupByReading, function (iDisc, disc) {
+        noteSum = 0;
+        noteAvrg = 0;
+        //por cada pergunta
+        $.each(disc, function (iQuest, quest) {
+            noteSum += parseFloat(quest.note);
+        });
+        noteAvrg = ( noteSum / disc.length).toFixed(2);
+        $tbodyRead.append(
+            $('<tr>').append(
+                $('<td>', {html: iDisc}),
+                $('<td>', {html: noteAvrg})
+            )
+        );
+    });
+
+    var $statRead = $('<div>');
+    //ESTATISTICA GERAL
+    var $tableRead = $('<table>', {
+        class: "highchart", 'data-graph-container-before': "1", 'data-graph-type': "column", style: "display:none",
+        'data-graph-xaxis-start-on-tick': "1"
+    }).append(
+        $('<thead>').append(
+            $('<tr>').append(
+                $('<th>', {html: 'Disciplina'}),
+                $('<th>', {html: 'Média'})
+            )
+        ), $tbodyRead);
+
+    var $navPillsRead = $('<ul>', {class: 'nav nav-pills'}).append(
+        $('<li>', {class: 'active'}).append(
+            $('<a>', {'data-toggle': "pill", href: "#geral" + 'Read', html: 'Geral'})
+        )
+    );
+    var $tabContentRead = $('<ul>', {class: 'tab-content'}).append(
+        $('<div>', {id: 'geral' + 'Read', class: "tab-pane fade in active"}).append(
+            $tableRead
+        )
+    );
+
+    //ESTATISTICA POR DISCIPLINA
+    //Por cada disciplina adiciona um tab e um grafico com a evolucao
+    $.each(groupByReading, function (iDisc, disc) {
+        console.log(disc)
+        $navPillsRead.append(
+            $('<li>').append(
+                $('<a>', {'data-toggle': "pill", href: "#" + iDisc + 'Read'}).append(
+                    $('<img>', {src: "../img/" + iDisc + ".png", class: "smallImgPreView"})
+                )
+            )
+        );
+        $tbodyRead = $('<tbody>');
+        //Cria o grafico de evolucao da disciplina
+        $.each(disc, function (iQuest, quest) {
+            console.log(quest.note)
+            //verifica a percentagem de fliudez (nr erros* 100 / nr palavras)
+            var fluidity = 100 - ((_.filter(quest.errors, function (error) {
+                    return error.error == 'fluidity';
+                }).length) * 100 / quest.wordsCount);
+            var accuracy = 100 - ((_.filter(quest.errors, function (error) {
+                    return error.error == 'accuracy';
+                }).length) * 100 / quest.wordsCount)
+            $tbodyRead.append(
+                $('<tr>').append(
+                    $('<td>', {html: quest.resolutionDate}),
+                    $('<td>', {html: quest.note}),
+                    $('<td>', {
+                        html: fluidity
+                    }), $('<td>', {
+                        html: accuracy
+                    })
+                )
+            );
+        });
+
+        var $tableRead = $('<table>', {
+            class: "highchart", 'data-graph-container-before': "1", 'data-graph-type': "line", style: "display:none",
+            'data-graph-xaxis-start-on-tick': "1"
+        }).append(
+            $('<thead>').append(
+                $('<tr>').append(
+                    $('<th>', {html: 'Data'}),
+                    $('<th>', {html: 'Nota'}),
+                    $('<th>', {html: 'Fluidez'}),
+                    $('<th>', {html: 'Expressividade'})
+                    //$('<th>', {html: 'Tempo'})
+                )
+            ), $tbodyRead);
+        console.log($tableRead.html())
+        $tabContentRead.append(
+            $('<div>', {id: iDisc + 'Read', class: "tab-pane fade in"}).append(
+                $('<h3>', {html: 'Progresso por disciplina'}),
+                $tableRead
+            )
+        );
+    });
+    $statRead.append($navPillsRead, $tabContentRead);
+    //cria um panel collapsible com as estatisticas
+    var $panel = $('<div>', {class: 'panel-group', id: "accordion"}).append(
+        $('<div>', {class: 'panel panel-success'}).append(
+            $('<div>', {class: 'panel-heading'}).append(
+                $('<h4>', {class: 'panel-title'}).append(
+                    $('<a>', {
+                        'data-toggle': "collapse",
+                        'data-parent': "#accordion",
+                        href: "#collapse1",
+                        html: 'Estatísticas Disciplinares'
+                    })
+                )
+            ),
+            $('<div>', {id: "collapse1", class: "panel-collapse collapse"}).append(
+                $('<div>', {class: "panel-body"}).append(
+                    $statDisc
+                ),
+                $('<div>', {class: "panel-footer"}).append(
+
+                )
+            )
+        ), $('<div>', {class: 'panel panel-warning'}).append(
+            $('<div>', {class: 'panel-heading'}).append(
+                $('<h4>', {class: 'panel-title'}).append(
+                    $('<a>', {
+                        'data-toggle': "collapse",
+                        'data-parent': "#accordion",
+                        href: "#collapse2",
+                        html: 'Estatísticas de Leitura'
+                    })
+                )
+            ),
+            $('<div>', {id: "collapse2", class: "panel-collapse collapse"}).append(
+                $('<div>', {class: "panel-body"}).append(
+                    $statRead
+                ),
+                $('<div>', {class: "panel-footer"}).append(
+
+                )
+            )
+        )
+    )
+
+    return [$panel.wrap('<p/>').parent().html()]
 }
