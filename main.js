@@ -223,7 +223,7 @@ app.route('/schools/:id/removeclass')
     .post(auth, perms(3), schools.removeClass);
 
 app.route('/classes/:school/:class')
-    .get(auth, perms(3), schools.getClass);
+    .get(auth, perms(3), schools.getClassInfo);
 
 
 //-----------------------------------------------------STUDENTS

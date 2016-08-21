@@ -1,6 +1,55 @@
 /* Custom CSS
  * --------------------------------------- */
 
+/*FLIPER */
+.card-grid {
+    width: 100%;
+    overflow: hidden;
+    margin: 10px;
+    display: inline-block;
+    border: 1px solid #c1c1c1;
+    background: rgba(245, 245, 245, 0.76);
+}
+
+.card-grid, .card-grid-img {
+    border-radius: 5px;
+}
+
+.card-grid-img {
+    width: 100%;
+    position: relative;
+}
+
+.card-grid-sm-img {
+    width: 40px;
+    position: relative;
+}
+
+.card-grid-hr {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.card-grid-span {
+    backface-visibility: hidden;
+    position: inherit;
+    width: inherit;
+    bottom: 0;
+    left: 0;
+    background: rgba(245, 245, 245, 0.76);
+    text-align: center;
+    font-size: 18px;
+}
+
+.card-grid-a {
+    color: #abc650;
+}
+
+.front:hover {
+    cursor: pointer;
+}
+
+/*FLIPER */
 html {
     position: fixed;
     min-width: 100%;
@@ -310,11 +359,6 @@ li.dropdown-submenu {
     display: inline-flex;
 }
 
-#page {
-    padding-top: 50px;
-    overflow: auto;
-}
-
 #homeBar img {
     height: 50px;
 }
@@ -367,7 +411,7 @@ input[type=checkbox] {
 
 .form {
     width: 85%;
-    margin: 20px auto;
+    margin: 70px auto 20px auto;
 }
 
 .container {
@@ -588,11 +632,6 @@ a {
     -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1);
     box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1);
     padding: 0 0 5px 0;
-}
-
-#section0 {
-    background: url("../../img/study-with-books.jpg");
-    padding: 20px;
 }
 
 #slide1 {
@@ -950,6 +989,7 @@ label {
     position: absolute;
     height: 100%;
     width: 100%;
+    text-align: -webkit-center;
 }
 
 .subMenu-Item {
@@ -1597,6 +1637,7 @@ option:hover {
     font-size: 12px;
     line-height: 1;
     color: #673AB7;
+    border: 1px solid;
     text-align: center;
     border-radius: 5px;
 }
@@ -1610,6 +1651,13 @@ option:hover {
 @media (max-width: 767px) {
     .divWidget {
         padding: 5px;
+    }
+
+    #fullpage .card-grid {
+        width: 80px;
+        height: 80px;
+        margin: 5px;
+
     }
 }
 
@@ -1631,4 +1679,63 @@ span > img {
 
 ol, ul {
     padding-left: 0px;
+}
+
+.slideImg {
+    width: 100%;
+    z-index: 0;
+    position: absolute;
+}
+
+.yellow-border {
+    border: 4px solid #e7ac44;
+}
+
+.blue-border {
+    border: 4px solid #3ab0e2;
+
+}
+
+.red-border {
+    border: 4px solid #e96656;
+
+}
+
+.green-border {
+    border: 4px solid #34d293;
+}
+
+#homeLoginDiv {
+    width: 300px;
+    margin: auto;
+    padding: 15px;
+}
+
+#upperFooter {
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    height: 50px;
+    margin-bottom: 0px;
+    background-color: rgba(245, 245, 220, 0.8);
+}
+
+.lblRed {
+    color: #e96656;
+}
+.lblGreen {
+    color: #34d293;
+}
+.panelDiv {
+    width: 100%;
+    background: #fffffe;
+    display: inline-block;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+    text-align: left;
+    border-color: transparent;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.275);
 }

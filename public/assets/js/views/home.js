@@ -1,14 +1,14 @@
 window.Home = Backbone.View.extend({
 
     events: {
-        "click #showlogin": "showlogin",
+        "click #loginbtn": "attemptlogin",
         "click #showDownload": "showDownload",
         "click .btn-info": "appDownload",
     },
 
 
     //Show Login Modal
-    showlogin: function (e) {
+    attemptlogin: function (e) {
         var self = this;
 
         //Check For BasicAuth Session Cookie
@@ -36,7 +36,7 @@ window.Home = Backbone.View.extend({
 
         }
         else {
-            showLoginModal($("#content"));
+            attemptLogin();
         }
     },
 
@@ -127,20 +127,16 @@ window.Home = Backbone.View.extend({
 
     //Class Initializer
     initialize: function () {
-        $('body').bind('mousewheel', function (e) {
-            if (e.originalEvent.wheelDelta / 120 > 0) {
-                $(this).carousel('prev');
-            }
-            else {
-                $(this).carousel('next');
-            }
-        });
+
     },
 
     //Class Renderer
     render: function () {
 
         $(this.el).html(this.template());
+        $(".card-grid", this.el).flip({trigger: 'hover'});
+        $('.card-grid', this.el).css({'height': $('.card-grid').width() + 'px'});
+        console.log($(".card-grid").width())
         return this;
     }
 

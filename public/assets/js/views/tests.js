@@ -174,6 +174,9 @@ window.TestsView = Backbone.View.extend({
             case 'boxes':
                 $("#questionsPreview" + i).append(setBoxesPreview(question))
                 break;
+            case 'whitespaces':
+                $("#questionsPreview" + i).append(setWhiteSpacesPreview(question))
+                break;
         }
         ;
     },

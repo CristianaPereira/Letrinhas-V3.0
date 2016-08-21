@@ -84,6 +84,7 @@ var Students = Backbone.Collection.extend({
                 json.sort(sortJsonByCol('name'));
                 for (i = 0; i < json.length; i++) {
                     self.models.push(new Student(json[i]));
+
                 }
                 after_fetch();
             },

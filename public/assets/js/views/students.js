@@ -146,7 +146,7 @@ window.StudentsView = Backbone.View.extend({
     //Class Renderer
     render: function () {
         var self = this;
-
+        console.log(self.data)
         //Render Template
         $(this.el).html(this.template({collection: self.data}));
 

@@ -3,22 +3,21 @@ require('colors');
 //DB Info
 var nano = require('nano')(process.env.COUCHDB);
 var db = nano.use('let_categories');
+Categories = require("./cat.js")
 
 //Get category by ID
 exports.get = function (req, res) {
 
     var id = req.params.id;
-    console.log('category get: '.green + id);
-
-    //Search School Parameters
-    db.get(id, function (err, body) {
+    Category.getById(id, function (err, category) {
         if (err) {
-            return res.status(err.statusCode).json({});
+            return res.status(500).json({
+                'result': 'nok',
+                'message': err
+            });
         }
+        res.status(200).json(category);
 
-        //delete body._id;
-        delete body._rev;
-        res.status(200).json(body);
     });
 };
 
@@ -89,15 +88,15 @@ exports.addSpecif = function (req, res) {
 };
 exports.getAll = function (req, res) {
     console.log('category getAll'.yellow);
-
-    db.list({'include_docs': true, 'attachments': true, 'limit': undefined, 'descending': false}, function (err, body) {
+    Categories.getAll(function (err, categories) {
         if (err) {
             return res.status(500).json({
                 'result': 'nok',
                 'message': err
             });
         }
-        res.json(body.rows);
+        res.status(200).json(categories);
     });
+
 };
 

@@ -588,7 +588,7 @@ window.showLoginModal = function (form) {
                         ).append($("<span>", {
                             id: "pwdIcon", class: "glyphicon glyphicon-lock"
                         }))
-                    ),
+                    )/*,
                     $("<div>", {
                         class: "row form-group",
                     }).append(
@@ -602,7 +602,7 @@ window.showLoginModal = function (form) {
                                 value: '',
                                 id: 'keepsession'
                             })))
-                    )
+                    )*/
                 )
             ).append(
                 $("<div>", {

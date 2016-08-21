@@ -36,27 +36,52 @@
     </div>
 </nav>
 <div id="studentsDiv" class="mainDiv">
-    <div class="panel-scroll col-md-5" align=center>
 
-        <div id="studentsContent" class=" panel-body col-md-12" align=center>
-            <% _.each(collection,function(student){ %>
-            <div class="listButton divWidget row"
-                 id='<%= student._id %>' value="<%= student.name %>">
-
-                <img src="<%= student.b64 %>">
-                <span><%= student.name %></span>
-                <i class="fa fa-eye"></i>
-
+    <% var classes =_.groupBy(collection, 'schoolDetails'); %>
+    <% _.each(classes,function(classe,iClass){ %>
+    <h3><i class="fa fa-university"></i> <%=iClass%></h3>
+    <hr class="card-grid-hr">
+    <% _.each(classe,function(student){ %>
+    <div class="card-grid animated bounceInUp">
+        <div class="front">
+            <img src="<%= student.b64 %>" class="card-grid-img">
+            <% var abrName=(student.name).split(" ") %>
+            <span class="card-grid-span"><%= abrName[0]%> <%= abrName[abrName.length-1]%> </span>
+        </div>
+        <div class="back">
+            <span><i class="fa fa-user"></i>  <%=student.name%> <b>(<%=student.username%>)</b></span><br>
+            <hr class="card-grid-hr">
+            <span><i class="fa fa-university"></i> <%=student.schoolDetails%></span><br>
+            <hr class="card-grid-hr">
+            <span><i class="fa fa-graduation-cap"></i> <%=student.number%></span><br>
+            <hr class="card-grid-hr">
+            <div class="col-md-4 col-xs-4">
+                <a href="#students/<%=student._id%>/info" class="card-grid-a">
+                    <i class="fa fa-pie-chart"></i>
+                </a>
             </div>
-            <% }); %>
-
+            <div class="col-md-4 col-xs-4">
+                <a href="#students/<%=student._id%>/edit" class="card-grid-a">
+                    <i class="fa fa-edit"></i>
+                </a>
+            </div>
+            <div class="col-md-4 col-xs-4">
+                <a class="deleteStudent card-grid-a" id="<%=student._id%>" value="<%=student.name%>">
+                    <i class="fa fa-trash"></i>
+                </a>
+            </div>
         </div>
     </div>
+    <% }); %>
+    <% }); %>
+
+    <% _.each(collection,function(student){ %>
 
 
-    <div class="col-md-7" style="padding: 30px; " align="center">
-        <div id="studentsPreview" class="col-md-12 divWidget" align="center">
-        </div>
-    </div>
+    <% }); %>
 </div>
 
+
+<script>
+    $(".card-grid").flip({trigger: 'hover'});
+</script>

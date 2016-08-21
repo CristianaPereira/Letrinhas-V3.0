@@ -39,9 +39,6 @@ var Router = Backbone.Router.extend({
         //Pagina Inicial
         "home": "home",
 
-        //Default Page
-        "": "index",
-
         "categories": "categories",
         //Teachers Routing
         "teachers": "teachers",
@@ -94,7 +91,10 @@ var Router = Backbone.Router.extend({
         "questionsboxes/:id/edit": "questionsBoxesEdit",
 
         "tests": "tests",
-        "tests/new": "testsNew"
+        "tests/new": "testsNew",
+
+        //Default Page
+        "": "home"
     },
 
 
