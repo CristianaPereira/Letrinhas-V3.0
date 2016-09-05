@@ -21,10 +21,10 @@ var Category = Backbone.Model.extend({
             }
         );
     },
-    insertSpecif: function (form) {
+    insertSpecif: function (form, idCategory, idContent) {
         var self = this;
 
-        modem('POST', 'categories/specification',
+        modem('PUT', 'categories/' + idCategory + '/content/' + idContent + '/addSpecification',
             //Response Handler
             function (json) {
                 sucssesMsg($("body"), json.text);
@@ -40,6 +40,26 @@ var Category = Backbone.Model.extend({
                 console.log(thrownError)
             }, form
         );
+    },
+    insertContent: function (form, idCategory) {
+        var self = this;
+        modem('PUT', 'categories/' + idCategory + '/addContent',
+            //Response Handler
+            function (json) {
+                sucssesMsg($("body"), json.text);
+                setTimeout(function () {
+                    document.location.reload(true);
+                }, json.text.length * 45);
+            },
+
+            //Error Handling
+            function (xhr, ajaxOptions, thrownError) {
+                console.log(xhr)
+                console.log(ajaxOptions)
+                console.log(thrownError)
+            }, form
+        );
+
     }
 });
 

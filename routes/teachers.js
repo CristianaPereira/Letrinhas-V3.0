@@ -6,6 +6,11 @@ var request = require('request');
 var nano = require('nano')(process.env.COUCHDB);
 //var nano = require('nano')('http://185.15.22.235:5984');
 //var db = nano.use('professores');
+
+var Teachers = require('./models/Teachers.js');
+var Schools = require('./models/Schools.js');
+var Students = require('./models/Students.js');
+
 var db = nano.use('let_teachers');
 var db2 = nano.use('let_schools');
 
@@ -18,15 +23,138 @@ nano.auth(process.env.USERNAME, process.env.PASSWORD, function (err, response, h
     db2 = nano.use('let_schools');
 });
 
-exports.new = function (req, res) {
-    console.log('teachers new'.green);
-    console.log(req.body);
 
+exports.addToClass = function (req, res) {
+    var escolas = JSON.parse(req.body.classes);
+    var data = {
+        teacherID: req.params.teacher
+    }
+    for (var items in escolas) {
+        data.school = escolas[items].id;
+        data.classes = escolas[items].classes;
+        Schools.addTeacherToClass(data, function (err) {
+            if (err) {
+                console.log("not found")
+                return res.status(204).json({
+                    'result': 'nok',
+                    'message': err
+                });
+            }
+        });
+    }
+    res.status(200).json({});
+};//*
+
+exports.get = function (req, res) {
+    var idTeacher = req.params.teacher || req.user.name;
+    console.log('teacher get: '.green + idTeacher);
+    Teachers.getById(idTeacher, function (err, body) {
+        if (err) {
+            console.log("not found")
+            return res.status(204).json({
+                'result': 'nok',
+                'message': err
+            });
+        }
+        //Remove Sensitive Information
+        delete body._rev;
+        delete body.password;
+        delete body.pin;
+
+        //gets schools and classes
+        Schools.getClassesByTeacher(idTeacher, function (err, escolas) {
+            if (err) {
+                return res.status(500).json({
+                    'result': 'nok',
+                    'message': err
+                });
+            }
+            body.schools = escolas;
+            //Return Result
+            res.json(body);
+        })
+    });
+};//*
+
+exports.getAll = function (req, res) {
+    console.log('teachers getAll'.yellow);
+
+    Teachers.getAll(function (err, body) {
+        if (err) {
+            return res.status(500).json({
+                'result': 'nok',
+                'message': err
+            });
+        }
+        res.status(200).json(body);
+    });
+};//*
+
+
+//Função para desassociar professores às turmas
+exports.removeFromClass = function (req, res) {
+
+    var data = {
+        teacherID: req.params.teacher,
+        school: req.body.school,
+        class: req.body.class
+    }
+    Schools.removeTeacherFromClass(data, function (err) {
+        if (err) {
+            return res.status(500).json({
+                'result': 'nok',
+                'message': err
+            });
+        }
+        res.status(200).json({});
+    })
+};//*
+
+exports.editDetails = function (req, res) {
+    //Verify Fields
+    var idTeacher = req.params.teacher;
+    if (JSON.stringify(req.body).indexOf('""') == -1) {
+        Teachers.getById(idTeacher, function (err, data) {
+            if (err) {
+                //Report Error (School Doenst Exists)
+                console.log("Error Editing Student");
+                res.send(err.statusCode, {error: "Aluno Invalido"});
+            }
+            var state = false;
+
+            if (req.body.state == 1) {
+                data.state = true;
+            }
+            data.name = req.body.name;
+            data.phoneNumber = req.body.phoneNumber;
+            data.type = req.body.type;
+            data.state = state;
+            data.b64 = req.body.b64;
+
+            Teachers.update(idTeacher, data, function (err) {
+                if (err) {
+                    return res.status(500).json({
+                        'result': 'nok',
+                        'message': err
+                    });
+                }
+                res.status(200).json({});
+            });
+        });
+
+    } else {
+        return res.status(500).json({
+            'result': "Campos em falta"
+        });
+    }
+};//*?* differ admin edit and user edit
+
+exports.new = function (req, res) {
     //Verify Fields
     if (JSON.stringify(req.body).indexOf('""') == -1) {
-        var state = false;
 
-        var newteacher = {
+        var data = {
+            "_id": req.body.email,
             "state": true,
             "name": req.body.name,
             "password": req.body.password,
@@ -36,74 +164,26 @@ exports.new = function (req, res) {
             "b64": req.body.b64,
         };
 
-        db.insert(newteacher, req.body.email, function (err, body) {
-            if (err)
-                console.log("(L-131) - Não foi possivel inserir " + req.body.email + '\n' + "erro: " + err);
-            else {
-                res.json(body);
-                console.log('New teacher ' + req.body.name + ' was inserted!'.green);
-                var escolas = req.body.classes;
-
-                for (var items in escolas) {
-                    console.log("Associar escolsa :" + escolas[items].id + " ao prof" + req.body.email);
-                    insertProfTurma(req.body.email, escolas[items].id, escolas[items].classes);
-                    console.log("-------------");
-                }
-            }
-        });
-
-
-    } else {
-        return res.status(500).json({
-            'result': 'Campos em falta'
-        });
-    }
-
-
-};
-
-exports.updateDetails = function (req, res) {
-    console.log('Teachers - UPDATE'.cyan);
-    console.log(req.body)
-    //Verify Fields
-    if (JSON.stringify(req.body).indexOf('""') == -1) {
-        db.get(req.body.id, function (err, body) {
-            var state = false;
-
-            if (req.body.state == 1) {
-                state = true;
-            }
+        Teachers.add(data, function (err) {
             if (err) {
-                console.log("(L-20) - Não foi possivel aceder a " + req.body.id + '\n'
-                    + "erro: " + err);
-                res.redirect('/teachers');
+                return res.status(500).json({
+                    'result': 'nok',
+                    'message': err
+                });
             }
-            body.name = req.body.name;
-            body.phoneNumber = req.body.phoneNumber;
-            body.type = req.body.type;
-            body.state = state;
-            body.b64 = req.body.b64;
-
-            db.insert(body, req.body.id, function (err, body) {
-                if (err) {
-                    console.log("(L-131) - Não foi possivel alterar " + req.body.id + '\n' + "erro: " + err);
-                    return res.status(500).json({
-                        'result': "Não foi possivel alterar " + req.body.id
-                    });
-                }
-                else {
-                    res.status(200).json({});
-                    console.log('Updated teacher '.green + req.body.name + '!');
-                }
-            });
-        });
-
-    } else {
-        return res.status(500).json({
-            'result': "Campos em falta"
+            res.status(200).json({});
         });
     }
-};
+    else {
+        console.log("Fields Missing");
+        return res.status(500).json({
+            'result': 'nok',
+            'message': 'missingfields'
+        });
+    }
+
+
+};//*
 
 exports.editPasswd = function (req, res) {
     console.log('Teachers - UPDATE'.cyan);
@@ -138,165 +218,59 @@ exports.editPasswd = function (req, res) {
         }
 
     });
-};
-
-exports.editClasses = function (req, res) {
-    console.log(req.body)
-    var escolas = JSON.parse(req.body.classes);
-    for (var items in escolas) {
-        insertProfTurma(req.body.id, escolas[items].id, escolas[items].classes);
-    }
-    res.redirect('/teachers/' + req.body.id);
-};
+};//*
 
 exports.delete = function (req, res) {
-
-    db.get(req.params.id, function (err, body) {
-            if (err) {
-                console.log("Nao foi possivel encontrar " + req.params.id + "\n " + err);
-                return res.status(err.statusCode).json({});
-            } else {
-                db.destroy(body._id, body._rev, function (err) {
-                    if (err) {
-                        //Report Error (School Doenst Exists)
-                        console.log("Error Removing TEACHER");
-                        return res.status(err.statusCode).json({});
-                    }
-                    else {
-                        console.log("tEACHER Removed");
-                        //Remove o professor das turmas
-                        //gets schools ans classes
-                        db2.list({
-                            'include_docs': true,
-                            'attachments': true,
-                            'limit': undefined,
-                            'descending': false
-                        }, function (err, schools) {
-                            if (err) {
-                                return res.status(500).json({
-                                    'result': 'nok',
-                                    'message': err
-                                });
-                            }
-                            console.log(body.classes)
-                            var schools = getClasses(schools, req.params.id);
-                            for (var is = 0; is < schools.length; is++) {
-                                for (var ic = 0; ic < schools[is].class.length; ic++) {
-                                    console.log(schools[is].class[ic].id)
-                                    removeProfTurma(req.params.id, schools[is].id, schools[is].class[ic].id, res);
-                                }
-                            }
-                            //Return Result
-                            res.json(body);
-                        });
-
-                        return res.status(200).json({});
-                    }
-
-                });
-            }
-        }
-    );
-
-};
-
-exports.photo = function (req, res) {
-    var id = req.params.id;
-    var db = req.params.db;
-    var photo = req.params.photo;
-
-    request({
-        'url': process.env.COUCHDB + '/' + db + '/' + id + '/' + photo, headers: {
-            "Authorization": "Basic " + new Buffer(process.env.USERNAME + ":" + process.env.PASSWORD).toString("base64")
-        }
-    }).pipe(res);
-
-};
-
-exports.getAll = function (req, res) {
-    console.log('teachers getAll'.yellow);
-
-    db.list({'include_docs': true, 'attachments': true, 'limit': undefined, 'descending': true}, function (err, body) {
+    var idTeacher = req.params.teacher;
+    //Doesnt allow delete itself
+    if (req.user.name == idTeacher) {
+        return res.status(500).json({
+            'result': 'nok',
+            'message': 'cant delete yourself'
+        });
+    }
+    Teachers.getById(idTeacher, function (err, teacherData) {
         if (err) {
             return res.status(500).json({
                 'result': 'nok',
                 'message': err
             });
-            console.log(err);
         }
-        //Removes Sensitive Information
-
-        //gets schools ans classes
-        db2.list({
-            'include_docs': true,
-            'attachments': true,
-            'limit': undefined,
-            'descending': false
-        }, function (err, schools) {
+        //Search School Info
+        Teachers.delete(idTeacher, teacherData._rev, function (err) {
             if (err) {
                 return res.status(500).json({
                     'result': 'nok',
                     'message': err
                 });
             }
-            for (var items = 0; items < body.rows.length; items++) {
-                delete body.rows[items].value;
-                delete body.rows[items].doc._rev;
-                delete body.rows[items].doc.password;
-                delete body.rows[items].doc.pin;
-                console.log(body.rows[items].doc._id)
-                body.rows[items].doc.classes = getClasses(schools, body.rows[items].doc._id);
-            }
-            //Return Result
-            res.json(body.rows);
+            console.log("School Removed");
+            return res.status(200).json({});
+
         });
-
     });
-};
-
-exports.get = function (req, res) {
-    var id = req.params.id;
-    console.log('teacher get: '.green + id);
-    db.get(id, function (err, body) {
-        if (err) {
-            console.log("not found")
-            return res.status(204).json({
-                'result': 'nok',
-                'message': err
-            });
-        }
-        //Remove Sensitive Information
-        delete body._rev;
-        delete body.password;
-        delete body.pin;
+};//*
 
 
-        //gets schools ans classes
-        db2.list({
-            'include_docs': true,
-            'attachments': true,
-            'limit': undefined,
-            'descending': false
-        }, function (err, schools) {
-            if (err) {
-                return res.status(500).json({
-                    'result': 'nok',
-                    'message': err
-                });
-            }
-            console.log(body.classes)
-            body.classes = getClasses(schools, id);
-            //Return Result
-            res.json(body);
-        });
+/*
+ exports.photo = function (req, res) {
+ var id = req.params.id;
+ var db = req.params.db;
+ var photo = req.params.photo;
 
-    });
-};
+ request({
+ 'url': process.env.COUCHDB + '/' + db + '/' + id + '/' + photo, headers: {
+ "Authorization": "Basic " + new Buffer(process.env.USERNAME + ":" + process.env.PASSWORD).toString("base64")
+ }
+ }).pipe(res);
+
+ };
+ */
 
 exports.getMyData = function (req, res) {
-    var id = req.params.userID;
-    console.log('getting my data :' + id.bgBlue);
-    db.get(id, function (err, body) {
+    var idTeacher = req.params.userID;
+    console.log('getting my data :' + idTeacher.bgBlue);
+    db.get(idTeacher, function (err, body) {
         if (err) {
             console.log("not found")
             return res.status(204).json({
@@ -311,22 +285,27 @@ exports.getMyData = function (req, res) {
 
 
         //gets schools ans classes
-        db2.list({
-            'include_docs': true,
-            'attachments': true,
-            'limit': undefined,
-            'descending': false
-        }, function (err, schools) {
+        //gets schools and classes
+        Schools.getClassesByTeacher(idTeacher, function (err, escolas) {
             if (err) {
                 return res.status(500).json({
                     'result': 'nok',
                     'message': err
                 });
             }
-            body.classes = getClasses(schools, id);
-            //Return Result
-            res.json(body);
-        });
+            body.schools = escolas;
+            Students.getByTeacher(idTeacher, function (err, students) {
+                if (err) {
+                    return res.status(500).json({
+                        'result': 'nok',
+                        'message': err
+                    });
+                }
+                body.students = students;
+                //Return Result
+                res.json(body);
+            });
+        })
 
     });
 };
@@ -341,12 +320,11 @@ function getClasses(schools, idProf) {
         var escola = schools.rows[school].doc;
         var classes = {};
         if (JSON.stringify(escola).indexOf(idProf) != -1) {
-            classes["id"] = escola._id;
+            classes["_id"] = escola._id;
             classes["name"] = escola.name;
             classes["class"] = [];
             //Search all classes
             for (var turma in escola.classes) {
-
                 //If professor belongs to that class
                 if (JSON.stringify(escola.classes[turma]).indexOf(idProf) != -1) {
                     classes["class"].push({
@@ -358,6 +336,7 @@ function getClasses(schools, idProf) {
             profClasses.push(classes)
         }
     }
+    console.log(profClasses)
     return profClasses;
 }
 
@@ -448,10 +427,4 @@ function sortJsonByCol(property) {
         return sortStatus;
     };
 
-};
-//Função para desassociar professores às turmas
-exports.rmvClass = function (req, res) {
-    //Obtem os dados da escola
-    console.log(req.body)
-    removeProfTurma(req.body.id, req.body.school, req.body.class, res);
 };

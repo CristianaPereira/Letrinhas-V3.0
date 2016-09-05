@@ -91,7 +91,7 @@ window.TeachersEditView = Backbone.View.extend({
     assocTurmas: function (e) {
         var self = this;
         e.preventDefault();
-        modem('POST', 'teachers/editClasses',
+        modem('POST', 'teachers/' + $("#inputEmail").val() + '/editClasses',
             //Response Handler
             function (json) {
                 sucssesMsg($("#editTeacherForm"), "Turmas associadas com sucesso.");
@@ -135,7 +135,7 @@ window.TeachersEditView = Backbone.View.extend({
         $('#modalConfirmDel').modal("hide");
         var classe = $(e.currentTarget).attr("value").split(":");
 
-        modem('POST', 'teachers/rmvClass',
+        modem('POST', 'teachers/' + $("#inputEmail").val() + '/removeFromClass',
             //Response Handler
             function (json) {
                 sucssesMsg($("#editTeacherForm"), "Turma desassociada com sucesso.");
@@ -152,8 +152,7 @@ window.TeachersEditView = Backbone.View.extend({
             },
             new FormData($('<form>', {}).append(
                 $('<input>', {name: "school", value: classe[0]}),
-                $('<input>', {name: "class", value: classe[1]}),
-                $('<input>', {name: "id", value: $("#inputEmail").val()})
+                $('<input>', {name: "class", value: classe[1]})
             )[0])
         );
 

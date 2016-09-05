@@ -46,15 +46,12 @@ window.StudentsView = Backbone.View.extend({
     },
 
     //Applys filters
-    filterBy: function () {
-        var typedText = $("#txtSearch").val();
+    filterBy: function (e) {
+        //Esconde todos os alunos
+        $(".studentItem").hide();
+        $(".studentItem:containsi(" + $(e.currentTarget).val() + ")").show();
 
-        //Esconde todos os testes
-        $(".listButton").hide();
-        //Mostra apenas os que contém a string escrita
-        $(".listButton:containsi(" + typedText + ")").show();
-
-        $("#studentsBadge").text($(".listButton:visible").length + "/" + this.data.length)
+        $("#counter").html($(".studentItem:visible").length + "/" + this.data.length)
 
     },
 

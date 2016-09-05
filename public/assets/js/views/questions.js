@@ -2,15 +2,18 @@ window.QuestionsView = Backbone.View.extend({
     events: {
         "click #deletebtn": "deleteQuestion",
         "click .deleteQuest": "confirmDelete",
-        'click [type="checkbox"]': "filterBy",
-        'click dropdown-submenu': "filterBy",
-        'click .contentFilter': "filterBycontent",
-        "keyup #txtSearch": "filterBy",
-        'click .listButton': "enchePreview",
-
-        "click #orderBy": "orderQuestions"
+        'click .contentFilter': "filterBySubject",
+        "keyup #txtSearch": "filterByText",
+        'click .word': 'jumpToWord',
+        'click [type="checkbox"]': "filterByType",
     },
-
+    jumpToWord: function (e) {
+        //Procura os dados da palavra e reproduz
+        var id = $(e.target).closest('.questionItem').attr('id');
+        var x = document.getElementById("teacherVoice" + id);
+        x.currentTime = $(e.currentTarget).attr('data-start');
+        x.play();
+    },
     //Solicita confirmação para apagar o professor
     confirmDelete: function (e) {
 
@@ -46,143 +49,61 @@ window.QuestionsView = Backbone.View.extend({
         });
     },
 
-    orderQuestions: function (e) {
-        var mylist = $('#questionsContent');
-        orderContentList(mylist, e);
-    },
 
     //Applys filters
     filterBy: function () {
-        var typedText = $("#txtSearch").val();
+        $("#nodata").remove();
+        //Esconde todos os alunos
+        $(".questionItem").show();
 
-        //Esconde todos os testes
-        $(".listButton").hide();
-        //Mostra apenas os que contém a string escrita
-        $(".listButton:containsi(" + typedText + ")").show();
+        var self = this;
+        console.log(self.filters)
+        $(".questionItem:not(:containsi('" + self.filters.text + "'))").hide();
+        $(".questionItem:not(:containsi('" + self.filters.sub + "'))").hide();
 
-        //Esconde os testes cujas checkboxes não estão seleccionadas
-        $.each($("input:checkbox:not(:checked)"), function (i, k) {
-            console.log($(k).attr("value"))
-            $(".listButton[type=" + $(k).attr("value") + "]").hide();
-        });
+        //verifica o tipo
 
-        //Esconde os que ao correspondem conteudos seleccionados
-        $.each($(".listButton:visible"), function (i, k) {
-            //Se nao pertencerem à categoria escolhida, esconde-os
-            if ($(k).attr("value").indexOf($("#filterSubject").attr("filter")) == -1) {
-                $(k).hide();
-            }
-        });
-        $("#questionsBadge").text($(".listButton:visible").length + "/" + this.data.length)
-
+        if (self.filters.type.length != 0) {
+            $.each($(".questionItem:visible"), function (i, k) {
+                if (self.filters.type.indexOf($(k).attr('type')) == -1) {
+                    $(k).hide();
+                }
+            });
+        }
+        var nQuest = $(".questionItem:visible").length;
+        $("#counter").html(nQuest + "/" + this.data.length);
+        if (!nQuest) {
+            $(".content-wrapper").append(
+                $('<span>', {
+                    id: 'nodata',
+                    html: 'UPS! Não encontramos perguntas que correspondam aos filtros seleccionados. \n'
+                })
+            )
+        }
     },
 
-    //Applys filters
-    filterBycontent: function (e) {
+    filterBySubject: function (e) {
+        e.preventDefault();
         var self = this;
-        $("#filterSubject").attr("filter", $(e.target).attr("value"));
+        self.filters.sub = $(e.currentTarget).attr('value');
         self.filterBy();
     },
 
-    //Text Preview
-    enchePreview: function (e) {
-        var question = this.collection.getByID($(e.currentTarget).attr("id"));
+
+    filterByText: function (e) {
         var self = this;
-        //Clear Preview, fill preview
-
-        $("#questionsPreview").empty()
-            .append(
-                $('<div>', {
-                    class: "dropdown"
-                }).append(
-                    $('<button>', {
-                        class: "btn btn-default dropdown-toggle", type: "button",
-                        'data-toggle': "dropdown"
-                    }).append(
-                        $('<label>', {
-                            class: "dataTitle col-md-12", text: question.title + "  "
-                        }).append(
-                            $('<i>', {
-                                class: "fa fa-gear"
-                            })
-                        )
-                    ),
-                    $('<ul>', {
-                        class: "dropdown-menu"
-                    }).append(
-                        $('<li>').append(
-                            $('<a>', {
-                                href: "#questions/" + question._id + "/info", html: '  Clonar pergunta'
-                            }).prepend(
-                                '<i class="fa fa-clone"></i>'
-                            )
-                        ),
-
-                        //Se o user for o autor da pergunta
-                        (question.profID == window.sessionStorage.getItem('username') ?
-                            $('<li>').append(
-                                $('<a>', {
-                                    href: "#questions" + question.type + "/" + question._id + "/edit",
-                                    html: '  Editar pergunta'
-                                }).prepend(
-                                    '<i class="fa fa-edit"></i>'
-                                )
-                            ) : '')
-                        ,
-
-                        //Se o user for o autor da pergunta
-                        (question.profID == window.sessionStorage.getItem('username') ?
-                            $('<li>').append(
-                                $('<a>', {
-                                    html: '  Eminar pergunta',
-                                    class: 'deleteQuest',
-                                    questionID: question._id,
-                                    questionTitle: question.title
-                                }).prepend(
-                                    '<i class="fa fa-trash"  ></i>'
-                                )
-                            ) : '')
-                    )
-                )
-                ,
-                ('<hr class="dataHr">'),
-
-                $('<div>', {
-                    class: "form-group"
-                }).append(
-                    $('<label>', {
-                        class: "col-md-3 lblDataDetails", text: "Pergunta:"
-                    }),
-                    $('<label>', {
-                        class: "col-md-9 ", text: question.question
-                    })
-                )
-            )
-        ;
-        switch (question.type) {
-            case 'text':
-                $("#questionsPreview").append(getTextPreview(question));
-                setSyncr(question)
-                break;
-            case 'list':
-                $("#questionsPreview").append(setListPreview(question))
-                break;
-            case 'interpretation':
-                $("#questionsPreview").append(setInterpretationPreview(question))
-                break;
-            case 'multimedia':
-                $("#questionsPreview").append(setMultimediaPreview(question));
-                break;
-            case 'boxes':
-                $("#questionsPreview").append(setBoxesPreview(question));
-                break;
-            case 'whitespaces':
-                $("#questionsPreview").append(setWhiteSpacesPreview(question));
-                break;
-        }
-        ;
+        self.filters.text = $(e.currentTarget).val();
+        self.filterBy();
     },
 
+    filterByType: function (e) {
+        var self = this;
+        self.filters.type = [];
+        $.each($("input:checkbox:checked"), function (i, k) {
+            self.filters.type.push($(k).attr("value"))
+        });
+        self.filterBy();
+    },
     //Class Initializer
     initialize: function () {
         var self = this;
@@ -191,17 +112,106 @@ window.QuestionsView = Backbone.View.extend({
         self.data = self.collection.toJSON();
     },
 
+    setSideMenu: function () {
+        var self = this;
+        var cats = new Categories();
+        cats.fetch(function () {
+            var categories = cats.toJSON();
+            for (var i = 0; i < categories.length; i++) {
+                console.log(categories[i])
+                var $contents = $('<ul>', {class: "treeview-menu", style: "display: none;"});
+                $contents.append(
+                    $('<li>').append(
+                        $('<a>', {href: "#", class: "contentFilter", value: categories[i]._id}).append(
+                            $('<i>', {
+                                class: "fa fa-circle-o text-aqua"
+                            }),
+                            'All'
+                        )
+                    )
+                )
+                for (var sub = 0; sub < categories[i].content.length; sub++) {
+
+                    var $spec = $('<ul>', {class: "treeview-menu", style: "display: none;"});
+                    $spec.append(
+                        $('<li>').append(
+                            $('<a>', {
+                                href: "#",
+                                class: "contentFilter",
+                                value: categories[i].content[sub]._id
+                            }).append(
+                                $('<i>', {
+                                    class: "fa fa-circle-o text-aqua"
+                                }),
+                                'All'
+                            )
+                        )
+                    )
+                    for (var spec = 0; spec < categories[i].content[sub].specification.length; spec++) {
+
+                        $('.sidebar-menu', self.el).append(
+                            $spec.append(
+                                $('<li>').append(
+                                    $('<a>', {
+                                        href: "#",
+                                        class: "contentFilter",
+                                        value: categories[i].content[sub].specification[spec]._id
+                                    }).append(
+                                        $('<i>', {
+                                            class: "fa fa-circle-o text-aqua"
+                                        }),
+                                        categories[i].content[sub].specification[spec].name
+                                    )
+                                )
+                            )
+                        )
+                    }
+                    $('.sidebar-menu', self.el).append(
+                        $contents.append(
+                            $('<li>').append(
+                                $('<a>', {href: "#"}).append(
+                                    $('<i>', {
+                                        class: "fa fa-circle-o text-orange"
+                                    }), categories[i].content[sub].name
+                                    , $('<span>', {class: 'pull-right-container'}).append(
+                                        $('<i>', {class: "fa fa-angle-left pull-right"})
+                                    )
+                                ),
+                                $spec
+                            )
+                        )
+                    )
+                }
+                $('.sidebar-menu', self.el).append(
+                    $('<li>', {class: "treeview"}).append(
+                        $('<a>', {href: '#'}).append(
+                            $('<img>', {src: " ../img/" + categories[i]._id + ".png"}),
+                            $('<span>', {html: categories[i].subject}),
+                            $('<span>', {class: 'pull-right-container'}).append(
+                                $('<i>', {class: "fa fa-angle-left pull-right"})
+                            )
+                        ),
+
+                        $contents
+                    )
+                )
+            }
+            console.log('done')
+        })
+    },
+
     //Class Renderer
     render: function () {
         var self = this;
-
-        getFilters();
+        self.filters = {sub: '', type: [], text: ''};
+        self.setSideMenu();
 
         self.data.sort(sortJsonByCol('title'));
 
-        $(this.el).html(this.template({collection: self.data}));
+        $(self.el).html(self.template({collection: self.data}));
+        $('.translations', this.el).i18n();
 
-        return this;
+        return self;
     }
 })
 ;

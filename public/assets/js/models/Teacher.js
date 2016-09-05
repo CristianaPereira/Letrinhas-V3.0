@@ -13,7 +13,7 @@ var Teacher = Backbone.Model.extend({
                 if (teacherData) {
                     //Adiciona os dados ao model
                     self.attributes = (teacherData);
-                    self.attributes.classes.sort(sortJsonByCol('id'));
+                    self.attributes.schools.sort(sortJsonByCol('id'));
 
                     //Conta o numero de turmas associadas
                     $.each(self.attributes.classes, function (i, classe) {

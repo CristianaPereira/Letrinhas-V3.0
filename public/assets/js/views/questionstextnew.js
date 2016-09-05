@@ -2,47 +2,143 @@ window.QuestionsTextNew = Backbone.View.extend({
     events: {
         "click #showEqualizer": "showEqualizer",
         "click #record": "initRecord",
-        "click #btnSync": "syncText",
         "click #backbtn": "goBack",
         "change #uploadSoundFile": "uploadSoundFile",
         "blur .emptyField": "isEmpty",
+        "blur #inputText": "applyText",
         "submit": "beforeSend",
-        "mouseover #subTxt": "pop"
+        "click .soundAdjust": "adjustSound",
+        "click .next": "nextStep",
+        "click .previous": "previousStep",
+        "click #wordsList .selectable": "addTiming",
+        'click .jumpToWord': 'jumpToWord',
+        'click .adjustBack': 'adjustBack',
+        'click .adjustFront': 'adjustFront',
+        'click .removeTime': 'removeTime',
+        'mouseleave': 'leave',
+        'keydown .selected': 'keyAction'
+
     },
-    syncText: function (e) {
-        e.preventDefault();
-        var text = $("#InputTexto").val();
-
-
-        //Calcula a duracao de cada caracter
-        var x = document.getElementById("teacherVoice");
-        var letterTime = x.duration / text.length;
-
-        var acumulatedTime = 4;
-
-        //separa o texto por espacos e coloca-os na div de seleccao
-        $.each(text.split(' '), function (iWord, word) {
-            $("#divWords").append(
-                $('<span>', {
-                    text: word + " ",
-                })
-            )
-        })
-
-        //pop.play();
-
-        //var mySnd = document.getElementById("teacherVoice");
-        x.playbackRate = 0.5;
+    //MARKED WORDS BUTTONS
+    jumpToWord: function (e) {
+        //Procura os dados da palavra e reproduz
+        var x = document.getElementById("teacherVoice1");
+        x.currentTime = $(e.currentTarget).closest('.word.selected').attr('data-start');
         x.play();
+    },
+    adjustBack: function (e) {
+        var $word = $(e.currentTarget).closest('.word.selected');
+        $word.attr('data-start', ( parseFloat($word.attr('data-start')) - (0.1)).toFixed(5))
+    },
+    adjustFront: function (e) {
+        var $word = $(e.currentTarget).closest('.word.selected');
+        $word.attr('data-start', ( parseFloat($word.attr('data-start')) + (0.1)).toFixed(5))
+    },
+    removeTime: function (e) {
+        console.log($(e.target))
+        var $word = $(e.currentTarget).closest('.word.selected');
+        $word.children('div').remove();
+        $word.removeClass('word')
+        $word.removeClass('selected')
+        $word.removeAttr('data-start')
 
     },
-    //Initializes popover content
-    pop: function () {
 
-        setPopOver("Ano, Disciplina, Conteúdo, Especificação, Título, Pergunta, Texto e Som.");
+    //MARK WORDs
+    addTiming: function (e) {
+        console.log($(e.target))
+        //Se a palavra nao estiver marcada ainda
+        if ($(e.target).hasClass('selectable')) {
+            var x = document.getElementById("teacherVoice1");
+            var pop = Popcorn("#teacherVoice1");
+            $(e.target).attr('data-start', (x.currentTime - 0.3).toFixed(5))
+            $(e.target).addClass('word');
+            $(e.target).append(
+                '<div class="wordOptions">' +
+                '<div class="input-group-addon"><i class="fa fa-backward adjustBack"></i></div>' +
+                '<div class="input-group-addon"><i class="fa fa-play-circle-o jumpToWord"></i></div>' +
+                '<div class="input-group-addon"><i class="fa fa-forward adjustFront"></i></div>' +
+                '<div class="input-group-addon"><i class="fa fa-close removeTime"></i></div>' +
 
+                '</div>'
+            )
+            pop.footnote({
+                start: $(e.target).attr('data-start'),
+                text: '',
+                target: $(e.target).attr('id'),
+                effect: "applyclass",
+                applyclass: "selected"
+            });
+            pop.play();
+        }
+        // this.applyTimings();
+    },
+    adjustSound: function (e) {
+        e.preventDefault();
+
+        var x = document.getElementById("teacherVoice1");
+        x.playbackRate = (x.playbackRate + (0.1 * $(e.target).val())).toFixed(1);
+        console.log(x.playbackRate)
+
+        $("#soundSpeed").html(x.playbackRate * 100 + '%');
     },
 
+    //PREVIOUS--NEXT CONTROLS
+    previousStep: function (e) {
+        e.preventDefault();
+        var prevId = $(e.currentTarget).parents('.tab-pane').prev().attr("id");
+        $('[href="#' + prevId + '"]').tab('show');
+    },
+    nextStep: function (e) {
+        e.preventDefault();
+        var $parentTab = $(e.currentTarget).parents('.tab-pane');
+        //If all mandatory inputs are filled, goes to next tab
+        //if (this.validateDetails($parentTab.attr("id"))) {
+
+        var nextId = $parentTab.next().attr("id");
+        $('[href="#' + nextId + '"]').tab('show');
+        // }
+    },
+    //Validates first TAB
+    validateDetails: function (parentID) {
+        //Se algum dos campos estiver vazio
+        var allListElements = $('#' + parentID + ' .mandatory');
+        console.log(allListElements)
+        //Verifies if all inputs are OK
+        var isValid = isFormValid(allListElements);
+        //If they are
+        return isValid;
+    },
+
+    applyText: function (e) {
+        var text = $(e.currentTarget).val();
+        $("#wordsList").empty();
+        //Separa o texto em paragrafos
+        var $paragraph = text.split(/\n/);
+        var words = $();
+        var nWords = 0;
+        //por cada paragrafo adiciona a palavra a lista, e a new line
+        $.each($paragraph, function (iLine, line) {
+            var $wordsList = line.split(" ");
+            $.each($wordsList, function (i, word) {
+
+                words = words.add($('<span>', {
+                    text: word + " ",
+                    id: "wd" + nWords,
+                    class: 'selectable'
+
+                }))
+
+                //incrementa o nr de palavras (nao conta os breaks
+                nWords++;
+            });
+            words = words.add('<br />')
+        });
+
+        $("#wordsList").append(words);
+
+
+    },
     //Go back to the last visited page
     goBack: function (e) {
         e.preventDefault();
@@ -59,11 +155,18 @@ window.QuestionsTextNew = Backbone.View.extend({
     //Before Sending Request To Server
     beforeSend: function (e) {
         e.preventDefault();
+        var $wordTimes = [];
+        $.each($(".selectable.word"), function (i, word) {
+            $wordTimes.push({pos: $(word).attr('id').replace('wd', ''), start: $(word).attr('data-start')})
+        });
+
         //Se algum dos campos estiver vazio
         var allListElements = $(".mandatory");
         //Verifies if all inputs are OK
         var isValid = isFormValid(allListElements);
         //If they are
+        var fd = new FormData($("#newTextTestForm")[0])
+        fd.append("wordTimes", JSON.stringify($wordTimes))
         if (isValid) {
             $('#content').append(loadingSpinner());
             modem('POST', 'questions',
@@ -79,25 +182,24 @@ window.QuestionsTextNew = Backbone.View.extend({
                 function (xhr, ajaxOptions, thrownError) {
                     failMsg($("body"), "Não foi possível inserir a nova pergunta.");
                 },
-                new FormData($("#newTextTestForm")[0])
+                fd
             );
-
         }
-
-    },
+    }
+    ,
 
     //Show Voice Recorder Equalizer
     showEqualizer: function (e) {
         e.preventDefault();
-        console.log("somm")
-        $("#myModalRecord").modal("show");
+
         //Limpa a div
         $("#rTexto").empty();
         //Clona o texto
         $("#InputTexto").clone().appendTo("#rTexto");
 
         initAudio();
-    },
+    }
+    ,
 
     //Initiate Voice Recording
     initRecord: function (e) {
@@ -117,13 +219,15 @@ window.QuestionsTextNew = Backbone.View.extend({
         }
 
         toggleRecording(e.target);
-    },
+    }
+    ,
 
     //Upload Sound File
     uploadSoundFile: function (obj) {
         var files = $("#uploadSoundFile").prop('files');
         var reader = new FileReader();
         var sound = document.getElementById('teacherVoice');
+        var sound2 = document.getElementById('teacherVoice1');
         reader.onload = (function (audio) {
             return function (e) {
                 audio.src = e.target.result;
@@ -135,11 +239,8 @@ window.QuestionsTextNew = Backbone.View.extend({
             .attr("placeholder", files[0].name)
             .attr("value", files[0].name)
             .css('border', 'solid 1px #cccccc');
-        $("#teacherVoice source").attr("src", files[0].name);
-        var mySnd = document.getElementById("teacherVoice");
-        //mySnd.playbackRate = 0.5;
-        console.log(mySnd.playbackRate)
-    },
+    }
+    ,
 
     //Class Initializer
     initialize: function () {
@@ -147,7 +248,8 @@ window.QuestionsTextNew = Backbone.View.extend({
         self.bd = 'let_tests';
         self.bd2 = 'let_questions';
         self.site = 'http://185.15.22.235:5984';
-    },
+    }
+    ,
 
     //Class Renderer
     render: function () {
@@ -158,7 +260,8 @@ window.QuestionsTextNew = Backbone.View.extend({
         $(this.el).html(this.template());
         return this;
 
-    },
+    }
+    ,
 
 })
 ;

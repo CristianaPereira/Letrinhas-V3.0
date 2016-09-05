@@ -140,11 +140,11 @@
                         <%= classLength %>
                     </label>
                     </legend>
-                    <% _.each(classes,function(classe){ %>
-                    <% _.each(classe.class,function(cl){ %>
-                    <div class="row" id="<%= classe.id %>:<%= cl.id %>" value="<%= cl.name %>"><p
+                    <% _.each(schools,function(school){ %>
+                    <% _.each(school.classes,function(classe){ %>
+                    <div class="row" id="<%= school._id %>:<%= classe._id %>" value="<%= classe.name %>"><p
                             class="col-md-10 col-sm-10"> <%=
-                        classe.name %>, <b><%= cl.name %></b></p>
+                        school.name %>, <b><%= classe.name %></b></p>
                         <div class="col-md-2 col-sm-2">
                             <button class="desassocClass round-button fa fa-trash"
                             ></button>

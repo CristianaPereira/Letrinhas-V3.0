@@ -1,181 +1,129 @@
-<nav class="navbar navbar-default sidebar" role="navigation">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse"
-                    data-target="#bs-sidebar-navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-        </div>
-        <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                <li><a>Total: <label id="questionsBadge" class=""><%=collection.length%></label>
-                     <span style="font-size:16px;"
-                           class="pull-right hidden-xs showopacity fa fa-question"></span>
-                </a></li>
-                <li>
-                    <input id="txtSearch" type="text" class="form-control" placeholder="Pesquisar"
-                           aria-describedby="basic-addon2">
-                </li>
-                <li class="active">
-                    <a id="orderBy" class="order">Ordenar
-                        <span style="font-size:16px;"
-                              class="pull-right hidden-xs showopacity fa fa-sort-alpha-desc"></span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#tests/new">Inserir
-                        <span style="font-size:16px;"
-                              class="pull-right hidden-xs showopacity glyphicon glyphicon-plus-sign"></span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
-<div id="testsDiv" class="mainDiv">
+<div class="translations">
+    <!--MENU -->
+    <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar" style="height: auto;">
 
-    <div class=" panel-body col-md-5" align="center">
-        <div class="col-md-12">
-            <section class="panel subMenu">
-
-                <ul class="nav navbar-nav">
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-filter"></i>
-                            Disciplina
-                            <b class="caret"></b></a>
-                        <ul class="dropdown-menu" id="filterSubject" filter="">
-                            <li class="dropdown-submenu pull-left">
-                                <a class=" contentFilter"
-                                   data-toggle="dropdown"
-                                   value=""
-                                   aria-expanded="false">Ver todas</a>
-                            </li>
-
-                        </ul>
-                    </li>
-                </ul>
-            </section>
-            <!-- END REGIONAL STATS PORTLET-->
-        </div>
-        <div id="testsContent" class=" panel-body col-md-12" align="center">
-            <% _.each(collection,function(test){ %>
-            <div class="listButton divWidget row" value=" <%= test.subject %>"
-                 id='<%= test._id %>'
-            <% if ( test.profID == window.sessionStorage.getItem('username') ){ %>
-            style="background-color:#FBF6B4"
-            <% } %>
-            >
-            <% console.log(test._id) %>
-            <img src='../img/<%= test.subject.split(":")[0] %>.png'>
-            <span><%= test.title %></span>
-            <div class="editDeleteOp">
-                <a title="Atribuir teste"><i
-                        testID="<%= test._id %>" testName="<%= test.title %>" class="fa fa-calendar"></i></a>
-                <% if ( test.profID == window.sessionStorage.getItem('username') ){ %>
-                <a title="Apagar teste">
-                    <i class="fa fa-trash-o deleteTest" testID="<%= test._id %>"
-                       testName="<%= test.title %>"></i></a>
-                <% } %>
-
-
+            <!-- search form -->
+            <div class="input-group">
+                <input type="text" id="txtSearch" class="form-control" placeholder="Procurar...">
+              <span class="input-group-btn">
+                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+                </button>
+              </span>
             </div>
+
+            <!-- /.search form -->
+
+            <ul class="sidebar-menu">
+                <li>
+                    <a>
+                        <i class="fa fa-file-text"></i>
+                        <span data-i18n="general.tests"></span>
+                        <span class="pull-right-container">
+                            <span id="counter" class="label label-primary pull-right"><%=collection.length%>
+                        </span>
+                    </span>
+                    </a>
+                </li>
+                <!-- Tests new -->
+                <li class="treeview">
+                    <a href="#" class="newTest">
+                        <span data-i18n="tests.insert"></span>
+                        <span class="pull-right-container">
+                            <span class="label label-success pull-right">+</span>
+                        </span>
+                    </a>
+
+                </li>
+
+                <!-- Test subjects -->
+                <li class="header" data-i18n="questions.filterbuyubject"></li>
+            </ul>
+        </section>
+        <!-- /.sidebar -->
+    </aside>
+
+    <div class="content-wrapper">
+
+        <% _.each(collection,function(test){ %>
+        <div class="col-md-12 col-sm-12 testItem">
+            <!-- Box Comment -->
+            <div class="box box-widget collapsed-box">
+                <div class="box-header with-border">
+                    <div class="user-block">
+                        <img class="img-circle" src=" ../img/<%= test.subject.split(':')[0] %>.png" alt="User
+                        Image">
+                        <span class="username"><span class="info-box-text"><%=test.title%></span></span>
+                        <span class="description"><%=test.questions.length%></span>
+                        <span class="hidden"><%=test.subject%></span>
+                        <span class="hidden"><%=test.title%></span>
+                    </div>
+                    <!-- /.user-block -->
+                    <div class="box-tools">
+
+                        <button filled="false" id="<%=test._id%>" type="button" class="btn btn-box-tool previewTest"
+                                data-widget="collapse"><i
+                                class="fa fa-plus"></i>
+                        </button>
+                    </div>
+                    <!-- /.box-tools -->
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div id="mvCrsl<%=test._id%>" class="carousel slide" data-ride="carousel">
+
+                        <ol class="carousel-indicators">
+
+                        </ol>
+                        <!-- Wrapper for slides -->
+                        <div class="carousel-inner" role="listbox">
+
+                        </div>
+
+                        <!-- Left and right controls -->
+                        <a class="left carousel-control" href="#mvCrsl<%=test._id%>" role="button" data-slide="prev"
+                           style="
+    color: #F9D0DC;">
+                            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="right carousel-control" href="#mvCrsl<%=test._id%>" role="button"
+                           data-slide="next" style="
+    color: #F9D0DC;">
+                            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                    <button type="button" class="btn btn-default btn-xs cloneTest" value="<%=test._id%>"><i
+                            class="fa fa-clone"></i> Clonar
+                    </button>
+                    <% if ( test.profID == window.sessionStorage.getItem("user") || test.profID ==
+                    window.localStorage.getItem("user")){ %>
+                    <button type="button" class="btn btn-default btn-xs editTest" value="<%=test._id%>"><i
+                            class="fa fa-edit"></i> Editar
+                    </button>
+                    <button type="button" class="btn btn-default btn-xs deleteTest" name="<%=test.title%>"
+                            value="<%=test._id%>"><i
+                            class="fa fa-trash-o"></i> Eliminar
+                    </button>
+
+                    <% } %>
+
+                    <span class="pull-right text-muted"><%=test.schoolYear%>º ano</span>
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer box-comments">
+                    <div class="box-body no-padding">
+                        Criado por: <%=test.profID%>
+                    </div>
+                </div>
+
+                <!-- /.box-footer -->
+            </div>
+            <!-- /.box -->
         </div>
         <% }); %>
-
     </div>
-</div>
-<div class="col-md-7" style="padding: 15px 30px; ">
-    <div id="testsPreview" class="row divWidget">
-        <div id="myCarousel" class="carousel slide" data-ride="carousel">
-
-            <ol class="carousel-indicators">
-
-            </ol>
-            <!-- Wrapper for slides -->
-            <div class="carousel-inner" role="listbox">
-
-            </div>
-
-            <!-- Left and right controls -->
-            <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev" style="
-    color: #F9D0DC;">
-                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next" style="
-    color: #F9D0DC;">
-                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-            </a>
-        </div>
-    </div>
-</div>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="attrTest" role="dialog">
-    <form id="attrTestForm">
-        <div class="modal-dialog">
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Modal Header</h4>
-                </div>
-                <div class="modal-body row">
-                    <input type="hidden" id="testID" name="genericID">
-
-                    <div class="col-md-6">
-                        <select class="form-control mandatory" id="studentsDD" name="studentID">
-                            <option disabled selected>Aluno</option>
-                        </select>
-                    </div>
-                    <div class="row col-md-6">
-                        <select class="form-control mandatory" id="selectType" name="type">
-                            <option disabled selected>Tipo de teste</option>
-                        </select>
-                    </div>
-                    <div class="row col-sm-12">
-                        <input type="text" class="form-control mandatory" placeholder="Descrição" name="description">
-                        <span class="glyphicon"><i class="fa fa-comment-o"></i></span>
-                    </div>
-
-                    <div class="row col-md-6">
-                        <div class='input-group date'>
-                            <span class="input-group-addon">De</span>
-                            <input type='text' class="form-control mandatory" name="beginDate"
-                                   placeholder="Data de Inicio"/>
-                        </div>
-                    </div>
-                    <div class="row col-md-6">
-                        <div class='input-group date'>
-                            <span class="input-group-addon">
-                                Até
-                            </span>
-                            <input type='text' class="form-control mandatory" name="endDate" placeholder="Data de Fim"/>
-
-                        </div>
-                    </div>
-                    <script type="text/javascript">
-                        $(function () {
-                            $('.date').datetimepicker({
-                                viewMode: 'days',
-                                format: 'DD-MM-YYYY'
-                            });
-                        });
-                    </script>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button id="btnAtrTest" type="submit" class="btn btn-success">Atribuir</button>
-                </div>
-            </div>
-
-        </div>
-    </form>
-</div>
 
 </div>

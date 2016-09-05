@@ -3,7 +3,6 @@ require('colors');
 var nano = require('nano')(process.env.COUCHDB);
 
 var db = nano.use('let_students');
-var dbe = nano.use('let_schools');
 var dbTests = nano.use('let_tests');
 var dbSchools = nano.use('let_schools');
 var dbResolutions = nano.use('let_resolutions');
@@ -11,113 +10,117 @@ var dbResolutions = nano.use('let_resolutions');
 var jsonQuery = require('json-query');
 
 
+var Schools = require("./models/Schools.js");
+var Students = require('./models/Students.js');
+var Tests = require("./models/Tests.js");
+var Resolutions = require("./models/Resolutions.js");
 
 
+exports.getAll = function (req, res) {
 
-
-
-
-
-exports.new = function (req, res) {
-
-    //console.log(req.body)
-    //Verify Fields
-    if (JSON.stringify(req.body).indexOf('""') == -1) {
-        //verifica se o username nao esta a ser utilizado
-        exists(req.body.username.trim().toLowerCase(), function (exists) {
-            if (!exists) {
-                //!TEMPORARY! - Separating Class From School
-                var newStudent = {
-                    "school": req.body.school,
-                    "name": req.body.name,
-                    "b64": req.body.b64,
-                    "number": req.body.number,
-                    "password": req.body.password,
-                    "username": req.body.username.trim().toLowerCase(),
-                    "class": req.body.class
-                };
-
-                db.insert(newStudent, function (err) {
-                    if (err)
-                        return res.status(err.statusCode).json({});
-                    else {
-                        console.log('New student was inserted'.green);
-                        res.send(200, {text: "Aluno inserido com sucesso!"});
-                    }
-                })
-            } else {
-                res.send(401, {text: "O nome de utilizador escolhido ja esta a ser utilizado"});
-            }
-        });
-
-    }
-    else {
-        console.log("Fields Missing");
-        res.send(401, {text: "Todos os campos sao de preenchimento obrigatório"});
-    }
-
-};
-//Verifica se o nome de utilizador ja esta a ser utilizado
-exports.exist = function (req, res) {
-    exists(req.body.username, function (exists) {
-        res.json(exists);
+    var teacher = req.user.name;
+    console.log('getting my students :' + teacher.bgBlue);
+    Students.getByTeacher(teacher, function (err, students) {
+        if (err) {
+            return res.status(500).json({
+                'result': 'nok',
+                'message': err
+            });
+        }
+        res.status(200).json(students);
     })
 };
 
-
 exports.get = function (req, res) {
-    var id = req.params.id;
-    console.log('student get: '.green + id);
+    var studentId = req.params.student;
+    console.log('student get: '.green + studentId);
 
-    db.get(id, function (err, body) {
+    Students.getById(studentId, function (err, body) {
         if (err) {
-            return res.status(err.statusCode).json({});
+            return res.status(500).json({
+                'result': 'nok',
+                'message': err
+            });
         }
-
-        res.json(body);
+        //delete body._id;
+        delete body._rev;
+        res.status(200).json(body);
     });
 };
-exports.getInfo = function (req, res) {
-    var id = req.params.id;
-    console.log('student get: '.green + id);
 
-    db.get(id, function (err, studentData) {
-        if (err) {
-            return res.status(err.statusCode).json({});
-        }
-        dbTests.list({
-            'include_docs': true, 'attachments': true,
-            'limit': undefined, 'descending': false
-        }, function (err, testsData) {
+exports.new = function (req, res) {
+
+    //Verify Fields
+    if (JSON.stringify(req.body).indexOf('""') == -1) {
+        var data = {
+            "school": req.body.school,
+            "name": req.body.name,
+            "b64": req.body.b64,
+            "number": req.body.number,
+            "password": req.body.password,
+            "username": req.body.username.trim().toLowerCase(),
+            "class": req.body.class
+        };
+        Students.add(data, function (err) {
             if (err) {
                 return res.status(500).json({
                     'result': 'nok',
                     'message': err
                 });
             }
-            //Recolhe os testes do aluno
-            var studentTests = jsonQuery('[doc][*studentID=' + id + ']', {data: testsData.rows}).value;
-            //console.log(studentTests)
-            //Adiciona-os ao json da view o nr de testes por resolver
+            res.status(200).json({});
+        })
+    }
+    else {
+        console.log("Fields Missing");
+        return res.status(500).json({
+            'result': 'nok',
+            'message': 'missingfields'
+        });
+    }
 
-            studentData.unsolvedTests = jsonQuery('[*solved=false]', {data: studentTests}).value || [];
-            studentData.solvedTests = jsonQuery('[*solved=true]', {data: studentTests}).value || [];
-            dbResolutions.list({
-                'include_docs': true, 'attachments': true,
-                'limit': undefined, 'descending': false
-            }, function (err, resolData) {
+};
+
+//Verifica se o nome de utilizador ja esta a ser utilizado
+exports.exist = function (req, res) {
+    Students.isUsernameAvailable(req.body.username, function (err, exists) {
+        if (err) {
+            return res.status(500).json({
+                'result': 'nok',
+                'message': err
+            });
+        }
+        res.json(exists);
+    })
+};
+
+exports.getDetails = function (req, res) {
+    var id = req.params.id;
+    console.log('student get: '.green + id);
+
+    Students.getById(id, function (err, studentData) {
+        if (err) {
+            return res.status(500).json({
+                'result': 'nok',
+                'message': err
+            });
+        }
+        Tests.getByStudent(id, function (err, testsData) {
+            if (err) {
+                return res.status(500).json({
+                    'result': 'nok',
+                    'message': err
+                });
+            }
+            studentData.unsolvedTests = jsonQuery('[*solved=false]', {data: testsData}).value || [];
+            studentData.solvedTests = jsonQuery('[*solved=true]', {data: testsData}).value || [];
+            Resolutions.getNotCorrectedByStudent(id, function (err, resolutions) {
                 if (err) {
                     return res.status(500).json({
                         'result': 'nok',
                         'message': err
                     });
                 }
-                //Recolhe os testes do aluno
-                var resolutions = jsonQuery('[doc][*studentID=' + id + '& note != -1]', {data: resolData.rows}).value;
-                for (var i = 0; i < resolutions.length; i++) {
-                    console.log(resolutions[i])
-                }
-
                 //Adiciona-os ao json da view
                 studentData.resolutions = resolutions || [];
 
@@ -125,12 +128,15 @@ exports.getInfo = function (req, res) {
                 //Search School Parameters
                 dbSchools.get(studentData.school, function (err, school) {
                     if (err) {
-                        return res.status(err.statusCode).json({});
+                        return res.status(500).json({
+                            'result': 'nok',
+                            'message': err
+                        });
                     }
                     studentData.schoolName = school.name;
                     var classe = jsonQuery('[classes][_id=' + studentData.class + ']', {data: school}).value;
                     studentData.classe = classe.year + "º " + classe.name;
-                    res.json(studentData);
+                    res.status(200).json(studentData);
                 });
 
             });
@@ -178,77 +184,6 @@ exports.editStudent = function (req, res) {
         console.log('Parameters Missing');
         res.send(401, {error: "Alguns parametros são de preenchimento obrigatório"});
     }
-};
-
-exports.getAll = function (req, res) {
-
-    var user = req.params.userID;
-    console.log('getting my students :' + user.bgBlue);
-    var escolas = [];
-
-    //Get Teacher Classes
-    dbe.list({
-        'include_docs': true,
-        'attachments': false,
-        'limit': undefined,
-        'descending': true
-    }, function (err, body) {
-        if (err) {
-            console.log(err)
-            return res.status(err.statusCode, {error: "Erro a procurar alunos"});
-        }
-        console.log("schools")
-        console.log(body)
-        //Fetch Classes
-
-        for (var i in body.rows) {
-
-            for (var j in body.rows[i].doc.classes) {
-
-                for (var k in body.rows[i].doc.classes[j].profs) {
-
-                    if (body.rows[i].doc.classes[j].profs[k]._id == user)
-                        escolas.push({
-                            "_id": body.rows[i].doc.classes[j]._id,
-                            "details": body.rows[i].doc.name + ", " + body.rows[i].doc.classes[j].year + "º " + body.rows[i].doc.classes[j].name
-                        })
-                    //classes.push({"_id": body.rows[i].doc.classes[j]._id});
-                }
-            }
-        }
-        console.log(escolas)
-        //Fetch Students From Classes
-        db.list({
-            'include_docs': true,
-            'attachments': false,
-            'limit': undefined,
-            'descending': true
-        }, function (err, body2) {
-            if (err) {
-                return res.status(err.statusCode).json({});
-            }
-            var students = body2.rows;
-
-            //Filtra "os meus alunos"
-            //Adiciona a string da escola
-
-            var myStudents = [];
-            for (var i = 0; i < students.length; i++) {
-                //Remove a password dos campos enviados para a view
-                delete students[i].doc.password;
-                //Adiciona o campo com o nome da escola e aturma por extenso
-                for (var esc in escolas) {
-                    if (escolas[esc]._id == students[i].doc.class) {
-                        students[i].doc.schoolDetails = escolas[esc].details;
-                        myStudents.push(students[i])
-                    }
-                }
-            }
-            //console.log(myStudents)
-            // console.log(jsonQuery('doc', {data: myStudents}).value)
-            res.json(jsonQuery('doc', {data: myStudents}).value);
-        });
-    });
 };
 
 exports.removeStudent = function (req, res) {
@@ -335,25 +270,4 @@ exports.removeStudent = function (req, res) {
 
 };
 
-function exists(username, callback) {
-    //Fetch Students From Classes
-    db.list({
-        'include_docs': true,
-        'attachments': false,
-        'limit': undefined,
-        'descending': true
-    }, function (err, studentsList) {
-        if (err) {
-            return res.status(err.statusCode).json({});
-        }
-        //Verica se o username ja esta em uso
-        var student = jsonQuery('rows[doc][*username=' + username + ']', {data: studentsList}).value;
-
-        if (student.length > 0) {
-            callback(true);
-        } else {
-            callback(false);
-        }
-    });
-};
 

@@ -1,21 +1,39 @@
 window.NavigationBarView = Backbone.View.extend({
 
-    events: {},
+    events: {
+        "click .gotoprofile": "gotoprofile",
+        "click .gotostudents": "gotostudents",
+        "click .gotoschools": "gotoschools",
+    },
 
+    gotoprofile: function (e) {
+        e.preventDefault();
+        app.navigate('user', true);
+    },
+
+    gotostudents: function (e) {
+        e.preventDefault();
+        app.navigate('students', true);
+    },
+
+    gotoschools: function (e) {
+        e.preventDefault();
+        app.navigate('schools', true);
+    },
 
     //Class Initializer
-    initialize: function (name) {
+    initialize: function () {
+        this.data = this.model.toJSON();
     },
 
     //Class Renderer
     render: function () {
-        var name = window.sessionStorage.getItem("name") || window.localStorage.getItem("name");
-        var b64 = window.sessionStorage.getItem("b64") || window.localStorage.getItem("b64");
+        var self = this;
+        $(this.el).html(this.template(self.data));
+        /// $("body", this.el).addClass("sidebar-collapse")
 
-        $(this.el).html(this.template({
-            name: name, b64: b64
-        }))
-        ;
+        console.log(self.data)
+
 
         return this;
     }

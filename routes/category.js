@@ -3,7 +3,7 @@ require('colors');
 //DB Info
 var nano = require('nano')(process.env.COUCHDB);
 var db = nano.use('let_categories');
-Categories = require("./cat.js")
+Categories = require("./models/Categories.js")
 
 //Get category by ID
 exports.get = function (req, res) {
@@ -55,13 +55,59 @@ exports.new = function (req, res) {
 
 };
 
+exports.addContent = function (req, res) {
+
+    var idSubject = req.params.subject;
+
+    if (req.body.content) {
+        var presentYear = new Date().getFullYear();
+        Categories.getById(idSubject, function (err, data) {
+            if (err) {
+                return res.status(500).json({
+                    'result': 'nok',
+                    'message': err
+                });
+            }
+            //Generate New Class Skeleton
+            var newContent = {
+                _id: "C" + presentYear + new Date().getTime() + (data.content.length + 1),
+                name: req.body.content,
+                specification: []
+            };
+            //Add New Class Skeleton to School
+            data.content.push(newContent);
+            Categories.update(idSubject, data, function (err) {
+                if (err) {
+                    return res.status(500).json({
+                        'result': 'nok',
+                        'message': err
+                    });
+                }
+                res.status(200).json({});
+            });
+        });
+    } else {
+        console.log('Parameters Missing');
+        res.send(401, {error: "Alguns parametros são de preenchimento obrigatório"});
+    }
+
+};
+
 exports.addSpecif = function (req, res) {
-    console.log(req.body)
-    console.log('Adding specification: '.green + req.body.subject);
+
+    console.log(req.body);
+    console.log('Adding specification: '.green + req.body);
+
+    var idSubject = req.params.subject;
+    var idContent = req.params.content;
+
+    if (!req.body.specification) {
+        console.log('Parameters Missing');
+        return res.status(500).json({error: "Alguns parametros são de preenchimento obrigatório"});
+    }
     var newId = new Date().getTime();
-    var inserido = false;
     //Search category Parameters
-    db.get(req.body.subject, function (err, data) {
+    Categories.getById(idSubject, function (err, data) {
             if (err) {
                 console.log("Especificação não inserida");
                 return res.status(400).json({});
@@ -69,10 +115,13 @@ exports.addSpecif = function (req, res) {
                 //percorre a categoria ate encontrar o conteudo desejado e adiciona a nova especificacao
                 for (var i = 0; i < data.content.length; i++) {
                     console.log(i)
-                    if (data.content[i]._id == req.body.content) {
-                        data.content[i].specification.push({_id: newId, name: req.body.specification});
+                    if (data.content[i]._id == idContent) {
+                        data.content[i].specification.push({
+                            _id: 'E' + newId + data.content.length,
+                            name: req.body.specification
+                        });
                         //insere na bd
-                        db.insert(data, req.body.subject, function (err) {
+                        Categories.update(idSubject, data, function (err) {
                             if (err) {
                                 console.log("Especificação não inserida");
                                 return res.send(200, {text: "Especificação não inserida."});
@@ -86,6 +135,7 @@ exports.addSpecif = function (req, res) {
         }
     );
 };
+
 exports.getAll = function (req, res) {
     console.log('category getAll'.yellow);
     Categories.getAll(function (err, categories) {

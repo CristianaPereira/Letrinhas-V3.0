@@ -1,87 +1,142 @@
-<nav class="navbar navbar-default sidebar" role="navigation">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse"
-                    data-target="#bs-sidebar-navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-        </div>
-        <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                <li><a>Total: <label id="studentsBadge" class=""><%=collection.length%></label>
-                     <span style="font-size:16px;"
-                           class="pull-right hidden-xs showopacity fa fa-graduation-cap"></span>
-                </a></li>
-                <li>
-                    <input id="txtSearch" type="text" class="form-control" placeholder="Pesquisar"
-                           aria-describedby="basic-addon2">
-                </li>
-                <li class="active">
-                    <a id="orderBy" class="order">Ordenar
-                        <span style="font-size:16px;"
-                              class="pull-right hidden-xs showopacity fa fa-sort-alpha-desc"></span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#students/new">Inserir
-                        <span style="font-size:16px;"
-                              class="pull-right hidden-xs showopacity glyphicon glyphicon-plus-sign"></span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
-<div id="studentsDiv" class="mainDiv">
+<aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar" style="height: auto;">
 
-    <% var classes =_.groupBy(collection, 'schoolDetails'); %>
-    <% _.each(classes,function(classe,iClass){ %>
-    <h3><i class="fa fa-university"></i> <%=iClass%></h3>
-    <hr class="card-grid-hr">
-    <% _.each(classe,function(student){ %>
-    <div class="card-grid animated bounceInUp">
-        <div class="front">
-            <img src="<%= student.b64 %>" class="card-grid-img">
-            <% var abrName=(student.name).split(" ") %>
-            <span class="card-grid-span"><%= abrName[0]%> <%= abrName[abrName.length-1]%> </span>
+        <!-- search form -->
+        <div class="input-group">
+            <input type="text" id="txtSearch" class="form-control" placeholder="Procurar...">
+              <span class="input-group-btn">
+                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+                </button>
+              </span>
         </div>
-        <div class="back">
-            <span><i class="fa fa-user"></i>  <%=student.name%> <b>(<%=student.username%>)</b></span><br>
-            <hr class="card-grid-hr">
-            <span><i class="fa fa-university"></i> <%=student.schoolDetails%></span><br>
-            <hr class="card-grid-hr">
-            <span><i class="fa fa-graduation-cap"></i> <%=student.number%></span><br>
-            <hr class="card-grid-hr">
-            <div class="col-md-4 col-xs-4">
-                <a href="#students/<%=student._id%>/info" class="card-grid-a">
-                    <i class="fa fa-pie-chart"></i>
-                </a>
-            </div>
-            <div class="col-md-4 col-xs-4">
-                <a href="#students/<%=student._id%>/edit" class="card-grid-a">
-                    <i class="fa fa-edit"></i>
-                </a>
-            </div>
-            <div class="col-md-4 col-xs-4">
-                <a class="deleteStudent card-grid-a" id="<%=student._id%>" value="<%=student.name%>">
-                    <i class="fa fa-trash"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-    <% }); %>
-    <% }); %>
 
+        <!-- /.search form -->
+        <!-- sidebar menu: : style can be found in sidebar.less -->
+        <ul class="sidebar-menu">
+            <li class="treeview">
+                <a>
+                    <i class="fa fa-graduation-cap"></i>
+                    <span>Alunos</span>
+                    <span class="pull-right-container">
+                        <span class="label label-primary pull-right" id="counter"><%=collection.length%></span>
+                    </span>
+                </a>
+            </li>
+
+            <li class="treeview">
+                <a href="#">
+                    <span>Filtrar</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <% _.each(collection,function(school){ %>
+                    <li><a href="#"><i class="fa fa-book text-yellow"></i>
+                        <span><%=school.name%></span></a></li>
+                    <% }); %>
+
+
+                </ul>
+            </li>
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-filter"></i> <span>Filtrar</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+
+                    <% console.log(_.groupBy(collection, 'schoolDetails')); %>
+                    <% _.each(collection,function(student){ %>
+
+                    <% }); %>
+                    <li><a href="#"><i class="fa fa-circle-o"></i> Level One</a></li>
+                    <li>
+                        <a href="#"><i class="fa fa-circle-o"></i> Level One
+                <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="#"><i class="fa fa-circle-o"></i> Level Two</a></li>
+                            <li>
+                                <a href="#"><i class="fa fa-circle-o"></i> Level Two
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
+                                    <li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><a href="#"><i class="fa fa-circle-o"></i> Level One</a></li>
+                </ul>
+            </li>
+
+        </ul>
+    </section>
+    <!-- /.sidebar -->
+</aside>
+<div class="content-wrapper">
     <% _.each(collection,function(student){ %>
+    <div class="col-md-4 col-sm-6 studentItem" name="<%=student.name%>">
+        <!-- Box Comment -->
+        <div class="box box-widget collapsed-box">
+            <div class="box-header with-border">
+                <div class="user-block">
+                    <img class="img-circle" src="<%=student.b64%>" alt="User Image">
+                    <span class="username"><span class="info-box-text"><%=student.name%></span></span>
+                    <span class="description"><%=student.schoolDetails%> (<%=student.classDetails%>)</span>
+                </div>
+                <!-- /.user-block -->
+                <div class="box-tools">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                            class="fa fa-plus"></i>
+                    </button>
+                </div>
+                <!-- /.box-tools -->
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <img class="img-responsive pad" src="<%=student.b64%>" alt="Photo">
+                <button type="button" class="btn btn-default btn-xs statStudent" value="<%=student._id%>"><i
+                        class="fa fa-edit"></i> Estatisticas
+                </button>
+                <button type="button" class="btn btn-default btn-xs editStudent" value="<%=student._id%>"><i
+                        class="fa fa-edit"></i> Editar
+                </button>
+                <button type="button" class="btn btn-default btn-xs deleteStudent" name="<%=student.name%>"
+                        value="<%=student._id%>"><i
+                        class="fa fa-trash-o"></i> Eliminar
+                </button>
+                <span class="pull-right text-muted">Nrº <%=student.number%></span>
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer box-comments">
+                <div class="box-body no-padding">
+                    <table id="layout-skins-list" class="table table-striped bring-up nth-2-center">
+                        <thead>
+                        <tr>
+                            <th style="width: 210px;">Turmas</th>
+                            <th>Preview</th>
+                        </tr>
+                        </thead>
+                        <tbody>
 
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
+            <!-- /.box-footer -->
+        </div>
+        <!-- /.box -->
+    </div>
     <% }); %>
 </div>
-
-
-<script>
-    $(".card-grid").flip({trigger: 'hover'});
-</script>

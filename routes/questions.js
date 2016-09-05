@@ -172,7 +172,7 @@ exports.get = function (req, res) {
 exports.test = function (req, res) {
 
     //If there's any empty field, stops right here
-
+    console.log(req.body.wordTimes)
     if (JSON.stringify(req.body).indexOf('""') != -1) {
 
         console.log('Required Arguments Missing'.green);
@@ -204,6 +204,7 @@ exports.test = function (req, res) {
         switch ($question.type) {
             case "text":
                 $question.content["text"] = req.body.text;
+                $question.content["wordTimes"] = JSON.parse(req.body.wordTimes);
                 break;
 
             case "list":

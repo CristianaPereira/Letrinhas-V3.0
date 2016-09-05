@@ -15,28 +15,16 @@ window.Home = Backbone.View.extend({
         var keyo = window.sessionStorage.getItem("keyo");
 
         if (keyo) {
-            //Check User Authenticity
-            modem('GET', 'me',
-
-                //Response Handler
-                function (json) {
-                    console.log(json)
-                    //If Session Already Present, Go to user main
-                    app.navigate("/user", {
-                        trigger: true
-                    });
-                },
-
-                //Error Handling
-                function (xhr, ajaxOptions, thrownError) {
-                    //Remove Session Key if login atempt failed
-                    window.sessionStorage.removeItem("keyo");
-                }
-            );
-
+            app.navigate("/user", {
+                trigger: true
+            });
         }
         else {
-            attemptLogin();
+            attemptLogin(function () {
+                app.navigate("/user", {
+                    trigger: true
+                });
+            });
         }
     },
 
@@ -136,7 +124,7 @@ window.Home = Backbone.View.extend({
         $(this.el).html(this.template());
         $(".card-grid", this.el).flip({trigger: 'hover'});
         $('.card-grid', this.el).css({'height': $('.card-grid').width() + 'px'});
-        console.log($(".card-grid").width())
+        $('#fullpage', this.el).i18n();
         return this;
     }
 

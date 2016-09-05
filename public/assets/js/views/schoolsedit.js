@@ -32,19 +32,16 @@ window.SchoolsEdit = Backbone.View.extend({
     deleteClass: function (e) {
         e.preventDefault();
         $('#modalConfirmDel').modal("hide");
-        modem('POST', 'schools/' + this.data._id + '/removeclass',
+        modem('POST', 'schools/' + this.data._id + '/removeclass/' + $(e.target).attr("value"),
             //Response Handler
             function () {
                 document.location.reload(true);
             },
-
             //Error Handling
             function (xhr, ajaxOptions, thrownError) {
-                failMsg($("#classes"), "Não foi possível remover a turma. \n (" + JSON.parse(xhr.responseText).error + ").");
+                failMsg($("body"), "Não foi possível remover a turma. \n (" + JSON.parse(xhr.responseText).result + ").");
             },
-            new FormData($('<form>', {}).append(
-                $('<input>', {name: "_id", value: $(e.target).attr("value")})
-            )[0])
+            new FormData()
         );
 
 
@@ -119,7 +116,6 @@ window.SchoolsEdit = Backbone.View.extend({
         e.preventDefault();
 
         var self = this;
-        console.log(self.model)
         //Se algum dos campos estiver vazio
         var allListElements = $("#newclassform .mandatory");
         //Verifies if all inputs are OK
@@ -139,6 +135,8 @@ window.SchoolsEdit = Backbone.View.extend({
                 },
                 new FormData($("#newclassform")[0])
             );
+        } else {
+            alertMsg($("body"), "Escolha um ano e uma designação para a turma.")
         }
     },
 

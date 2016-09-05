@@ -127,13 +127,13 @@ var auth = function (req, res, next) {
                 else {
                     //Report Error (Rong Password)
                     console.log("Login Attempt Failed - Wrong info");
-                    return res.status(401).json({text: 'Dados incorrectos.'});
+                    return res.status(401).json({result: 'wrongpassword'});
                 }
             }
             else {
                 //Report Error (Rong Username)
                 console.log("Login Attempt Failed" + err);
-                return res.status(401).json({text: 'Utilizador não encontrado.'});
+                return res.status(401).json({result: 'usernotregisted'});
             }
 
         });
@@ -141,7 +141,7 @@ var auth = function (req, res, next) {
     else {
         //Report Error (No Auth Credentials)
         console.log("Login Attempt Failed - Missing user");
-        return res.status(401).json({text: 'Não está Loggado'});
+        return res.status(401).json({result: 'notlogged'});
     }
 
 };
@@ -180,10 +180,14 @@ app.use('/', router);
 
 //-----------------------------------------------------CATEGORIES
 app.route('/categories')
-    .get(auth, perms(2), category.getAll);
+    .get(auth, perms(2), category.getAll);//*
 
-app.route('/categories/specification')
-    .post(auth, perms(2), category.addSpecif);
+app.route('/categories/:subject/addContent')
+    .put(auth, perms(2), category.addContent);
+
+app.route('/categories/:subject/content/:content/addSpecification')
+    .put(auth, perms(2), category.addSpecif);
+
 
 //-----------------------------------------------------QUESTIONS
 
@@ -211,18 +215,18 @@ app.route('/schools')
     .post(auth, perms(3), schools.new)
     .get(auth, perms(3), schools.getAll);
 
-app.route('/schools/:id')
+app.route('/schools/:school')
     .put(auth, perms(3), schools.editSchool)
     .get(auth, perms(3), schools.get)
     .delete(auth, perms(3), schools.removeSchool);
 
-app.route('/schools/:id/newclass')
-    .post(auth, perms(3), schools.newClass);
+app.route('/schools/:school/newclass')
+    .post(auth, perms(3), schools.addClass);
 
-app.route('/schools/:id/removeclass')
+app.route('/schools/:school/removeclass/:class')
     .post(auth, perms(3), schools.removeClass);
 
-app.route('/classes/:school/:class')
+app.route('/schools/:school/classes/:class')
     .get(auth, perms(3), schools.getClassInfo);
 
 
@@ -231,16 +235,16 @@ app.route('/classes/:school/:class')
 //Only Return Teacher Related Students
 app.route('/students')
     .post(auth, perms(2), students.new)
-    .get(auth, tself, perms(2), students.getAll);
+    .get(auth, perms(2), students.getAll);
 
 
-app.route('/students/:id')
+app.route('/students/:student')
     .put(auth, perms(2), students.editStudent)
     .get(auth, perms(2), students.get)
     .delete(auth, perms(3), students.removeStudent);
 
 app.route('/students/:id/info')
-    .get(auth, perms(2), students.getInfo)
+    .get(auth, perms(2), students.getDetails)
 
 
 app.route('/students/exist')
@@ -256,24 +260,27 @@ app.route('/statistics')
 app.route('/me')//GETS ACTUAL USER DATA
     .get(auth, tself, teachers.getMyData);
 
+app.route('/login')//GETS ACTUAL USER DATA
+    .get(auth, tself, teachers.get);
+
 app.route('/teachers')
     .post(auth, perms(3), teachers.new)
     .get(auth, perms(3), teachers.getAll);
 
-app.route('/teachers/:id')//GETS SPECIFIC USER
+app.route('/teachers/:teacher')//GETS SPECIFIC USER
     .get(auth, perms(3), teachers.get)
     .delete(auth, perms(3), teachers.delete)
-    .put(auth, perms(3), teachers.updateDetails);
+    .put(auth, perms(3), teachers.editDetails);
 
 
 app.route('/teachers/editPasswd')
     .post(auth, perms(3), teachers.editPasswd);
 
-app.route('/teachers/editClasses')
-    .post(auth, perms(3), teachers.editClasses);
+app.route('/teachers/:teacher/editClasses')
+    .post(auth, perms(3), teachers.addToClass);
 
-app.route('/teachers/rmvClass')
-    .post(auth, perms(3), teachers.rmvClass);
+app.route('/teachers/:teacher/removeFromClass')
+    .post(auth, perms(3), teachers.removeFromClass);
 
 
 //-----------------------------------------------------TESTS

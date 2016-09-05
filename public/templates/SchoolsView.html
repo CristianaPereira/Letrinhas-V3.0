@@ -1,71 +1,123 @@
-<nav class="navbar navbar-default sidebar" role="navigation">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse"
-                    data-target="#bs-sidebar-navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-        </div>
-        <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                <li><a>Total: <label id="schoolsBadge" class=""><%=collection.length%></label>
-                     <span style="font-size:16px;"
-                           class="pull-right hidden-xs showopacity fa fa-institution"></span>
-                </a></li>
+<div class="translations">
+    <!--MENU -->
+    <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar" style="height: auto;">
+
+            <!-- search form -->
+            <div class="input-group">
+                <input type="text" id="txtSearch" class="form-control" placeholder="Procurar...">
+              <span class="input-group-btn">
+                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+                </button>
+              </span>
+            </div>
+
+            <!-- /.search form -->
+            <!-- sidebar menu: : style can be found in sidebar.less -->
+            <ul class="sidebar-menu">
                 <li>
-                    <input id="txtSearch" type="text" class="form-control" placeholder="Pesquisar"
-                           aria-describedby="basic-addon2">
-                </li>
-                <li class="active">
-                    <a id="orderBy" class="order">Ordenar
-                        <span style="font-size:16px;"
-                              class="pull-right hidden-xs showopacity fa fa-sort-alpha-desc"></span>
+                    <a>
+                        <i class="fa fa-institution"></i>
+                        <span>Escolas</span>
+                        <span class="pull-right-container">
+                            <span id="counter" class="label label-primary pull-right"><%=collection.length%>
+                        </span>
+                    </span>
                     </a>
                 </li>
                 <li>
-                    <a href="#schools/new">Inserir
-                        <span style="font-size:16px;"
-                              class="pull-right hidden-xs showopacity glyphicon glyphicon-plus-sign"></span>
+                    <a href="#" class="newSchool">
+                        <span data-i18n="btns.newschool"></span>
+                        <span class="pull-right-container">
+                            <span class="label label-success pull-right">+
+                        </span>
+                    </span>
                     </a>
                 </li>
+                <li class="treeview">
+                    <a href="#">
+                        <span>Filtrar</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <% _.each(collection,function(school){ %>
+                        <li><a href="#"><i class="fa fa-book text-yellow"></i>
+                            <span><%=school.name%></span></a></li>
+                        <% }); %>
+
+
+                    </ul>
+                </li>
+
             </ul>
-        </div>
-    </div>
-</nav>
-<div id="schoolsDiv" class="mainDiv">
-    <div class=" panel-body col-md-5" align=center>
+        </section>
+        <!-- /.sidebar -->
+    </aside>
 
-        <div id="schoolsContent" class=" panel-body col-md-12" align=center>
-            <% _.each(collection,function(school){ %>
-            <div class="row">
-                <div class="listButton divWidget"
-                     id='<%= school._id %>' value="<%= school.name %>">
-                    <img src="<%= school.b64 %>">
-                    <span><%= school.name %></span>
-                    <div class="editDeleteOp">
-                        <a href="#schools/<%= school._id %>/edit" title="Editar escola">
-                            <i id="btnEdit" class="fa fa-edit"></i>
-                        </a>
-                        <a href="#schools" class="delete" title="Apagar escola">
-                            <i class="fa fa-trash-o"></i>
-                        </a>
+    <div class="content-wrapper">
+        <% _.each(collection,function(school){ %>
+        <div class="col-md-4 col-sm-6 schoolItem" name="<%=school.name%>">
+            <!-- Box Comment -->
+            <div class="box box-widget collapsed-box">
+                <div class="box-header with-border">
+                    <div class="user-block">
+                        <img class="img-circle" src="<%=school.b64%>" alt="User Image">
+                        <span class="username"><span class="info-box-text"><%=school.name%></span></span>
+                        <span class="description"><%=school.address%></span>
                     </div>
+                    <!-- /.user-block -->
+                    <div class="box-tools">
 
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                class="fa fa-plus"></i>
+                        </button>
+                    </div>
+                    <!-- /.box-tools -->
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <img class="img-responsive pad" src="<%=school.b64%>" alt="Photo">
+                    <button type="button" class="btn btn-default btn-xs editSchool" value="<%=school._id%>"><i
+                            class="fa fa-edit"></i> Editar
+                    </button>
+                    <button type="button" class="btn btn-default btn-xs deleteSchool" name="<%=school.name%>"
+                            value="<%=school._id%>"><i
+                            class="fa fa-trash-o"></i> Eliminar
+                    </button>
+                    <span class="pull-right text-muted"><%=school.classes.length%> turmas associadas</span>
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer box-comments">
+                    <div class="box-body no-padding">
+                        <table id="layout-skins-list" class="table table-striped bring-up nth-2-center">
+                            <thead>
+                            <tr>
+                                <th style="width: 210px;">Turmas</th>
+                                <th>Preview</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <% _.each(school.classes,function(classe){ %>
+                            <tr>
+                                <td><%=classe.year%> º <%=classe.name%></td>
+                                <td><a id="<%=classe._id%>" school="<%=school._id%>" href="#" data-skin="skin-blue"
+                                       class="btn btn-primary btn-xs showClassInfo"><i
+                                        class="fa fa-eye" align="center"></i></a></td>
+                            </tr>
+                            <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
+                <!-- /.box-footer -->
             </div>
-            <% }); %>
+            <!-- /.box -->
         </div>
+        <% }); %>
     </div>
 
-
-    <div class="col-md-7" style="padding: 30px; " align="center">
-        <div id="schoolsPreview" class="col-md-12 divWidget" align="center">
-        </div>
-    </div>
 </div>
-
-

@@ -1,15 +1,57 @@
 window.TestsView = Backbone.View.extend({
     events: {
-        'click .listButton': "fillPreview",
+        'click .previewTest': "fillPreview",
         'click .fa-calendar': "assocTeste",
         'click #btnAtrTest': "atrTeste",
-        'click dropdown-submenu': "filterBy",
-        'click .contentFilter': "filterBycontent",
-        "keyup #txtSearch": "filterBy",
-        "click #orderBy": "orderTests",
+        "click .newTest": "newTest",
+        'click .contentFilter': "filterBySubject",
+        "keyup #txtSearch": "filterByText",
         "click .deleteTest": "confirmDelete",
         "click #deletebtn": "deleteTest",
 
+    },
+
+    newTest: function (e) {
+        e.preventDefault();
+        app.navigate('tests/new', true);
+    },
+    //Applys filters
+    filterBy: function () {
+        $("#nodata").remove();
+        //Esconde todos os alunos
+        $(".testItem").show();
+
+        var self = this;
+        console.log(self.filters)
+        $(".testItem:not(:containsi('" + self.filters.text + "'))").hide();
+        $(".testItem:not(:containsi('" + self.filters.sub + "'))").hide();
+
+        //verifica o tipo
+
+        var nQuest = $(".testItem:visible").length;
+        $("#counter").html(nQuest + "/" + this.data.length);
+        if (!nQuest) {
+            $(".content-wrapper").append(
+                $('<span>', {
+                    id: 'nodata',
+                    html: 'UPS! Não encontrámos testes que correspondam aos filtros seleccionados. \n'
+                })
+            )
+        }
+    },
+
+    filterBySubject: function (e) {
+        e.preventDefault();
+        var self = this;
+        self.filters.sub = $(e.currentTarget).attr('value');
+        self.filterBy();
+    },
+
+
+    filterByText: function (e) {
+        var self = this;
+        self.filters.text = $(e.currentTarget).val();
+        self.filterBy();
     },
 
     //Exibe o modal com os campos necessarios para associar o teste
@@ -23,38 +65,6 @@ window.TestsView = Backbone.View.extend({
         //$("#mLogin  #myCarousel").attr("id", "atrTest");
         // $("#mLogin  a").attr("href", "#atrTest");
         $("#attrTest").modal("show");
-    },
-    //Applys filters
-    filterBy: function () {
-        var typedText = $("#txtSearch").val();
-
-        //Esconde todos os testes
-        $(".listButton").hide();
-        //Mostra apenas os que contém a string escrita
-        $(".listButton:containsi(" + typedText + ")").show();
-
-        //Esconde os testes cujas checkboxes não estão seleccionadas
-        $.each($("input:checkbox:not(:checked)"), function (i, k) {
-            console.log($(k).attr("value"))
-            $(".listButton[type=" + $(k).attr("value") + "]").hide();
-        });
-
-        //Esconde os que ao correspondem conteudos seleccionados
-        $.each($(".listButton:visible"), function (i, k) {
-            //Se nao pertencerem à categoria escolhida, esconde-os
-            if ($(k).attr("value").indexOf($("#filterSubject").attr("filter")) == -1) {
-                $(k).hide();
-            }
-        });
-        $("#questionsBadge").text($(".listButton:visible").length + "/" + this.data.length)
-
-    },
-
-    //Applys filters
-    filterBycontent: function (e) {
-        var self = this;
-        $("#filterSubject").attr("filter", $(e.target).attr("value"));
-        self.filterBy();
     },
 
     //Atribui o teste ao aluno
@@ -84,21 +94,23 @@ window.TestsView = Backbone.View.extend({
     },
 
     fillPreview: function (e) {
-        //Se foi clicado no button e nao nos buttons da sopçoes
-        if ($(e.target).hasClass("listButton")) {
+
+        var testID = $(e.currentTarget).attr("id");
+        //Se ainda nao foi preenchido
+        if ($(e.currentTarget).attr('filled') == 'false') {
+            console.log('filling')
             var self = this;
             //Recolhe a info do teste
-            var test = this.collection.getByID($(e.currentTarget).attr("id"));
+            var test = this.collection.getByID(testID);
 
             //Recolhe a info de cada uma das perguntas do teste
-            $(".carousel-indicators").empty();
-            $("#myCarousel .carousel-inner").empty();
+            $("#mvCrsl" + testID + " .carousel-indicators").empty();
+            $("#mvCrsl" + testID + " .carousel-inner").empty();
             $.each(test.questions, function (testKey, quest) {
-                console.log(testKey)
-                console.log(quest)
+
                 //Adiciona o botao
-                $(".carousel-indicators").append($('<li>', {
-                    'data-target': '#myCarousel',
+                $("#mvCrsl" + testID + " .carousel-indicators").append($('<li>', {
+                    'data-target': "#mvCrsl" + testID,
                     'data-slide-to': testKey
                 }));
 
@@ -106,24 +118,23 @@ window.TestsView = Backbone.View.extend({
                 var question = new Question({id: quest._id});
                 question.fetch(function () {
                     //Adiciona o titulo
-                    $("#previewModalTitle").text(test.title)
                     //Adiciona a div onde será apresentado o conteúdo
-                    $("#myCarousel .carousel-inner").append($('<div>', {
-                        class: 'item', html: quest.title, id: 'questionsPreview' + testKey
+                    $("#mvCrsl" + testID + " .carousel-inner").append($('<div>', {
+                        class: 'item', html: quest.title, id: 'questionsPreview' + (testKey + '').concat(testID)
                     }));
                     //Exibe os dados do teste
-                    self.enchePreview(question.attributes, testKey);
+                    self.enchePreview(question.attributes, (testKey + '').concat(testID));
                     //Exibe a primeira pergunta do teste
-                    $('#myCarousel .carousel-indicators li:first').addClass('active');
-                    $('#myCarousel .carousel-inner > div:first').addClass('active');
+                    $("#mvCrsl" + testID + ' .carousel-indicators li:first').addClass('active');
+                    $("#mvCrsl" + testID + ' .carousel-inner > div:first').addClass('active');
                 })
 
             });
+            $(e.currentTarget).attr('filled', 'true')
         }
 
 
     },
-
 
     //Text Preview
     enchePreview: function (question, i) {
@@ -229,18 +240,105 @@ window.TestsView = Backbone.View.extend({
 
     },
 
+    setSideMenu: function () {
+        var self = this;
+        var cats = new Categories();
+        cats.fetch(function () {
+            var categories = cats.toJSON();
+            for (var i = 0; i < categories.length; i++) {
+                console.log(categories[i])
+                var $contents = $('<ul>', {class: "treeview-menu", style: "display: none;"});
+                $contents.append(
+                    $('<li>').append(
+                        $('<a>', {href: "#", class: "contentFilter", value: categories[i]._id}).append(
+                            $('<i>', {
+                                class: "fa fa-circle-o text-aqua"
+                            }),
+                            'All'
+                        )
+                    )
+                )
+                for (var sub = 0; sub < categories[i].content.length; sub++) {
+
+                    var $spec = $('<ul>', {class: "treeview-menu", style: "display: none;"});
+                    $spec.append(
+                        $('<li>').append(
+                            $('<a>', {
+                                href: "#",
+                                class: "contentFilter",
+                                value: categories[i].content[sub]._id
+                            }).append(
+                                $('<i>', {
+                                    class: "fa fa-circle-o text-aqua"
+                                }),
+                                'All'
+                            )
+                        )
+                    )
+                    for (var spec = 0; spec < categories[i].content[sub].specification.length; spec++) {
+
+                        $('.sidebar-menu', self.el).append(
+                            $spec.append(
+                                $('<li>').append(
+                                    $('<a>', {
+                                        href: "#",
+                                        class: "contentFilter",
+                                        value: categories[i].content[sub].specification[spec]._id
+                                    }).append(
+                                        $('<i>', {
+                                            class: "fa fa-circle-o text-aqua"
+                                        }),
+                                        categories[i].content[sub].specification[spec].name
+                                    )
+                                )
+                            )
+                        )
+                    }
+                    $('.sidebar-menu', self.el).append(
+                        $contents.append(
+                            $('<li>').append(
+                                $('<a>', {href: "#"}).append(
+                                    $('<i>', {
+                                        class: "fa fa-circle-o text-orange"
+                                    }), categories[i].content[sub].name
+                                    , $('<span>', {class: 'pull-right-container'}).append(
+                                        $('<i>', {class: "fa fa-angle-left pull-right"})
+                                    )
+                                ),
+                                $spec
+                            )
+                        )
+                    )
+                }
+                $('.sidebar-menu', self.el).append(
+                    $('<li>', {class: "treeview"}).append(
+                        $('<a>', {href: '#'}).append(
+                            $('<img>', {src: " ../img/" + categories[i]._id + ".png"}),
+                            $('<span>', {html: categories[i].subject}),
+                            $('<span>', {class: 'pull-right-container'}).append(
+                                $('<i>', {class: "fa fa-angle-left pull-right"})
+                            )
+                        ),
+
+                        $contents
+                    )
+                )
+            }
+            console.log('done')
+        })
+    },
+
     //Class Renderer
     render: function () {
         var self = this;
 
         //Check Local Auth
-
-        getFilters();
-
+        self.filters = {sub: '', text: ''};
+        self.setSideMenu();
         self.data.sort(sortJsonByCol('title'));
 
         $(this.el).html(this.template({collection: self.data}));
-
+        $('.translations', this.el).i18n();
         return this;
     }
 

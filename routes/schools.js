@@ -1,11 +1,11 @@
 var jsonQuery = require('json-query');
 
 var Schools = require("./models/Schools.js");
-var Students = require("./models/Students.js");
-
+var Students = require('./models/Students.js');
 
 exports.editSchool = function (req, res) {
-    Schools.getById(req.body.id, function (err, body) {
+    var idSchool = req.params.school;
+    Schools.getById(idSchool, function (err, data) {
         if (err) {
             return res.status(500).json({
                 'result': 'nok',
@@ -13,11 +13,11 @@ exports.editSchool = function (req, res) {
             });
         }
         //sets new data
-        body.set('name', req.body.name);
-        body.set('address', req.body.address);
-        body.set('b64', req.body.b64);
+        data.name = req.body.name;
+        data.address = req.body.address;
+        data.b64 = req.body.b64;
         //saves it
-        Schools.update(req.body.id, body.data, function (err) {
+        Schools.update(idSchool, data, function (err) {
             if (err) {
                 return res.status(500).json({
                     'result': 'nok',
@@ -27,12 +27,12 @@ exports.editSchool = function (req, res) {
             res.status(200).json({});
         });
     });
-};
+};//
 
 exports.get = function (req, res) {
 
-    var id = req.params.id;
-    Schools.getById(id, function (err, body) {
+    var schoolId = req.params.school;
+    Schools.getById(schoolId, function (err, body) {
         if (err) {
             return res.status(500).json({
                 'result': 'nok',
@@ -41,9 +41,9 @@ exports.get = function (req, res) {
         }
         //delete body._id;
         delete body._rev;
-        res.status(200).json(body.data);
+        res.status(200).json(body);
     });
-};
+};//*
 
 exports.getAll = function (req, res) {
 
@@ -54,9 +54,9 @@ exports.getAll = function (req, res) {
                 'message': err
             });
         }
-        res.status(200).json(body.data);
+        res.status(200).json(body);
     });
-};
+};//*
 
 exports.getClassInfo = function (req, res) {
 
@@ -71,11 +71,11 @@ exports.getClassInfo = function (req, res) {
             });
         }
         //delete body._id;
-        delete body.data._rev;
-        delete body.data._attachments;
+        delete body._rev;
+        delete body._attachments;
 
         //Obtem os dados da turma
-        body.data = jsonQuery('[classes][_id=' + idClass + ']', {data: body.data}).value;
+        body = jsonQuery('[classes][_id=' + idClass + ']', {data: body}).value;
 
         Students.getByClass(idClass, function (err, students) {
             if (err) {
@@ -84,11 +84,11 @@ exports.getClassInfo = function (req, res) {
                     'message': err
                 });
             }
-            body.data.students = students.data;
-            res.status(200).json(body.data);
+            body.students = students;
+            res.status(200).json(body);
         })
     });
-};
+};//*
 
 exports.new = function (req, res) {
     if (req.body.name && req.body.address && req.body.b64) {
@@ -126,13 +126,15 @@ exports.new = function (req, res) {
         console.log('Required Arguments Missing'.green);
         res.status(406).json({});
     }
-};
+};//*
 
-exports.newClass = function (req, res) {
+exports.addClass = function (req, res) {
+
+    var idSchool = req.params.school;
 
     if (req.body.name && req.body.year) {
         var presentYear = new Date().getFullYear();
-        Schools.getById(req.params.id, function (err, body) {
+        Schools.getById(idSchool, function (err, data) {
             if (err) {
                 return res.status(500).json({
                     'result': 'nok',
@@ -141,20 +143,15 @@ exports.newClass = function (req, res) {
             }
             //Generate New Class Skeleton
             var newClass = {
-                _id: "T" + presentYear + req.body.year + new Date().getTime() + (body.data.classes.length + 1),
+                _id: "T" + presentYear + req.body.year + new Date().getTime() + (data.classes.length + 1),
                 name: req.body.name,
-                //Pass it to integer
                 year: parseInt(req.body.year),
                 scholarYear: presentYear,
                 profs: []
             };
-
             //Add New Class Skeleton to School
-            body.data.classes.push(newClass);
-
-            //Update School
-            //saves it
-            Schools.update(body.id, body.data, function (err) {
+            data.classes.push(newClass);
+            Schools.update(idSchool, data, function (err) {
                 if (err) {
                     return res.status(500).json({
                         'result': 'nok',
@@ -163,29 +160,31 @@ exports.newClass = function (req, res) {
                 }
                 res.status(200).json({});
             });
-
         });
-
     } else {
         console.log('Parameters Missing');
         res.send(401, {error: "Alguns parametros são de preenchimento obrigatório"});
     }
 
 
-};
+};//*
 
 exports.removeClass = function (req, res) {
 
-    Students.getAll(function (err, body) {
+    var idSchool = req.params.school;
+    var idClass = req.params.class;
+
+    Students.getByClass(idClass, function (err, studentsData) {
         if (err) {
             return res.status(500).json({
                 'result': 'nok',
                 'message': err
             });
         }
+
         //Se a turma a ser apagada não possuir alunos
-        if (JSON.stringify(body.data).indexOf(req.body._id) == -1) {
-            Schools.getById(req.params.id, function (err, body1) {
+        if (studentsData.length == 0) {
+            Schools.getById(idSchool, function (err, schoolData) {
                 if (err) {
                     return res.status(500).json({
                         'result': 'nok',
@@ -193,14 +192,14 @@ exports.removeClass = function (req, res) {
                     });
                 }
                 //Search For The Correct Class
-                for (var c in body1.data.classes) {
+                for (var c in schoolData.classes) {
                     //Remove Class
-                    if (body1.data.classes[c]._id == req.body._id) {
-                        body1.data.classes.splice(c, 1);
+                    if (schoolData.classes[c]._id == idClass) {
+                        schoolData.classes.splice(c, 1);
                     }
                 }
                 //saves it
-                Schools.update(body1.data.id, body1.data, function (err) {
+                Schools.update(idSchool, schoolData, function (err) {
                     if (err) {
                         return res.status(500).json({
                             'result': 'nok',
@@ -216,21 +215,25 @@ exports.removeClass = function (req, res) {
             });
         }
     });
-};
+};//*
 
 exports.removeSchool = function (req, res) {
 
-    Students.getAll(function (err, body) {
+    var idSchool = req.params.school;
+    var idClass = req.params.class;
+
+    Students.getBySchool(idSchool, function (err, studentsData) {
         if (err) {
             return res.status(500).json({
                 'result': 'nok',
                 'message': err
             });
         }
+
         //Se a escola a ser apagada não possuir alunos
-        if (JSON.stringify(body.data).indexOf(req.params.id) == -1) {
+        if (studentsData.length == 0) {
             //Search School Info
-            Schools.getById(req.params.id, function (err, body1) {
+            Schools.getById(idSchool, function (err, schoolData) {
                 if (err) {
                     return res.status(500).json({
                         'result': 'nok',
@@ -238,11 +241,8 @@ exports.removeSchool = function (req, res) {
                     });
                 }
                 //Search School Info
-                Schools.delete(body1.data._id, body1.data._rev, function (err) {
+                Schools.delete(idSchool, schoolData._rev, function (err) {
                     if (err) {
-                        console.log(err)
-                        //Report Error (School Doenst Exists)
-                        console.log("Error Removing School");
                         return res.status(500).json({
                             'result': 'nok',
                             'message': err
@@ -260,5 +260,5 @@ exports.removeSchool = function (req, res) {
             });
         }
     });
-};
+};//*
 

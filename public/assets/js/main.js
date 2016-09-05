@@ -38,7 +38,7 @@ var Router = Backbone.Router.extend({
 
         //Pagina Inicial
         "home": "home",
-
+        "dev": "developer",
         "categories": "categories",
         //Teachers Routing
         "teachers": "teachers",
@@ -102,15 +102,19 @@ var Router = Backbone.Router.extend({
     navbar: function () {
         var self = this;
         $('#content').html(loadingSpinner());
-        isLogged();
-
-        //Load NavigationBar
         templateLoader.load(["NavigationBarView"],
             function () {
-                var v = new NavigationBarView({});
-                self.showView(v, $('#header'));
+                var ss = new Me();
+                ss.login(function () {
+                    var v = new NavigationBarView({
+                        model: ss
+                    });
+                    self.showView(v, $('#header'));
+                })
+
             }
         );
+
     },
 
 
@@ -131,6 +135,16 @@ var Router = Backbone.Router.extend({
         templateLoader.load(["Home"],
             function () {
                 var v = new Home({});
+                self.showView(v, $('#content'));
+            }
+        );
+    },
+    developer: function () {
+        var self = this;
+
+        templateLoader.load(["Developer"],
+            function () {
+                var v = new Developer({});
                 self.showView(v, $('#content'));
             }
         );
@@ -687,10 +701,31 @@ var Router = Backbone.Router.extend({
 
 });
 
+/*
+ templateLoader.load(["Home"],
+ function () {
+ app = new Router();
+ Backbone.history.start();
+ }
+ );*/
+//18n
+$(document).ready(function () {
+    var language = localStorage.getItem('language');
+    if (language === null) {
+        language = 'pt-PT';
+        localStorage.setItem('language', 'pt-PT');
+    }
 
-templateLoader.load(["Home"],
-    function () {
+    $.i18n.init({
+        lng: language,
+        ns: {
+            namespaces: ['ns.common'],
+            defaultNs: 'ns.common'
+        },
+        useLocalStorage: false,
+        useCookie: false
+    }, function (t) {
         app = new Router();
         Backbone.history.start();
-    }
-);
+    });
+});

@@ -2,6 +2,7 @@ window.CategoriesView = Backbone.View.extend({
 
     events: {
         "click .addSpecification": "addSpecification",
+        "click .addContent": "addContent",
         "click .editContent": "activateEditContent",
         "click .btnEditContent": "editContent"
     },
@@ -9,15 +10,23 @@ window.CategoriesView = Backbone.View.extend({
     addSpecification: function (e) {
         e.preventDefault();
         //obtem o form
-        var $form = $(e.target).parent().parent();
+        var $form = $(e.target).closest("form");
         //cria um novo data form
         var fd = new FormData($form[0]);
-        //inserts category and id on form
-        fd.append("content", $form.attr("content"));
-        fd.append("subject", $form.attr("subject"));
         //sends it
         var categ = new Category({});
-        categ.insertSpecif(fd);
+        categ.insertSpecif(fd, $form.attr("category"), $form.attr("content"));
+    },
+
+    addContent: function (e) {
+        e.preventDefault();
+        //obtem o form
+        var $form = $(e.target).closest("form");
+        //cria um novo data form
+        var fd = new FormData($form[0]);
+        //sends it
+        var categ = new Category({});
+        categ.insertContent(fd, $form.attr("category"));
     },
     //exibe o input e o botao para edicao do content
     activateEditContent: function (e) {
@@ -56,6 +65,7 @@ window.CategoriesView = Backbone.View.extend({
         var self = this;
         self.data.sort(sortJsonByCol('title'));
         $(this.el).html(this.template({collection: self.data}));
+        $('.translations', this.el).i18n();
         return this;
     },
 })

@@ -1,102 +1,51 @@
 window.SchoolsView = Backbone.View.extend({
     events: {
-        "click #orderBy": "orderSchools",
-        "keyup #txtSearch": "searchSchool",
-        'click .listButton': "enchePreview",
-        "click .delete": "confirmDelete",
+        "keyup #txtSearch": "filterBy",
+        'click .showClassInfo': "showClassInfo",
+        "click .newSchool": "newSchool",
+        "click .deleteSchool": "confirmDelete",
+        "click .editSchool": "editSchool",
         "click #deletebtn": "deleteSchool",
     },
 
-    orderSchools: function (e) {
-        var mylist = $('#schoolsContent');
+    //Applys filters
+    filterBy: function (e) {
+        //Esconde todos os alunos
+        $(".schoolItem").hide();
+        $(".schoolItem:containsi(" + $(e.currentTarget).val() + ")").show();
 
-        var listitems = mylist.children('div').get();
-
-        listitems.sort(function (a, b) {
-            return $(a).children('span').text().toUpperCase().localeCompare($(b).children('span').text().toUpperCase());
-        });
-        //ordenar de forma descendente/ascendente
-        if (!$(e.currentTarget).children('i').hasClass("fa-sort-alpha-asc")) {
-            listitems = listitems.reverse();
-            $(e.currentTarget).children('i').addClass("fa-sort-alpha-asc")
-            $(e.currentTarget).children('i').removeClass("fa-sort-alpha-desc")
-        } else {
-            $(e.currentTarget).children('i').removeClass("fa-sort-alpha-asc")
-            $(e.currentTarget).children('i').addClass("fa-sort-alpha-desc")
-        }
-        $.each(listitems, function (index, item) {
-            mylist.append(item);
-        });
-    },
-
-    //Search School
-    searchSchool: function (e) {
-
-        $(".listButton").hide();
-        $(".listButton:containsi(" + $(e.currentTarget).val() + ")").show();
+        $("#counter").html($(".schoolItem:visible").length + "/" + this.data.length);
 
     },
 
-    enchePreview: function (e) {
-        var self = this;
-        //gets model info
-        var schoolData = self.collection.getByID($(e.currentTarget).attr("id"));
-        console.log(schoolData)
-        $('#schoolsPreview').empty();
-
-        var $hr = '<div class="col-md-12" ><hr class="dataHr"></div>';
-        var $divFoto = $("<div>", {
-            class: "col-md-5"
-        }).append('<img src="' + schoolData.b64 + '"  class="dataImage">');
-
-        var $divDados =
-
-            $("<div>", {class: "col-md-7 row"}).append(
-                $('<div>', {
-                    class: "row"
-                }).append(
-                    $('<label>', {
-                        class: "fa fa-map", text: " " + schoolData.address
-                    })
-                ))
-        $('#schoolsPreview').append($('<label>', {
-                class: "dataTitle col-md-12", text: schoolData.name
-            }), $hr, $divFoto, $divDados)
-            .append($hr, '<div id="classesList" class="col-md-12" align=left></div>')
-        ;
-        $('#classesList').append('<div id="prfSchool" class="col-md-12" align=left></div> </br>');
-
-        $.each(schoolData.classes, function (is, School) {
-            console.log(School)
-            var $class = $('<button>', {
-                class: "classBtn",
-                html: School.year + "º " + School.name + " "
-            }).click(function () {
-                    showClassInfo($(e.currentTarget).attr("id"), School._id)
-                }
-            )
-
-
-            $("#classesList").append($class);
-
-        });
-        $("#classesList").prepend('<label id="assocClasses"> Existe ' + schoolData.classes.length + ' turma(s) associada(s).</label>')
-        //getAssocClasses(teacherData._id, teacherData.nome, false);
-
+    showClassInfo: function (e) {
+        e.preventDefault();
+        showClassInfo($(e.currentTarget).attr("school"), $(e.currentTarget).attr("id"));
     },
 
     //Solicita confirmação para apagar o professor
     confirmDelete: function (e) {
-
-        var id = $(e.currentTarget).parent().parent().attr("id");
-        var nome = $(e.currentTarget).parent().parent().attr("value");
-
+        var id = $(e.currentTarget).attr("value");
+        var name = $(e.currentTarget).attr("name");
         var modal = delModal("Apagar escola",
-            "Tem a certeza que pretende eliminar a escola <label>" + nome + " </label> ?",
+            "Tem a certeza que pretende eliminar a escola <label>" + name + " </label> ?",
             "deletebtn", id);
 
-        $('#schoolsDiv').append(modal);
+        $('.content-wrapper').append(modal);
         $('#modalConfirmDel').modal("show");
+    },
+
+    newSchool: function (e) {
+        e.preventDefault();
+        app.navigate("/schools/new", {
+            trigger: true
+        });
+    },
+    editSchool: function (e) {
+        var id = $(e.currentTarget).attr("value");
+        app.navigate("/schools/" + id + '/edit', {
+            trigger: true
+        });
     },
 
     //Remove School
@@ -114,21 +63,23 @@ window.SchoolsView = Backbone.View.extend({
             },
             error: function (model, response) {
                 console.log(response)
-                failMsg($("#schoolsDiv"), "Não foi possível remover a escola. \n (" + JSON.parse(response.responseText).result + ").");
+                failMsg($(".content-wrapper"), "Não foi possível remover a escola. \n (" + JSON.parse(response.responseText).result + ").");
             }
         });
 
     },
 
+    //Class Initializer
+    initialize: function () {
+        this.data = this.collection.toJSON();
+    },
     //Class Renderer
     render: function () {
-
         var self = this;
-
-
-        var data = self.collection.toJSON();
-        $(this.el).html(this.template({collection: data}));
-
+        console.log(self.data)
+        //Render Template
+        $(this.el).html(this.template({collection: self.data}));
+        $('.translations', this.el).i18n();
         return this;
 
     }

@@ -173,7 +173,7 @@ window.assocClass = function () {
 
 window.removeClass = function (elem) {
     var classe = (elem.id).split(":");
-    modem('POST', 'teachers/rmvClass',
+    modem('POST', 'teachers/' + $("#inputEmail").val() + '/removeFromClass',
         //Response Handler
         function (json) {
             getAssocClasses($("#inputEmail").val(), $("#InputNome").val(), true);
@@ -182,7 +182,7 @@ window.removeClass = function (elem) {
         function (xhr, ajaxOptions, thrownError) {
             failMsg($("#newteacherform"), "Não foi possível alterar os dados. \n (" + JSON.parse(xhr.responseText).result + ").");
         },
-        '&email=' + encodeURIComponent($("#inputEmail").val()) + '&school=' + encodeURIComponent(classe[0]) + '&class=' + encodeURIComponent(classe[1])
+        '&school=' + encodeURIComponent(classe[0]) + '&class=' + encodeURIComponent(classe[1])
     )
     ;
 };
@@ -589,20 +589,20 @@ window.showLoginModal = function (form) {
                             id: "pwdIcon", class: "glyphicon glyphicon-lock"
                         }))
                     )/*,
-                    $("<div>", {
-                        class: "row form-group",
-                    }).append(
-                        $("<div>", {
-                            class: " col-sm-12 checkbox",
-                        }).append(
-                            $("<label>", {
-                                html: "Manter sessão iniciada"
-                            }).append($("<input>", {
-                                type: "checkbox",
-                                value: '',
-                                id: 'keepsession'
-                            })))
-                    )*/
+                     $("<div>", {
+                     class: "row form-group",
+                     }).append(
+                     $("<div>", {
+                     class: " col-sm-12 checkbox",
+                     }).append(
+                     $("<label>", {
+                     html: "Manter sessão iniciada"
+                     }).append($("<input>", {
+                     type: "checkbox",
+                     value: '',
+                     id: 'keepsession'
+                     })))
+                     )*/
                 )
             ).append(
                 $("<div>", {
@@ -624,7 +624,7 @@ window.showLoginModal = function (form) {
 };
 
 //Tenta efectuar login
-window.attemptLogin = function () {
+window.attemptLogin = function (callback) {
     //Create Credentials
     var cre = $('#userEmail').val() + ':' + md5($("#psswrd").val());   //Credentials = Username:Password
     if ($("#keepsession").prop("checked")) {
@@ -638,28 +638,21 @@ window.attemptLogin = function () {
 
         //Response Handler
         function (user) {
-            //Hides Login Modal
-            $("#mLogin").modal("hide");
-
             //Se a opçao manter sessao iniciada estiver 'ligada'
             if ($("#keepsession").prop("checked")) {
-                window.localStorage.setItem("username", user._id)
-                window.localStorage.setItem("name", user.name)
-                window.localStorage.setItem("b64", user.b64)
+                window.localStorage.setItem("user", user._id)
             } else {
-                window.sessionStorage.setItem("username", user._id)
-                window.sessionStorage.setItem("name", user.name)
-                window.sessionStorage.setItem("b64", user.b64)
+                window.sessionStorage.setItem("user", user._id)
             }
 
-            //Reloads actual view
+            callback();
 
-            document.location.reload(true);
-            app.navigate('user', true);
         },
         //Error Handling
         function (xhr, ajaxOptions, thrownError) {
             var json = JSON.parse(xhr.responseText);
+            console.log('as')
+            failMsg($('body'), json + '')
             console.log(xhr)
             console.log(ajaxOptions)
             console.log(thrownError)
@@ -919,7 +912,7 @@ window.getQuestionVoice = function (questionID) {
         .append(' <label class="col-md-2 audioLbl"> Professor </label>', $('<audio>', {
                 class: "col-md-10",
                 "controls": "controls",
-                id: "teacherVoice"
+                id: "teacherVoice" + questionID
             })
             .append(
                 $('<source>', {
@@ -1082,7 +1075,7 @@ window.setMultimediaPreview = function (question, div) {
         case "image":
             //Adiciona a imagem
             $contentDiv.append($('<div>', {class: 'questBox centered'}).append(
-                $('<img>', {src: question.content.question})
+                $('<img>', {src: question.content.question, class: "img-responsive"})
             ));
             break;
         case "text":
@@ -2257,7 +2250,7 @@ window.showClassInfo = function (idSchool, idClass) {
     $("#mClass").remove();
 
     //Recolhe os dados da turma
-    modem('GET', 'classes/' + idSchool + '/' + idClass,
+    modem('GET', 'schools/' + idSchool + '/classes/' + idClass,
         //Response Handler
         function (classData) {
 
@@ -2580,4 +2573,20 @@ window.getStudentStatistics = function (tests) {
     )
 
     return [$panel.wrap('<p/>').parent().html()]
+}
+
+
+window.activateSteps = function (steps) {
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+
+        //update progress
+        var step = $(e.target).data('step');
+        var percent = (parseInt(step) / steps) * 100;
+
+        $('.progress-bar').css({width: percent + '%'});
+        $('.progress-bar').text("Step " + step + " of " + steps);
+
+        //e.relatedTarget // previous tab
+
+    })
 }
