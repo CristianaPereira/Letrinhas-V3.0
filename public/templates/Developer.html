@@ -1,214 +1,124 @@
-<!--<div class="col-md-6">
-    <div id="myfirstchart" style="height: 250px;"></div>
-</div>
-
-<div class="col-md-6">
-    <div id="myfirstchart1" style="height: 250px;"></div>
-</div>
-
-
-<script>
-
-    new Morris.Line({
-        // ID of the element in which to draw the chart.
-        element: 'myfirstchart1',
-        // Chart data records -- each entry in this array corresponds to a point on
-        // the chart.
-        data: [
-            {year: '2008', value: 20, flui: 4},
-            {year: '2009', value: 10},
-            {year: '2010', value: 5, flui: 9},
-            {year: '2011', value: 5},
-            {year: '2012', value: 20}
-        ],
-        // The name of the data record attribute that contains x-values.
-        xkey: 'year',
-        // A list of names of data record attributes that contain y-values.
-        ykeys: ['value', 'flui'],
-        // Labels for the ykeys -- will be displayed when you hover over the
-        // chart.
-        labels: ['Value', 'flui']
-    });
-</script>-->
-
-<img src="../img/01.jpg"
-     class="slideImg"
->
+<img src="../img/01.jpg" class="slideImg">
 <div class="parallax">
-    <div style="background-color: rgba(245,245,220,0.8);">
-        <img src="../img/letrinhas_logo.png" class="dataImage">
-        <br>
-        <div id="homeLoginDiv">
-            <div class="row form-group">
-                <div class="col-sm-12">
-                    <input id="userEmail" class="form-control" data-i18n="[placeholder]userdata.email" name="email"
-                           type="email" autofocus="autofocus" autocomplete="on" placeholder="Email">
-                    <span id="imgMail" class="glyphicon glyphicon-envelope"></span>
+    <section>
+        <div>
+            <img src="../img/letrinhas_logo.png" class="dataImage">
+            <div id="homeLoginDiv">
+                <div class="row form-group">
+                    <div class="col-sm-12">
+                        <input id="userEmail" class="form-control" data-i18n="[placeholder]userdata.email" name="email"
+                               type="email" autofocus="autofocus" autocomplete="on" placeholder="Email">
+                        <span id="imgMail" class="glyphicon glyphicon-envelope"></span>
+                    </div>
                 </div>
-            </div>
-            <div class="row form-group">
-                <div class=" col-sm-12">
-                    <input id="psswrd" class="form-control" data-i18n="[placeholder]userdata.password" name="password"
-                           type="password" placeholder="Palavra-Passe">
-                    <span id="pwdIcon" class="glyphicon glyphicon-lock"></span>
+                <div class="row form-group">
+                    <div class=" col-sm-12">
+                        <input id="psswrd" class="form-control" data-i18n="[placeholder]userdata.password"
+                               name="password"
+                               type="password" placeholder="Palavra-Passe">
+                        <span id="pwdIcon" class="glyphicon glyphicon-lock"></span>
+                    </div>
                 </div>
-            </div>
-            <div class="row form-group">
-                <div class=" col-sm-12">
-                    <button type="submit" id="loginbtn" class="btn btn-success" data-i18n="userdata.login">Login
-                    </button>
+                <div class="row form-group">
+                    <div class=" col-sm-12">
+                        <button type="submit" id="loginbtn" class="btn btn-success" data-i18n="userdata.login">Login
+                        </button>
+                    </div>
                 </div>
-            </div>
 
-        </div>
-    </div>
-    <div class="parallax-gap-300">
-    </div>
-    <div class="parallax-box">
-        <div class="row">
-            <div class="col-md-4">
-                <!-- Widget: user widget style 1 -->
-                <div class="box box-widget widget-user">
-                    <!-- Add the bg color to the header using any of the bg-* classes -->
-                    <div class="widget-user-header bg-aqua-active">
-                        <h3 class="widget-user-username">Alexander Pierce</h3>
-                        <h5 class="widget-user-desc">Founder &amp; CEO</h5>
-                    </div>
-                    <div class="widget-user-image">
-                        <img class="img-circle" src="../dist/img/user1-128x128.jpg" alt="User Avatar">
-                    </div>
-                    <div class="box-footer">
-                        <div class="row">
-                            <div class="col-sm-4 border-right">
-                                <div class="description-block">
-                                    <h5 class="description-header">3,200</h5>
-                                    <span class="description-text">SALES</span>
-                                </div>
-                                <!-- /.description-block -->
-                            </div>
-                            <!-- /.col -->
-                            <div class="col-sm-4 border-right">
-                                <div class="description-block">
-                                    <h5 class="description-header">13,000</h5>
-                                    <span class="description-text">FOLLOWERS</span>
-                                </div>
-                                <!-- /.description-block -->
-                            </div>
-                            <!-- /.col -->
-                            <div class="col-sm-4">
-                                <div class="description-block">
-                                    <h5 class="description-header">35</h5>
-                                    <span class="description-text">PRODUCTS</span>
-                                </div>
-                                <!-- /.description-block -->
-                            </div>
-                            <!-- /.col -->
-                        </div>
-                        <!-- /.row -->
-                    </div>
-                </div>
-                <!-- /.widget-user -->
-            </div>
-            <div class="col-md-4">
-                <!-- Widget: user widget style 1 -->
-                <div class="box box-widget widget-user">
-                    <!-- Add the bg color to the header using any of the bg-* classes -->
-                    <div class="widget-user-header bg-aqua-active">
-                        <h3 class="widget-user-username">Alexander Pierce</h3>
-                        <h5 class="widget-user-desc">Founder &amp; CEO</h5>
-                    </div>
-                    <div class="widget-user-image">
-                        <img class="img-circle" src="../dist/img/user1-128x128.jpg" alt="User Avatar">
-                    </div>
-                    <div class="box-footer">
-                        <div class="row">
-                            <div class="col-sm-4 border-right">
-                                <div class="description-block">
-                                    <h5 class="description-header">3,200</h5>
-                                    <span class="description-text">SALES</span>
-                                </div>
-                                <!-- /.description-block -->
-                            </div>
-                            <!-- /.col -->
-                            <div class="col-sm-4 border-right">
-                                <div class="description-block">
-                                    <h5 class="description-header">13,000</h5>
-                                    <span class="description-text">FOLLOWERS</span>
-                                </div>
-                                <!-- /.description-block -->
-                            </div>
-                            <!-- /.col -->
-                            <div class="col-sm-4">
-                                <div class="description-block">
-                                    <h5 class="description-header">35</h5>
-                                    <span class="description-text">PRODUCTS</span>
-                                </div>
-                                <!-- /.description-block -->
-                            </div>
-                            <!-- /.col -->
-                        </div>
-                        <!-- /.row -->
-                    </div>
-                </div>
-                <!-- /.widget-user -->
-            </div>
-            <div class="col-md-4">
-                <!-- Widget: user widget style 1 -->
-                <div class="box box-widget widget-user">
-                    <!-- Add the bg color to the header using any of the bg-* classes -->
-                    <div class="widget-user-header bg-aqua-active">
-                        <h3 class="widget-user-username">Alexander Pierce</h3>
-                        <h5 class="widget-user-desc">Founder &amp; CEO</h5>
-                    </div>
-                    <div class="widget-user-image">
-                        <img class="img-circle" src="../dist/img/user1-128x128.jpg" alt="User Avatar">
-                    </div>
-                    <div class="box-footer">
-                        <div class="row">
-                            <div class="col-sm-4 border-right">
-                                <div class="description-block">
-                                    <h5 class="description-header">3,200</h5>
-                                    <span class="description-text">SALES</span>
-                                </div>
-                                <!-- /.description-block -->
-                            </div>
-                            <!-- /.col -->
-                            <div class="col-sm-4 border-right">
-                                <div class="description-block">
-                                    <h5 class="description-header">13,000</h5>
-                                    <span class="description-text">FOLLOWERS</span>
-                                </div>
-                                <!-- /.description-block -->
-                            </div>
-                            <!-- /.col -->
-                            <div class="col-sm-4">
-                                <div class="description-block">
-                                    <h5 class="description-header">35</h5>
-                                    <span class="description-text">PRODUCTS</span>
-                                </div>
-                                <!-- /.description-block -->
-                            </div>
-                            <!-- /.col -->
-                        </div>
-                        <!-- /.row -->
-                    </div>
-                </div>
-                <!-- /.widget-user -->
             </div>
         </div>
-    </div>
-    <div height="300"></div>
-    <div height="300"><h2>Lorem Ipsum Dolor</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-        <h2>Lorem Ipsum Dolor</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-        <h2>Lorem Ipsum Dolor</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-        <h2>Lorem Ipsum Dolor</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-        <h2>Lorem Ipsum Dolor</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-        <h2>Lorem Ipsum Dolor</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-    </div>
+    </section>
+    <section>
+        <div>
+            <h3 class="text-center">Sobre nós</h3>
+            <hr>
+            <div class="row">
+                <div class="col-md-3 col-sm-6 usDiv">
+                    <img class="img-circle"
+                         src="../../img/manso.jpg"
+                         alt="António Manso" width="140" height="140">
+                    <h3>António Manso</h3>
+                    <hr>
+                    <p>Coordenador de projecto.</p>
+                    <p><a class="btn btn-default" href="#" role="button">View details »</a></p>
+                </div><!-- A.M -->
+                <div class="col-md-3 col-sm-6 usDiv">
+                    <img class="img-circle"
+                         src="../../img/pereira.jpg"
+                         alt="Cristiana Pereira" width="140" height="140">
+                    <h3>Cristiana Pereira</h3>
+                    <hr>
+                    <p>Programadora</p>
+                    <p><a class="btn btn-default" href="#" role="button">View details »</a></p>
+                </div><!--C.P -->
+                <div class="col-md-3 col-sm-6 usDiv"><!--C.M -->
+                    <img class="img-circle"
+                         src="../../img/marques.jpg"
+                         alt="Generic placeholder image" width="140" height="140">
+                    <h3>Célio Marques</h3>
+                    <hr>
+                    <p>Coordenador de projecto.</p>
+                    <p><a class="btn btn-default" href="#" role="button">View details »</a></p>
+                </div><!-- C.M -->
+                <div class="col-md-3 col-sm-6 usDiv">
+                    <img class="img-circle"
+                         src="../../img/dias.jpg"
+                         alt="Pedro Dias" width="140" height="140">
+                    <h3>Pedro Dias</h3>
+                    <hr>
+                    <p>Coordenador de projecto.</p>
+                    <p><a class="btn btn-default" href="#" role="button">View details »</a></p>
+                </div><!-- P.D -->
+            </div><!-- /.row -->
+            <div class="row">
+                <div class="col-md-3 col-sm-6 usDiv">
+                    <img class="img-circle"
+                         src="../../img/pestana.jpg"
+                         alt="Renato Pestana" width="140" height="140">
+                    <h3>Renato Pestana</h3>
+                    <hr>
+                    <p>Programador</p>
+                    <p><a class="btn btn-default" href="#" role="button">View details »</a></p>
+                </div><!-- R.P -->
+                <div class="col-md-3 col-sm-6 usDiv">
+                    <img class="img-circle"
+                         src="../../img/fernandes.jpg"
+                         alt="Tiago Fernandes" width="140" height="140">
+                    <h3>Tiago Fernandes</h3>
+                    <hr>
+                    <p>Programador</p>
+                    <p><a class="btn btn-default" href="#" role="button">View details »</a></p>
+                </div><!-- T.F -->
+                <div class="col-md-3 col-sm-6 usDiv">
+                    <img class="img-circle"
+                         src="../../img/carvalho.jpg"
+                         alt="Alexandre Carvalho" width="140" height="140">
+                    <h3>Alexandre Carvalho</h3>
+                    <hr>
+                    <p>Programador</p>
+                    <p><a class="btn btn-default" href="#" role="button">View details »</a></p>
+                </div><!-- A.C -->
+                <div class="col-md-3 col-sm-6 usDiv">
+                    <img class="img-circle"
+                         src="../../img/gomes.jpg"
+                         alt="Pedro Dias" width="140" height="140">
+                    <h3>Artur Gomes</h3>
+                    <hr>
+                    <p>Programador</p>
+                    <p><a class="btn btn-default" href="#" role="button">View details »</a></p>
+                </div><!--A.G -->
+            </div>
+        </div>
+    </section>
+
+    <section>
+
+    </section>
+    <section>
+
+    </section>
+    <section>
+
+    </section>
 </div>

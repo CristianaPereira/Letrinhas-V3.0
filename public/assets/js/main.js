@@ -31,7 +31,7 @@ var Router = Backbone.Router.extend({
         elem.html(rendered.el);
 
     },
-    afterRender: function (view, elem, sub) {
+    afterRender: function (view) {
         view.afterRender();
     },
     routes: {
@@ -202,7 +202,7 @@ var Router = Backbone.Router.extend({
                         model: ss
                     });
                     self.showView(v, $('#content'));
-                    self.afterRender(v, $('#content'))
+                    self.afterRender(v)
                 });
             }
         );
@@ -343,6 +343,7 @@ var Router = Backbone.Router.extend({
                         model: ss
                     });
                     self.showView(v, $('#content'));
+                    self.afterRender(v);
                 })
 
             }
@@ -709,23 +710,27 @@ var Router = Backbone.Router.extend({
  }
  );*/
 //18n
-$(document).ready(function () {
-    var language = localStorage.getItem('language');
-    if (language === null) {
-        language = 'pt-PT';
-        localStorage.setItem('language', 'pt-PT');
-    }
+//$(document).ready(function () {
+var language = localStorage.getItem('language');
+if (language === null) {
+    language = 'pt-PT';
+    localStorage.setItem('language', 'pt-PT');
+}
 
-    $.i18n.init({
-        lng: language,
-        ns: {
-            namespaces: ['ns.common'],
-            defaultNs: 'ns.common'
-        },
-        useLocalStorage: false,
-        useCookie: false
-    }, function (t) {
-        app = new Router();
-        Backbone.history.start();
-    });
+$.i18n.init({
+    lng: language,
+    ns: {
+        namespaces: ['ns.common'],
+        defaultNs: 'ns.common'
+    },
+    useLocalStorage: false,
+    useCookie: false
+}, function (t) {
+    templateLoader.load(["Home"],
+        function () {
+            app = new Router();
+            Backbone.history.start();
+        }
+    );
 });
+//});

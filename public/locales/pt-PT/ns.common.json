@@ -33,9 +33,11 @@
     "insert": "Inserir",
     "delete": "Eliminar",
     "addstudent": "Adicionar novo aluno",
-    "newschool": "Inserir nova Escola"
+    "newschool": "Inserir nova Escola",
+    "check": "Ver"
   },
   "questions": {
+    "question": "Pergunta",
     "text": "Texto",
     "list": "Lista",
     "multimedia": "Escolha múltipla",
@@ -54,5 +56,8 @@
     "contents": "Conteúdos",
     "specification": "Especificação",
     "specifications": "Especificações"
-  }
+  },
+  "type": "Tipo",
+  "subject": "Disciplina",
+  "note": "Nota"
 }

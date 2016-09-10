@@ -38,7 +38,7 @@ window.UserView = Backbone.View.extend({
         console.log(data)
         //$(".sidebar-toggle", self.el).remove();
         $(self.el).html(self.template(data));
-        $('.aboveMenu', this.el).i18n();
+       // $('.aboveMenu', this.el).i18n();
         return this;
     }
 

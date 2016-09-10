@@ -29,7 +29,6 @@
 }
 
 #page {
-    padding-top: 10px;
     max-width: 1500px;
     margin: auto;
     position: relative;
@@ -264,10 +263,6 @@ nav.sidebar .navbar-nav .open .dropdown-menu > li > a:hover, nav.sidebar .navbar
 
 nav:hover .forAnimate {
     opacity: 1;
-}
-
-section {
-    padding-left: 15px;
 }
 
 /* Let's get this party started */
@@ -1840,10 +1835,29 @@ ol, ul {
     position: relative;
 }
 
-.parallax-gap-300 {
-    height: 300px;
+.parallax section {
+    height: 100vh;
+    position: relative;
 }
 
-.parallax-box {
+.parallax section:nth-child(odd) > div {
+    background-color: rgba(255, 255, 255, 0.8);
+    /*    background-color: rgba(245, 245, 220, 0.8);*/
+    padding: 10px 0px;
+}
+
+.parallax section:nth-child(even) > div {
     background-color: #FFFFFF;
+    padding: 10px 0px;
+}
+
+.usDiv * {
+    margin: auto;
+    display: table;
+    padding: 5px;
+}
+
+.usDiv hr {
+    width: inherit;
+    border-top: 2px solid #92cabc;
 }

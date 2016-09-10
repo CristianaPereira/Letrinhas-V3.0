@@ -62,7 +62,7 @@ window.Home = Backbone.View.extend({
                     console.log("Auth Error");
                 }
                 else {
-                    console.log("Database Connetcion Error");
+                    console.log("Database Connection Error");
                 }
 
             }
@@ -124,7 +124,7 @@ window.Home = Backbone.View.extend({
         $(this.el).html(this.template());
         $(".card-grid", this.el).flip({trigger: 'hover'});
         $('.card-grid', this.el).css({'height': $('.card-grid').width() + 'px'});
-        $('#fullpage', this.el).i18n();
+       // $('#fullpage', this.el).i18n();
         return this;
     }
 
