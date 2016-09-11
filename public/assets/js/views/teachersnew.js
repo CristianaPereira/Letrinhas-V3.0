@@ -123,7 +123,6 @@ window.TeachersNewView = Backbone.View.extend({
             $("#ConfirmPasswd").addClass("emptyField");
             return false;
         }
-        console.log(isValid)
         if (isValid) {
             $('#content').append(loadingSpinner());
             //Recolhe os dados da view

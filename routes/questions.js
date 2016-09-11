@@ -53,6 +53,7 @@ exports.upDate = function (req, res) {
                     case "list":
                         //Remmove as palavras vazias
                         body.content["columns"] = JSON.parse(req.body.columns.replace(/,""/gi, ''));
+                        body.content["wordTimes"] = JSON.parse(req.body.wordTimes);
                         break;
 
                     case "interpretation":
@@ -210,6 +211,7 @@ exports.test = function (req, res) {
 
             case "list":
                 $question.content["columns"] = JSON.parse(req.body.columns.replace(/,""/gi, ''));
+                $question.content["wordTimes"] = JSON.parse(req.body.wordTimes);
                 break;
 
             case "interpretation":

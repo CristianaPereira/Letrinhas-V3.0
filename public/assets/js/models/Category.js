@@ -35,9 +35,6 @@ var Category = Backbone.Model.extend({
 
             //Error Handling
             function (xhr, ajaxOptions, thrownError) {
-                console.log(xhr)
-                console.log(ajaxOptions)
-                console.log(thrownError)
             }, form
         );
     },
@@ -54,9 +51,6 @@ var Category = Backbone.Model.extend({
 
             //Error Handling
             function (xhr, ajaxOptions, thrownError) {
-                console.log(xhr)
-                console.log(ajaxOptions)
-                console.log(thrownError)
             }, form
         );
 

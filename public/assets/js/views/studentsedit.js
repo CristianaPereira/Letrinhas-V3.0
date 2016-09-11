@@ -55,9 +55,6 @@ window.StudentsEdit = Backbone.View.extend({
             //Send Student Changes to Server
             var student = new Student({id: self.data._id});
             var studentDetails = $('#editstudentform').serializeObject();
-            console.log(student)
-            console.log(studentDetails)
-
             student.save(studentDetails, {
                 success: function () {
                     sucssesMsg($(".form"), "Aluno alterado com sucesso!");
@@ -80,13 +77,10 @@ window.StudentsEdit = Backbone.View.extend({
         self.data = this.model.toJSON();
         populateDDSchools(self.data.school, self.data.class);
         $("#dbSchools").val(self.data.school)
-        console.log($("#dbSchools").val())
     },
 
     render: function () {
         var self = this;
-
-        console.log(self.data)
         $(this.el).html(this.template(self.data));
 
         return this;

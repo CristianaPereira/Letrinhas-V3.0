@@ -75,7 +75,6 @@ window.QuestionsConnectionsNew = Backbone.View.extend({
 
     //Changes content input type
     getImage: function (e) {
-        console.log($(e.currentTarget))
         //Verifica se é imagem
         if ($(e.currentTarget).attr("accept").indexOf("image") != -1) {
             var file = e.target.files[0];
@@ -91,7 +90,6 @@ window.QuestionsConnectionsNew = Backbone.View.extend({
             }
             reader.readAsDataURL(file);
         }
-        console.log($(e.currentTarget).val())
     },
 
     //Recorta a foto
@@ -210,7 +208,6 @@ window.QuestionsConnectionsNew = Backbone.View.extend({
             });
             $("#inputAnswers").val(JSON.stringify(answers));
             //Se algum dos campos estiver vazio
-            console.log(answers)
             /*
              modem('POST', 'questions',
              function () {

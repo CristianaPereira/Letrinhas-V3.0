@@ -44,7 +44,6 @@ window.QuestionsBoxesNew = Backbone.View.extend({
 
             $("#boxes").val(JSON.stringify(boxes));
 
-            console.log($("#newBoxesTestForm").serializeObject())
             modem('POST', 'questions',
                 function () {
                     sucssesMsg($("body"), "Pergunta inserida com sucesso!");

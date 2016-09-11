@@ -32,11 +32,9 @@ window.StudentsNewView = Backbone.View.extend({
         //Se o username ja estiver a ser utilizado
         student.exist($(e.currentTarget).val(), function (response) {
             if (response) {
-                console.log("trouble")
                 $(e.currentTarget).addClass("emptyField");
                 failMsg($(".form"), "O nome de utilizador " + $(e.currentTarget).val() + " já está a ser utilizado!", 1000);
             } else {
-                console.log("ok")
                 $(e.currentTarget).removeClass("emptyField");
             }
         })

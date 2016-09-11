@@ -28,7 +28,6 @@ window.TestsNewView = Backbone.View.extend({
         $("#allQuestions .listButton").show();
         //Esconde os testes cujas checkboxes não estão seleccionadas
         $.each($("input:checkbox:not(:checked)"), function (i, k) {
-            console.log($(k).attr("value"))
             $("#allQuestions .listButton[type=" + $(k).attr("value") + "]").hide();
         });
 
@@ -52,7 +51,6 @@ window.TestsNewView = Backbone.View.extend({
 
     //Move element to test list
     addQuestion: function (e) {
-        console.log($(e.currentTarget).attr("questID"))
         //Move o elemento para a lista de perg seleccionadas
         $("#" + $(e.currentTarget).attr("questID"))
             .appendTo("#questionsList");
@@ -61,7 +59,6 @@ window.TestsNewView = Backbone.View.extend({
             "btn-Rmv removeQuestion"
         );
         //Adiciona a dd de importancia da question
-        console.log($(e.currentTarget).parent())
         $(e.currentTarget).parent().append(getImportanceDD())
         //Incrementa o nr de perguntas
         $("#questionsTestBadge").text($("#questionsList .panel").length);
@@ -115,8 +112,6 @@ window.TestsNewView = Backbone.View.extend({
                 test.attributes.schoolYear = parseInt(test.attributes.schoolYear);
             })
 
-            console.log(questions)
-            console.log(test.attributes)
             test.save(null, {
                 success: function (user) {
                     sucssesMsg($(".form"), "Teste inserido com sucesso!");
@@ -127,7 +122,6 @@ window.TestsNewView = Backbone.View.extend({
                      }, 2000);*/
                 },
                 error: function (model, response) {
-                    console.log()
                     failMsg($(".form"), "Lamentamos mas não foi possível inserir o teste! \n" + JSON.parse(response.responseText).result);
                 }
             });
@@ -146,7 +140,6 @@ window.TestsNewView = Backbone.View.extend({
         var self = this;
         //Ordena a collection por title
         self.data.sort(sortJsonByCol('title'));
-        console.log(self.students)
         getCategories();
 
         getFilters();

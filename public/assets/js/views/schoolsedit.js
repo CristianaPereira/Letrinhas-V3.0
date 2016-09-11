@@ -58,8 +58,6 @@ window.SchoolsEdit = Backbone.View.extend({
             var image = new Image();
             image.src = readerEvent.target.result;
             showCropper(".form", image, 300, 16 / 9);
-            console.log(image.src);
-
         }
         reader.readAsDataURL(file);
     },
@@ -71,7 +69,6 @@ window.SchoolsEdit = Backbone.View.extend({
         var dataUrl = canvas.toDataURL('image/jpeg');
         $("#base64textarea").val(dataUrl);
         $("#iFoto").attr('src', dataUrl);
-        console.log(dataUrl);
         $(".cropBG").remove();
     },
 

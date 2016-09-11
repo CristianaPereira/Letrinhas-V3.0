@@ -35,13 +35,11 @@ window.TestsNewView = Backbone.View.extend({
 
         //Esconde os testes cujas checkboxes não estão seleccionadas
         $.each($("input:checkbox:not(:checked)"), function (i, k) {
-            console.log($(k).attr("value"))
             $("#allQuestions  .panel-default[type=" + $(k).attr("value") + "]").hide();
         });
 
         //Esconde os que ao correspondem conteudos seleccionados
         $.each($("#allQuestions  .panel-default:visible"), function (i, k) {
-            console.log($(k).attr("value"))
             //Se nao pertencerem à categoria escolhida, esconde-os
             if ($(k).attr("value").indexOf($("#filterSubject").attr("filter")) == -1) {
                 $(k).hide();
@@ -59,7 +57,6 @@ window.TestsNewView = Backbone.View.extend({
 
     //Move element to test list
     addQuestion: function (e) {
-        console.log($(e.currentTarget).attr("questID"))
         //Move o elemento para a lista de perg seleccionadas
         $("#" + $(e.currentTarget).attr("questID"))
             .appendTo("#questionsList");
@@ -68,7 +65,6 @@ window.TestsNewView = Backbone.View.extend({
             "btn-Rmv removeQuestion"
         );
         //Adiciona a dd de importancia da question
-        console.log($(e.currentTarget).parent())
         $(e.currentTarget).parent().append(getImportanceDD())
         //Incrementa o nr de perguntas
         $("#questionsTestBadge").text($("#questionsList .panel").length);
@@ -156,7 +152,6 @@ window.TestsNewView = Backbone.View.extend({
         var self = this;
         //Ordena a collection por title
         self.data.sort(sortJsonByCol('title'));
-        console.log(self.students)
         getCategories();
 
         getFilters();

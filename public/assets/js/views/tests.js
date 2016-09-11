@@ -22,7 +22,6 @@ window.TestsView = Backbone.View.extend({
         $(".testItem").show();
 
         var self = this;
-        console.log(self.filters)
         $(".testItem:not(:containsi('" + self.filters.text + "'))").hide();
         $(".testItem:not(:containsi('" + self.filters.sub + "'))").hide();
 
@@ -56,8 +55,6 @@ window.TestsView = Backbone.View.extend({
 
     //Exibe o modal com os campos necessarios para associar o teste
     assocTeste: function (e) {
-        console.log($(e.currentTarget).attr("testID"));
-
         //Mostra o titulo do teste
         $("#attrTest h4").html("Atribuir teste: " + $(e.currentTarget).attr("testName"));
         $("#testID").val($(e.currentTarget).attr("testID"))
@@ -98,7 +95,6 @@ window.TestsView = Backbone.View.extend({
         var testID = $(e.currentTarget).attr("id");
         //Se ainda nao foi preenchido
         if ($(e.currentTarget).attr('filled') == 'false') {
-            console.log('filling')
             var self = this;
             //Recolhe a info do teste
             var test = this.collection.getByID(testID);
@@ -246,7 +242,6 @@ window.TestsView = Backbone.View.extend({
         cats.fetch(function () {
             var categories = cats.toJSON();
             for (var i = 0; i < categories.length; i++) {
-                console.log(categories[i])
                 var $contents = $('<ul>', {class: "treeview-menu", style: "display: none;"});
                 $contents.append(
                     $('<li>').append(
@@ -324,7 +319,6 @@ window.TestsView = Backbone.View.extend({
                     )
                 )
             }
-            console.log('done')
         })
     },
 

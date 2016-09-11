@@ -33,7 +33,6 @@ window.Home = Backbone.View.extend({
 
             //Response Handler
             function (json) {
-                console.log(json);
                 $("#mLogin").modal("hide");
                 //If Session Already Present, Go to user main
                 app.navigate("/user", {
@@ -51,10 +50,8 @@ window.Home = Backbone.View.extend({
 
                 //Checks Error Type
                 if (json.message.statusCode == 404) {
-                    console.log("Auth Error");
                 }
                 else {
-                    console.log("Database Connection Error");
                 }
 
             }

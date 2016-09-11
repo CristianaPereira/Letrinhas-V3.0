@@ -32,9 +32,6 @@ window.NavigationBarView = Backbone.View.extend({
         $(this.el).html(this.template(self.data));
         /// $("body", this.el).addClass("sidebar-collapse")
 
-        console.log(self.data)
-
-
         return this;
     }
 

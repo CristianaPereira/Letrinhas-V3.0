@@ -8,7 +8,6 @@ var School = Backbone.Model.extend({
         var self = this;
         modem('GET', 'schools/' + this.id,
             function (json) {
-                console.log(json)
                 //Adiciona os dados ao model
                 self.attributes = (json);
                 //Ordena as classes por ano
@@ -55,7 +54,6 @@ var Schools = Backbone.Collection.extend({
     //Gets specific item from collection
     getByID: function (id) {
         var self = this;
-        console.log(self.models);
         return (
             self.models.find(function (model) {
                 return model.get('_id') === id;

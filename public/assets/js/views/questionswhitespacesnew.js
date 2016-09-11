@@ -59,8 +59,6 @@ window.QuestionsWhiteSpacesNew = Backbone.View.extend({
                 })
                 .value();
             fd.append("sid", JSON.stringify($sid));
-            console.log(fd)
-
             modem('POST', 'questions',
                 function () {
                     sucssesMsg($("body"), "Pergunta inserida com sucesso!");
@@ -156,7 +154,6 @@ window.QuestionsWhiteSpacesNew = Backbone.View.extend({
         $.each($paragraph, function (iLine, line) {
             //Separa a pontuação
             var $wordsList = line.replace(/\,/gi, " ,").replace(/\-/gi, "- ").replace(/\:/gi, " :").replace(/\./gi, " .").replace(/\!/gi, " !").replace(/\?/gi, " ?").split(" ");
-            console.log($wordsList)
             $.each($wordsList, function (i, word) {
                 if (word) {
                     //Replace String With Selectable Span (Não esquecer os PARAGRAFOS)
@@ -185,7 +182,6 @@ window.QuestionsWhiteSpacesNew = Backbone.View.extend({
     //Mark Word
     selectWord: function (e) {
         $(e.target).toggleClass("whitespace");
-        console.log($(e.target).attr("id"))
     },
 
     //Class Initializer

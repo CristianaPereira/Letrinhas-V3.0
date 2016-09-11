@@ -2,7 +2,6 @@ window.QuestionsTextEdit = Backbone.View.extend({
     events: {
         "click #showEqualizer": "showEqualizer",
         "click #record": "initRecord",
-        "click #backbtn": "goBack",
         "change #uploadSoundFile": "uploadSoundFile",
         "blur .emptyField": "isEmpty",
         "blur #inputText": "applyText",
@@ -22,7 +21,6 @@ window.QuestionsTextEdit = Backbone.View.extend({
     jumpToWord: function (e) {
         //Procura os dados da palavra e reproduz
         var x = document.getElementById("teacherVoice1");
-        console.log($(e.currentTarget).closest('.word').attr('data-start'))
         x.currentTime = $(e.currentTarget).closest('.word').attr('data-start');
         x.play();
     },
@@ -35,7 +33,6 @@ window.QuestionsTextEdit = Backbone.View.extend({
         $word.attr('data-start', ( parseFloat($word.attr('data-start')) + (0.1)).toFixed(3))
     },
     removeTime: function (e) {
-        console.log($(e.target))
         var $word = $(e.currentTarget).closest('.word');
         $word.children('div').remove();
         $word.removeClass('word')
@@ -77,8 +74,6 @@ window.QuestionsTextEdit = Backbone.View.extend({
         e.preventDefault();
         var x = document.getElementById("teacherVoice1");
         x.playbackRate = (x.playbackRate + (0.1 * $(e.target).val())).toFixed(1);
-        console.log(x.playbackRate)
-
         $("#soundSpeed").html(x.playbackRate * 100 + '%');
     },
 
@@ -102,7 +97,6 @@ window.QuestionsTextEdit = Backbone.View.extend({
     validateDetails: function (parentID) {
         //Se algum dos campos estiver vazio
         var allListElements = $('#' + parentID + ' .mandatory');
-        console.log(allListElements)
         //Verifies if all inputs are OK
         var isValid = isFormValid(allListElements);
         //If they are
@@ -114,7 +108,7 @@ window.QuestionsTextEdit = Backbone.View.extend({
         var wordTimes = [];
         if (e) {
             text = $(e.currentTarget).val();
-        } else {
+    } else {
             text = this.data.content.text;
             wordTimes = this.data.content.wordTimes;
         }
@@ -294,8 +288,6 @@ window.QuestionsTextEdit = Backbone.View.extend({
         var self = this;
 
         self.data = this.model.toJSON();
-        console.log(self.data)
-
 
         $(self.el).html(self.template(self.data));
         getCategories(self.data.subject);

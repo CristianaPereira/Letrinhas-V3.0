@@ -15,7 +15,6 @@ window.manView = Backbone.View.extend({
     //verificar se está logado
     var controlo=window.localStorage.getItem("Logged");
     if(!controlo){
-      console.log('Não Logado');
       app.navigate('/#', {
           trigger: true
         });

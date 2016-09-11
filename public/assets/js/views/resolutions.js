@@ -20,7 +20,6 @@ window.ResolutionsView = Backbone.View.extend({
 
         //Esconde os testes cujas checkboxes não estão seleccionadas
         $.each($("input:checkbox:not(:checked)"), function (i, k) {
-            console.log($(k).attr("value"))
             $(".listButton[type=" + $(k).attr("value") + "]").hide();
         });
 
@@ -48,9 +47,6 @@ window.ResolutionsView = Backbone.View.extend({
 
         var self = this;
         self.data.sort(sortJsonByCol('solved'));
-
-
-        console.log(self.data);
 
         $(this.el).html(this.template({collection: self.data}));
 

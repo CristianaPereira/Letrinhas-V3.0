@@ -7,6 +7,7 @@ window.QuestionsTextNew = Backbone.View.extend({
         "blur .emptyField": "isEmpty",
         "blur #inputText": "applyText",
         "submit": "beforeSend",
+
         "click .soundAdjust": "adjustSound",
         "click .next": "nextStep",
         "click .previous": "previousStep",
@@ -15,7 +16,6 @@ window.QuestionsTextNew = Backbone.View.extend({
         'click .adjustBack': 'adjustBack',
         'click .adjustFront': 'adjustFront',
         'click .removeTime': 'removeTime',
-        'mouseleave': 'leave'
 
     },
     //MARKED WORDS BUTTONS
@@ -34,7 +34,6 @@ window.QuestionsTextNew = Backbone.View.extend({
         $word.attr('data-start', ( parseFloat($word.attr('data-start')) + (0.1)).toFixed(3))
     },
     removeTime: function (e) {
-        console.log($(e.target))
         var $word = $(e.currentTarget).closest('.word');
         $word.children('div').remove();
         $word.removeClass('word')
@@ -45,7 +44,6 @@ window.QuestionsTextNew = Backbone.View.extend({
 
     //MARK WORDs
     addTiming: function (e) {
-        console.log($(e.target))
         //Se a palavra nao estiver marcada ainda
         if (!$(e.currentTarget).hasClass('word')) {
             var x = document.getElementById("teacherVoice1");
@@ -77,8 +75,6 @@ window.QuestionsTextNew = Backbone.View.extend({
 
         var x = document.getElementById("teacherVoice1");
         x.playbackRate = (x.playbackRate + (0.1 * $(e.target).val())).toFixed(1);
-        console.log(x.playbackRate)
-
         $("#soundSpeed").html(x.playbackRate * 100 + '%');
     },
 
@@ -102,7 +98,6 @@ window.QuestionsTextNew = Backbone.View.extend({
     validateDetails: function (parentID) {
         //Se algum dos campos estiver vazio
         var allListElements = $('#' + parentID + ' .mandatory');
-        console.log(allListElements)
         //Verifies if all inputs are OK
         var isValid = isFormValid(allListElements);
         //If they are

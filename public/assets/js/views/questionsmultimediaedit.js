@@ -184,7 +184,6 @@ window.QuestionsMultimediaEdit = Backbone.View.extend({
             }
             reader.readAsDataURL(file);
         }
-        console.log($(e.currentTarget).val())
     },
 
     //Recorta a foto
@@ -288,7 +287,6 @@ window.QuestionsMultimediaEdit = Backbone.View.extend({
                 answers.push({_id: i + 1, content: $(answer).val()});
             });
             $("#inputAnswers").val(JSON.stringify(answers));
-            console.log(answers)
             //Se algum dos campos estiver vazio
 
             modem('PUT', 'questions/' + this.data._id,
@@ -326,9 +324,6 @@ window.QuestionsMultimediaEdit = Backbone.View.extend({
         var self = this;
 
         self.data = this.model.toJSON();
-        console.log(self.data)
-
-
         $(self.el).html(self.template(self.data));
         getCategories(self.data.subject);
 

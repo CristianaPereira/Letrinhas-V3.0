@@ -5,8 +5,6 @@ var Me = Backbone.Model.extend({
     login: function (after_fetch) {
         var self = this;
         modem('GET', 'login', function (teacherData) {
-            console.log(document)
-            console.log(teacherData)
             self.attributes = teacherData;
             self.set("permissionName", getUserRole(teacherData.permissionLevel));
 
@@ -24,7 +22,6 @@ var Me = Backbone.Model.extend({
     fetch: function (after_fetch) {
         var self = this;
         modem('GET', 'me', function (teacherData) {
-            console.log(teacherData)
             self.attributes = teacherData;
             self.set("permissionName", getUserRole(teacherData.permissionLevel));
 

@@ -9,7 +9,6 @@ var Student = Backbone.Model.extend({
         modem('GET', 'students/' + this.id,
             function (json) {
                 self.attributes = (json);
-                console.log(self)
                 after_fetch();
             },
             function (xhr, ajaxOptions, thrownError) {
@@ -34,7 +33,6 @@ var Student = Backbone.Model.extend({
                     //Obtem apenas a data
                     resol.resolutionDate = resol.resolutionDate.split("T")[0];
                 });
-                console.log(self)
                 self.attributes = (json);
                 after_fetch();
             },

@@ -50,7 +50,6 @@ window.CategoriesView = Backbone.View.extend({
     //edita o content
     editContent: function (e) {
         e.preventDefault();
-        console.log($(e.currentTarget).parents('form:first').serializeObject())
     },
 
     //Class Initializer
@@ -58,7 +57,6 @@ window.CategoriesView = Backbone.View.extend({
         var self = this;
 
         self.data = self.collection.toJSON();
-        console.log(self.data)
     },
 
     render: function () {

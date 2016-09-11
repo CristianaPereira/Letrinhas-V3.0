@@ -37,7 +37,6 @@ window.StudentsView = Backbone.View.extend({
                 }, 1000);
             },
             error: function (model, response) {
-                console.log(response)
                 failMsg($("#studentsDiv"), "Não foi possível remover o aluno. \n (" + JSON.parse(response.responseText).result + ").");
             }
         });
@@ -143,7 +142,6 @@ window.StudentsView = Backbone.View.extend({
     //Class Renderer
     render: function () {
         var self = this;
-        console.log(self.data)
         //Render Template
         $(this.el).html(this.template({collection: self.data}));
 

@@ -6,8 +6,127 @@ window.QuestionsListNew = Backbone.View.extend({
         "click #backbtn": "goBack",
         "blur .emptyField": "isEmpty",
         "mouseover #subTxt": "pop",
-        "submit": "beforeSend"
+        "submit": "beforeSend",
+
+        "blur .list": "applyText",
+        "click .soundAdjust": "adjustSound",
+        "click .next": "nextStep",
+        "click .previous": "previousStep",
+        "click #wordsList .selectable": "addTiming",
+        'click .jumpToWord': 'jumpToWord',
+        'click .adjustBack': 'adjustBack',
+        'click .adjustFront': 'adjustFront',
+        'click .removeTime': 'removeTime',
+
     },
+
+    //MARKED WORDS BUTTONS
+    jumpToWord: function (e) {
+        //Procura os dados da palavra e reproduz
+        var x = document.getElementById("teacherVoice1");
+        x.currentTime = $(e.currentTarget).closest('.word').attr('data-start');
+        x.play();
+    },
+    adjustBack: function (e) {
+        var $word = $(e.currentTarget).closest('.word');
+        $word.attr('data-start', ( parseFloat($word.attr('data-start')) - (0.1)).toFixed(3))
+    },
+    adjustFront: function (e) {
+        var $word = $(e.currentTarget).closest('.word');
+        $word.attr('data-start', ( parseFloat($word.attr('data-start')) + (0.1)).toFixed(3))
+    },
+    removeTime: function (e) {
+        var $word = $(e.currentTarget).closest('.word');
+        $word.children('div').remove();
+        $word.removeClass('word')
+        $word.removeClass('selected')
+        $word.removeAttr('data-start')
+
+    },
+
+    //MARK WORDs
+    addTiming: function (e) {
+        //Se a palavra nao estiver marcada ainda
+        if (!$(e.currentTarget).hasClass('word')) {
+            var x = document.getElementById("teacherVoice1");
+            var pop = Popcorn("#teacherVoice1");
+            $(e.target).attr('data-start', (x.currentTime - 0.3).toFixed(3))
+            $(e.target).addClass('word');
+            $(e.target).append(
+                '<div class="wordOptions">' +
+                '<div class="input-group-addon"><i class="fa fa-backward adjustBack"></i></div>' +
+                '<div class="input-group-addon"><i class="fa fa-play-circle-o jumpToWord"></i></div>' +
+                '<div class="input-group-addon"><i class="fa fa-forward adjustFront"></i></div>' +
+                '<div class="input-group-addon"><i class="fa fa-close removeTime"></i></div>' +
+
+                '</div>'
+            )
+            pop.footnote({
+                start: $(e.target).attr('data-start'),
+                text: '',
+                target: $(e.target).attr('id'),
+                effect: "applyclass",
+                applyclass: "selected"
+            });
+            pop.play();
+        }
+        // this.applyTimings();
+    },
+    adjustSound: function (e) {
+        e.preventDefault();
+
+        var x = document.getElementById("teacherVoice1");
+        x.playbackRate = (x.playbackRate + (0.1 * $(e.target).val())).toFixed(1);
+
+        $("#soundSpeed").html(x.playbackRate * 100 + '%');
+    },
+
+    //PREVIOUS--NEXT CONTROLS
+    previousStep: function (e) {
+        e.preventDefault();
+        var prevId = $(e.currentTarget).parents('.tab-pane').prev().attr("id");
+        $('[href="#' + prevId + '"]').tab('show');
+    },
+    nextStep: function (e) {
+        e.preventDefault();
+        var $parentTab = $(e.currentTarget).parents('.tab-pane');
+        //If all mandatory inputs are filled, goes to next tab
+        if (this.validateDetails($parentTab.attr("id"))) {
+
+            var nextId = $parentTab.next().attr("id");
+            $('[href="#' + nextId + '"]').tab('show');
+        }
+    },
+    //Validates first TAB
+    validateDetails: function (parentID) {
+        //Se algum dos campos estiver vazio
+        var allListElements = $('#' + parentID + ' .mandatory');
+        //Verifies if all inputs are OK
+        var isValid = isFormValid(allListElements);
+        //If they are
+        return isValid;
+    },
+    applyText: function (e) {
+        var text = $(e.currentTarget).val();
+
+
+        //Clona o texto
+        $.each($("#lists textarea"), function (iList, list) {
+            $("#wordsList #list" + (iList + 1)).empty();
+            var words = $();
+            var word = $(list).val().split('\n');
+            for (var nWords = 0; nWords < word.length; nWords++) {
+                $("#wordsList #list" + (iList + 1)).append($('<span>', {
+                    text: word[nWords],
+                    id: "wd" + nWords,
+                    class: 'selectable'
+
+                }), '<br>')
+            }
+
+        })
+    },
+
     //Initializes popover content
     pop: function () {
 
@@ -31,11 +150,17 @@ window.QuestionsListNew = Backbone.View.extend({
     //Before Sending Request To Server
     beforeSend: function (e) {
         e.preventDefault();
+        var $wordTimes = [];
+        $.each($(".selectable.word"), function (i, word) {
+            $wordTimes.push({pos: $(word).attr('id').replace('wd', ''), start: $(word).attr('data-start')})
+        });
         //Se algum dos campos estiver vazio
         var allListElements = $(".mandatory");
         //Verifies if all inputs are OK
         var isValid = isFormValid(allListElements);
         //If they are
+        var fd = new FormData($("#newListTestForm")[0])
+        fd.append("wordTimes", JSON.stringify($wordTimes))
         if (isValid) {
             $('#content').append(loadingSpinner());
             //Recolhe as listas
@@ -63,7 +188,7 @@ window.QuestionsListNew = Backbone.View.extend({
                 function (xhr, ajaxOptions, thrownError) {
                     failMsg($("body"), "Não foi possível inserir a nova pergunta.");
                 },
-                new FormData($("#newListTestForm")[0])
+                fd
             );
 
         }
@@ -106,9 +231,11 @@ window.QuestionsListNew = Backbone.View.extend({
         var files = $("#uploadSoundFile").prop('files');
         var reader = new FileReader();
         var sound = document.getElementById('teacherVoice');
+        var sound2 = document.getElementById('teacherVoice1');
         reader.onload = (function (audio) {
             return function (e) {
                 audio.src = e.target.result;
+                sound2.src = e.target.result;
             };
         })(sound);
         reader.readAsDataURL(files[0]);
@@ -120,7 +247,6 @@ window.QuestionsListNew = Backbone.View.extend({
         $("#teacherVoice source").attr("src", files[0].name);
         var mySnd = document.getElementById("teacherVoice");
         //mySnd.playbackRate = 0.5;
-        console.log(mySnd.playbackRate)
     },
 
 

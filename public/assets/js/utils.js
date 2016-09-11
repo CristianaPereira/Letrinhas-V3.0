@@ -196,7 +196,6 @@ window.desassocClass = function (elem) {
             $.each(school.classes, function (iTurma, turma) {
                 if (turma == data[1]) {
                     obj[iSchool].classes.splice(iTurma, 1);
-                    console.log(school.classes.length);
                     if (school.classes.length == 0) {
                         delete obj[iSchool];
                     }
@@ -240,7 +239,6 @@ window.getCategories = function (cat) {
             //Populates dd with the contents of selects subject
             $('#selectSubject').change(
                 function () {
-                    console.log("chang")
                     $.each(json, function (i, key) {
                         var selectedSubject = $("#selectSubject").val();
                         if (key.doc._id === selectedSubject) {
@@ -262,7 +260,6 @@ window.getCategories = function (cat) {
              //Populates dd with the contents of selects subject
             $('#selectContent').change(
                 function () {
-                    console.log("chang")
                     $.each(json, function (i, key) {
                         var selectedSubject = $("#selectSubject").val();
                         var selectedContent = $("#selectContent").val();
@@ -381,7 +378,6 @@ window.getTypes = function () {
             });
         },
         function () {
-            console.log("ups test types")
         }
     );
 };
@@ -415,9 +411,7 @@ window.getImportanceDD = function () {
     $imp.append($("<option>", {
         html: "Dificuldade"
     }));
-    console.log(importances)
     $.each(importances, function (iImportance, importance) {
-        console.log(importance)
 
         $imp.append($("<option>", {
             html: "(" + importance.value + ") " + importance.description,
@@ -651,12 +645,7 @@ window.attemptLogin = function (callback) {
         //Error Handling
         function (xhr, ajaxOptions, thrownError) {
             var json = JSON.parse(xhr.responseText);
-            console.log('as')
             failMsg($('body'), json + '')
-            console.log(xhr)
-            console.log(ajaxOptions)
-            console.log(thrownError)
-
         }
     );
 };
@@ -970,7 +959,6 @@ window.setSyncr = function (question) {
     var pop = Popcorn("audio");
 
     $.each(question.content.wordTimes, function (id, time) {
-        console.log(time)
         pop.footnote({
             start: time.start,
             end: time.end,
@@ -993,7 +981,6 @@ window.setSyncr = function (question) {
 };
 //Preenche a div desejada com a preview da pergunta
 window.setListPreview = function (question) {
-    // console.log(question)
     var $contentDiv = $('<div>', {class: 'col-md-12'});
     var $soundDiv = getQuestionVoice(question._id);
     var nWords = 0;
@@ -1120,7 +1107,6 @@ window.setMultimediaPreview = function (question, div) {
 
 //Preenche a div desejada com a preview da pergunta
 window.setBoxesPreview = function (question) {
-    // console.log(question)
     var $contentDiv = $('<div>', {class: 'col-md-12'});
     var nWords = 0;
     //Por cada coluna: Coloca as palavras nas coluna
@@ -1885,7 +1871,6 @@ window.setCorrecBoxesPreview = function (question) {
         var words = $();
         //Obtem as respostas do aluno e verifica se sao iguasi
         var answer = getObjects(resol.answer.boxes, '_id', box._id)[0].words;
-        //  console.log(answer)
         $.each(box.words, function (iw, word) {
 
             //Verifica se o aluno seleccionaou e soma as certas ou erradas
@@ -2016,10 +2001,8 @@ window.setCorrecWhiteSpacesPreview = function (question) {
     $contentDiv.append($text);
     $contentDiv.append($soundDiv);
 
-    //console.log(question.content.text)
     //Separa o texto em paragrafos
     var $paragraph = info.content.text.split(/\r|\n/);
-    // console.log($paragraph)
     var words = $();
     var nWords = 0;
 
@@ -2037,7 +2020,6 @@ window.setCorrecWhiteSpacesPreview = function (question) {
     $.each($paragraph, function (iLine, line) {
         if (line) {
             var $wordsList = line.replace(/\,/gi, " ,").replace(/\-/gi, "- ").replace(/\:/gi, " :").replace(/\./gi, " .").replace(/\!/gi, " !").replace(/\?/gi, " ?").split(" ");
-            // console.log($wordsList)
             $.each($wordsList, function (i, word) {
 
                 if (word) {
@@ -2129,9 +2111,6 @@ window.setCorrecWhiteSpacesPreview = function (question) {
 };
 
 window.autoCorrecWhiteSpaces = function (question, resol) {
-    console.log(question.content)
-    console.log(resol.answer)
-
     var Sids = [];
     //Recolhe todos os spans marcados
     $.each(question.content.sid, function (iList, list) {
@@ -2143,11 +2122,8 @@ window.autoCorrecWhiteSpaces = function (question, resol) {
     var words = $();
     var $text = $('<div>', {class: 'questBox'});
     $contentDiv.append($text);
-
-    //console.log(question.content.text)
     //Separa o texto em paragrafos
     var $paragraph = question.content.text.split(/\r|\n/);
-    // console.log($paragraph)
     var words = $();
     var nWords = 0;
 
@@ -2162,12 +2138,10 @@ window.autoCorrecWhiteSpaces = function (question, resol) {
         }
 
     });
-    console.log(rightAnswers)
     //por cada paragrafo adiciona a palavra a lista, e a new line
     $.each($paragraph, function (iLine, line) {
         if (line) {
             var $wordsList = line.replace(/\,/gi, " ,").replace(/\-/gi, "- ").replace(/\:/gi, " :").replace(/\./gi, " .").replace(/\!/gi, " !").replace(/\?/gi, " ?").split(" ");
-            // console.log($wordsList)
             $.each($wordsList, function (i, word) {
                 if (word) {
                     //Replace String With Selectable Span (Não esquecer os PARAGRAFOS)
@@ -2203,11 +2177,8 @@ window.setWhiteSpacesPreview = function (question) {
     var words = $();
     var $text = $('<div>', {class: 'questBox'});
     $contentDiv.append($text);
-
-    //console.log(question.content.text)
     //Separa o texto em paragrafos
     var $paragraph = question.content.text.split(/\r|\n/);
-    // console.log($paragraph)
     var words = $();
     var ponctuation = ['.', '!', '?', '-', ';', ':'];
     var nWords = 0;
@@ -2215,7 +2186,6 @@ window.setWhiteSpacesPreview = function (question) {
     $.each($paragraph, function (iLine, line) {
         if (line) {
             var $wordsList = line.replace(/\,/gi, " ,").replace(/\-/gi, "- ").replace(/\:/gi, " :").replace(/\./gi, " .").replace(/\!/gi, " !").replace(/\?/gi, " ?").split(" ");
-            // console.log($wordsList)
             $.each($wordsList, function (i, word) {
                 if (word) {
                     //Replace String With Selectable Span (Não esquecer os PARAGRAFOS)
@@ -2308,10 +2278,6 @@ window.showClassInfo = function (idSchool, idClass) {
         //Error Handling
         function (xhr, ajaxOptions, thrownError) {
             var json = JSON.parse(xhr.responseText);
-            console.log(xhr)
-            console.log(ajaxOptions)
-            console.log(thrownError)
-
         }
     )
 
@@ -2371,8 +2337,6 @@ window.getStudentStatistics = function (tests) {
                 $('<th>', {html: 'Media'})
             )
         ), $tbodyDisc);
-    console.log($tableDisc.html())
-
     var $navPillsDisc = $('<ul>', {class: 'nav nav-pills'}).append(
         $('<li>', {class: 'active'}).append(
             $('<a>', {'data-toggle': "pill", href: "#geral", html: 'Geral'})
@@ -2397,7 +2361,6 @@ window.getStudentStatistics = function (tests) {
         $tbodyDisc = $('<tbody>');
         //Cria o grafico de evolucao da disciplina
         $.each(disc, function (iQuest, quest) {
-            console.log(quest.note)
             $tbodyDisc.append(
                 $('<tr>').append(
                     $('<td>', {html: quest.resolutionDate}),
@@ -2475,7 +2438,6 @@ window.getStudentStatistics = function (tests) {
     //ESTATISTICA POR DISCIPLINA
     //Por cada disciplina adiciona um tab e um grafico com a evolucao
     $.each(groupByReading, function (iDisc, disc) {
-        //console.log(disc)
         $navPillsRead.append(
             $('<li>').append(
                 $('<a>', {'data-toggle': "pill", href: "#" + iDisc + 'Read'}).append(
@@ -2486,7 +2448,6 @@ window.getStudentStatistics = function (tests) {
         $tbodyRead = $('<tbody>');
         //Cria o grafico de evolucao da disciplina
         $.each(disc, function (iQuest, quest) {
-            //console.log(quest.note)
             //verifica a percentagem de fliudez (nr erros* 100 / nr palavras)
             var fluidity = 100 - ((_.filter(quest.errors, function (error) {
                     return error.error == 'fluidity';
@@ -2520,7 +2481,6 @@ window.getStudentStatistics = function (tests) {
                     //$('<th>', {html: 'Tempo'})
                 )
             ), $tbodyRead);
-        //console.log($tableRead.html())
         $tabContentRead.append(
             $('<div>', {id: iDisc + 'Read', class: "tab-pane fade in"}).append(
                 $('<h3>', {html: 'Progresso por disciplina'}),
@@ -2625,28 +2585,6 @@ window.setQuestionsChart = function (questions, table) {
     for (var quest = 0; quest < questions.length; quest++) {
         data.push({date: questions[quest].resolutionDate, note: parseFloat(questions[quest].note)})
     }
-    console.log(data)
-
-    $(document).ready(function () {
-        console.log(questions)
-        console.log(table)
-        window.graph.push(Morris.Line({
-            // ID of the element in which to draw the chart.
-            element: table,
-            // Chart data records -- each entry in this array corresponds to a point on
-            // the chart.
-            data: data,
-            // The name of the data record attribute that contains x-values.
-            xkey: 'date',
-            // A list of names of data record attributes that contain y-values.
-            ykeys: ['note'],
-            // Labels for the ykeys -- will be displayed when you hover over the
-            // chart.
-            labels: ['Nota'],
-            parseTime: false
-        }));
-
-    });
 }
 window.setReadingChart = function (questions, table) {
     var data = [];
@@ -2658,8 +2596,6 @@ window.setReadingChart = function (questions, table) {
         var accuracy = 100 - ((_.filter(questions[quest].errors, function (error) {
                 return error.error == 'accuracy';
             }).length) * 100 / questions[quest].wordsCount);
-        console.log(fluidity)
-        console.log(accuracy)
         data.push({
             date: questions[quest].resolutionDate,
             note: parseFloat(questions[quest].note),
@@ -2669,30 +2605,4 @@ window.setReadingChart = function (questions, table) {
             time: (questions[quest].time * 100) / 5 || null,
         })
     }
-    console.log(data)
-
-    $(document).ready(function () {
-        console.log(questions)
-        console.log(table)
-        window.graph.push(Morris.Line({
-            // ID of the element in which to draw the chart.
-            element: table,
-            // Chart data records -- each entry in this array corresponds to a point on
-            // the chart.
-            data: data,
-            // The name of the data record attribute that contains x-values.
-            xkey: 'date',
-            // A list of names of data record attributes that contain y-values.
-            ykeys: ['note', 'accuracy', 'fluidity', 'expression', 'time'],
-            // Labels for the ykeys -- will be displayed when you hover over the
-            // chart.
-            labels: ['Nota', 'Precisão', 'Fluidez', 'Expressividade', 'Tempo'],
-            parseTime: false,
-            continuousLine: true,
-            resize: true
-
-        }));
-
-    });
-
 }

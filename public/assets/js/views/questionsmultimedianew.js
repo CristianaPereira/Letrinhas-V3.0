@@ -184,7 +184,6 @@ window.QuestionsMultimediaNew = Backbone.View.extend({
             }
             reader.readAsDataURL(file);
         }
-        console.log($(e.currentTarget).val())
     },
 
 
@@ -292,8 +291,6 @@ window.QuestionsMultimediaNew = Backbone.View.extend({
             });
             $("#inputAnswers").val(JSON.stringify(answers));
             //Se algum dos campos estiver vazio
-            console.log(answers)
-
             modem('POST', 'questions',
                 function () {
                     sucssesMsg($("body"), "Pergunta inserida com sucesso!");

@@ -44,7 +44,6 @@ window.QuestionsBoxesEdit = Backbone.View.extend({
 
             $("#boxes").val(JSON.stringify(boxes));
 
-            console.log($("#newBoxesTestForm").serializeObject())
             modem('PUT', 'questions/' + this.data._id,
                 function () {
                     sucssesMsg($("body"), "Pergunta editada com sucesso!");
@@ -74,7 +73,6 @@ window.QuestionsBoxesEdit = Backbone.View.extend({
         var self = this;
 
         self.data = this.model.toJSON();
-        console.log(self.data)
 
         $(self.el).html(self.template(self.data));
         getCategories(self.data.subject);

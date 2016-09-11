@@ -18,7 +18,6 @@ window.ResolutionsNewView = Backbone.View.extend({
         //Recolhe cada um dos forms
         $.each($('form'), function (iForm, form) {
             var formData = $(form).serializeObject();
-            console.log(formData);
             var nAccuracy = 0;
             formData.id = $(form).attr("id");
             formData.type = $(form).attr("type");
@@ -49,12 +48,9 @@ window.ResolutionsNewView = Backbone.View.extend({
             }
 
         });
-        console.log(resolution.attributes)
         //Verifica se todos os testes estao corrigidos
         var corrected = true;
         $.each(resolution.attributes.questions, function (iRes, res) {
-
-            console.log(res)
             if (res.type == 'text' || res.type == 'list') {
                 if (res.note == '0') {
                     corrected = false;
@@ -63,7 +59,6 @@ window.ResolutionsNewView = Backbone.View.extend({
         });
         //se todas estiverem corrigidas
         if (corrected) {
-            console.log(resolution)
             resolution.save(null, {
                 success: function (user, response) {
                     sucssesMsg($(".form"), response.text);
@@ -85,14 +80,11 @@ window.ResolutionsNewView = Backbone.View.extend({
     },
     //Calcula a nota do teste de texto/lista segundo os parametros seleccionados
     recalcTestNote: function (e) {
-        //console.log($(e.currentTarget))
         var self = this;
         //obtem o respectivo form
         var formName = $(e.currentTarget).closest('form').attr("id");
-        console.log(formName)
         //Numero total de palavras
         var nWords = parseInt($("#" + formName + " #wordsCount").html());
-        console.log(nWords)
 
         //Total dos parametros de dificuldade
         var difTotal = 0;
@@ -107,8 +99,6 @@ window.ResolutionsNewView = Backbone.View.extend({
             difTotal += parseInt($("#" + formName + " #accuracyDif").val());
             finalNote += accuracyNote;
         }
-        console.log("accuracyError " + accuracyError + " : " + accuracyNote)
-
 
         //Calcula o subtotal da fluidez
         var fluidityError = parseInt($("#" + formName + " #fluidity").val());
@@ -118,24 +108,18 @@ window.ResolutionsNewView = Backbone.View.extend({
             finalNote += fluidityNote;
         }
 
-        console.log("fluidityError " + fluidityError + " : " + fluidityNote)
-
         //Calcula o subtotal da pontuacao
         var expressionNote = (parseInt($("#" + formName + " #expression").val()) * parseInt($("#" + formName + " #expressionDif").val()));
         if ($.isNumeric(expressionNote)) {
             difTotal += parseInt($("#" + formName + " #expressionDif").val());
             finalNote += expressionNote;
         }
-        console.log("expressionNote " + expressionNote + " : " + difTotal)
-
         //Calcula o subtotal do tempo (tempo do prof/tempo do aluno)
         var timeNote = (parseInt($("#" + formName + " #time").val()) * parseInt($("#" + formName + " #timeDif").val()));
         if ($.isNumeric(timeNote)) {
             difTotal += parseInt($("#" + formName + " #timeDif").val());
             finalNote += timeNote;
         }
-        console.log("timeNote " + timeNote + " : " + difTotal)
-        //console.log("finalNote " + finalNote + " : " + difTotal)
         //Passa para percentagem
         finalNote = ((finalNote / difTotal) * 100 / 5) || 0;
 
@@ -170,7 +154,6 @@ window.ResolutionsNewView = Backbone.View.extend({
 
         //Recalcula  a nota
         var accuracyError = $("#" + formName + " *[class*='accuracy']").length;
-        console.log(accuracyError)
         var fluidityError = $("#" + formName + " *[class*='fluidity']").length;
 
         $("#" + formName + " #errorCount").html(fluidityError + accuracyError);
@@ -245,8 +228,6 @@ window.ResolutionsNewView = Backbone.View.extend({
 
 //conta o numero de palavras
         self.data = self.model.toJSON();
-        //  console.log(self.data)
-
         $(this.el).html(this.template({model: self.data}));
         //console.log("já render")
 

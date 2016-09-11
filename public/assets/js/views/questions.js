@@ -63,7 +63,6 @@ window.QuestionsView = Backbone.View.extend({
         $(".questionItem").show();
 
         var self = this;
-        console.log(self.filters)
         $(".questionItem:not(:containsi('" + self.filters.text + "'))").hide();
         $(".questionItem:not(:containsi('" + self.filters.sub + "'))").hide();
 
@@ -124,7 +123,6 @@ window.QuestionsView = Backbone.View.extend({
         cats.fetch(function () {
             var categories = cats.toJSON();
             for (var i = 0; i < categories.length; i++) {
-                console.log(categories[i])
                 var $contents = $('<ul>', {class: "treeview-menu", style: "display: none;"});
                 $contents.append(
                     $('<li>').append(
@@ -202,7 +200,6 @@ window.QuestionsView = Backbone.View.extend({
                     )
                 )
             }
-            console.log('done')
         })
     },
 

@@ -68,7 +68,6 @@ window.TeachersView = Backbone.View.extend({
         var self = this;
         //gets model info
         var teacherData = self.collection.getByID($(e.currentTarget).attr("id"));
-        console.log(teacherData)
         var $hr = '<div class="col-md-12" ><hr class="dataHr"></div>';
         $('#teachersPreview').empty();
 
@@ -90,13 +89,8 @@ window.TeachersView = Backbone.View.extend({
         ;
         $('#classesList').append('<div id="prfSchool" class="col-md-12" align=left></div>');
         var nTurmas = 0;
-        console.log(teacherData.classes)
         $.each(teacherData.classes, function (iS, school) {
-            console.log(school)
-
-
             $.each(school.class, function (iS, classe) {
-                console.log(classe)
                 var $class = $('<button>', {class: "classBtn", html: classe.name}).click(function () {
                         showClassInfo(school.id, classe._id)
                     }

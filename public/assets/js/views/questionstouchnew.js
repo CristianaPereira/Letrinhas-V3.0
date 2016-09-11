@@ -8,7 +8,6 @@ window.QuestionsTouchNew = Backbone.View.extend({
     getImage: function (e) {
         var fReader = new FileReader();
         fReader.readAsDataURL(e.currentTarget.files[0]);
-        console.log(e);
         fReader.onloadend = function (event) {
             $("#imgTest").attr("src", event.target.result);
         }

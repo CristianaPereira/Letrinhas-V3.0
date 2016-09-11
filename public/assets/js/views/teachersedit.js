@@ -33,8 +33,6 @@ window.TeachersEditView = Backbone.View.extend({
             var image = new Image();
             image.src = readerEvent.target.result;
             showCropper(".form", image, 300, 1);
-            console.log(image.src);
-
         }
         reader.readAsDataURL(file);
     },
@@ -68,7 +66,6 @@ window.TeachersEditView = Backbone.View.extend({
                 }, 1000);
             },
             error: function (model, response) {
-                console.log(response)
                 failMsg($("#editTeacherForm"), "Não foi possível alterar os dados. \n (" + JSON.parse(response.responseText).result + ").");
             }
         });
@@ -102,8 +99,6 @@ window.TeachersEditView = Backbone.View.extend({
             //Error Handling
             function (xhr, ajaxOptions, thrownError) {
                 failMsg($("#editTeacherView"), "Não foi possível alterar os dados. \n (" + JSON.parse(xhr.responseText).result + ").");
-                console.log("NOT OK");
-
             },
             new FormData($('<form>', {}).append(
                 $("#assocTurma"),
@@ -119,7 +114,6 @@ window.TeachersEditView = Backbone.View.extend({
         e.preventDefault();
         var id = $(e.currentTarget).parent().parent().attr("id");
         var nome = $(e.currentTarget).parent().parent().attr("value");
-        console.log()
         var modal = delModal("Apagar professor",
             "Tem a certeza que pretende desassociar a turma <label>" + nome + " </label> ?",
             "desassocTurma", id);
@@ -147,8 +141,6 @@ window.TeachersEditView = Backbone.View.extend({
             //Error Handling
             function (xhr, ajaxOptions, thrownError) {
                 failMsg($("#editTeacherForm"), "Não foi possível alterar os dados. \n (" + JSON.parse(xhr.responseText).result + ").");
-                console.log("NOT OK");
-
             },
             new FormData($('<form>', {}).append(
                 $('<input>', {name: "school", value: classe[0]}),
@@ -230,7 +222,6 @@ window.TeachersEditView = Backbone.View.extend({
 
         //Gets teacher data and shows his/her info
         $(this.el).html(this.template(self.data));
-        console.log(self.data)
         //Preenche as dd das escolas e das turmas
         populateDDSchools();
 

@@ -26,8 +26,6 @@ window.StudentsInfo = Backbone.View.extend({
                 noteSum += parseFloat(quest.note);
             });
             noteAvrg = ( noteSum / disc.length).toFixed(2);
-            console.log(iDisc)
-            console.log(noteAvrg)
         });
 
         //Por cada disciplina, cria um novo grafico
@@ -69,8 +67,6 @@ window.StudentsInfo = Backbone.View.extend({
     },
     render: function () {
         var self = this;
-
-        console.log(self.data)
         $(this.el).html(this.template(self.data));
 
         $('.form', this.el).i18n();

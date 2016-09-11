@@ -62,7 +62,6 @@ window.SchoolsView = Backbone.View.extend({
                 }, 2000);
             },
             error: function (model, response) {
-                console.log(response)
                 failMsg($(".content-wrapper"), "Não foi possível remover a escola. \n (" + JSON.parse(response.responseText).result + ").");
             }
         });
@@ -76,7 +75,6 @@ window.SchoolsView = Backbone.View.extend({
     //Class Renderer
     render: function () {
         var self = this;
-        console.log(self.data)
         //Render Template
         $(this.el).html(this.template({collection: self.data}));
         $('.translations', this.el).i18n();

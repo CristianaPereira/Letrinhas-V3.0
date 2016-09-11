@@ -6,7 +6,6 @@ Backbone.View.prototype.close = function () {
 
 Backbone.ajax = function () {
     var args = Array.prototype.slice.call(arguments, 0);
-    console.log(window.sessionStorage.getItem("keyo") || window.localStorage.getItem("keyo"))
     args[0].beforeSend = function (xhr) {
         xhr.setRequestHeader('Authorization', 'Basic ' + (window.sessionStorage.getItem("keyo") || (window.localStorage.getItem("keyo") )));
     };
@@ -117,7 +116,6 @@ var Router = Backbone.Router.extend({
 
     //Default Template
     index: function () {
-        console.log('loading index')
         app.navigate("/home", {
             trigger: true
         });

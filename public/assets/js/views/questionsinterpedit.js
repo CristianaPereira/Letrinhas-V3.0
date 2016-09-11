@@ -46,7 +46,6 @@ window.QuestionsInterpEdit = Backbone.View.extend({
             $("#inputPanel").find(".badge").each(function () {
                 $sid.push((this.id).substring(3));
             });
-            console.log($sid)
             fd.append("sid", $sid);
             $('#content').append(loadingSpinner());
             modem('PUT', 'questions/' + this.data._id,
@@ -149,8 +148,6 @@ window.QuestionsInterpEdit = Backbone.View.extend({
         $.each($paragraph, function (iLine, line) {
             var $wordsList = line.split(" ");
             $.each($wordsList, function (i, word) {
-                console.log(nWords)
-                console.log(jQuery.inArray(nWords, $sid) != -1)
                 //Replace String With Selectable Span (Não esquecer os PARAGRAFOS)
                 words = words.add($('<span>', {
                     text: word + " ",
@@ -175,7 +172,6 @@ window.QuestionsInterpEdit = Backbone.View.extend({
     //Mark Word
     selectWord: function (e) {
         $(e.target).toggleClass("badge");
-        console.log($(e.target).attr("id"))
     },
 
     //Make Unique String Array
@@ -233,10 +229,7 @@ window.QuestionsInterpEdit = Backbone.View.extend({
     //Class Renderer
     render: function () {
         var self = this;
-
         self.data = this.model.toJSON();
-        console.log(self.data)
-
         $(self.el).html(self.template(self.data));
         getCategories(self.data.subject);
 
