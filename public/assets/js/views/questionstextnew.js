@@ -51,7 +51,7 @@ window.QuestionsTextNew = Backbone.View.extend({
         if ($(e.target).hasClass('selectable')) {
             var x = document.getElementById("teacherVoice1");
             var pop = Popcorn("#teacherVoice1");
-            $(e.target).attr('data-start', (x.currentTime - 0.3).toFixed(5))
+            $(e.target).attr('data-start', (x.currentTime - 0.3).toFixed(3))
             $(e.target).addClass('word');
             $(e.target).append(
                 '<div class="wordOptions">' +
@@ -93,11 +93,11 @@ window.QuestionsTextNew = Backbone.View.extend({
         e.preventDefault();
         var $parentTab = $(e.currentTarget).parents('.tab-pane');
         //If all mandatory inputs are filled, goes to next tab
-        //if (this.validateDetails($parentTab.attr("id"))) {
+        if (this.validateDetails($parentTab.attr("id"))) {
 
-        var nextId = $parentTab.next().attr("id");
-        $('[href="#' + nextId + '"]').tab('show');
-        // }
+            var nextId = $parentTab.next().attr("id");
+            $('[href="#' + nextId + '"]').tab('show');
+        }
     },
     //Validates first TAB
     validateDetails: function (parentID) {
@@ -231,9 +231,15 @@ window.QuestionsTextNew = Backbone.View.extend({
         reader.onload = (function (audio) {
             return function (e) {
                 audio.src = e.target.result;
+                sound2.src = e.target.result;
+                sound2.playbackRate = 0.5;
             };
         })(sound);
         reader.readAsDataURL(files[0]);
+
+        //Adujta o som para 50%
+
+        $("#soundSpeed").html('50%');
 
         $("#soundPath")
             .attr("placeholder", files[0].name)

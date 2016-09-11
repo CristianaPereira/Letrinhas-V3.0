@@ -25,11 +25,8 @@ var Router = Backbone.Router.extend({
             this.currentView.delegateEvents();
 
         }
-        console.log("vai render")
         var rendered = view.render();
-        console.log("rendeu")
         elem.html(rendered.el);
-
     },
     afterRender: function (view) {
         view.afterRender();
@@ -94,7 +91,7 @@ var Router = Backbone.Router.extend({
         "tests/new": "testsNew",
 
         //Default Page
-        "": "home"
+        "": "index"
     },
 
 
@@ -120,6 +117,7 @@ var Router = Backbone.Router.extend({
 
     //Default Template
     index: function () {
+        console.log('loading index')
         app.navigate("/home", {
             trigger: true
         });
@@ -710,27 +708,27 @@ var Router = Backbone.Router.extend({
  }
  );*/
 //18n
-//$(document).ready(function () {
-var language = localStorage.getItem('language');
-if (language === null) {
-    language = 'pt-PT';
-    localStorage.setItem('language', 'pt-PT');
-}
+$(document).ready(function () {
+    var language = localStorage.getItem('language');
+    if (language === null) {
+        language = 'pt-PT';
+        localStorage.setItem('language', 'pt-PT');
+    }
 
-$.i18n.init({
-    lng: language,
-    ns: {
-        namespaces: ['ns.common'],
-        defaultNs: 'ns.common'
-    },
-    useLocalStorage: false,
-    useCookie: false
-}, function (t) {
-    templateLoader.load(["Home"],
-        function () {
-            app = new Router();
-            Backbone.history.start();
-        }
-    );
+    $.i18n.init({
+        lng: language,
+        ns: {
+            namespaces: ['ns.common'],
+            defaultNs: 'ns.common'
+        },
+        useLocalStorage: false,
+        useCookie: false
+    }, function (t) {
+        templateLoader.load(["Home"],
+            function () {
+                app = new Router();
+                Backbone.history.start();
+            }
+        );
+    });
 });
-//});

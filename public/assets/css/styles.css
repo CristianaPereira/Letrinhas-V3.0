@@ -456,6 +456,11 @@ input[type=checkbox] {
 
 .container {
     position: relative;
+    padding-top: 50px;
+}
+
+.progress-bar-letrinhas {
+    background-color: #97ccbf;
 }
 
 #footer > .navbar {
@@ -1498,12 +1503,13 @@ option:hover {
 
 /*********TEXT SYNC ******/
 .word {
-    color: red;
+    color: #6c69e5;
 }
 
 .word:hover, .word.selected {
-    color: blue;
+    color: black;
     cursor: pointer;
+    background-color: #d1daf8;
 }
 
 .rightAnswer {

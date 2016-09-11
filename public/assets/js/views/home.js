@@ -11,21 +11,13 @@ window.Home = Backbone.View.extend({
     attemptlogin: function (e) {
         var self = this;
 
-        //Check For BasicAuth Session Cookie
-        var keyo = window.sessionStorage.getItem("keyo");
-
-        if (keyo) {
-            app.navigate("/user", {
-                trigger: true
-            });
-        }
-        else {
             attemptLogin(function () {
+                document.location.reload(true);
                 app.navigate("/user", {
                     trigger: true
                 });
             });
-        }
+
     },
 
     //Login Process
@@ -124,7 +116,7 @@ window.Home = Backbone.View.extend({
         $(this.el).html(this.template());
         $(".card-grid", this.el).flip({trigger: 'hover'});
         $('.card-grid', this.el).css({'height': $('.card-grid').width() + 'px'});
-       // $('#fullpage', this.el).i18n();
+        // $('#fullpage', this.el).i18n();
         return this;
     }
 

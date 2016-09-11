@@ -1,8 +1,20 @@
 <div class="container" id="myWizard">
+    <section class="content-header">
+        <h1>
+            Inserir
+            <small>Pergunta de texto</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-home"></i> Home</a></li>
+            <li><a href="#questions"><i class="fa fa-question"></i> Perguntas</a></li>
+            <li class="active">Inserir</li>
+        </ol>
+    </section>
+    <br>
     <div class="progress">
-        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="1" aria-valuemin="1"
+        <div class="progress-bar progress-bar-letrinhas" role="progressbar" aria-valuenow="1" aria-valuemin="1"
              aria-valuemax="4" style="width: 25%;">
-            Step 1 of 4
+            Passo 1 de 4
         </div>
     </div>
     <div class="navbar hidden">
@@ -143,8 +155,8 @@
                         </span>
                         </div>
                         <div class="col-md-3" style="padding-left: 0px;">
-                            <input type="text" class="form-control" id="soundPath"
-                                   placeholder="Nenhum ficheiro seleccionado">
+                            <input type="text" class="form-control mandatory" id="soundPath"
+                                   placeholder="Nenhum ficheiro seleccionado" readonly>
                         </div>
                         <div class="col-md-1" style="vertical-align:bottom">
                             <label style="margin-top: 10px;">OU</label>
@@ -235,7 +247,7 @@
                             </div>
                             <div class="col-md-12  col-right">
                                 <audio controls id="teacherVoice1">
-                                    <source src="../img/cabra.mp3" type="audio/mpeg">
+                                    <source type="audio/mpeg">
                                 </audio>
                             </div>
                             <div class="col-md-12">
