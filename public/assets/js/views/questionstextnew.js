@@ -15,28 +15,27 @@ window.QuestionsTextNew = Backbone.View.extend({
         'click .adjustBack': 'adjustBack',
         'click .adjustFront': 'adjustFront',
         'click .removeTime': 'removeTime',
-        'mouseleave': 'leave',
-        'keydown .selected': 'keyAction'
+        'mouseleave': 'leave'
 
     },
     //MARKED WORDS BUTTONS
     jumpToWord: function (e) {
         //Procura os dados da palavra e reproduz
         var x = document.getElementById("teacherVoice1");
-        x.currentTime = $(e.currentTarget).closest('.word.selected').attr('data-start');
+        x.currentTime = $(e.currentTarget).closest('.word').attr('data-start');
         x.play();
     },
     adjustBack: function (e) {
-        var $word = $(e.currentTarget).closest('.word.selected');
-        $word.attr('data-start', ( parseFloat($word.attr('data-start')) - (0.1)).toFixed(5))
+        var $word = $(e.currentTarget).closest('.word');
+        $word.attr('data-start', ( parseFloat($word.attr('data-start')) - (0.1)).toFixed(3))
     },
     adjustFront: function (e) {
-        var $word = $(e.currentTarget).closest('.word.selected');
-        $word.attr('data-start', ( parseFloat($word.attr('data-start')) + (0.1)).toFixed(5))
+        var $word = $(e.currentTarget).closest('.word');
+        $word.attr('data-start', ( parseFloat($word.attr('data-start')) + (0.1)).toFixed(3))
     },
     removeTime: function (e) {
         console.log($(e.target))
-        var $word = $(e.currentTarget).closest('.word.selected');
+        var $word = $(e.currentTarget).closest('.word');
         $word.children('div').remove();
         $word.removeClass('word')
         $word.removeClass('selected')
@@ -48,7 +47,7 @@ window.QuestionsTextNew = Backbone.View.extend({
     addTiming: function (e) {
         console.log($(e.target))
         //Se a palavra nao estiver marcada ainda
-        if ($(e.target).hasClass('selectable')) {
+        if (!$(e.currentTarget).hasClass('word')) {
             var x = document.getElementById("teacherVoice1");
             var pop = Popcorn("#teacherVoice1");
             $(e.target).attr('data-start', (x.currentTime - 0.3).toFixed(3))

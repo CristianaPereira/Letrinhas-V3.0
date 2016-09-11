@@ -129,7 +129,8 @@
     <div class="content-wrapper">
 
         <% _.each(collection,function(question){ %>
-        <div class="col-md-6 col-sm-12 questionItem" id="<%=question._id%>"name="<%=question.title%>" type="<%=question.type%>">
+        <div class="col-md-6 col-sm-12 questionItem" id="<%=question._id%>" name="<%=question.title%>"
+             type="<%=question.type%>">
             <!-- Box Comment -->
             <div class="box box-widget collapsed-box">
                 <div class="box-header with-border">
@@ -182,7 +183,8 @@
                     </button>
                     <% if ( question.profID == window.sessionStorage.getItem("user") || question.profID ==
                     window.localStorage.getItem("user")){ %>
-                    <button type="button" class="btn btn-default btn-xs editQuestion" value="<%=question._id%>"><i
+                    <button type="button" class="btn btn-default btn-xs editQuestion"
+                            value="questions<%=question.type%>/<%=question._id%>/edit"><i
                             class="fa fa-edit"></i> Editar
                     </button>
                     <button type="button" class="btn btn-default btn-xs deleteQuestion" name="<%=question.title%>"

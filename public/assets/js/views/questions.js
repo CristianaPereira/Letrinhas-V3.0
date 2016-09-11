@@ -2,6 +2,7 @@ window.QuestionsView = Backbone.View.extend({
     events: {
         "click #deletebtn": "deleteQuestion",
         "click .deleteQuest": "confirmDelete",
+        "click .editQuestion": "editQuestion",
         'click .contentFilter': "filterBySubject",
         "keyup #txtSearch": "filterByText",
         'click .word': 'jumpToWord',
@@ -48,7 +49,12 @@ window.QuestionsView = Backbone.View.extend({
             }
         });
     },
-
+    editQuestion: function (e) {
+        e.preventDefault();
+        app.navigate(e.target.value, {
+            trigger: true
+        });
+    },
 
     //Applys filters
     filterBy: function () {

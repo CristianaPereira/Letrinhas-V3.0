@@ -47,6 +47,7 @@ exports.upDate = function (req, res) {
                 switch (body.type) {
                     case "text":
                         body.content["text"] = req.body.text;
+                        body.content["wordTimes"] = JSON.parse(req.body.wordTimes);
                         break;
 
                     case "list":
