@@ -1,7 +1,7 @@
 window.TestsView = Backbone.View.extend({
     events: {
         'click .previewTest': "fillPreview",
-        'click .fa-calendar': "assocTeste",
+        'click .assocTeste': "assocTeste",
         'click #btnAtrTest': "atrTeste",
         "click .newTest": "newTest",
         'click .contentFilter': "filterBySubject",
@@ -55,6 +55,7 @@ window.TestsView = Backbone.View.extend({
 
     //Exibe o modal com os campos necessarios para associar o teste
     assocTeste: function (e) {
+        console.log('attr')
         //Mostra o titulo do teste
         $("#attrTest h4").html("Atribuir teste: " + $(e.currentTarget).attr("testName"));
         $("#testID").val($(e.currentTarget).attr("testID"))
@@ -198,7 +199,7 @@ window.TestsView = Backbone.View.extend({
             "Tem a certeza que pretende eliminar o teste <label>" + nome + " </label> ?",
             "deletebtn", id);
 
-        $('#testsDiv').append(modal);
+        $('.translations').append(modal);
         $('#modalConfirmDel').modal("show");
     },
 

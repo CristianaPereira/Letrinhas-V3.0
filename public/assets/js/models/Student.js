@@ -31,7 +31,7 @@ var Student = Backbone.Model.extend({
                     //Obtem apenas a disciplina
                     resol.subject = resol.subject.split(":")[0];
                     //Obtem apenas a data
-                    resol.resolutionDate = resol.resolutionDate.split("T")[0];
+
                 });
                 self.attributes = (json);
                 after_fetch();

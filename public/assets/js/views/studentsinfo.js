@@ -61,6 +61,7 @@ window.StudentsInfo = Backbone.View.extend({
 
                 )
             ))
+            console.log("RC" + desc)
             setReadingChart(groupByReading[desc], "RC" + desc);
         }
 

@@ -85,10 +85,11 @@
                         </td>
                         <td>
                             <p class="hidden"><%= resolution.subject%></p>
+                            <%= console.log(resolution.subject) %>
                             <img src=" ../img/<%= resolution.subject.split(':')[0] %>.png"
                                  style="height:20px">
                         </td>
-                        <td> <%=resolution.t%></td>
+                        <td> <%=resolution.resolutionDate%></td>
                         <td> <%=resolution.note%></td>
                         <td class="text-right">
                             <a href="#" data-skin="skin-blue" class="btn btn-primary btn-xs">

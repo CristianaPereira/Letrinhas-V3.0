@@ -100,11 +100,11 @@
                     </button>
                     <% if ( test.profID == window.sessionStorage.getItem("user") || test.profID ==
                     window.localStorage.getItem("user")){ %>
-                    <button type="button" class="btn btn-default btn-xs editTest" value="<%=test._id%>"><i
-                            class="fa fa-edit"></i> Editar
+                    <button type="button" class="btn btn-default btn-xs assocTeste " testID="<%=test._id%>"><i
+                            class="fa fa-calendar "></i> Atribuir a aluno
                     </button>
-                    <button type="button" class="btn btn-default btn-xs deleteTest" name="<%=test.title%>"
-                            value="<%=test._id%>"><i
+                    <button type="button" class="btn btn-default btn-xs deleteTest" testName="<%=test.title%>"
+                            testID="<%=test._id%>"><i
                             class="fa fa-trash-o"></i> Eliminar
                     </button>
 
@@ -126,4 +126,67 @@
         <% }); %>
     </div>
 
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="attrTest" role="dialog">
+    <form id="attrTestForm">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Modal Header</h4>
+                </div>
+                <div class="modal-body row">
+                    <input type="hidden" id="testID" name="genericID">
+
+                    <div class="col-md-6">
+                        <select class="form-control mandatory" id="studentsDD" name="studentID">
+                            <option disabled selected>Aluno</option>
+                        </select>
+                    </div>
+                    <div class="row col-md-6">
+                        <select class="form-control mandatory" id="selectType" name="type">
+                            <option disabled selected>Tipo de teste</option>
+                        </select>
+                    </div>
+                    <div class="row col-sm-12">
+                        <input type="text" class="form-control mandatory" placeholder="Descrição" name="description">
+                        <span class="glyphicon"><i class="fa fa-comment-o"></i></span>
+                    </div>
+
+                    <div class="row col-md-6">
+                        <div class='input-group date'>
+                            <span class="input-group-addon">De</span>
+                            <input type='text' class="form-control mandatory" name="beginDate"
+                                   placeholder="Data de Inicio"/>
+                        </div>
+                    </div>
+                    <div class="row col-md-6">
+                        <div class='input-group date'>
+                            <span class="input-group-addon">
+                                Até
+                            </span>
+                            <input type='text' class="form-control mandatory" name="endDate" placeholder="Data de Fim"/>
+
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+                        $(function () {
+                            $('.date').datetimepicker({
+                                viewMode: 'days',
+                                format: 'DD-MM-YYYY'
+                            });
+                        });
+                    </script>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button id="btnAtrTest" type="submit" class="btn btn-success">Atribuir</button>
+                </div>
+            </div>
+
+        </div>
+    </form>
 </div>

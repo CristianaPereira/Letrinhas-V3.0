@@ -2585,17 +2585,42 @@ window.setQuestionsChart = function (questions, table) {
     for (var quest = 0; quest < questions.length; quest++) {
         data.push({date: questions[quest].resolutionDate, note: parseFloat(questions[quest].note)})
     }
+    console.log(data)
+
+    $(document).ready(function () {
+        console.log(questions)
+        console.log(table)
+        window.graph.push(Morris.Line({
+            // ID of the element in which to draw the chart.
+            element: table,
+            // Chart data records -- each entry in this array corresponds to a point on
+            // the chart.
+            data: data,
+            // The name of the data record attribute that contains x-values.
+            xkey: 'date',
+            // A list of names of data record attributes that contain y-values.
+            ykeys: ['note'],
+            // Labels for the ykeys -- will be displayed when you hover over the
+            // chart.
+            labels: ['Nota'],
+            parseTime: false
+        }));
+
+    });
 }
+
 window.setReadingChart = function (questions, table) {
     var data = [];
     for (var quest = 0; quest < questions.length; quest++) {
         //verifica a percentagem de fliudez (nr erros* 100 / nr palavras)
         var fluidity = 100 - ((_.filter(questions[quest].errors, function (error) {
                 return error.error == 'fluidity';
-            }).length) * 100 / questions[quest].wordsCount);
+            }).length) * 100 / questions[quest].wordsCount) || null;
         var accuracy = 100 - ((_.filter(questions[quest].errors, function (error) {
                 return error.error == 'accuracy';
-            }).length) * 100 / questions[quest].wordsCount);
+            }).length) * 100 / questions[quest].wordsCount) || null;
+        console.log(fluidity)
+        console.log(accuracy)
         data.push({
             date: questions[quest].resolutionDate,
             note: parseFloat(questions[quest].note),
@@ -2605,4 +2630,30 @@ window.setReadingChart = function (questions, table) {
             time: (questions[quest].time * 100) / 5 || null,
         })
     }
+    console.log(data)
+
+    $(document).ready(function () {
+        console.log(questions)
+        console.log(table)
+        window.graph.push(Morris.Line({
+            // ID of the element in which to draw the chart.
+            element: table,
+            // Chart data records -- each entry in this array corresponds to a point on
+            // the chart.
+            data: data,
+            // The name of the data record attribute that contains x-values.
+            xkey: 'date',
+            // A list of names of data record attributes that contain y-values.
+            ykeys: ['note', 'accuracy', 'fluidity', 'expression', 'time'],
+            // Labels for the ykeys -- will be displayed when you hover over the
+            // chart.
+            labels: ['Nota', 'Precisão', 'Fluidez', 'Expressividade', 'Tempo'],
+            parseTime: false,
+            continuousLine: true,
+            resize: true
+
+        }));
+
+    });
+
 }
